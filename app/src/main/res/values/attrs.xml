@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="CustomFontTextView">
+        <attr name="textFont" format="enum">
+            <enum name="lato_black" value="0" />
+            <enum name="lato_black_italic" value="1" />
+            <enum name="lato_bold" value="2" />
+            <enum name="lato_bold_italic" value="3" />
+            <enum name="lato_hairline" value="4" />
+            <enum name="lato_hairline_italic" value="5" />
+            <enum name="lato_heavy" value="6" />
+            <enum name="lato_heavy_italic" value="7" />
+            <enum name="lato_italic" value="8" />
+            <enum name="lato_light" value="9" />
+            <enum name="lato_light_italic" value="10" />
+            <enum name="lato_medium" value="11" />
+            <enum name="lato_medium_italic" value="12" />
+            <enum name="lato_regular" value="13" />
+            <enum name="lato_semibold" value="14" />
+            <enum name="lato_semibold_italic" value="15" />
+            <enum name="lato_thin" value="16" />
+            <enum name="lato_thin_italic" value="17" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="DynamicHeightImageView">
+        <attr name="heightRatio" format="float" />
+    </declare-styleable>
+
+    <bool name="is_rtl">false</bool>
+
+</resources>

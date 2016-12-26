@@ -1,0 +1,21 @@
+<resources>
+
+    <style name="AlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <!--<item name="colorPrimary">@color/primary</item>-->
+        <!--<item name="colorPrimaryDark">@color/primary_dark</item>-->
+        <item name="colorAccent">@color/accent</item>
+        <item name="colorControlNormal">@color/control_normal</item>
+        <item name="colorControlActivated">@color/control_activated</item>
+        <item name="colorControlHighlight">@color/control_highlight</item>
+    </style>
+
+    <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <!--<item name="colorPrimary">@color/primary</item>-->
+        <!--<item name="colorPrimaryDark">@color/primary_dark</item>-->
+        <item name="colorAccent">@color/accent</item>
+        <item name="colorControlNormal">@color/control_normal</item>
+        <item name="colorControlActivated">@color/control_activated</item>
+        <item name="colorControlHighlight">@color/control_highlight</item>
+    </style>
+
+</resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- This is used when the Navigation Item is checked -->
+    <item android:color="@android:color/white" android:state_checked="true" />
+    <!-- This is the default text color -->
+    <item android:color="@color/fifty_percent_transparency_white" />
+</selector>

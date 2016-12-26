@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<transitionSet xmlns:android="http://schemas.android.com/apk/res/android"
+    android:transitionOrdering="together">
+    <!--android:startDelay="300"-->
+    <slide android:slideEdge="bottom">
+        <targets>
+            <target android:targetId="@id/nsv" />
+        </targets>
+    </slide>
+
+    <fade>
+        <!--android:duration="1000"-->
+        <targets>
+            <target android:excludeId="@android:id/statusBarBackground" />
+            <target android:excludeId="@android:id/navigationBarBackground" />
+            <target android:excludeId="@id/nsv" />
+            <target android:excludeId="@id/bottom_navigation" />
+        </targets>
+    </fade>
+</transitionSet>

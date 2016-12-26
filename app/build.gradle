@@ -1,0 +1,100 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.0"
+    defaultConfig {
+        applicationId "com.etiennelawlor.moviehub"
+        minSdkVersion 21
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+        // Enabling multidex support.
+        multiDexEnabled true
+//        multiDexKeepProguard file('multidex-keep.txt')
+        vectorDrawables.useSupportLibrary = true
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+    productFlavors {
+        // Define separate dev and prod product flavors.
+        dev {
+            // dev utilizes minSDKVersion = 21 to allow the Android gradle plugin
+            // to pre-dex each module and produce an APK that can be tested on
+            // Android Lollipop without time consuming dex merging processes.
+            minSdkVersion 21
+        }
+        prod {
+            // The actual minSdkVersion for the application.
+            minSdkVersion 19
+        }
+    }
+    buildTypes {
+        release {
+            debuggable false
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles fileTree('proguard').asList().toArray()
+        }
+        debug {
+            debuggable true
+            minifyEnabled false
+        }
+    }
+    lintOptions {
+        checkReleaseBuilds true
+        abortOnError false
+    }
+    packagingOptions {
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
+    }
+}
+
+ext {
+    supportLibVersion = '25.1.0'
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
+    compile 'com.squareup.okhttp3:okhttp:3.5.0'
+    compile 'com.squareup.okhttp3:okhttp-urlconnection:3.5.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.5.0'
+    debugCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+
+    compile "com.android.support:design:${supportLibVersion}"
+    compile "com.android.support:cardview-v7:${supportLibVersion}"
+    compile "com.android.support:palette-v7:${supportLibVersion}"
+
+    compile 'de.hdodenhof:circleimageview:2.1.0'
+
+    compile 'com.jakewharton:butterknife:8.4.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+//    apt 'com.jakewharton:butterknife-compiler:8.4.0'
+    compile 'com.jakewharton.timber:timber:4.4.0'
+
+    compile 'jp.wasabeef:recyclerview-animators:2.0.0' // Stable
+
+    compile 'com.github.lawloretienne:trestle:0.0.7'
+
+    compile 'com.android.support:multidex:1.0.1' //
+
+    compile 'io.reactivex:rxjava:1.1.8' // RxJava // Should update at some point
+    compile 'io.reactivex:rxandroid:1.2.1' // RxAndroid providing Android Scheduler // Should update at some point
+    compile 'com.jakewharton.rxbinding:rxbinding:1.0.0' // RxBinding
+
+    compile 'com.makeramen:roundedimageview:2.3.0'
+
+    testCompile 'junit:junit:4.12'
+}

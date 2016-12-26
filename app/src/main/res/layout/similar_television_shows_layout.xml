@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/similar_television_shows_ll"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.etiennelawlor.moviehub.ui.CustomFontTextView
+        android:id="@+id/similar_telvision_shows_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="32dp"
+        android:text="Similar Television Shows"
+        android:textColor="@color/primary_text_light"
+        android:textSize="20sp"
+        app:textFont="lato_medium" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/similar_television_shows_rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>
+

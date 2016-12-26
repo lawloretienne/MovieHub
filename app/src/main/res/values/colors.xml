@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--<color name="primary">@color/blue_grey_500</color>-->
+    <!--<color name="primary_dark">@color/blue_grey_700</color>-->
+    <color name="accent">@color/teal_A400</color>
+
+    <color name="background_dark">#333333</color>
+
+    <color name="five_percent_transparency_white">#0Dffffff</color>
+    <color name="ten_percent_transparency_white">#1Affffff</color>
+    <color name="twenty_percent_transparency_white">#33ffffff</color>
+    <color name="thirty_percent_transparency_white">#4Dffffff</color>
+    <color name="forty_percent_transparency_white">#66FFFFFF</color>
+    <color name="fifty_percent_transparency_white">#80ffffff</color>
+    <color name="sixty_percent_transparency_white">#99ffffff</color>
+    <color name="seventy_percent_transparency_white">#B3ffffff</color>
+    <color name="eighty_percent_transparency_white">#CCffffff</color>
+    <color name="ninty_percent_transparency_white">#E6ffffff</color>
+    <color name="ninty_five_percent_transparency_white">#F2ffffff</color>
+
+    <color name="five_percent_transparency_black">#0D000000</color>
+    <color name="ten_percent_transparency_black">#1A000000</color>
+    <color name="twenty_percent_transparency_black">#33000000</color>
+    <color name="thirty_percent_transparency_black">#4D000000</color>
+    <color name="forty_percent_transparency_black">#66000000</color>
+    <color name="fifty_percent_transparency_black">#80000000</color>
+    <color name="sixty_percent_transparency_black">#99000000</color>
+    <color name="seventy_percent_transparency_black">#B3000000</color>
+    <color name="eighty_percent_transparency_black">#CC000000</color>
+    <color name="ninty_percent_transparency_black">#E6000000</color>
+    <color name="ninty_five_percent_transparency_black">#F2000000</color>
+
+    <color name="sixty_percent_transparency_primary">#99607d8b</color>
+
+    <color name="dark_icon">#CC000000</color> <!-- 80% black-->
+
+    <color name="bottom_nav_bg">#5A5A5A</color>
+    <color name="status_bar_color">#5A5A5A</color>
+
+</resources>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="80dp">
+
+    <FrameLayout
+        android:id="@+id/loading_fl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:id="@+id/pb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/accent"/>
+
+    </FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/error_rl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:visibility="gone">
+
+        <com.etiennelawlor.moviehub.ui.CustomFontButton
+            android:id="@+id/reload_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="@string/reload"
+            android:textAllCaps="false"
+            android:textColor="@color/primary_text_dark"
+            android:textSize="16sp"
+            app:textFont="lato_medium"
+            app:backgroundTint="@color/accent"/>
+
+        <com.etiennelawlor.moviehub.ui.CustomFontTextView
+            android:id="@+id/error_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/reload_btn"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="@string/check_your_network_connection"
+            android:textColor="@color/secondary_text_light"
+            android:textSize="16sp"
+            app:textFont="lato_medium" />
+
+    </RelativeLayout>
+
+</FrameLayout>
+
+

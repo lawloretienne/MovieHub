@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="Base.Theme.MovieHub" parent="Theme.AppCompat.Light.NoActionBar">
+        <!--<item name="colorPrimary">@color/primary</item>-->
+        <!--<item name="colorPrimaryDark">@color/primary_dark</item>-->
+        <item name="colorAccent">@color/accent</item>
+        <!--<item name="colorButtonNormal">@color/primary</item>-->
+        <!--<item name="colorControlActivated">@color/primary</item>-->
+        <item name="android:statusBarColor">@color/status_bar_color</item>
+        <item name="colorControlHighlight">@color/grey_500</item>
+        <item name="android:textColorPrimary">@color/primary_text_dark</item>
+        <item name="android:textColorSecondary">@color/secondary_text_dark</item>
+        <item name="android:dialogTheme">@style/DialogTheme</item>
+        <item name="android:alertDialogTheme">@style/AlertDialogTheme</item>
+        <item name="android:windowBackground">@color/background_dark</item>
+    </style>
+
+    <style name="Theme.MovieHub" parent="Base.Theme.MovieHub" />
+
+    <style name="Theme.MovieHub.MainActivity" parent="Theme.MovieHub">
+    </style>
+
+    <style name="Theme.MovieHub.MainActivity.Launcher" parent="Theme.MovieHub">
+        <item name="android:windowBackground">@drawable/launch_screen</item>
+    </style>
+
+    <style name="Theme.MovieHub.MovieDetailsActivity" parent="Theme.MovieHub">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@color/five_percent_transparency_black</item>
+
+        <!-- specify enter and exit transitions -->
+        <item name="android:windowEnterTransition">@transition/detail_enter</item>
+    </style>
+
+    <style name="Theme.MovieHub.TelevisionShowDetailsActivity" parent="Theme.MovieHub">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@color/five_percent_transparency_black</item>
+
+        <!-- specify enter and exit transitions -->
+        <item name="android:windowEnterTransition">@transition/detail_enter</item>
+    </style>
+
+    <style name="Theme.MovieHub.PersonDetailsActivity" parent="Theme.MovieHub">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@color/five_percent_transparency_black</item>
+
+        <!-- specify enter and exit transitions -->
+        <item name="android:windowEnterTransition">@transition/detail_enter</item>
+    </style>
+
+</resources>

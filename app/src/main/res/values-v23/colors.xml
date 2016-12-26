@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--<color name="primary">@color/blue_grey_100</color>-->
+    <!--<color name="primary_dark">@color/blue_grey_300</color>-->
+    <!--<color name="accent">#00FF66</color>-->
+
+    <color name="bottom_nav_bg">#e0e0e0</color>
+    <color name="status_bar_color">#e0e0e0</color>
+
+</resources>
