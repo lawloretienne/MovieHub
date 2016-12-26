@@ -9,5 +9,8 @@ in order to run this project.  Then you can store your api_key into /res/values/
 :-:|:-:|:-:|:-:|:-:
 ![MovieHub](https://raw.githubusercontent.com/lawloretienne/MovieHub/master/images/MovieHub_Screenshot_1.png)   |   ![MovieHub](https://raw.githubusercontent.com/lawloretienne/MovieHub/master/images/MovieHub_Screenshot_2.png)   |   ![MovieHub](https://raw.githubusercontent.com/lawloretienne/MovieHub/master/images/MovieHub_Screenshot_3.png)   |   ![MovieHub](https://raw.githubusercontent.com/lawloretienne/MovieHub/master/images/MovieHub_Screenshot_4.png)
    |   |   |   |
-:-:|:-:|:-:|:-:|:-:
 ![MovieHub](https://raw.githubusercontent.com/lawloretienne/MovieHub/master/images/MovieHub_Screenshot_5.png)   |   ![MovieHub](https://raw.githubusercontent.com/lawloretienne/MovieHub/master/images/MovieHub_Screenshot_6.png)   |   ![MovieHub](https://raw.githubusercontent.com/lawloretienne/MovieHub/master/images/MovieHub_Screenshot_7.png)   |   ![MovieHub](https://raw.githubusercontent.com/lawloretienne/MovieHub/master/images/MovieHub_Screenshot_8.png)
+   |   |   |   |
+![MovieHub](https://raw.githubusercontent.com/lawloretienne/MovieHub/master/images/MovieHub_Screenshot_9.png)   |   ![MovieHub](https://raw.githubusercontent.com/lawloretienne/MovieHub/master/images/MovieHub_Screenshot_10.png)   |   ![MovieHub](https://raw.githubusercontent.com/lawloretienne/MovieHub/master/images/MovieHub_Screenshot_11.png)   |   ![MovieHub](https://raw.githubusercontent.com/lawloretienne/MovieHub/master/images/MovieHub_Screenshot_12.png)
+   |
+![MovieHub](https://raw.githubusercontent.com/lawloretienne/MovieHub/master/images/MovieHub_Screenshot_13.png)   
