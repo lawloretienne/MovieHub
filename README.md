@@ -2,7 +2,7 @@
 
 ![MovieHub](https://raw.githubusercontent.com/lawloretienne/MovieHub/master/images/ic_launcher.png)
 
-![MovieHub](https://youtu.be/u20-ZgBYUHk)
+[![MovieHub](http://img.youtube.com/vi/u20-ZgBYUHk/0.jpg)](https://www.youtube.com/watch?v=u20-ZgBYUHk "MovieHub")
 
 Showcases popular movies, tv shows, and people from The Movie Database.
 https://www.themoviedb.org/documentation/api
