@@ -198,6 +198,15 @@ public class Movie implements Parcelable {
         return releaseYear;
     }
 
+    public int getReleaseDateYear(){
+        int releaseDateYear = -1;
+        if (!TextUtils.isEmpty(releaseDate)) {
+            Calendar calendar = DateUtility.getCalendar(releaseDate, PATTERN);
+            releaseDateYear = calendar.get(Calendar.YEAR);
+        }
+        return releaseDateYear;
+    }
+
     public String getPosterUrl(Context context){
         String secureBaseUrl = ConfigurationUtility.getSecureBaseUrl(context);
         String posterSize = ConfigurationUtility.getPosterSize(context);

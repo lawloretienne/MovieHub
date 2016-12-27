@@ -57,6 +57,7 @@ import com.etiennelawlor.moviehub.network.interceptors.AuthorizedNetworkIntercep
 import com.etiennelawlor.moviehub.network.models.Configuration;
 import com.etiennelawlor.moviehub.network.models.Genre;
 import com.etiennelawlor.moviehub.network.models.Images;
+import com.etiennelawlor.moviehub.network.models.Movie;
 import com.etiennelawlor.moviehub.network.models.Network;
 import com.etiennelawlor.moviehub.network.models.Person;
 import com.etiennelawlor.moviehub.network.models.TelevisionShow;
@@ -76,6 +77,8 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -743,6 +746,28 @@ public class TelevisionShowDetailsFragment extends BaseFragment {
                 similarTelevisionShowsRecyclerView.setAdapter(similarTelevisionShowsAdapter);
                 SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
                 snapHelper.attachToRecyclerView(similarTelevisionShowsRecyclerView);
+
+                Collections.sort(similarTelevisionShows, new Comparator<TelevisionShow>() {
+                    @Override
+                    public int compare(TelevisionShow t1, TelevisionShow t2) {
+                        int year1 = -1;
+                        if(t1.getFirstAirDateYear() != -1){
+                            year1 = t1.getFirstAirDateYear();
+                        }
+
+                        int year2 = -1;
+                        if(t2.getFirstAirDateYear() != -1){
+                            year2 = t2.getFirstAirDateYear();
+                        }
+
+                        if(year1 > year2)
+                            return -1;
+                        else if(year1 < year2)
+                            return 1;
+                        else
+                            return 0;
+                    }
+                });
 
                 similarTelevisionShowsAdapter.addAll(similarTelevisionShows);
             }

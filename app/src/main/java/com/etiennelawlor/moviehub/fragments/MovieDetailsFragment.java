@@ -62,6 +62,7 @@ import com.etiennelawlor.moviehub.network.models.MovieCredit;
 import com.etiennelawlor.moviehub.network.models.MovieCreditsEnvelope;
 import com.etiennelawlor.moviehub.network.models.MoviesEnvelope;
 import com.etiennelawlor.moviehub.network.models.Person;
+import com.etiennelawlor.moviehub.network.models.PersonCredit;
 import com.etiennelawlor.moviehub.prefs.MovieHubPrefs;
 import com.etiennelawlor.moviehub.ui.GravitySnapHelper;
 import com.etiennelawlor.moviehub.utilities.AnimationUtility;
@@ -76,6 +77,8 @@ import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -748,6 +751,28 @@ public class MovieDetailsFragment extends BaseFragment {
                 similarMoviesRecyclerView.setAdapter(similarMoviesAdapter);
                 SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
                 snapHelper.attachToRecyclerView(similarMoviesRecyclerView);
+
+                Collections.sort(similarMovies, new Comparator<Movie>() {
+                    @Override
+                    public int compare(Movie m1, Movie m2) {
+                        int year1 = -1;
+                        if(m1.getReleaseDateYear() != -1){
+                            year1 = m1.getReleaseDateYear();
+                        }
+
+                        int year2 = -1;
+                        if(m2.getReleaseDateYear() != -1){
+                            year2 = m2.getReleaseDateYear();
+                        }
+
+                        if(year1 > year2)
+                            return -1;
+                        else if(year1 < year2)
+                            return 1;
+                        else
+                            return 0;
+                    }
+                });
 
                 similarMoviesAdapter.addAll(similarMovies);
             }

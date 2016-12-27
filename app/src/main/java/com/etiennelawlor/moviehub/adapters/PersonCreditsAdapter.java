@@ -172,6 +172,8 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCredit> {
         TextView titleTextView;
         @BindView(R.id.subtitle_tv)
         TextView subtitleTextView;
+        @BindView(R.id.caption_tv)
+        TextView captionTextView;
         // endregion
 
         // region Constructors
@@ -186,10 +188,12 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCredit> {
             resetInfoBackgroundColor(infoLinearLayout);
             resetTitleTextColor(titleTextView);
             resetSubtitleTextColor(subtitleTextView);
+            resetCaptionTextColor(captionTextView);
 
             setUpThumbnail(this, personCredit);
             setUpTitle(titleTextView, personCredit);
             setUpSubtitle(subtitleTextView, personCredit);
+            setUpCaption(captionTextView, personCredit);
         }
 
         private void setUpThumbnail(final PersonCreditViewHolder vh, final PersonCredit personCredit){
@@ -215,6 +219,7 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCredit> {
                                     setUpInfoBackgroundColor(vh.infoLinearLayout, personCredit.getPosterPalette());
                                     setUpTitleTextColor(vh.titleTextView, personCredit.getPosterPalette());
                                     setUpSubtitleTextColor(vh.subtitleTextView, personCredit.getPosterPalette());
+                                    setUpCaptionTextColor(vh.captionTextView, personCredit.getPosterPalette());
                                 } else {
                                     Bitmap bitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
                                     Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
@@ -224,6 +229,7 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCredit> {
                                             setUpInfoBackgroundColor(vh.infoLinearLayout, palette);
                                             setUpTitleTextColor(vh.titleTextView, palette);
                                             setUpSubtitleTextColor(vh.subtitleTextView, palette);
+                                            setUpCaptionTextColor(vh.captionTextView, palette);
                                         }
                                     });
                                 }
@@ -259,6 +265,8 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCredit> {
                 tv.setText(title);
             } else if (!TextUtils.isEmpty(name)) {
                 tv.setText(name);
+            } else {
+                tv.setText("N/A");
             }
         }
 
@@ -283,6 +291,18 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCredit> {
                 tv.setText(job);
             } else if (!TextUtils.isEmpty(character)) {
                 tv.setText(character);
+            } else {
+                tv.setText("N/A");
+            }
+        }
+
+        private void setUpCaption(TextView tv, PersonCredit personCredit){
+            int firstAirYear = personCredit.getFirstAirYear();
+            int releaseYear = personCredit.getReleaseYear();
+            if(firstAirYear != -1){
+                tv.setText(String.format("%d", firstAirYear));
+            } else if(releaseYear != -1){
+                tv.setText(String.format("%d", releaseYear));
             }
         }
 
@@ -290,7 +310,21 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCredit> {
             tv.setTextColor(ContextCompat.getColor(tv.getContext(), R.color.secondary_text_light));
         }
 
+        private void resetCaptionTextColor(TextView tv) {
+            tv.setTextColor(ContextCompat.getColor(tv.getContext(), R.color.secondary_text_light));
+        }
+
         private void setUpSubtitleTextColor(final TextView tv, Palette palette){
+            Palette.Swatch swatch = ColorUtility.getMostPopulousSwatch(palette);
+            if(swatch != null){
+                int startColor = ContextCompat.getColor(tv.getContext(), R.color.secondary_text_light);
+                int endColor = swatch.getBodyTextColor();
+
+                AnimationUtility.animateTextColorChange(tv, startColor, endColor);
+            }
+        }
+
+        private void setUpCaptionTextColor(final TextView tv, Palette palette){
             Palette.Swatch swatch = ColorUtility.getMostPopulousSwatch(palette);
             if(swatch != null){
                 int startColor = ContextCompat.getColor(tv.getContext(), R.color.secondary_text_light);

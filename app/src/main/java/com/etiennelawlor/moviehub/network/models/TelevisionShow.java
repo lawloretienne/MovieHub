@@ -214,6 +214,14 @@ public class TelevisionShow implements Parcelable {
         return firstAirYear;
     }
 
+    public int getFirstAirDateYear(){
+        int firstAirDateYear = -1;
+        if (!TextUtils.isEmpty(firstAirDate)) {
+            Calendar calendar = DateUtility.getCalendar(firstAirDate, PATTERN);
+            firstAirDateYear = calendar.get(Calendar.YEAR);
+        }
+        return firstAirDateYear;
+    }
 
     public String getPosterUrl(Context context){
         String secureBaseUrl = ConfigurationUtility.getSecureBaseUrl(context);

@@ -75,6 +75,8 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -738,6 +740,32 @@ public class PersonDetailsFragment extends BaseFragment {
                 SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
                 snapHelper.attachToRecyclerView(castRecyclerView);
 
+                Collections.sort(cast, new Comparator<PersonCredit>() {
+                    @Override
+                    public int compare(PersonCredit pc1, PersonCredit pc2) {
+                        int year1 = -1;
+                        if(pc1.getFirstAirYear() != -1){
+                            year1 = pc1.getFirstAirYear();
+                        } else if(pc1.getReleaseYear() != -1){
+                            year1 = pc1.getReleaseYear();
+                        }
+
+                        int year2 = -1;
+                        if(pc2.getFirstAirYear() != -1){
+                            year2 = pc2.getFirstAirYear();
+                        } else if(pc2.getReleaseYear() != -1){
+                            year2 = pc2.getReleaseYear();
+                        }
+
+                        if(year1 > year2)
+                            return -1;
+                        else if(year1 < year2)
+                            return 1;
+                        else
+                            return 0;
+                    }
+                });
+
                 castAdapter.addAll(cast);
             }
         }
@@ -759,6 +787,32 @@ public class PersonDetailsFragment extends BaseFragment {
                 crewRecyclerView.setAdapter(crewAdapter);
                 SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
                 snapHelper.attachToRecyclerView(crewRecyclerView);
+
+                Collections.sort(crew, new Comparator<PersonCredit>() {
+                    @Override
+                    public int compare(PersonCredit pc1, PersonCredit pc2) {
+                        int year1 = -1;
+                        if(pc1.getFirstAirYear() != -1){
+                            year1 = pc1.getFirstAirYear();
+                        } else if(pc1.getReleaseYear() != -1){
+                            year1 = pc1.getReleaseYear();
+                        }
+
+                        int year2 = -1;
+                        if(pc2.getFirstAirYear() != -1){
+                            year2 = pc2.getFirstAirYear();
+                        } else if(pc2.getReleaseYear() != -1){
+                            year2 = pc2.getReleaseYear();
+                        }
+
+                        if(year1 > year2)
+                            return -1;
+                        else if(year1 < year2)
+                            return 1;
+                        else
+                            return 0;
+                    }
+                });
 
                 crewAdapter.addAll(crew);
             }

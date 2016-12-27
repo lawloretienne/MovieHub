@@ -2,15 +2,23 @@ package com.etiennelawlor.moviehub.network.models;
 
 import android.content.Context;
 import android.support.v7.graphics.Palette;
+import android.text.TextUtils;
 
 import com.etiennelawlor.moviehub.utilities.ConfigurationUtility;
+import com.etiennelawlor.moviehub.utilities.DateUtility;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.Calendar;
 
 /**
  * Created by etiennelawlor on 12/16/16.
  */
 
 public class PersonCredit extends Credit {
+
+    // region Constants
+    public static final String PATTERN = "yyyy-MM-dd";
+    // endregion
 
     // region Fields
     @SerializedName("job")
@@ -83,6 +91,24 @@ public class PersonCredit extends Credit {
         String profileUrl = String.format("%s%s%s", secureBaseUrl, posterSize, posterPath);
 
         return profileUrl;
+    }
+
+    public int getFirstAirYear(){
+        int firstAirYear = -1;
+        if (!TextUtils.isEmpty(firstAirDate)) {
+            Calendar calendar = DateUtility.getCalendar(firstAirDate, PATTERN);
+            firstAirYear = calendar.get(Calendar.YEAR);
+        }
+        return firstAirYear;
+    }
+
+    public int getReleaseYear(){
+        int releaseYear = -1;
+        if (!TextUtils.isEmpty(releaseDate)) {
+            Calendar calendar = DateUtility.getCalendar(releaseDate, PATTERN);
+            releaseYear = calendar.get(Calendar.YEAR);
+        }
+        return releaseYear;
     }
     // endregion
 

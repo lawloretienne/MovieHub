@@ -47,6 +47,16 @@
                 android:textSize="14sp"
                 app:textFont="lato_medium"/>
 
+            <com.etiennelawlor.moviehub.ui.CustomFontTextView
+                android:id="@+id/caption_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:textColor="@color/secondary_text_light"
+                android:textSize="14sp"
+                app:textFont="lato_medium"/>
+
         </LinearLayout>
 
     </LinearLayout>
