@@ -18,16 +18,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.activities.MovieDetailsActivity;
 import com.etiennelawlor.moviehub.activities.TelevisionShowDetailsActivity;
 import com.etiennelawlor.moviehub.adapters.BaseAdapter;
-import com.etiennelawlor.moviehub.adapters.MoviesAdapter;
 import com.etiennelawlor.moviehub.adapters.TelevisionShowsAdapter;
 import com.etiennelawlor.moviehub.network.MovieHubService;
 import com.etiennelawlor.moviehub.network.ServiceGenerator;
 import com.etiennelawlor.moviehub.network.interceptors.AuthorizedNetworkInterceptor;
 import com.etiennelawlor.moviehub.network.models.Configuration;
-import com.etiennelawlor.moviehub.network.models.Movie;
 import com.etiennelawlor.moviehub.network.models.TelevisionShow;
 import com.etiennelawlor.moviehub.network.models.TelevisionShowsEnvelope;
 import com.etiennelawlor.moviehub.prefs.MovieHubPrefs;

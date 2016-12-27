@@ -1,12 +1,12 @@
 package com.etiennelawlor.moviehub.network.models;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v7.graphics.Palette;
 
+import com.etiennelawlor.moviehub.utilities.ConfigurationUtility;
 import com.google.gson.annotations.SerializedName;
-
-import java.util.List;
 
 /**
  * Created by etiennelawlor on 12/16/16.
@@ -22,7 +22,7 @@ public class Person implements Parcelable {
     @SerializedName("deathday")
     public String deathday;
     @SerializedName("id")
-    public Integer id;
+    public int id;
     @SerializedName("imdb_id")
     public String imdbId;
     @SerializedName("name")
@@ -45,7 +45,7 @@ public class Person implements Parcelable {
         this.biography = in.readString();
         this.birthday = in.readString();
         this.deathday = in.readString();
-        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.id = in.readInt();
         this.imdbId = in.readString();
         this.name = in.readString();
         this.placeOfBirth = in.readString();
@@ -68,7 +68,7 @@ public class Person implements Parcelable {
         return deathday;
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
@@ -96,7 +96,13 @@ public class Person implements Parcelable {
         return profilePalette;
     }
 
+    public String getProfileUrl(Context context){
+        String secureBaseUrl = ConfigurationUtility.getSecureBaseUrl(context);
+        String profileSize = ConfigurationUtility.getProfileSize(context);
+        String profileUrl = String.format("%s%s%s", secureBaseUrl, profileSize, profilePath);
 
+        return profileUrl;
+    }
     // endregion
 
     // region Setters
@@ -113,7 +119,7 @@ public class Person implements Parcelable {
         this.deathday = deathday;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -154,7 +160,7 @@ public class Person implements Parcelable {
         dest.writeString(this.biography);
         dest.writeString(this.birthday);
         dest.writeString(this.deathday);
-        dest.writeValue(this.id);
+        dest.writeInt(this.id);
         dest.writeString(this.imdbId);
         dest.writeString(this.name);
         dest.writeString(this.placeOfBirth);

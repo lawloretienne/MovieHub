@@ -13,7 +13,7 @@ public class Network implements Parcelable {
 
     // region Fields
     @SerializedName("id")
-    public Integer id;
+    public int id;
     @SerializedName("name")
     public String name;
     // endregion
@@ -23,14 +23,14 @@ public class Network implements Parcelable {
     }
 
     protected Network(Parcel in) {
-        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.id = in.readInt();
         this.name = in.readString();
     }
     // endregion
 
     // region Getters
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
@@ -42,7 +42,7 @@ public class Network implements Parcelable {
 
     // region Setters
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -60,7 +60,7 @@ public class Network implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeValue(this.id);
+        dest.writeInt(this.id);
         dest.writeString(this.name);
     }
     // endregion

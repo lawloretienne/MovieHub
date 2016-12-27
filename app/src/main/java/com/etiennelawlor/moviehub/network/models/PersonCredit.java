@@ -1,7 +1,9 @@
 package com.etiennelawlor.moviehub.network.models;
 
+import android.content.Context;
 import android.support.v7.graphics.Palette;
 
+import com.etiennelawlor.moviehub.utilities.ConfigurationUtility;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -75,6 +77,13 @@ public class PersonCredit extends Credit {
         return posterPalette;
     }
 
+    public String getPosterUrl(Context context){
+        String secureBaseUrl = ConfigurationUtility.getSecureBaseUrl(context);
+        String posterSize = ConfigurationUtility.getPosterSize(context);
+        String profileUrl = String.format("%s%s%s", secureBaseUrl, posterSize, posterPath);
+
+        return profileUrl;
+    }
     // endregion
 
     // region Setters

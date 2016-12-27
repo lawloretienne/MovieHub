@@ -12,7 +12,7 @@ public class MovieCreditsEnvelope {
 
     // region Fields
     @SerializedName("id")
-    public Integer id;
+    public int id;
     @SerializedName("cast")
     public List<MovieCredit> cast = null;
     @SerializedName("crew")
@@ -21,7 +21,7 @@ public class MovieCreditsEnvelope {
 
     // region Getters
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
@@ -37,7 +37,7 @@ public class MovieCreditsEnvelope {
 
     // region Setters
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 

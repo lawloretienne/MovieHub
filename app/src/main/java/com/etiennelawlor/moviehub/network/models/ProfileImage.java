@@ -13,17 +13,17 @@ public class ProfileImage implements Parcelable {
 
     // region Fields
     @SerializedName("aspect_ratio")
-    public Float aspectRatio;
+    public float aspectRatio;
     @SerializedName("file_path")
     public String filePath;
     @SerializedName("height")
-    public Integer height;
+    public int height;
     @SerializedName("vote_average")
-    public Float voteAverage;
+    public float voteAverage;
     @SerializedName("vote_count")
-    public Integer voteCount;
+    public int voteCount;
     @SerializedName("width")
-    public Integer width;
+    public int width;
     // endregion
 
     // region Constructors
@@ -31,18 +31,18 @@ public class ProfileImage implements Parcelable {
     }
 
     protected ProfileImage(Parcel in) {
-        this.aspectRatio = (Float) in.readValue(Float.class.getClassLoader());
+        this.aspectRatio = in.readFloat();
         this.filePath = in.readString();
-        this.height = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.voteAverage = (Float) in.readValue(Float.class.getClassLoader());
-        this.voteCount = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.width = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.height = in.readInt();
+        this.voteAverage = in.readFloat();
+        this.voteCount = in.readInt();
+        this.width = in.readInt();
     }
     // endregion
 
     // region Getters
 
-    public Float getAspectRatio() {
+    public float getAspectRatio() {
         return aspectRatio;
     }
 
@@ -50,19 +50,19 @@ public class ProfileImage implements Parcelable {
         return filePath;
     }
 
-    public Integer getHeight() {
+    public int getHeight() {
         return height;
     }
 
-    public Float getVoteAverage() {
+    public float getVoteAverage() {
         return voteAverage;
     }
 
-    public Integer getVoteCount() {
+    public int getVoteCount() {
         return voteCount;
     }
 
-    public Integer getWidth() {
+    public int getWidth() {
         return width;
     }
 
@@ -70,7 +70,7 @@ public class ProfileImage implements Parcelable {
 
     // region Setters
 
-    public void setAspectRatio(Float aspectRatio) {
+    public void setAspectRatio(float aspectRatio) {
         this.aspectRatio = aspectRatio;
     }
 
@@ -78,19 +78,19 @@ public class ProfileImage implements Parcelable {
         this.filePath = filePath;
     }
 
-    public void setHeight(Integer height) {
+    public void setHeight(int height) {
         this.height = height;
     }
 
-    public void setVoteAverage(Float voteAverage) {
+    public void setVoteAverage(float voteAverage) {
         this.voteAverage = voteAverage;
     }
 
-    public void setVoteCount(Integer voteCount) {
+    public void setVoteCount(int voteCount) {
         this.voteCount = voteCount;
     }
 
-    public void setWidth(Integer width) {
+    public void setWidth(int width) {
         this.width = width;
     }
 
@@ -104,12 +104,12 @@ public class ProfileImage implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeValue(this.aspectRatio);
+        dest.writeFloat(this.aspectRatio);
         dest.writeString(this.filePath);
-        dest.writeValue(this.height);
-        dest.writeValue(this.voteAverage);
-        dest.writeValue(this.voteCount);
-        dest.writeValue(this.width);
+        dest.writeInt(this.height);
+        dest.writeFloat(this.voteAverage);
+        dest.writeInt(this.voteCount);
+        dest.writeInt(this.width);
     }
     // endregion
 

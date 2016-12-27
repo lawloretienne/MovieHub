@@ -1,12 +1,16 @@
 package com.etiennelawlor.moviehub.network.models;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v7.graphics.Palette;
+import android.text.TextUtils;
 
+import com.etiennelawlor.moviehub.utilities.ConfigurationUtility;
+import com.etiennelawlor.moviehub.utilities.DateUtility;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -15,19 +19,23 @@ import java.util.List;
 
 public class Movie implements Parcelable {
 
+    // region Constants
+    public static final String PATTERN = "yyyy-MM-dd";
+    // endregion
+
     // region Fields
     @SerializedName("adult")
-    public Boolean adult;
+    public boolean adult;
     @SerializedName("backdrop_path")
     public String backdropPath;
     @SerializedName("budget")
-    public Integer budget;
+    public int budget;
     @SerializedName("genres")
     public List<Genre> genres = null;
     @SerializedName("homepage")
     public String homepage;
     @SerializedName("id")
-    public Integer id;
+    public int id;
     @SerializedName("imdb_id")
     public String imdbId;
     @SerializedName("original_language")
@@ -37,15 +45,15 @@ public class Movie implements Parcelable {
     @SerializedName("overview")
     public String overview;
     @SerializedName("popularity")
-    public Float popularity;
+    public float popularity;
     @SerializedName("poster_path")
     public String posterPath;
     @SerializedName("release_date")
     public String releaseDate;
     @SerializedName("revenue")
-    public Long revenue;
+    public long revenue;
     @SerializedName("runtime")
-    public Integer runtime;
+    public int runtime;
     @SerializedName("status")
     public String status;
     @SerializedName("tagline")
@@ -53,11 +61,11 @@ public class Movie implements Parcelable {
     @SerializedName("title")
     public String title;
     @SerializedName("video")
-    public Boolean video;
+    public boolean video;
     @SerializedName("vote_average")
-    public Float voteAverage;
+    public float voteAverage;
     @SerializedName("vote_count")
-    public Integer voteCount;
+    public int voteCount;
 
     private Palette posterPalette;
     // endregion
@@ -67,36 +75,33 @@ public class Movie implements Parcelable {
     }
 
     protected Movie(Parcel in) {
-        this.adult = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.adult = in.readByte() != 0;
         this.backdropPath = in.readString();
-        this.budget = (Integer) in.readValue(Integer.class.getClassLoader());
-        List<Genre> genres = new ArrayList<>();
-        in.readList(genres, null);
-        this.genres = genres;
+        this.budget = in.readInt();
+        this.genres = in.createTypedArrayList(Genre.CREATOR);
         this.homepage = in.readString();
-        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.id = in.readInt();
         this.imdbId = in.readString();
         this.originalLanguage = in.readString();
         this.originalTitle = in.readString();
         this.overview = in.readString();
-        this.popularity = (Float) in.readValue(Float.class.getClassLoader());
+        this.popularity = in.readFloat();
         this.posterPath = in.readString();
         this.releaseDate = in.readString();
-        this.revenue = (Long) in.readValue(Long.class.getClassLoader());
-        this.runtime = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.revenue = in.readLong();
+        this.runtime = in.readInt();
         this.status = in.readString();
         this.tagline = in.readString();
         this.title = in.readString();
-        this.video = (Boolean) in.readValue(Boolean.class.getClassLoader());
-        this.voteAverage = (Float) in.readValue(Float.class.getClassLoader());
-        this.voteCount = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.video = in.readByte() != 0;
+        this.voteAverage = in.readFloat();
+        this.voteCount = in.readInt();
     }
-
     // endregion
 
     // region Getters
 
-    public Boolean getAdult() {
+    public boolean isAdult() {
         return adult;
     }
 
@@ -104,7 +109,7 @@ public class Movie implements Parcelable {
         return backdropPath;
     }
 
-    public Integer getBudget() {
+    public int getBudget() {
         return budget;
     }
 
@@ -116,7 +121,7 @@ public class Movie implements Parcelable {
         return homepage;
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
@@ -136,7 +141,7 @@ public class Movie implements Parcelable {
         return overview;
     }
 
-    public Float getPopularity() {
+    public float getPopularity() {
         return popularity;
     }
 
@@ -148,12 +153,12 @@ public class Movie implements Parcelable {
         return releaseDate;
     }
 
-    public Long getRevenue() {
+    public long getRevenue() {
         return revenue;
     }
 
-    public Integer getRuntime() {
-        return runtime == null ? -1 : runtime;
+    public int getRuntime() {
+        return runtime;
     }
 
     public String getStatus() {
@@ -168,15 +173,15 @@ public class Movie implements Parcelable {
         return title;
     }
 
-    public Boolean getVideo() {
+    public boolean isVideo() {
         return video;
     }
 
-    public Float getVoteAverage() {
+    public float getVoteAverage() {
         return voteAverage;
     }
 
-    public Integer getVoteCount() {
+    public int getVoteCount() {
         return voteCount;
     }
 
@@ -184,11 +189,28 @@ public class Movie implements Parcelable {
         return posterPalette;
     }
 
+    public String getReleaseYear(){
+        String releaseYear = "";
+        if (!TextUtils.isEmpty(releaseDate)) {
+            Calendar calendar = DateUtility.getCalendar(releaseDate, PATTERN);
+            releaseYear = String.format("%d", calendar.get(Calendar.YEAR));
+        }
+        return releaseYear;
+    }
+
+    public String getPosterUrl(Context context){
+        String secureBaseUrl = ConfigurationUtility.getSecureBaseUrl(context);
+        String posterSize = ConfigurationUtility.getPosterSize(context);
+        String profileUrl = String.format("%s%s%s", secureBaseUrl, posterSize, posterPath);
+
+        return profileUrl;
+    }
+
     // endregion
 
     // region Setters
 
-    public void setAdult(Boolean adult) {
+    public void setAdult(boolean adult) {
         this.adult = adult;
     }
 
@@ -196,7 +218,7 @@ public class Movie implements Parcelable {
         this.backdropPath = backdropPath;
     }
 
-    public void setBudget(Integer budget) {
+    public void setBudget(int budget) {
         this.budget = budget;
     }
 
@@ -208,7 +230,7 @@ public class Movie implements Parcelable {
         this.homepage = homepage;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -228,7 +250,7 @@ public class Movie implements Parcelable {
         this.overview = overview;
     }
 
-    public void setPopularity(Float popularity) {
+    public void setPopularity(float popularity) {
         this.popularity = popularity;
     }
 
@@ -240,11 +262,11 @@ public class Movie implements Parcelable {
         this.releaseDate = releaseDate;
     }
 
-    public void setRevenue(Long revenue) {
+    public void setRevenue(long revenue) {
         this.revenue = revenue;
     }
 
-    public void setRuntime(Integer runtime) {
+    public void setRuntime(int runtime) {
         this.runtime = runtime;
     }
 
@@ -260,15 +282,15 @@ public class Movie implements Parcelable {
         this.title = title;
     }
 
-    public void setVideo(Boolean video) {
+    public void setVideo(boolean video) {
         this.video = video;
     }
 
-    public void setVoteAverage(Float voteAverage) {
+    public void setVoteAverage(float voteAverage) {
         this.voteAverage = voteAverage;
     }
 
-    public void setVoteCount(Integer voteCount) {
+    public void setVoteCount(int voteCount) {
         this.voteCount = voteCount;
     }
 
@@ -286,31 +308,31 @@ public class Movie implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeValue(this.adult);
+        dest.writeByte(this.adult ? (byte) 1 : (byte) 0);
         dest.writeString(this.backdropPath);
-        dest.writeValue(this.budget);
-        dest.writeList(this.genres);
+        dest.writeInt(this.budget);
+        dest.writeTypedList(this.genres);
         dest.writeString(this.homepage);
-        dest.writeValue(this.id);
+        dest.writeInt(this.id);
         dest.writeString(this.imdbId);
         dest.writeString(this.originalLanguage);
         dest.writeString(this.originalTitle);
         dest.writeString(this.overview);
-        dest.writeValue(this.popularity);
+        dest.writeFloat(this.popularity);
         dest.writeString(this.posterPath);
         dest.writeString(this.releaseDate);
-        dest.writeValue(this.revenue);
-        dest.writeValue(this.runtime);
+        dest.writeLong(this.revenue);
+        dest.writeInt(this.runtime);
         dest.writeString(this.status);
         dest.writeString(this.tagline);
         dest.writeString(this.title);
-        dest.writeValue(this.video);
-        dest.writeValue(this.voteAverage);
-        dest.writeValue(this.voteCount);
+        dest.writeByte(this.video ? (byte) 1 : (byte) 0);
+        dest.writeFloat(this.voteAverage);
+        dest.writeInt(this.voteCount);
     }
     // endregion
 
-    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
         @Override
         public Movie createFromParcel(Parcel source) {
             return new Movie(source);

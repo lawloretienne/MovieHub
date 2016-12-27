@@ -10,14 +10,14 @@ public class Credit {
 
     // region Fields
     @SerializedName("id")
-    public Integer id;
+    public int id;
     @SerializedName("credit_id")
     public String creditId;
     // endregion
 
     // region Getters
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
@@ -29,12 +29,13 @@ public class Credit {
 
     // region Setters
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
     public void setCreditId(String creditId) {
         this.creditId = creditId;
     }
+
     // endregion
 }

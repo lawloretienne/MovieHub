@@ -57,7 +57,6 @@ import com.etiennelawlor.moviehub.network.interceptors.AuthorizedNetworkIntercep
 import com.etiennelawlor.moviehub.network.models.Configuration;
 import com.etiennelawlor.moviehub.network.models.Genre;
 import com.etiennelawlor.moviehub.network.models.Images;
-import com.etiennelawlor.moviehub.network.models.MovieCredit;
 import com.etiennelawlor.moviehub.network.models.Network;
 import com.etiennelawlor.moviehub.network.models.Person;
 import com.etiennelawlor.moviehub.network.models.TelevisionShow;

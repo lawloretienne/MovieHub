@@ -1,7 +1,9 @@
 package com.etiennelawlor.moviehub.network.models;
 
+import android.content.Context;
 import android.support.v7.graphics.Palette;
 
+import com.etiennelawlor.moviehub.utilities.ConfigurationUtility;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -49,6 +51,14 @@ public class TelevisionShowCredit extends Credit {
 
     public Palette getProfilePalette() {
         return profilePalette;
+    }
+
+    public String getProfileUrl(Context context){
+        String secureBaseUrl = ConfigurationUtility.getSecureBaseUrl(context);
+        String profileSize = ConfigurationUtility.getProfileSize(context);
+        String profileUrl = String.format("%s%s%s", secureBaseUrl, profileSize, profilePath);
+
+        return profileUrl;
     }
 
     // endregion

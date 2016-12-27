@@ -12,18 +12,18 @@ public class PeopleEnvelope {
 
     // region Fields
     @SerializedName("page")
-    public Integer page;
+    public int page;
     @SerializedName("results")
     public List<Person> persons = null;
     @SerializedName("total_results")
-    public Integer totalResults;
+    public int totalResults;
     @SerializedName("total_pages")
-    public Integer totalPages;
+    public int totalPages;
     // endregion
 
     // region Getters
 
-    public Integer getPage() {
+    public int getPage() {
         return page;
     }
 
@@ -31,11 +31,11 @@ public class PeopleEnvelope {
         return persons;
     }
 
-    public Integer getTotalResults() {
+    public int getTotalResults() {
         return totalResults;
     }
 
-    public Integer getTotalPages() {
+    public int getTotalPages() {
         return totalPages;
     }
 
@@ -43,7 +43,7 @@ public class PeopleEnvelope {
 
     // region Setters
 
-    public void setPage(Integer page) {
+    public void setPage(int page) {
         this.page = page;
     }
 
@@ -51,11 +51,11 @@ public class PeopleEnvelope {
         this.persons = persons;
     }
 
-    public void setTotalResults(Integer totalResults) {
+    public void setTotalResults(int totalResults) {
         this.totalResults = totalResults;
     }
 
-    public void setTotalPages(Integer totalPages) {
+    public void setTotalPages(int totalPages) {
         this.totalPages = totalPages;
     }
 

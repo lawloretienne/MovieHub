@@ -1,12 +1,17 @@
 package com.etiennelawlor.moviehub.network.models;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v7.graphics.Palette;
+import android.text.TextUtils;
 
+import com.etiennelawlor.moviehub.utilities.ConfigurationUtility;
+import com.etiennelawlor.moviehub.utilities.DateUtility;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -14,6 +19,10 @@ import java.util.List;
  */
 
 public class TelevisionShow implements Parcelable {
+
+    // region Constants
+    public static final String PATTERN = "yyyy-MM-dd";
+    // endregion
 
     // region Fields
     @SerializedName("backdrop_path")
@@ -27,9 +36,9 @@ public class TelevisionShow implements Parcelable {
     @SerializedName("homepage")
     public String homepage;
     @SerializedName("id")
-    public Integer id;
+    public int id;
     @SerializedName("in_production")
-    public Boolean inProduction;
+    public boolean inProduction;
     @SerializedName("languages")
     public List<String> languages = null;
     @SerializedName("last_air_date")
@@ -39,9 +48,9 @@ public class TelevisionShow implements Parcelable {
     @SerializedName("networks")
     public List<Network> networks = null;
     @SerializedName("number_of_episodes")
-    public Integer numberOfEpisodes;
+    public int numberOfEpisodes;
     @SerializedName("number_of_seasons")
-    public Integer numberOfSeasons;
+    public int numberOfSeasons;
     @SerializedName("origin_country")
     public List<String> originCountry = null;
     @SerializedName("original_language")
@@ -51,7 +60,7 @@ public class TelevisionShow implements Parcelable {
     @SerializedName("overview")
     public String overview;
     @SerializedName("popularity")
-    public Float popularity;
+    public float popularity;
     @SerializedName("poster_path")
     public String posterPath;
     @SerializedName("status")
@@ -59,9 +68,9 @@ public class TelevisionShow implements Parcelable {
     @SerializedName("type")
     public String type;
     @SerializedName("vote_average")
-    public Float voteAverage;
+    public float voteAverage;
     @SerializedName("vote_count")
-    public Integer voteCount;
+    public int voteCount;
 
     private Palette posterPalette;
     // endregion
@@ -77,26 +86,24 @@ public class TelevisionShow implements Parcelable {
         this.firstAirDate = in.readString();
         this.genres = in.createTypedArrayList(Genre.CREATOR);
         this.homepage = in.readString();
-        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.inProduction = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.id = in.readInt();
+        this.inProduction = in.readByte() != 0;
         this.languages = in.createStringArrayList();
         this.lastAirDate = in.readString();
         this.name = in.readString();
-        this.networks = new ArrayList<Network>();
-        in.readList(this.networks, Network.class.getClassLoader());
-        this.numberOfEpisodes = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.numberOfSeasons = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.networks = in.createTypedArrayList(Network.CREATOR);
+        this.numberOfEpisodes = in.readInt();
+        this.numberOfSeasons = in.readInt();
         this.originCountry = in.createStringArrayList();
         this.originalLanguage = in.readString();
         this.originalName = in.readString();
         this.overview = in.readString();
-        this.popularity = (Float) in.readValue(Float.class.getClassLoader());
+        this.popularity = in.readFloat();
         this.posterPath = in.readString();
         this.status = in.readString();
         this.type = in.readString();
-        this.voteAverage = (Float) in.readValue(Integer.class.getClassLoader());
-        this.voteCount = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.posterPalette = in.readParcelable(Palette.class.getClassLoader());
+        this.voteAverage = in.readFloat();
+        this.voteCount = in.readInt();
     }
     // endregion
 
@@ -122,11 +129,11 @@ public class TelevisionShow implements Parcelable {
         return homepage;
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public Boolean getInProduction() {
+    public boolean isInProduction() {
         return inProduction;
     }
 
@@ -146,11 +153,11 @@ public class TelevisionShow implements Parcelable {
         return networks;
     }
 
-    public Integer getNumberOfEpisodes() {
+    public int getNumberOfEpisodes() {
         return numberOfEpisodes;
     }
 
-    public Integer getNumberOfSeasons() {
+    public int getNumberOfSeasons() {
         return numberOfSeasons;
     }
 
@@ -170,7 +177,7 @@ public class TelevisionShow implements Parcelable {
         return overview;
     }
 
-    public Float getPopularity() {
+    public float getPopularity() {
         return popularity;
     }
 
@@ -186,11 +193,11 @@ public class TelevisionShow implements Parcelable {
         return type;
     }
 
-    public Float getVoteAverage() {
+    public float getVoteAverage() {
         return voteAverage;
     }
 
-    public Integer getVoteCount() {
+    public int getVoteCount() {
         return voteCount;
     }
 
@@ -198,6 +205,23 @@ public class TelevisionShow implements Parcelable {
         return posterPalette;
     }
 
+    public String getFirstAirYear(){
+        String firstAirYear = "";
+        if (!TextUtils.isEmpty(firstAirDate)) {
+            Calendar calendar = DateUtility.getCalendar(firstAirDate, PATTERN);
+            firstAirYear = String.format("%d", calendar.get(Calendar.YEAR));
+        }
+        return firstAirYear;
+    }
+
+
+    public String getPosterUrl(Context context){
+        String secureBaseUrl = ConfigurationUtility.getSecureBaseUrl(context);
+        String posterSize = ConfigurationUtility.getPosterSize(context);
+        String profileUrl = String.format("%s%s%s", secureBaseUrl, posterSize, posterPath);
+
+        return profileUrl;
+    }
     // endregion
 
     // region Setters
@@ -222,11 +246,11 @@ public class TelevisionShow implements Parcelable {
         this.homepage = homepage;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public void setInProduction(Boolean inProduction) {
+    public void setInProduction(boolean inProduction) {
         this.inProduction = inProduction;
     }
 
@@ -246,11 +270,11 @@ public class TelevisionShow implements Parcelable {
         this.networks = networks;
     }
 
-    public void setNumberOfEpisodes(Integer numberOfEpisodes) {
+    public void setNumberOfEpisodes(int numberOfEpisodes) {
         this.numberOfEpisodes = numberOfEpisodes;
     }
 
-    public void setNumberOfSeasons(Integer numberOfSeasons) {
+    public void setNumberOfSeasons(int numberOfSeasons) {
         this.numberOfSeasons = numberOfSeasons;
     }
 
@@ -270,7 +294,7 @@ public class TelevisionShow implements Parcelable {
         this.overview = overview;
     }
 
-    public void setPopularity(Float popularity) {
+    public void setPopularity(float popularity) {
         this.popularity = popularity;
     }
 
@@ -286,11 +310,11 @@ public class TelevisionShow implements Parcelable {
         this.type = type;
     }
 
-    public void setVoteAverage(Float voteAverage) {
+    public void setVoteAverage(float voteAverage) {
         this.voteAverage = voteAverage;
     }
 
-    public void setVoteCount(Integer voteCount) {
+    public void setVoteCount(int voteCount) {
         this.voteCount = voteCount;
     }
 
@@ -313,24 +337,24 @@ public class TelevisionShow implements Parcelable {
         dest.writeString(this.firstAirDate);
         dest.writeTypedList(this.genres);
         dest.writeString(this.homepage);
-        dest.writeValue(this.id);
-        dest.writeValue(this.inProduction);
+        dest.writeInt(this.id);
+        dest.writeByte(this.inProduction ? (byte) 1 : (byte) 0);
         dest.writeStringList(this.languages);
         dest.writeString(this.lastAirDate);
         dest.writeString(this.name);
-        dest.writeList(this.networks);
-        dest.writeValue(this.numberOfEpisodes);
-        dest.writeValue(this.numberOfSeasons);
+        dest.writeTypedList(this.networks);
+        dest.writeInt(this.numberOfEpisodes);
+        dest.writeInt(this.numberOfSeasons);
         dest.writeStringList(this.originCountry);
         dest.writeString(this.originalLanguage);
         dest.writeString(this.originalName);
         dest.writeString(this.overview);
-        dest.writeValue(this.popularity);
+        dest.writeFloat(this.popularity);
         dest.writeString(this.posterPath);
         dest.writeString(this.status);
         dest.writeString(this.type);
-        dest.writeValue(this.voteAverage);
-        dest.writeValue(this.voteCount);
+        dest.writeFloat(this.voteAverage);
+        dest.writeInt(this.voteCount);
     }
     // endregion
 

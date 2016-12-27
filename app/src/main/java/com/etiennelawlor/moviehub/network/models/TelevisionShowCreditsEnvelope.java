@@ -12,7 +12,7 @@ public class TelevisionShowCreditsEnvelope {
 
     // region Fields
     @SerializedName("id")
-    public Integer id;
+    public int id;
     @SerializedName("cast")
     public List<TelevisionShowCredit> cast = null;
     @SerializedName("crew")
@@ -21,7 +21,7 @@ public class TelevisionShowCreditsEnvelope {
 
     // region Getters
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
@@ -37,7 +37,7 @@ public class TelevisionShowCreditsEnvelope {
 
     // region Setters
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 

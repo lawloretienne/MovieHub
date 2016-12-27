@@ -18,20 +18,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.network.models.Configuration;
-import com.etiennelawlor.moviehub.network.models.Images;
 import com.etiennelawlor.moviehub.network.models.TelevisionShow;
-import com.etiennelawlor.moviehub.prefs.MovieHubPrefs;
 import com.etiennelawlor.moviehub.ui.DynamicHeightImageView;
 import com.etiennelawlor.moviehub.utilities.AnimationUtility;
 import com.etiennelawlor.moviehub.utilities.ColorUtility;
-import com.etiennelawlor.moviehub.utilities.DateUtility;
 import com.etiennelawlor.moviehub.utilities.DisplayUtility;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-
-import java.util.Calendar;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,12 +36,14 @@ import butterknife.ButterKnife;
 public class TelevisionShowsAdapter extends BaseAdapter<TelevisionShow> {
 
     // region Constants
-    public static final String PATTERN = "yyyy-MM-dd";
+    // endregion
+
+    // region Static Variables
+    private static int ivWidth;
     // endregion
 
     // region Member Variables
     private FooterViewHolder footerViewHolder;
-    private int ivWidth;
     // endregion
 
     // region Constructors
@@ -122,13 +117,7 @@ public class TelevisionShowsAdapter extends BaseAdapter<TelevisionShow> {
 
         final TelevisionShow televisionShow = getItem(position);
         if (televisionShow != null) {
-            resetInfoBackgroundColor(holder.infoLinearLayout);
-            resetTitleTextColor(holder.titleTextView);
-            resetSubtitleTextColor(holder.subtitleTextView);
-
-            setUpThumbnail(holder, televisionShow);
-            setUpTitle(holder.titleTextView, televisionShow);
-            setUpSubtitle(holder.subtitleTextView, televisionShow);
+            holder.bind(televisionShow);
         }
     }
 
@@ -160,133 +149,6 @@ public class TelevisionShowsAdapter extends BaseAdapter<TelevisionShow> {
         add(new TelevisionShow());
     }
 
-    // region Helper Methods
-    private void setUpThumbnail(final TelevisionShowViewHolder vh, final TelevisionShow televisionShow){
-        final DynamicHeightImageView iv = vh.thumbnailImageView;
-
-        double heightRatio = 3.0D/2.0D;
-
-        iv.setHeightRatio(heightRatio);
-
-        String posterUrl = getPosterUrl(iv.getContext(), televisionShow);
-        if (!TextUtils.isEmpty(posterUrl)) {
-            Picasso.with(iv.getContext())
-                    .load(posterUrl)
-                    .resize(ivWidth, (int)(heightRatio*ivWidth))
-                    .centerCrop()
-                    .into(iv, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            if(televisionShow.getPosterPalette() != null){
-                                setUpInfoBackgroundColor(vh.infoLinearLayout, televisionShow.getPosterPalette());
-                                setUpTitleTextColor(vh.titleTextView, televisionShow.getPosterPalette());
-                                setUpSubtitleTextColor(vh.subtitleTextView, televisionShow.getPosterPalette());
-                            } else {
-                                Bitmap bitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
-                                Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-                                    public void onGenerated(Palette palette) {
-                                        televisionShow.setPosterPalette(palette);
-
-                                        setUpInfoBackgroundColor(vh.infoLinearLayout, palette);
-                                        setUpTitleTextColor(vh.titleTextView, palette);
-                                        setUpSubtitleTextColor(vh.subtitleTextView, palette);
-                                    }
-                                });
-                            }
-                        }
-
-                        @Override
-                        public void onError() {
-
-                        }
-                    });
-        }
-    }
-
-    private String getPosterUrl(Context context, TelevisionShow televisionShow){
-        String posterUrl = "";
-        Configuration configuration = MovieHubPrefs.getConfiguration(context);
-        if(configuration != null) {
-            Images images = configuration.getImages();
-            if (images != null) {
-
-                List<String> posterSizes = images.getPosterSizes();
-                if (posterSizes != null && posterSizes.size() > 0) {
-                    String posterSize;
-                    if (posterSizes.size() > 1) {
-                        posterSize = posterSizes.get(posterSizes.size() - 2);
-                    } else {
-                        posterSize = posterSizes.get(posterSizes.size() - 1);
-                    }
-
-                    String secureBaseUrl = images.getSecureBaseUrl();
-                    String posterPath = televisionShow.getPosterPath();
-
-                    posterUrl = String.format("%s%s%s", secureBaseUrl, posterSize, posterPath);
-                }
-            }
-        }
-        return posterUrl;
-    }
-
-    private void resetInfoBackgroundColor(LinearLayout ll) {
-        ll.setBackgroundColor(ContextCompat.getColor(ll.getContext(), R.color.grey_800));
-    }
-
-    private void setUpInfoBackgroundColor(LinearLayout ll, Palette palette) {
-        Palette.Swatch swatch = ColorUtility.getMostPopulousSwatch(palette);
-        if(swatch != null){
-            int startColor = ContextCompat.getColor(ll.getContext(), R.color.grey_800);
-            int endColor = swatch.getRgb();
-
-            AnimationUtility.animateBackgroundColorChange(ll, startColor, endColor);
-        }
-    }
-
-    private void setUpTitle(TextView tv, TelevisionShow televisionShow){
-        String name = televisionShow.getName();
-        if (!TextUtils.isEmpty(name)) {
-            tv.setText(name);
-        }
-    }
-
-    private void resetTitleTextColor(TextView tv) {
-        tv.setTextColor(ContextCompat.getColor(tv.getContext(), R.color.primary_text_light));
-    }
-
-    private void setUpTitleTextColor(TextView tv, Palette palette){
-        Palette.Swatch swatch = ColorUtility.getMostPopulousSwatch(palette);
-        if(swatch != null){
-            int startColor = ContextCompat.getColor(tv.getContext(), R.color.primary_text_light);
-            int endColor = swatch.getTitleTextColor();
-
-            AnimationUtility.animateTextColorChange(tv, startColor, endColor);
-        }
-    }
-
-    private void setUpSubtitle(TextView tv, TelevisionShow televisionShow){
-        String firstAirDate = televisionShow.getFirstAirDate();
-        if (!TextUtils.isEmpty(firstAirDate)) {
-            Calendar calendar = DateUtility.getCalendar(firstAirDate, PATTERN);
-            tv.setText(String.format("%d", calendar.get(Calendar.YEAR)));
-        }
-    }
-
-    private void resetSubtitleTextColor(TextView tv) {
-        tv.setTextColor(ContextCompat.getColor(tv.getContext(), R.color.secondary_text_light));
-    }
-
-    private void setUpSubtitleTextColor(TextView tv, Palette palette){
-        Palette.Swatch swatch = ColorUtility.getMostPopulousSwatch(palette);
-        if(swatch != null){
-            int startColor = ContextCompat.getColor(tv.getContext(), R.color.secondary_text_light);
-            int endColor = swatch.getBodyTextColor();
-
-            AnimationUtility.animateTextColorChange(tv, startColor, endColor);
-        }
-    }
-    // endregion
-
     // region Inner Classes
 
     public static class HeaderViewHolder extends RecyclerView.ViewHolder {
@@ -316,6 +178,114 @@ public class TelevisionShowsAdapter extends BaseAdapter<TelevisionShow> {
             ButterKnife.bind(this, view);
         }
         // endregion
+
+        private void bind(TelevisionShow televisionShow){
+            resetInfoBackgroundColor(infoLinearLayout);
+            resetTitleTextColor(titleTextView);
+            resetSubtitleTextColor(subtitleTextView);
+
+            setUpThumbnail(this, televisionShow);
+            setUpTitle(titleTextView, televisionShow);
+            setUpSubtitle(subtitleTextView, televisionShow);
+        }
+
+        private void setUpThumbnail(final TelevisionShowViewHolder vh, final TelevisionShow televisionShow){
+            final DynamicHeightImageView iv = vh.thumbnailImageView;
+
+            double heightRatio = 3.0D/2.0D;
+
+            iv.setHeightRatio(heightRatio);
+
+            String posterUrl = televisionShow.getPosterUrl(iv.getContext());
+            if (!TextUtils.isEmpty(posterUrl)) {
+                Picasso.with(iv.getContext())
+                        .load(posterUrl)
+                        .resize(ivWidth, (int)(heightRatio*ivWidth))
+                        .centerCrop()
+                        .into(iv, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                if(televisionShow.getPosterPalette() != null){
+                                    setUpInfoBackgroundColor(vh.infoLinearLayout, televisionShow.getPosterPalette());
+                                    setUpTitleTextColor(vh.titleTextView, televisionShow.getPosterPalette());
+                                    setUpSubtitleTextColor(vh.subtitleTextView, televisionShow.getPosterPalette());
+                                } else {
+                                    Bitmap bitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
+                                    Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                                        public void onGenerated(Palette palette) {
+                                            televisionShow.setPosterPalette(palette);
+
+                                            setUpInfoBackgroundColor(vh.infoLinearLayout, palette);
+                                            setUpTitleTextColor(vh.titleTextView, palette);
+                                            setUpSubtitleTextColor(vh.subtitleTextView, palette);
+                                        }
+                                    });
+                                }
+                            }
+
+                            @Override
+                            public void onError() {
+
+                            }
+                        });
+            }
+        }
+
+        private void resetInfoBackgroundColor(LinearLayout ll) {
+            ll.setBackgroundColor(ContextCompat.getColor(ll.getContext(), R.color.grey_800));
+        }
+
+        private void setUpInfoBackgroundColor(LinearLayout ll, Palette palette) {
+            Palette.Swatch swatch = ColorUtility.getMostPopulousSwatch(palette);
+            if(swatch != null){
+                int startColor = ContextCompat.getColor(ll.getContext(), R.color.grey_800);
+                int endColor = swatch.getRgb();
+
+                AnimationUtility.animateBackgroundColorChange(ll, startColor, endColor);
+            }
+        }
+
+        private void setUpTitle(TextView tv, TelevisionShow televisionShow){
+            String name = televisionShow.getName();
+            if (!TextUtils.isEmpty(name)) {
+                tv.setText(name);
+            }
+        }
+
+        private void resetTitleTextColor(TextView tv) {
+            tv.setTextColor(ContextCompat.getColor(tv.getContext(), R.color.primary_text_light));
+        }
+
+        private void setUpTitleTextColor(TextView tv, Palette palette){
+            Palette.Swatch swatch = ColorUtility.getMostPopulousSwatch(palette);
+            if(swatch != null){
+                int startColor = ContextCompat.getColor(tv.getContext(), R.color.primary_text_light);
+                int endColor = swatch.getTitleTextColor();
+
+                AnimationUtility.animateTextColorChange(tv, startColor, endColor);
+            }
+        }
+
+        private void setUpSubtitle(TextView tv, TelevisionShow televisionShow){
+            String firstAirYear = televisionShow.getFirstAirYear();
+            if (!TextUtils.isEmpty(firstAirYear)) {
+                tv.setText(firstAirYear);
+            }
+        }
+
+        private void resetSubtitleTextColor(TextView tv) {
+            tv.setTextColor(ContextCompat.getColor(tv.getContext(), R.color.secondary_text_light));
+        }
+
+        private void setUpSubtitleTextColor(TextView tv, Palette palette){
+            Palette.Swatch swatch = ColorUtility.getMostPopulousSwatch(palette);
+            if(swatch != null){
+                int startColor = ContextCompat.getColor(tv.getContext(), R.color.secondary_text_light);
+                int endColor = swatch.getBodyTextColor();
+
+                AnimationUtility.animateTextColorChange(tv, startColor, endColor);
+            }
+        }
     }
 
     public static class FooterViewHolder extends RecyclerView.ViewHolder {
