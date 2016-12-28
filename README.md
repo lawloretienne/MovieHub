@@ -7,8 +7,7 @@
 Showcases popular movies, tv shows, and people from The Movie Database.
 https://www.themoviedb.org/documentation/api
 
-<div style="background-color:#071B24; padding-top=16px;" width="260px" height="260px"><img src="images/the_movie_db.png" style="display: block;  margin:0 auto; "></div>
-
+<a href="https://www.themoviedb.org/documentation/api"><img src="images/the_movie_db.png" style="display: block;  margin:0 auto; "></a>
 
 You must get an api_key here : https://www.themoviedb.org/account/signup
 in order to run this project.  Then you can store your api_key into /res/values/defaults.xml . 
