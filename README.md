@@ -8,10 +8,9 @@
 
 Showcases popular movies, tv shows, and people from <a href="https://www.themoviedb.org/documentation/api">The Movie Database</a>.
 
-You must get an api_key here : https://www.themoviedb.org/account/signup
-in order to run this project.  Then you can store your api_key into /res/values/defaults.xml . 
+In order to run this project, you must <a href="https://www.themoviedb.org/account/signup">Sign Up</a> to get an api_key.  Then you can store your api_key into `/res/values/defaults.xml` . 
 
-Otherwise you can just download the .APK in the Releases section : https://github.com/lawloretienne/MovieHub/releases
+Otherwise you can just download the .APK in <a href="https://github.com/lawloretienne/MovieHub/releases">Releases</a>
 
 ## Screencast
 
