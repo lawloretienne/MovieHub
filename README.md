@@ -7,7 +7,7 @@
 Showcases popular movies, tv shows, and people from The Movie Database.
 https://www.themoviedb.org/documentation/api
 
-<img src="images/the_movie_db.png" style="background-color:red;">
+<div style="background-color:#071B24; padding-top=16px;" width="260px" height="260px"><img src="images/the_movie_db.png" style="display: block;  margin:0 auto; "></div>
 
 
 You must get an api_key here : https://www.themoviedb.org/account/signup
