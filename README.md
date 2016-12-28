@@ -6,7 +6,7 @@
 
 Showcases popular movies, tv shows, and people from The Movie Database.
 
-<a href="https://www.themoviedb.org/documentation/api"><img src="images/the_movie_db.png" align="right" hspace="20"></a>
+<a href="https://www.themoviedb.org/documentation/api"><img src="images/the_movie_db.png" align="right"></a>
 
 You must get an api_key here : https://www.themoviedb.org/account/signup
 in order to run this project.  Then you can store your api_key into /res/values/defaults.xml . 
