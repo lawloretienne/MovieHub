@@ -55,12 +55,14 @@ import com.etiennelawlor.moviehub.network.MovieHubService;
 import com.etiennelawlor.moviehub.network.ServiceGenerator;
 import com.etiennelawlor.moviehub.network.interceptors.AuthorizedNetworkInterceptor;
 import com.etiennelawlor.moviehub.network.models.Configuration;
+import com.etiennelawlor.moviehub.network.models.ContentRating;
 import com.etiennelawlor.moviehub.network.models.Genre;
 import com.etiennelawlor.moviehub.network.models.Images;
 import com.etiennelawlor.moviehub.network.models.Movie;
 import com.etiennelawlor.moviehub.network.models.Network;
 import com.etiennelawlor.moviehub.network.models.Person;
 import com.etiennelawlor.moviehub.network.models.TelevisionShow;
+import com.etiennelawlor.moviehub.network.models.TelevisionShowContentRatingsEnvelope;
 import com.etiennelawlor.moviehub.network.models.TelevisionShowCredit;
 import com.etiennelawlor.moviehub.network.models.TelevisionShowCreditsEnvelope;
 import com.etiennelawlor.moviehub.network.models.TelevisionShowsEnvelope;
@@ -89,6 +91,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func3;
+import rx.functions.Func4;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -135,6 +138,8 @@ public class TelevisionShowDetailsFragment extends BaseFragment {
     TextView firstAirDateTextView;
     @BindView(R.id.networks_tv)
     TextView networksTextView;
+    @BindView(R.id.rating_tv)
+    TextView ratingTextView;
     @BindView(R.id.television_show_details_header_ll)
     LinearLayout televisionShowDetailsHeaderLinearLayout;
     @BindView(R.id.television_show_details_body_ll)
@@ -165,6 +170,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment {
     private Transition sharedElementEnterTransition;
     private TelevisionShowCreditsEnvelope televisionShowCreditsEnvelope;
     private TelevisionShowsEnvelope televisionShowsEnvelope;
+    private TelevisionShowContentRatingsEnvelope televisionShowContentRatingsEnvelope;
     private final Handler handler = new Handler();
     // endregion
 
@@ -612,10 +618,11 @@ public class TelevisionShowDetailsFragment extends BaseFragment {
                 movieHubService.getTelevisionShowDetails(tvId),
                 movieHubService.getTelevisionShowCredits(tvId),
                 movieHubService.getSimilarTelevisionShows(tvId),
-                new Func3<TelevisionShow, TelevisionShowCreditsEnvelope, TelevisionShowsEnvelope, FullTelevisionShow>() {
+                movieHubService.getTelevisionShowContentRatings(tvId),
+                new Func4<TelevisionShow, TelevisionShowCreditsEnvelope, TelevisionShowsEnvelope, TelevisionShowContentRatingsEnvelope, FullTelevisionShow>() {
                     @Override
-                    public FullTelevisionShow call(TelevisionShow televisionShow, TelevisionShowCreditsEnvelope televisionShowCreditsEnvelope, TelevisionShowsEnvelope televisionShowsEnvelope) {
-                        return new FullTelevisionShow(televisionShow, televisionShowCreditsEnvelope, televisionShowsEnvelope);
+                    public FullTelevisionShow call(TelevisionShow televisionShow, TelevisionShowCreditsEnvelope televisionShowCreditsEnvelope, TelevisionShowsEnvelope televisionShowsEnvelope, TelevisionShowContentRatingsEnvelope televisionShowContentRatingsEnvelope) {
+                        return new FullTelevisionShow(televisionShow, televisionShowCreditsEnvelope, televisionShowsEnvelope, televisionShowContentRatingsEnvelope);
                     }
                 })
                 .subscribeOn(Schedulers.newThread())
@@ -628,6 +635,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment {
                             televisionShow.setPosterPalette(posterPalette);
                             televisionShowCreditsEnvelope = fullTelevisionShow.getTelevisionShowCreditsEnvelope();
                             televisionShowsEnvelope = fullTelevisionShow.getTelevisionShowsEnvelope();
+                            televisionShowContentRatingsEnvelope = fullTelevisionShow.getTelevisionShowContentRatingsEnvelope();
 
                             setUpBackdrop();
                             setUpOverview();
@@ -635,7 +643,8 @@ public class TelevisionShowDetailsFragment extends BaseFragment {
                             setUpSeasons();
                             setUpStatus();
                             setUpFirstAirDate();
-                            setUpNetworks();
+                            setUpNetwork();
+                            setUpRating();
 
                             showTelevisionShowDetailsBody();
                         }
@@ -806,6 +815,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment {
     private void setUpOverview(){
         String overview = televisionShow.getOverview();
         if(!TextUtils.isEmpty(overview)){
+            overview = overview.trim();
             overviewTextView.setText(overview);
         } else {
             overviewTextView.setText("N/A");
@@ -826,7 +836,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment {
                 Genre genre = genres.get(i);
                 stringBuilder.append(genre.getName());
                 if(i!=genres.size()-1){
-                    stringBuilder.append(", ");
+                    stringBuilder.append(" | ");
                 }
             }
 
@@ -856,20 +866,30 @@ public class TelevisionShowDetailsFragment extends BaseFragment {
         }
     }
 
-    private void setUpNetworks(){
-        List<Network> networks = televisionShow.getNetworks();
-        if(networks != null && networks.size()>0){
-            StringBuilder stringBuilder = new StringBuilder("");
+    private void setUpNetwork(){
+        String network = televisionShow.getFormattedNetwork();
+        if(!TextUtils.isEmpty(network)){
+            networksTextView.setText(network);
+        }
+    }
 
-            for(int i=0; i<networks.size(); i++){
-                Network network = networks.get(i);
-                stringBuilder.append(network.getName());
-                if(i!=networks.size()-1){
-                    stringBuilder.append(", ");
+    private void setUpRating(){
+        String rating = "";
+        List<ContentRating> contentRatings = televisionShowContentRatingsEnvelope.getContentRatings();
+        if(contentRatings != null && contentRatings.size() > 0){
+            for(ContentRating contentRating : contentRatings){
+                String iso31661 = contentRating.getIso31661();
+                if(iso31661.equals("US")){
+                    rating = contentRating.getRating();
+                    break;
                 }
             }
+        }
 
-            networksTextView.setText(stringBuilder);
+        if(!TextUtils.isEmpty(rating)){
+            ratingTextView.setText(rating);
+        } else {
+            ratingTextView.setVisibility(View.GONE);
         }
     }
 

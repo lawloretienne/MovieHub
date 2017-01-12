@@ -116,110 +116,123 @@
                 android:layout_marginBottom="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:background="@color/grey_100"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:orientation="vertical">
 
-                <com.etiennelawlor.moviehub.ui.CustomFontTextView
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Overview"
-                    android:textColor="@color/primary_text_dark"
-                    android:textSize="18sp"
-                    app:textFont="lato_medium" />
+                    android:background="@color/grey_500"
+                    android:padding="16dp">
 
-                <com.etiennelawlor.moviehub.ui.CustomFontTextView
-                    android:id="@+id/overview_tv"
+                    <com.etiennelawlor.moviehub.ui.CustomFontTextView
+                        android:id="@+id/rating_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/secondary_text_light"
+                        android:textSize="14sp"
+                        android:layout_marginRight="16dp"
+                        app:textFont="lato_black" />
+
+                    <com.etiennelawlor.moviehub.ui.CustomFontTextView
+                        android:id="@+id/genres_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/secondary_text_light"
+                        android:textSize="14sp"
+                        android:layout_alignWithParentIfMissing="true"
+                        android:layout_toRightOf="@id/rating_tv"
+                        android:layout_marginRight="16dp"
+                        android:singleLine="true"
+                        android:ellipsize="end"
+                        android:layout_toLeftOf="@+id/networks_tv"
+                        app:textFont="lato_medium" />
+
+                    <com.etiennelawlor.moviehub.ui.CustomFontTextView
+                        android:id="@+id/networks_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:textColor="@color/secondary_text_light"
+                        android:textSize="14sp"
+                        app:textFont="lato_medium" />
+
+                </RelativeLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/secondary_text_dark"
-                    android:textSize="16sp"
-                    app:textFont="lato_medium" />
+                    android:orientation="vertical"
+                    android:background="@color/grey_100"
+                    android:padding="16dp">
 
-                <com.etiennelawlor.moviehub.ui.CustomFontTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Genre(s)"
-                    android:textColor="@color/primary_text_dark"
-                    android:textSize="18sp"
-                    app:textFont="lato_medium" />
+                    <com.etiennelawlor.moviehub.ui.CustomFontTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Overview"
+                        android:textColor="@color/primary_text_dark"
+                        android:textSize="18sp"
+                        app:textFont="lato_medium" />
 
-                <com.etiennelawlor.moviehub.ui.CustomFontTextView
-                    android:id="@+id/genres_tv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/secondary_text_dark"
-                    android:textSize="16sp"
-                    app:textFont="lato_medium" />
+                    <com.etiennelawlor.moviehub.ui.CustomFontTextView
+                        android:id="@+id/overview_tv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/secondary_text_dark"
+                        android:textSize="16sp"
+                        app:textFont="lato_medium" />
 
-                <com.etiennelawlor.moviehub.ui.CustomFontTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Seasons"
-                    android:textColor="@color/primary_text_dark"
-                    android:textSize="18sp"
-                    app:textFont="lato_medium" />
+                    <com.etiennelawlor.moviehub.ui.CustomFontTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Seasons"
+                        android:textColor="@color/primary_text_dark"
+                        android:textSize="18sp"
+                        app:textFont="lato_medium" />
 
-                <com.etiennelawlor.moviehub.ui.CustomFontTextView
-                    android:id="@+id/seasons_tv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/secondary_text_dark"
-                    android:textSize="16sp"
-                    app:textFont="lato_medium" />
+                    <com.etiennelawlor.moviehub.ui.CustomFontTextView
+                        android:id="@+id/seasons_tv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/secondary_text_dark"
+                        android:textSize="16sp"
+                        app:textFont="lato_medium" />
 
-                <com.etiennelawlor.moviehub.ui.CustomFontTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Status"
-                    android:textColor="@color/primary_text_dark"
-                    android:textSize="18sp"
-                    app:textFont="lato_medium" />
+                    <com.etiennelawlor.moviehub.ui.CustomFontTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Status"
+                        android:textColor="@color/primary_text_dark"
+                        android:textSize="18sp"
+                        app:textFont="lato_medium" />
 
-                <com.etiennelawlor.moviehub.ui.CustomFontTextView
-                    android:id="@+id/status_tv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/secondary_text_dark"
-                    android:textSize="16sp"
-                    app:textFont="lato_medium" />
+                    <com.etiennelawlor.moviehub.ui.CustomFontTextView
+                        android:id="@+id/status_tv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/secondary_text_dark"
+                        android:textSize="16sp"
+                        app:textFont="lato_medium" />
 
-                <com.etiennelawlor.moviehub.ui.CustomFontTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="First Air Date"
-                    android:textColor="@color/primary_text_dark"
-                    android:textSize="18sp"
-                    app:textFont="lato_medium" />
+                    <com.etiennelawlor.moviehub.ui.CustomFontTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="First Air Date"
+                        android:textColor="@color/primary_text_dark"
+                        android:textSize="18sp"
+                        app:textFont="lato_medium" />
 
-                <com.etiennelawlor.moviehub.ui.CustomFontTextView
-                    android:id="@+id/first_air_date_tv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/secondary_text_dark"
-                    android:textSize="16sp"
-                    app:textFont="lato_medium" />
+                    <com.etiennelawlor.moviehub.ui.CustomFontTextView
+                        android:id="@+id/first_air_date_tv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/secondary_text_dark"
+                        android:textSize="16sp"
+                        app:textFont="lato_medium" />
 
-                <com.etiennelawlor.moviehub.ui.CustomFontTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Network(s)"
-                    android:textColor="@color/primary_text_dark"
-                    android:textSize="18sp"
-                    app:textFont="lato_medium" />
-
-                <com.etiennelawlor.moviehub.ui.CustomFontTextView
-                    android:id="@+id/networks_tv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/secondary_text_dark"
-                    android:textSize="16sp"
-                    app:textFont="lato_medium" />
+                </LinearLayout>
 
             </LinearLayout>
 

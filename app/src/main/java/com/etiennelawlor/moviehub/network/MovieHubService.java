@@ -7,7 +7,9 @@ import com.etiennelawlor.moviehub.network.models.MoviesEnvelope;
 import com.etiennelawlor.moviehub.network.models.PeopleEnvelope;
 import com.etiennelawlor.moviehub.network.models.Person;
 import com.etiennelawlor.moviehub.network.models.PersonCreditsEnvelope;
+import com.etiennelawlor.moviehub.network.models.MovieReleaseDatesEnvelope;
 import com.etiennelawlor.moviehub.network.models.TelevisionShow;
+import com.etiennelawlor.moviehub.network.models.TelevisionShowContentRatingsEnvelope;
 import com.etiennelawlor.moviehub.network.models.TelevisionShowCreditsEnvelope;
 import com.etiennelawlor.moviehub.network.models.TelevisionShowsEnvelope;
 
@@ -36,6 +38,9 @@ public interface MovieHubService {
     @GET("movie/{movieId}/similar")
     Observable<MoviesEnvelope> getSimilarMovies(@Path("movieId") long movieId);
 
+    @GET("movie/{movieId}/release_dates")
+    Observable<MovieReleaseDatesEnvelope> getMovieReleaseDates(@Path("movieId") long movieId);
+
     @GET("tv/popular")
     Call<TelevisionShowsEnvelope> getPopularTelevisionShows(@Query("page") int page);
 
@@ -47,6 +52,9 @@ public interface MovieHubService {
 
     @GET("tv/{tvId}/similar")
     Observable<TelevisionShowsEnvelope> getSimilarTelevisionShows(@Path("tvId") long tvId);
+
+    @GET("tv/{tvId}/content_ratings")
+    Observable<TelevisionShowContentRatingsEnvelope> getTelevisionShowContentRatings(@Path("tvId") long tvId);
 
     @GET("person/popular")
     Call<PeopleEnvelope> getPopularPeople(@Query("page") int page);

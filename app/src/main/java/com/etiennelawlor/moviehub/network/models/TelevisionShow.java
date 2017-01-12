@@ -230,6 +230,56 @@ public class TelevisionShow implements Parcelable {
 
         return profileUrl;
     }
+
+    public String getFormattedNetwork(){
+        String formattedNetwork =  "";
+        if(networks != null && networks.size()>0){
+
+            Network network = networks.get(0);
+            formattedNetwork = network.getName();
+
+            if(formattedNetwork.equals("Fox Broadcasting Company") || formattedNetwork.equals("Fox")){
+                formattedNetwork = "FOX";
+            } else if(formattedNetwork.equals("American Broadcasting Company")){
+                formattedNetwork = "ABC";
+            } else if(formattedNetwork.equals("The WB Television Network")){
+                formattedNetwork = "The WB";
+            } else if(formattedNetwork.equals("National Educational Television")){
+                formattedNetwork = "NET";
+            } else if(formattedNetwork.equals("CBC Television")){
+                formattedNetwork = "CBC";
+            } else if(formattedNetwork.equals("British Broadcasting Corporation")){
+                formattedNetwork = "BBC";
+            } else if(formattedNetwork.equals("Lifetime Television")){
+                formattedNetwork = "Lifetime";
+            } else if(formattedNetwork.equals("Public Broadcasting Service")){
+                formattedNetwork = "PBS";
+            } else if(formattedNetwork.equals("Oprah Winfrey Network")){
+                formattedNetwork = "OWN";
+            } else if(formattedNetwork.equals("The History Channel")){
+                formattedNetwork = "History";
+            } else if(formattedNetwork.equals("Orion Cinema Network")){
+                formattedNetwork = "OCN";
+            } else if(formattedNetwork.equals("National Geographic Channel")){
+                formattedNetwork = "National Geographic";
+            } else if(formattedNetwork.equals("Seoul Broadcasting System")){
+                formattedNetwork = "SBS";
+            } else if(formattedNetwork.equals("Total Variety Network")){
+                formattedNetwork = "TVN";
+            } else if(formattedNetwork.equals("Canal de las Estrellas")){
+                formattedNetwork = "Las Estrellas";
+            } else if(formattedNetwork.equals("Black Entertainment Television")){
+                formattedNetwork = "BET";
+            } else if(formattedNetwork.equals("RTL Television")){
+                formattedNetwork = "RTL";
+            } else if(formattedNetwork.equals("Munhwa Broadcasting Corporation")){
+                formattedNetwork = "MBC";
+            } else if(formattedNetwork.equals("Mainichi Broadcasting System")){
+                formattedNetwork = "MBS";
+            }
+        }
+        return formattedNetwork;
+    }
     // endregion
 
     // region Setters

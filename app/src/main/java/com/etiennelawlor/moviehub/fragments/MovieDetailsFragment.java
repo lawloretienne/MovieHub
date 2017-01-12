@@ -60,9 +60,11 @@ import com.etiennelawlor.moviehub.network.models.Images;
 import com.etiennelawlor.moviehub.network.models.Movie;
 import com.etiennelawlor.moviehub.network.models.MovieCredit;
 import com.etiennelawlor.moviehub.network.models.MovieCreditsEnvelope;
+import com.etiennelawlor.moviehub.network.models.MovieReleaseDate;
+import com.etiennelawlor.moviehub.network.models.MovieReleaseDateEnvelope;
+import com.etiennelawlor.moviehub.network.models.MovieReleaseDatesEnvelope;
 import com.etiennelawlor.moviehub.network.models.MoviesEnvelope;
 import com.etiennelawlor.moviehub.network.models.Person;
-import com.etiennelawlor.moviehub.network.models.PersonCredit;
 import com.etiennelawlor.moviehub.prefs.MovieHubPrefs;
 import com.etiennelawlor.moviehub.ui.GravitySnapHelper;
 import com.etiennelawlor.moviehub.utilities.AnimationUtility;
@@ -90,6 +92,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func3;
+import rx.functions.Func4;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -138,6 +141,8 @@ public class MovieDetailsFragment extends BaseFragment {
     TextView budgetTextView;
     @BindView(R.id.revenue_tv)
     TextView revenueTextView;
+    @BindView(R.id.rating_tv)
+    TextView ratingTextView;
     @BindView(R.id.movie_details_header_ll)
     LinearLayout movieDetailsHeaderLinearLayout;
     @BindView(R.id.movie_details_body_ll)
@@ -168,6 +173,7 @@ public class MovieDetailsFragment extends BaseFragment {
     private Transition sharedElementEnterTransition;
     private MovieCreditsEnvelope movieCreditsEnvelope;
     private MoviesEnvelope moviesEnvelope;
+    private MovieReleaseDatesEnvelope movieReleaseDatesEnvelope;
     private final Handler handler = new Handler();
     // endregion
 
@@ -615,10 +621,11 @@ public class MovieDetailsFragment extends BaseFragment {
                 movieHubService.getMovieDetails(movieId),
                 movieHubService.getMovieCredits(movieId),
                 movieHubService.getSimilarMovies(movieId),
-                new Func3<Movie, MovieCreditsEnvelope, MoviesEnvelope, FullMovie>() {
+                movieHubService.getMovieReleaseDates(movieId),
+                new Func4<Movie, MovieCreditsEnvelope, MoviesEnvelope, MovieReleaseDatesEnvelope, FullMovie>() {
                     @Override
-                    public FullMovie call(Movie movie, MovieCreditsEnvelope movieCreditsEnvelope, MoviesEnvelope moviesEnvelope) {
-                        return new FullMovie(movie, movieCreditsEnvelope, moviesEnvelope);
+                    public FullMovie call(Movie movie, MovieCreditsEnvelope movieCreditsEnvelope, MoviesEnvelope moviesEnvelope, MovieReleaseDatesEnvelope movieReleaseDatesEnvelope) {
+                        return new FullMovie(movie, movieCreditsEnvelope, moviesEnvelope, movieReleaseDatesEnvelope);
                     }
                 })
                 .subscribeOn(Schedulers.newThread())
@@ -631,6 +638,7 @@ public class MovieDetailsFragment extends BaseFragment {
                             movie.setPosterPalette(posterPalette);
                             movieCreditsEnvelope = fullMovie.getMovieCreditsEnvelope();
                             moviesEnvelope = fullMovie.getMoviesEnvelope();
+                            movieReleaseDatesEnvelope = fullMovie.getMovieReleaseDatesEnvelope();
 
                             setUpBackdrop();
                             setUpOverview();
@@ -640,6 +648,7 @@ public class MovieDetailsFragment extends BaseFragment {
                             setUpReleaseDate();
                             setUpBudget();
                             setUpRevenue();
+                            setUpRating();
 
                             showMovieDetailsBody();
                         }
@@ -845,7 +854,7 @@ public class MovieDetailsFragment extends BaseFragment {
                 Genre genre = genres.get(i);
                 stringBuilder.append(genre.getName());
                 if(i!=genres.size()-1){
-                    stringBuilder.append(", ");
+                    stringBuilder.append(" | ");
                 }
             }
 
@@ -890,6 +899,35 @@ public class MovieDetailsFragment extends BaseFragment {
             revenueTextView.setText(String.format("$%s", NumberFormat.getNumberInstance(Locale.US).format(revenue)));
         } else {
             revenueTextView.setText("N/A");
+        }
+    }
+
+    private void setUpRating(){
+        String rating = "";
+        List<MovieReleaseDateEnvelope> movieReleaseDateEnvelopes = movieReleaseDatesEnvelope.getMovieReleaseDateEnvelopes();
+        if(movieReleaseDateEnvelopes != null && movieReleaseDateEnvelopes.size()>0){
+            for(MovieReleaseDateEnvelope movieReleaseDateEnvelope : movieReleaseDateEnvelopes){
+                if(movieReleaseDateEnvelope != null){
+                    String iso31661 = movieReleaseDateEnvelope.getIso31661();
+                    if(iso31661.equals("US")){
+                        List<MovieReleaseDate> movieReleaseDates = movieReleaseDateEnvelope.getMovieReleaseDates();
+                        if(movieReleaseDates != null && movieReleaseDates.size()>0){
+                            for(MovieReleaseDate movieReleaseDate : movieReleaseDates){
+                                if(!TextUtils.isEmpty(movieReleaseDate.getCertification())){
+                                    rating = movieReleaseDate.getCertification();
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if(!TextUtils.isEmpty(rating)){
+            ratingTextView.setText(rating);
+        } else {
+            ratingTextView.setVisibility(View.GONE);
         }
     }
 
