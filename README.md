@@ -14,4 +14,4 @@ Otherwise you can just download the .APK in <a href="https://github.com/lawloret
 
 ## Screencast
 
-[![MovieHub](http://img.youtube.com/vi/u20-ZgBYUHk/0.jpg)](https://www.youtube.com/watch?v=u20-ZgBYUHk "MovieHub")
+[![MovieHub](https://raw.githubusercontent.com/lawloretienne/MovieHub/master/images/MovieHub_Screencast.png)](https://goo.gl/photos/o4CVd5ihs4UJBL5T7 "MovieHub")
