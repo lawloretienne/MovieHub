@@ -49,6 +49,13 @@
             android:label=""
             android:theme="@style/Theme.MovieHub.PersonDetailsActivity"/>
 
+        <activity
+            android:name=".activities.SearchActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            android:label=""
+            android:theme="@style/Theme.MovieHub.SearchActivity"/>
+
     </application>
 
 </manifest>

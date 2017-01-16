@@ -465,81 +465,84 @@ public class PersonDetailsFragment extends BaseFragment {
                     .into(backdropImageView, new Callback() {
                         @Override
                         public void onSuccess() {
-                            final Bitmap bitmap = ((BitmapDrawable) backdropImageView.getDrawable()).getBitmap();
-                            Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-                                public void onGenerated(Palette palette) {
-                                    boolean isDark;
-                                    @ColorUtility.Lightness int lightness = ColorUtility.isDark(palette);
-                                    if (lightness == ColorUtility.LIGHTNESS_UNKNOWN) {
-                                        isDark = ColorUtility.isDark(bitmap, bitmap.getWidth() / 2, 0);
-                                    } else {
-                                        isDark = lightness == ColorUtility.IS_DARK;
-                                    }
+                            if(isResumed()){
+                                final Bitmap bitmap = ((BitmapDrawable) backdropImageView.getDrawable()).getBitmap();
+                                Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                                    public void onGenerated(Palette palette) {
+                                        boolean isDark;
+                                        @ColorUtility.Lightness int lightness = ColorUtility.isDark(palette);
+                                        if (lightness == ColorUtility.LIGHTNESS_UNKNOWN) {
+                                            isDark = ColorUtility.isDark(bitmap, bitmap.getWidth() / 2, 0);
+                                        } else {
+                                            isDark = lightness == ColorUtility.IS_DARK;
+                                        }
 
-                                    if (!isDark && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                        // Make back icon dark on light images
-                                        ImageButton backButton = (ImageButton) toolbar.getChildAt(0);
-                                        backButton.setColorFilter(ContextCompat.getColor(getContext(), R.color.dark_icon));
-
-                                        // Make toolbar title text color dark
-                                        collapsingToolbarLayout.setCollapsedTitleTextColor(ContextCompat.getColor(getContext(), R.color.eighty_percent_transparency_black));
-                                    }
-
-                                    // color the status bar. Set a complementary dark color on L,
-                                    // light or dark color on M (with matching status bar icons)
-                                    statusBarColor = getActivity().getWindow().getStatusBarColor();
-                                    final Palette.Swatch topColor =
-                                            ColorUtility.getMostPopulousSwatch(palette);
-                                    if (topColor != null
-                                            && (isDark || Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
-                                        statusBarColor = ColorUtility.scrimify(topColor.getRgb(),
-                                                isDark, SCRIM_ADJUSTMENT);
-                                        // set a light status bar on M+
                                         if (!isDark && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                            ViewUtility.setLightStatusBar(getActivity().getWindow().getDecorView());
+                                            // Make back icon dark on light images
+                                            ImageButton backButton = (ImageButton) toolbar.getChildAt(0);
+                                            backButton.setColorFilter(ContextCompat.getColor(getContext(), R.color.dark_icon));
+
+                                            // Make toolbar title text color dark
+                                            collapsingToolbarLayout.setCollapsedTitleTextColor(ContextCompat.getColor(getContext(), R.color.eighty_percent_transparency_black));
+                                        }
+
+                                        // color the status bar. Set a complementary dark color on L,
+                                        // light or dark color on M (with matching status bar icons)
+                                        statusBarColor = getActivity().getWindow().getStatusBarColor();
+                                        final Palette.Swatch topColor =
+                                                ColorUtility.getMostPopulousSwatch(palette);
+                                        if (topColor != null
+                                                && (isDark || Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
+                                            statusBarColor = ColorUtility.scrimify(topColor.getRgb(),
+                                                    isDark, SCRIM_ADJUSTMENT);
+                                            // set a light status bar on M+
+                                            if (!isDark && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                                ViewUtility.setLightStatusBar(getActivity().getWindow().getDecorView());
+                                            }
+                                        }
+
+                                        if (statusBarColor != getActivity().getWindow().getStatusBarColor()) {
+                                            ValueAnimator statusBarColorAnim = ValueAnimator.ofArgb(
+                                                    getActivity().getWindow().getStatusBarColor(), statusBarColor);
+                                            statusBarColorAnim.addUpdateListener(new ValueAnimator
+                                                    .AnimatorUpdateListener() {
+                                                @Override
+                                                public void onAnimationUpdate(ValueAnimator animation) {
+                                                    if(getActivity() != null){
+                                                        getActivity().getWindow().setStatusBarColor(
+                                                                (int) animation.getAnimatedValue());
+                                                    }
+                                                }
+                                            });
+                                            statusBarColorAnim.setDuration(500L);
+                                            statusBarColorAnim.setInterpolator(
+                                                    AnimationUtility.getFastOutSlowInInterpolator(getContext()));
+                                            statusBarColorAnim.start();
+                                        }
+
+                                        if (isDark || Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                            GradientDrawable gradientDrawable = new GradientDrawable(
+                                                    GradientDrawable.Orientation.BOTTOM_TOP,
+                                                    new int[] {
+                                                            ContextCompat.getColor(getContext(), android.R.color.transparent),
+                                                            statusBarColor});
+
+                                            backdropFrameLayout.setForeground(gradientDrawable);
+                                            collapsingToolbarLayout.setContentScrim(new ColorDrawable(ColorUtility.modifyAlpha(statusBarColor, 0.9f)));
+                                        } else {
+                                            GradientDrawable gradientDrawable = new GradientDrawable(
+                                                    GradientDrawable.Orientation.BOTTOM_TOP,
+                                                    new int[] {
+                                                            ContextCompat.getColor(getContext(), android.R.color.transparent),
+                                                            ContextCompat.getColor(getContext(), R.color.status_bar_color)});
+
+                                            backdropFrameLayout.setForeground(gradientDrawable);
+                                            collapsingToolbarLayout.setContentScrim(new ColorDrawable(ColorUtility.modifyAlpha(ContextCompat.getColor(getContext(), R.color.status_bar_color), 0.9f)));
                                         }
                                     }
+                                });
+                            }
 
-                                    if (statusBarColor != getActivity().getWindow().getStatusBarColor()) {
-                                        ValueAnimator statusBarColorAnim = ValueAnimator.ofArgb(
-                                                getActivity().getWindow().getStatusBarColor(), statusBarColor);
-                                        statusBarColorAnim.addUpdateListener(new ValueAnimator
-                                                .AnimatorUpdateListener() {
-                                            @Override
-                                            public void onAnimationUpdate(ValueAnimator animation) {
-                                                if(getActivity() != null){
-                                                    getActivity().getWindow().setStatusBarColor(
-                                                            (int) animation.getAnimatedValue());
-                                                }
-                                            }
-                                        });
-                                        statusBarColorAnim.setDuration(500L);
-                                        statusBarColorAnim.setInterpolator(
-                                                AnimationUtility.getFastOutSlowInInterpolator(getContext()));
-                                        statusBarColorAnim.start();
-                                    }
-
-                                    if (isDark || Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                        GradientDrawable gradientDrawable = new GradientDrawable(
-                                                GradientDrawable.Orientation.BOTTOM_TOP,
-                                                new int[] {
-                                                        ContextCompat.getColor(getContext(), android.R.color.transparent),
-                                                        statusBarColor});
-
-                                        backdropFrameLayout.setForeground(gradientDrawable);
-                                        collapsingToolbarLayout.setContentScrim(new ColorDrawable(ColorUtility.modifyAlpha(statusBarColor, 0.9f)));
-                                    } else {
-                                        GradientDrawable gradientDrawable = new GradientDrawable(
-                                                GradientDrawable.Orientation.BOTTOM_TOP,
-                                                new int[] {
-                                                        ContextCompat.getColor(getContext(), android.R.color.transparent),
-                                                        ContextCompat.getColor(getContext(), R.color.status_bar_color)});
-
-                                        backdropFrameLayout.setForeground(gradientDrawable);
-                                        collapsingToolbarLayout.setContentScrim(new ColorDrawable(ColorUtility.modifyAlpha(ContextCompat.getColor(getContext(), R.color.status_bar_color), 0.9f)));
-                                    }
-                                }
-                            });
                         }
 
                         @Override
@@ -735,7 +738,6 @@ public class PersonDetailsFragment extends BaseFragment {
                 castRecyclerView.setLayoutManager(layoutManager);
                 castAdapter = new PersonCreditsAdapter(getContext());
                 castAdapter.setOnItemClickListener(castAdapterOnItemClickListener);
-                castRecyclerView.addItemDecoration(new HorizontalLinearItemDecoration(DisplayUtility.dp2px(getActivity(), 16)));
                 castRecyclerView.setAdapter(castAdapter);
                 SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
                 snapHelper.attachToRecyclerView(castRecyclerView);
@@ -783,7 +785,6 @@ public class PersonDetailsFragment extends BaseFragment {
                 crewRecyclerView.setLayoutManager(layoutManager);
                 crewAdapter = new PersonCreditsAdapter(getContext());
                 crewAdapter.setOnItemClickListener(crewAdapterOnItemClickListener);
-                crewRecyclerView.addItemDecoration(new HorizontalLinearItemDecoration(DisplayUtility.dp2px(getActivity(), 16)));
                 crewRecyclerView.setAdapter(crewAdapter);
                 SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
                 snapHelper.attachToRecyclerView(crewRecyclerView);
@@ -897,7 +898,6 @@ public class PersonDetailsFragment extends BaseFragment {
             dateOfDeathTextView.setText(formattedDateOfDeath);
             dateOfDeathLinearLayout.setVisibility(View.VISIBLE);
         } else {
-//            dateOfDeathTextView.setText("N/A");
             dateOfDeathLinearLayout.setVisibility(View.GONE);
         }
     }

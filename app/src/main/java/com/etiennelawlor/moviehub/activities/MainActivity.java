@@ -1,14 +1,21 @@
 package com.etiennelawlor.moviehub.activities;
 
+import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
+import android.view.View;
+import android.view.Window;
 
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.fragments.MoviesFragment;
@@ -19,6 +26,7 @@ import com.etiennelawlor.moviehub.utilities.TrestleUtility;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,6 +37,25 @@ public class MainActivity extends AppCompatActivity {
 
     // region Member Variables
     private Typeface font;
+    // endregion
+
+    // region Listeners
+    @OnClick(R.id.search_cv)
+    public void onSearchCardViewClicked(View view) {
+        Intent intent = new Intent(this, SearchActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+        Window window = getWindow();
+//        window.setStatusBarColor(primaryDark);
+
+        Resources resources = view.getResources();
+        Pair<View, String> searchPair  = getPair(view, resources.getString(R.string.transition_search));
+
+        ActivityOptionsCompat options = getActivityOptionsCompat(searchPair);
+
+        window.setExitTransition(null);
+        ActivityCompat.startActivity(this, intent, options.toBundle());
+    }
     // endregion
 
     // region Lifecycle Methods
@@ -112,6 +139,52 @@ public class MainActivity extends AppCompatActivity {
 
     private void applyFontToMenuItem(MenuItem mi) {
         mi.setTitle(TrestleUtility.getFormattedText(mi.getTitle().toString(), font));
+    }
+
+    private ActivityOptionsCompat getActivityOptionsCompat(Pair pair){
+        ActivityOptionsCompat options = null;
+
+        Pair<View, String> navigationBarPair  = getNavigationBarPair();
+        Pair<View, String> statusBarPair = getStatusBarPair();
+
+        if(pair!=null && statusBarPair!= null && navigationBarPair!= null){
+            options = ActivityOptionsCompat.makeSceneTransitionAnimation(this,
+                    pair, statusBarPair, navigationBarPair);
+        } else if(pair != null && statusBarPair != null){
+            options = ActivityOptionsCompat.makeSceneTransitionAnimation(this,
+                    pair, statusBarPair);
+        } else if(pair != null && navigationBarPair != null){
+            options = ActivityOptionsCompat.makeSceneTransitionAnimation(this,
+                    pair, navigationBarPair);
+        }
+
+        return options;
+    }
+
+    private Pair<View, String> getStatusBarPair(){
+        Pair<View, String> pair = null;
+        View statusBar = ButterKnife.findById(this, android.R.id.statusBarBackground);
+        if(statusBar != null)
+            pair = Pair.create(statusBar, statusBar.getTransitionName());
+        return pair;
+    }
+
+    private Pair<View, String> getNavigationBarPair(){
+        Pair<View, String> pair = null;
+        View navigationBar = ButterKnife.findById(this, android.R.id.navigationBarBackground);
+        if(navigationBar != null)
+            pair = Pair.create(navigationBar, navigationBar.getTransitionName());
+        return pair;
+    }
+
+    private Pair<View, String> getPair(View view, String transition){
+        Pair<View, String> searchPair = null;
+        View searchView = ButterKnife.findById(view, R.id.search_cv);
+        if(searchView != null){
+            searchPair = Pair.create(searchView, transition);
+        }
+
+        return searchPair;
     }
     // endregion
 }

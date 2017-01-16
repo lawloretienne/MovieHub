@@ -12,9 +12,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_people_large" />
-
-    <!--android:tint="@color/primary"-->
+        app:srcCompat="@drawable/ic_search_large" />
 
     <com.etiennelawlor.moviehub.ui.CustomFontTextView
         android:id="@+id/empty_tv"
@@ -22,7 +20,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:gravity="center"
-        android:text="No available people."
         android:textColor="@color/secondary_text_light"
         android:textSize="20sp"
         app:textFont="lato_medium" />

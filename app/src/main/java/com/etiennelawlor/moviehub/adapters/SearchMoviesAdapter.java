@@ -3,8 +3,10 @@ package com.etiennelawlor.moviehub.adapters;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.graphics.Palette;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
@@ -18,13 +20,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.network.models.Person;
+import com.etiennelawlor.moviehub.network.models.Movie;
 import com.etiennelawlor.moviehub.ui.DynamicHeightImageView;
 import com.etiennelawlor.moviehub.utilities.AnimationUtility;
 import com.etiennelawlor.moviehub.utilities.ColorUtility;
 import com.etiennelawlor.moviehub.utilities.DisplayUtility;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,7 +37,7 @@ import butterknife.ButterKnife;
  * Created by etiennelawlor on 12/17/16.
  */
 
-public class PersonsAdapter extends BaseAdapter<Person> {
+public class SearchMoviesAdapter extends BaseAdapter<Movie> {
 
     // region Constants
     // endregion
@@ -48,37 +52,29 @@ public class PersonsAdapter extends BaseAdapter<Person> {
 
     // region Constructors
 
-    public PersonsAdapter(Context context) {
+    public SearchMoviesAdapter(Context context) {
         int screenWidth = DisplayUtility.getScreenWidth(context);
-        ivWidth = screenWidth/2;
+        int peekWidth = DisplayUtility.dp2px(context, 32);
+        ivWidth = (screenWidth - peekWidth) / 3;
     }
 
     // endregion
 
     @Override
     public int getItemViewType(int position) {
-        if(position == 0)
-            return HEADER;
-        else
-            return (isLastPosition(position) && isFooterAdded) ? FOOTER : ITEM;
+        return (isLastPosition(position) && isFooterAdded) ? FOOTER : ITEM;
     }
 
     @Override
     protected RecyclerView.ViewHolder createHeaderViewHolder(ViewGroup parent) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_header, parent, false);
-        StaggeredGridLayoutManager.LayoutParams layoutParams = ((StaggeredGridLayoutManager.LayoutParams) v.getLayoutParams());
-        layoutParams.setFullSpan(true);
-        v.setLayoutParams(layoutParams);
-
-        final HeaderViewHolder holder = new HeaderViewHolder(v);
-        return holder;
+        return null;
     }
 
     @Override
     protected RecyclerView.ViewHolder createItemViewHolder(ViewGroup parent) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.person_card, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_movie_card, parent, false);
 
-        final PersonViewHolder holder = new PersonViewHolder(v);
+        final MovieViewHolder holder = new MovieViewHolder(v);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,11 +118,11 @@ public class PersonsAdapter extends BaseAdapter<Person> {
 
     @Override
     protected void bindItemViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        final PersonViewHolder holder = (PersonViewHolder) viewHolder;
+        final MovieViewHolder holder = (MovieViewHolder) viewHolder;
 
-        final Person person = getItem(position);
-        if (person != null) {
-            holder.bind(person);
+        final Movie movie = getItem(position);
+        if (movie != null) {
+            holder.bind(movie);
         }
     }
 
@@ -155,8 +151,17 @@ public class PersonsAdapter extends BaseAdapter<Person> {
     @Override
     public void addFooter() {
         isFooterAdded = true;
-        add(new Person());
+        add(new Movie());
     }
+
+    // region Helper Methods
+//    public void updatedAdapter(List<Movie> movies){
+//        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new MovieDiffCallback(this.items, movies));
+//        clear();
+//        addAll(movies);
+//        diffResult.dispatchUpdatesTo(this);
+//    }
+    // endregion
 
     // region Inner Classes
 
@@ -169,7 +174,7 @@ public class PersonsAdapter extends BaseAdapter<Person> {
         // endregion
     }
 
-    public static class PersonViewHolder extends RecyclerView.ViewHolder {
+    public static class MovieViewHolder extends RecyclerView.ViewHolder {
         // region Views
         @BindView(R.id.thumbnail_iv)
         DynamicHeightImageView thumbnailImageView;
@@ -177,55 +182,60 @@ public class PersonsAdapter extends BaseAdapter<Person> {
         LinearLayout infoLinearLayout;
         @BindView(R.id.title_tv)
         TextView titleTextView;
-//        @BindView(R.id.subtitle_tv)
-//        TextView subtitleTextView;
+        @BindView(R.id.subtitle_tv)
+        TextView subtitleTextView;
         // endregion
 
         // region Constructors
-        public PersonViewHolder(View view) {
+        public MovieViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }
         // endregion
 
         // region Helper Methods
-        private void bind(Person person){
+        private void bind(Movie movie){
             resetInfoBackgroundColor(infoLinearLayout);
             resetTitleTextColor(titleTextView);
+            resetSubtitleTextColor(subtitleTextView);
 
-            setUpThumbnail(this, person);
-            setUpTitle(titleTextView, person);
+            setUpThumbnail(this, movie);
+            setUpTitle(titleTextView, movie);
+            setUpSubtitle(subtitleTextView, movie);
         }
 
-        private void setUpThumbnail(final PersonViewHolder vh, final Person person){
+        private void setUpThumbnail(final MovieViewHolder vh, final Movie movie){
             final DynamicHeightImageView iv = vh.thumbnailImageView;
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) iv.getLayoutParams();
+            layoutParams.width = ivWidth;
+            iv.setLayoutParams(layoutParams);
 
             double heightRatio = 3.0D/2.0D;
 
             iv.setHeightRatio(heightRatio);
 
-            String profileUrl = person.getProfileUrl(iv.getContext());
-            if (!TextUtils.isEmpty(profileUrl)) {
+            String posterUrl = movie.getPosterUrl(iv.getContext());
+            if (!TextUtils.isEmpty(posterUrl)) {
                 Picasso.with(iv.getContext())
-                        .load(profileUrl)
+                        .load(posterUrl)
                         .resize(ivWidth, (int)(heightRatio*ivWidth))
                         .centerCrop()
                         .into(iv, new Callback() {
                             @Override
                             public void onSuccess() {
-                                if(person.getProfilePalette() != null){
-                                    setUpInfoBackgroundColor(vh.infoLinearLayout, person.getProfilePalette());
-                                    setUpTitleTextColor(vh.titleTextView, person.getProfilePalette());
-//                                setUpSubtitleTextColor(vh.subtitleTextView, person.getProfilePalette());
+                                if(movie.getPosterPalette() != null){
+                                    setUpInfoBackgroundColor(vh.infoLinearLayout, movie.getPosterPalette());
+                                    setUpTitleTextColor(vh.titleTextView, movie.getPosterPalette());
+                                    setUpSubtitleTextColor(vh.subtitleTextView, movie.getPosterPalette());
                                 } else {
                                     Bitmap bitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
                                     Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
                                         public void onGenerated(Palette palette) {
-                                            person.setProfilePalette(palette);
+                                            movie.setPosterPalette(palette);
 
                                             setUpInfoBackgroundColor(vh.infoLinearLayout, palette);
                                             setUpTitleTextColor(vh.titleTextView, palette);
-//                                        setUpSubtitleTextColor(vh.subtitleTextView, palette);
+                                            setUpSubtitleTextColor(vh.subtitleTextView, palette);
                                         }
                                     });
                                 }
@@ -236,6 +246,7 @@ public class PersonsAdapter extends BaseAdapter<Person> {
 
                             }
                         });
+
             }
         }
 
@@ -253,10 +264,10 @@ public class PersonsAdapter extends BaseAdapter<Person> {
             }
         }
 
-        private void setUpTitle(TextView tv, Person person){
-            String name = person.getName();
-            if (!TextUtils.isEmpty(name)) {
-                tv.setText(name);
+        private void setUpTitle(TextView tv, Movie movie){
+            String title = movie.getTitle();
+            if (!TextUtils.isEmpty(title)) {
+                tv.setText(title);
             }
         }
 
@@ -269,6 +280,27 @@ public class PersonsAdapter extends BaseAdapter<Person> {
             if(swatch != null){
                 int startColor = ContextCompat.getColor(tv.getContext(), R.color.primary_text_light);
                 int endColor = swatch.getTitleTextColor();
+
+                AnimationUtility.animateTextColorChange(tv, startColor, endColor);
+            }
+        }
+
+        private void setUpSubtitle(TextView tv, Movie movie){
+            String releaseYear = movie.getReleaseYear();
+            if (!TextUtils.isEmpty(releaseYear)) {
+                tv.setText(releaseYear);
+            }
+        }
+
+        private void resetSubtitleTextColor(TextView tv) {
+            tv.setTextColor(ContextCompat.getColor(tv.getContext(), R.color.secondary_text_light));
+        }
+
+        private void setUpSubtitleTextColor(final TextView tv, Palette palette){
+            Palette.Swatch swatch = ColorUtility.getMostPopulousSwatch(palette);
+            if(swatch != null){
+                int startColor = ContextCompat.getColor(tv.getContext(), R.color.secondary_text_light);
+                int endColor = swatch.getBodyTextColor();
 
                 AnimationUtility.animateTextColorChange(tv, startColor, endColor);
             }
@@ -293,5 +325,47 @@ public class PersonsAdapter extends BaseAdapter<Person> {
         }
         // endregion
     }
+
+//    private class MovieDiffCallback extends DiffUtil.Callback {
+//
+//        // region Member Variables
+//        private List<Movie> oldMovies;
+//        private List<Movie> newMovies;
+//        // endregion
+//
+//        // region Constructors
+//        public MovieDiffCallback(List<Movie> newMovies, List<Movie> oldMovies) {
+//            this.newMovies = newMovies;
+//            this.oldMovies = oldMovies;
+//        }
+//        // endregion
+//
+//        @Override
+//        public int getOldListSize() {
+//            return oldMovies.size();
+//        }
+//
+//        @Override
+//        public int getNewListSize() {
+//            return newMovies.size();
+//        }
+//
+//        @Override
+//        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+//            return oldMovies.get(oldItemPosition).getId() == newMovies.get(newItemPosition).getId();
+//        }
+//
+//        @Override
+//        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+//            return oldMovies.get(oldItemPosition).equals(newMovies.get(newItemPosition));
+//        }
+//
+//        @Nullable
+//        @Override
+//        public Object getChangePayload(int oldItemPosition, int newItemPosition) {
+//            // you can return particular field for changed item.
+//            return super.getChangePayload(oldItemPosition, newItemPosition);
+//        }
+//    }
     // endregion
 }

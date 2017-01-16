@@ -45,8 +45,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@null"
-                app:layout_collapseMode="pin"
                 app:contentInsetRight="16dp"
+                app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
@@ -113,7 +113,6 @@
                 android:id="@+id/movie_details_body_ll"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginBottom="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:orientation="vertical">
@@ -128,23 +127,26 @@
                         android:id="@+id/rating_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="16dp"
+                        android:background="@drawable/rating_bg"
                         android:textColor="@color/secondary_text_light"
                         android:textSize="14sp"
-                        android:layout_marginRight="16dp"
                         app:textFont="lato_black" />
 
                     <com.etiennelawlor.moviehub.ui.CustomFontTextView
                         android:id="@+id/genres_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignWithParentIfMissing="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="16dp"
+                        android:layout_toLeftOf="@+id/duration_tv"
+                        android:layout_toRightOf="@id/rating_tv"
+                        android:ellipsize="end"
+                        android:singleLine="true"
                         android:textColor="@color/secondary_text_light"
                         android:textSize="14sp"
-                        android:layout_alignWithParentIfMissing="true"
-                        android:layout_toRightOf="@id/rating_tv"
-                        android:layout_marginRight="16dp"
-                        android:singleLine="true"
-                        android:ellipsize="end"
-                        android:layout_toLeftOf="@+id/duration_tv"
                         app:textFont="lato_medium" />
 
                     <com.etiennelawlor.moviehub.ui.CustomFontTextView
@@ -152,6 +154,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
                         android:textColor="@color/secondary_text_light"
                         android:textSize="14sp"
                         app:textFont="lato_medium" />
@@ -161,8 +164,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
                     android:background="@color/grey_100"
+                    android:orientation="vertical"
                     android:padding="16dp">
 
                     <com.etiennelawlor.moviehub.ui.CustomFontTextView
@@ -253,20 +256,23 @@
 
             </LinearLayout>
 
-            <ViewStub android:id="@+id/cast_vs"
-                android:layout="@layout/cast_layout"
+            <ViewStub
+                android:id="@+id/cast_vs"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout="@layout/cast_layout" />
 
-            <ViewStub android:id="@+id/crew_vs"
-                android:layout="@layout/crew_layout"
+            <ViewStub
+                android:id="@+id/crew_vs"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout="@layout/crew_layout" />
 
-            <ViewStub android:id="@+id/similar_movies_vs"
-                android:layout="@layout/similar_movies_layout"
+            <ViewStub
+                android:id="@+id/similar_movies_vs"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout="@layout/similar_movies_layout" />
 
         </LinearLayout>
 

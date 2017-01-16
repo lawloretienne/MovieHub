@@ -5,5 +5,4 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:indeterminate="true"
-    android:indeterminateTint="@color/accent"
-    />
+    android:indeterminateTint="@color/accent" />

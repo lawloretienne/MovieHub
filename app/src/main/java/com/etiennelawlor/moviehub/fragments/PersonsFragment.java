@@ -385,16 +385,27 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
         Pair<View, String> bottomNavigationViewPair = getBottomNavigationViewPair();
         Pair<View, String> statusBarPair = getStatusBarPair();
         Pair<View, String> navigationBarPair  = getNavigationBarPair();
+        Pair<View, String> appBarPair  = getAppBarPair();
 
-        if(pair!=null && bottomNavigationViewPair != null && statusBarPair!= null && navigationBarPair!= null){
+        if(pair!=null
+                && bottomNavigationViewPair != null
+                && statusBarPair!= null
+                && navigationBarPair!= null
+                && appBarPair!= null){
             options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
-                    pair, bottomNavigationViewPair, statusBarPair, navigationBarPair);
-        } else if(pair != null && bottomNavigationViewPair != null && statusBarPair != null){
+                    pair, bottomNavigationViewPair, statusBarPair, navigationBarPair, appBarPair);
+        } else if(pair != null
+                && bottomNavigationViewPair != null
+                && statusBarPair != null
+                && appBarPair!= null){
             options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
-                    pair, bottomNavigationViewPair, statusBarPair);
-        } else if(pair != null && bottomNavigationViewPair != null && navigationBarPair != null){
+                    pair, bottomNavigationViewPair, statusBarPair, appBarPair);
+        } else if(pair != null
+                && bottomNavigationViewPair != null
+                && navigationBarPair != null
+                && appBarPair!= null){
             options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
-                    pair, bottomNavigationViewPair, navigationBarPair);
+                    pair, bottomNavigationViewPair, navigationBarPair, appBarPair);
         }
 
         return options;
@@ -435,5 +446,16 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
             pair = Pair.create(navigationBar, navigationBar.getTransitionName());
         return pair;
     }
+
+    private Pair<View, String> getAppBarPair(){
+        Pair<View, String> pair = null;
+        View appBar = ButterKnife.findById(getActivity(), R.id.appbar);
+        if(appBar != null) {
+            Resources resources = appBar.getResources();
+            pair = Pair.create(appBar, resources.getString(R.string.transition_app_bar));
+        }
+        return pair;
+    }
+
     // endregion
 }

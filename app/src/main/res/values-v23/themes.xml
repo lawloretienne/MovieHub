@@ -12,6 +12,11 @@
         <item name="android:statusBarColor">@color/status_bar_color</item>
     </style>
 
+    <style name="Theme.MovieHub.SearchActivity" parent="Theme.MovieHub">
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:statusBarColor">@color/status_bar_color</item>
+    </style>
+
     <!--<style name="Theme.MovieHub.MovieDetailsActivity" parent="Theme.MovieHub">-->
         <!--<item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
         <!--<item name="android:statusBarColor">@color/five_percent_transparency_black</item>-->

@@ -12,5 +12,9 @@
     <string name="transition_television_show_thumbnail" translatable="false">television_show_thumbnail</string>
     <string name="transition_person_thumbnail" translatable="false">person_thumbnail</string>
     <string name="transition_bottom_navigation" translatable="false">bottom_navigation</string>
+    <string name="transition_app_bar" translatable="false">app_bar</string>
+    <string name="transition_search_frame_layout" translatable="false">search_frame_layout</string>
+    <string name="transition_search" translatable="false">search</string>
+
 
 </resources>

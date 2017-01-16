@@ -36,7 +36,7 @@
                     android:id="@+id/backdrop_iv"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scaleType="centerCrop"/>
+                    android:scaleType="centerCrop" />
 
             </FrameLayout>
 
@@ -45,8 +45,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@null"
-                app:layout_collapseMode="pin"
                 app:contentInsetRight="16dp"
+                app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
@@ -113,7 +113,6 @@
                 android:id="@+id/person_details_body_ll"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginBottom="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:background="@color/grey_100"
@@ -172,10 +171,10 @@
 
                 <LinearLayout
                     android:id="@+id/dod_ll"
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <com.etiennelawlor.moviehub.ui.CustomFontTextView
                         android:layout_width="match_parent"
@@ -198,15 +197,17 @@
 
             </LinearLayout>
 
-            <ViewStub android:id="@+id/cast_vs"
-                android:layout="@layout/cast_layout"
+            <ViewStub
+                android:id="@+id/cast_vs"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout="@layout/cast_layout" />
 
-            <ViewStub android:id="@+id/crew_vs"
-                android:layout="@layout/crew_layout"
+            <ViewStub
+                android:id="@+id/crew_vs"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout="@layout/crew_layout" />
 
         </LinearLayout>
 

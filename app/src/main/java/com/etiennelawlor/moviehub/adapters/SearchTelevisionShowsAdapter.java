@@ -18,7 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.network.models.Person;
+import com.etiennelawlor.moviehub.network.models.TelevisionShow;
 import com.etiennelawlor.moviehub.ui.DynamicHeightImageView;
 import com.etiennelawlor.moviehub.utilities.AnimationUtility;
 import com.etiennelawlor.moviehub.utilities.ColorUtility;
@@ -33,7 +33,7 @@ import butterknife.ButterKnife;
  * Created by etiennelawlor on 12/17/16.
  */
 
-public class PersonsAdapter extends BaseAdapter<Person> {
+public class SearchTelevisionShowsAdapter extends BaseAdapter<TelevisionShow> {
 
     // region Constants
     // endregion
@@ -48,37 +48,29 @@ public class PersonsAdapter extends BaseAdapter<Person> {
 
     // region Constructors
 
-    public PersonsAdapter(Context context) {
+    public SearchTelevisionShowsAdapter(Context context) {
         int screenWidth = DisplayUtility.getScreenWidth(context);
-        ivWidth = screenWidth/2;
+        int peekWidth = DisplayUtility.dp2px(context, 32);
+        ivWidth = (screenWidth - peekWidth) / 3;
     }
 
     // endregion
 
     @Override
     public int getItemViewType(int position) {
-        if(position == 0)
-            return HEADER;
-        else
-            return (isLastPosition(position) && isFooterAdded) ? FOOTER : ITEM;
+        return (isLastPosition(position) && isFooterAdded) ? FOOTER : ITEM;
     }
 
     @Override
     protected RecyclerView.ViewHolder createHeaderViewHolder(ViewGroup parent) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_header, parent, false);
-        StaggeredGridLayoutManager.LayoutParams layoutParams = ((StaggeredGridLayoutManager.LayoutParams) v.getLayoutParams());
-        layoutParams.setFullSpan(true);
-        v.setLayoutParams(layoutParams);
-
-        final HeaderViewHolder holder = new HeaderViewHolder(v);
-        return holder;
+        return null;
     }
 
     @Override
     protected RecyclerView.ViewHolder createItemViewHolder(ViewGroup parent) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.person_card, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_television_show_card, parent, false);
 
-        final PersonViewHolder holder = new PersonViewHolder(v);
+        final TelevisionShowViewHolder holder = new TelevisionShowViewHolder(v);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,11 +114,11 @@ public class PersonsAdapter extends BaseAdapter<Person> {
 
     @Override
     protected void bindItemViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        final PersonViewHolder holder = (PersonViewHolder) viewHolder;
+        final TelevisionShowViewHolder holder = (TelevisionShowViewHolder) viewHolder;
 
-        final Person person = getItem(position);
-        if (person != null) {
-            holder.bind(person);
+        final TelevisionShow televisionShow = getItem(position);
+        if (televisionShow != null) {
+            holder.bind(televisionShow);
         }
     }
 
@@ -155,7 +147,7 @@ public class PersonsAdapter extends BaseAdapter<Person> {
     @Override
     public void addFooter() {
         isFooterAdded = true;
-        add(new Person());
+        add(new TelevisionShow());
     }
 
     // region Inner Classes
@@ -169,7 +161,7 @@ public class PersonsAdapter extends BaseAdapter<Person> {
         // endregion
     }
 
-    public static class PersonViewHolder extends RecyclerView.ViewHolder {
+    public static class TelevisionShowViewHolder extends RecyclerView.ViewHolder {
         // region Views
         @BindView(R.id.thumbnail_iv)
         DynamicHeightImageView thumbnailImageView;
@@ -177,55 +169,60 @@ public class PersonsAdapter extends BaseAdapter<Person> {
         LinearLayout infoLinearLayout;
         @BindView(R.id.title_tv)
         TextView titleTextView;
-//        @BindView(R.id.subtitle_tv)
-//        TextView subtitleTextView;
+        @BindView(R.id.subtitle_tv)
+        TextView subtitleTextView;
         // endregion
 
         // region Constructors
-        public PersonViewHolder(View view) {
+        public TelevisionShowViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }
         // endregion
 
         // region Helper Methods
-        private void bind(Person person){
+        private void bind(TelevisionShow televisionShow){
             resetInfoBackgroundColor(infoLinearLayout);
             resetTitleTextColor(titleTextView);
+            resetSubtitleTextColor(subtitleTextView);
 
-            setUpThumbnail(this, person);
-            setUpTitle(titleTextView, person);
+            setUpThumbnail(this, televisionShow);
+            setUpTitle(titleTextView, televisionShow);
+            setUpSubtitle(subtitleTextView, televisionShow);
         }
 
-        private void setUpThumbnail(final PersonViewHolder vh, final Person person){
+        private void setUpThumbnail(final TelevisionShowViewHolder vh, final TelevisionShow televisionShow){
             final DynamicHeightImageView iv = vh.thumbnailImageView;
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) iv.getLayoutParams();
+            layoutParams.width = ivWidth;
+            iv.setLayoutParams(layoutParams);
 
             double heightRatio = 3.0D/2.0D;
 
             iv.setHeightRatio(heightRatio);
 
-            String profileUrl = person.getProfileUrl(iv.getContext());
-            if (!TextUtils.isEmpty(profileUrl)) {
+            String posterUrl = televisionShow.getPosterUrl(iv.getContext());
+            if (!TextUtils.isEmpty(posterUrl)) {
                 Picasso.with(iv.getContext())
-                        .load(profileUrl)
+                        .load(posterUrl)
                         .resize(ivWidth, (int)(heightRatio*ivWidth))
                         .centerCrop()
                         .into(iv, new Callback() {
                             @Override
                             public void onSuccess() {
-                                if(person.getProfilePalette() != null){
-                                    setUpInfoBackgroundColor(vh.infoLinearLayout, person.getProfilePalette());
-                                    setUpTitleTextColor(vh.titleTextView, person.getProfilePalette());
-//                                setUpSubtitleTextColor(vh.subtitleTextView, person.getProfilePalette());
+                                if(televisionShow.getPosterPalette() != null){
+                                    setUpInfoBackgroundColor(vh.infoLinearLayout, televisionShow.getPosterPalette());
+                                    setUpTitleTextColor(vh.titleTextView, televisionShow.getPosterPalette());
+                                    setUpSubtitleTextColor(vh.subtitleTextView, televisionShow.getPosterPalette());
                                 } else {
                                     Bitmap bitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
                                     Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
                                         public void onGenerated(Palette palette) {
-                                            person.setProfilePalette(palette);
+                                            televisionShow.setPosterPalette(palette);
 
                                             setUpInfoBackgroundColor(vh.infoLinearLayout, palette);
                                             setUpTitleTextColor(vh.titleTextView, palette);
-//                                        setUpSubtitleTextColor(vh.subtitleTextView, palette);
+                                            setUpSubtitleTextColor(vh.subtitleTextView, palette);
                                         }
                                     });
                                 }
@@ -236,6 +233,7 @@ public class PersonsAdapter extends BaseAdapter<Person> {
 
                             }
                         });
+
             }
         }
 
@@ -253,10 +251,10 @@ public class PersonsAdapter extends BaseAdapter<Person> {
             }
         }
 
-        private void setUpTitle(TextView tv, Person person){
-            String name = person.getName();
-            if (!TextUtils.isEmpty(name)) {
-                tv.setText(name);
+        private void setUpTitle(TextView tv, TelevisionShow televisionShow){
+            String title = televisionShow.getName();
+            if (!TextUtils.isEmpty(title)) {
+                tv.setText(title);
             }
         }
 
@@ -269,6 +267,27 @@ public class PersonsAdapter extends BaseAdapter<Person> {
             if(swatch != null){
                 int startColor = ContextCompat.getColor(tv.getContext(), R.color.primary_text_light);
                 int endColor = swatch.getTitleTextColor();
+
+                AnimationUtility.animateTextColorChange(tv, startColor, endColor);
+            }
+        }
+
+        private void setUpSubtitle(TextView tv, TelevisionShow televisionShow){
+            String firstAirYear = televisionShow.getFirstAirYear();
+            if (!TextUtils.isEmpty(firstAirYear)) {
+                tv.setText(firstAirYear);
+            }
+        }
+
+        private void resetSubtitleTextColor(TextView tv) {
+            tv.setTextColor(ContextCompat.getColor(tv.getContext(), R.color.secondary_text_light));
+        }
+
+        private void setUpSubtitleTextColor(final TextView tv, Palette palette){
+            Palette.Swatch swatch = ColorUtility.getMostPopulousSwatch(palette);
+            if(swatch != null){
+                int startColor = ContextCompat.getColor(tv.getContext(), R.color.secondary_text_light);
+                int endColor = swatch.getBodyTextColor();
 
                 AnimationUtility.animateTextColorChange(tv, startColor, endColor);
             }

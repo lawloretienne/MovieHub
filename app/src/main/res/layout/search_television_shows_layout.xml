@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/crew_ll"
+    android:id="@+id/television_shows_ll"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:visibility="gone">
 
     <com.etiennelawlor.moviehub.ui.CustomFontTextView
-        android:id="@+id/crew_tv"
+        android:id="@+id/television_shows_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="Crew Credits"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
+        android:paddingLeft="16dp"
+        android:text="TV Shows"
         android:textColor="@color/primary_text_light"
         android:textSize="20sp"
         app:textFont="lato_medium" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/crew_rv"
+        android:id="@+id/television_shows_rv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
 </LinearLayout>
-
-

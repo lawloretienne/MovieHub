@@ -65,10 +65,16 @@ public interface MovieHubService {
     @GET("person/{personId}/combined_credits")
     Observable<PersonCreditsEnvelope> getPersonCredits(@Path("personId") long personId);
 
-//    @GET("configuration")
-//    Call<Configuration> getConfiguration();
-
     @GET("configuration")
     Observable<Configuration> getConfiguration();
+
+    @GET("search/movie")
+    Observable<MoviesEnvelope> searchMovies(@Query("query") String query, @Query("page") int page);
+
+    @GET("search/tv")
+    Observable<TelevisionShowsEnvelope> searchTelevisionShows(@Query("query") String query, @Query("page") int page);
+
+    @GET("search/person")
+    Observable<PeopleEnvelope> searchPeople(@Query("query") String query, @Query("page") int page);
 
 }

@@ -57,12 +57,21 @@ public class MoviesAdapter extends BaseAdapter<Movie> {
 
     @Override
     public int getItemViewType(int position) {
-        return (isLastPosition(position) && isFooterAdded) ? FOOTER : ITEM;
+        if(position == 0)
+            return HEADER;
+        else
+            return (isLastPosition(position) && isFooterAdded) ? FOOTER : ITEM;
     }
 
     @Override
     protected RecyclerView.ViewHolder createHeaderViewHolder(ViewGroup parent) {
-        return null;
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_header, parent, false);
+        StaggeredGridLayoutManager.LayoutParams layoutParams = ((StaggeredGridLayoutManager.LayoutParams) v.getLayoutParams());
+        layoutParams.setFullSpan(true);
+        v.setLayoutParams(layoutParams);
+
+        final HeaderViewHolder holder = new HeaderViewHolder(v);
+        return holder;
     }
 
     @Override

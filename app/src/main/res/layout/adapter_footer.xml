@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:indeterminate="true"
-            android:indeterminateTint="@color/accent"/>
+            android:indeterminateTint="@color/accent" />
 
     </FrameLayout>
 
@@ -39,8 +39,8 @@
             android:textAllCaps="false"
             android:textColor="@color/primary_text_dark"
             android:textSize="16sp"
-            app:textFont="lato_medium"
-            app:backgroundTint="@color/accent"/>
+            app:backgroundTint="@color/accent"
+            app:textFont="lato_medium" />
 
         <com.etiennelawlor.moviehub.ui.CustomFontTextView
             android:id="@+id/error_tv"

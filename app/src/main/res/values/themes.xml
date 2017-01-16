@@ -50,4 +50,7 @@
         <item name="android:windowEnterTransition">@transition/detail_enter</item>
     </style>
 
+    <style name="Theme.MovieHub.SearchActivity" parent="Theme.MovieHub">
+    </style>
+
 </resources>

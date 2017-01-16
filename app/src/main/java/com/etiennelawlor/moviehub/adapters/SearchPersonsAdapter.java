@@ -33,7 +33,7 @@ import butterknife.ButterKnife;
  * Created by etiennelawlor on 12/17/16.
  */
 
-public class PersonsAdapter extends BaseAdapter<Person> {
+public class SearchPersonsAdapter extends BaseAdapter<Person> {
 
     // region Constants
     // endregion
@@ -48,35 +48,27 @@ public class PersonsAdapter extends BaseAdapter<Person> {
 
     // region Constructors
 
-    public PersonsAdapter(Context context) {
+    public SearchPersonsAdapter(Context context) {
         int screenWidth = DisplayUtility.getScreenWidth(context);
-        ivWidth = screenWidth/2;
+        int peekWidth = DisplayUtility.dp2px(context, 32);
+        ivWidth = (screenWidth - peekWidth) / 3;
     }
 
     // endregion
 
     @Override
     public int getItemViewType(int position) {
-        if(position == 0)
-            return HEADER;
-        else
-            return (isLastPosition(position) && isFooterAdded) ? FOOTER : ITEM;
+        return (isLastPosition(position) && isFooterAdded) ? FOOTER : ITEM;
     }
 
     @Override
     protected RecyclerView.ViewHolder createHeaderViewHolder(ViewGroup parent) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_header, parent, false);
-        StaggeredGridLayoutManager.LayoutParams layoutParams = ((StaggeredGridLayoutManager.LayoutParams) v.getLayoutParams());
-        layoutParams.setFullSpan(true);
-        v.setLayoutParams(layoutParams);
-
-        final HeaderViewHolder holder = new HeaderViewHolder(v);
-        return holder;
+        return null;
     }
 
     @Override
     protected RecyclerView.ViewHolder createItemViewHolder(ViewGroup parent) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.person_card, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_person_card, parent, false);
 
         final PersonViewHolder holder = new PersonViewHolder(v);
 
@@ -199,6 +191,9 @@ public class PersonsAdapter extends BaseAdapter<Person> {
 
         private void setUpThumbnail(final PersonViewHolder vh, final Person person){
             final DynamicHeightImageView iv = vh.thumbnailImageView;
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) iv.getLayoutParams();
+            layoutParams.width = ivWidth;
+            iv.setLayoutParams(layoutParams);
 
             double heightRatio = 3.0D/2.0D;
 

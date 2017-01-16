@@ -3,49 +3,49 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:foreground="?android:attr/selectableItemBackground"
     android:stateListAnimator="@animator/raise"
-    app:cardCornerRadius="0dp"
-    android:foreground="?android:attr/selectableItemBackground">
+    app:cardCornerRadius="0dp">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <com.etiennelawlor.moviehub.ui.DynamicHeightImageView
             android:id="@+id/thumbnail_iv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/gradient_bg"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop" />
 
         <LinearLayout
+            android:id="@+id/info_ll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/grey_800"
             android:orientation="vertical"
-            android:padding="16dp"
-            android:id="@+id/info_ll"
-            android:background="@color/grey_800">
+            android:padding="16dp">
 
             <com.etiennelawlor.moviehub.ui.CustomFontTextView
                 android:id="@+id/title_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="1"
                 android:ellipsize="end"
+                android:maxLines="1"
                 android:textColor="@color/primary_text_light"
-                android:textSize="18sp"
-                app:textFont="lato_medium"/>
+                android:textSize="16sp"
+                app:textFont="lato_medium" />
 
             <com.etiennelawlor.moviehub.ui.CustomFontTextView
                 android:id="@+id/subtitle_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
                 android:ellipsize="end"
+                android:singleLine="true"
                 android:textColor="@color/secondary_text_light"
-                android:textSize="14sp"
-                app:textFont="lato_medium"/>
+                android:textSize="12sp"
+                app:textFont="lato_medium" />
 
         </LinearLayout>
 

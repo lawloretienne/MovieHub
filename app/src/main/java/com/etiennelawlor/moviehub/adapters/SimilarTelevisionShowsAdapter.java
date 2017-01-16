@@ -50,9 +50,8 @@ public class SimilarTelevisionShowsAdapter extends BaseAdapter<TelevisionShow> {
 
     public SimilarTelevisionShowsAdapter(Context context) {
         int screenWidth = DisplayUtility.getScreenWidth(context);
-        int margins = 3 * DisplayUtility.dp2px(context, 16);
         int peekWidth = DisplayUtility.dp2px(context, 32);
-        ivWidth = (screenWidth - margins - peekWidth) / 2;
+        ivWidth = (screenWidth - peekWidth) / 3;
     }
 
     // endregion
