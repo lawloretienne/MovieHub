@@ -29,6 +29,7 @@
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@+id/search_pb"
                     android:background="@null"
+                    android:alpha="0.0"
                     android:ellipsize="end"
                     android:hint="Search Movies, TV Shows, and People"
                     android:inputType="textCapWords"

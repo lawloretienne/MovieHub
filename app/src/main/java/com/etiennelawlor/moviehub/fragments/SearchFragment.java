@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -84,6 +85,8 @@ public class SearchFragment extends BaseFragment {
     // endregion
 
     // region Views
+    @BindView(R.id.appbar)
+    AppBarLayout appbar;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.search_et)
@@ -122,18 +125,20 @@ public class SearchFragment extends BaseFragment {
 //    private boolean isLastPage = false;
 //    private boolean isLoading = false;
     private Transition sharedElementEnterTransition;
+    private Transition sharedElementReturnTransition;
     // endregion
 
     // region Listeners
-    private Transition.TransitionListener transitionTransitionListener = new Transition.TransitionListener() {
+    private Transition.TransitionListener enterTransitionTransitionListener = new Transition.TransitionListener() {
         @Override
         public void onTransitionStart(Transition transition) {
-
+            Timber.d("");
         }
 
         @Override
         public void onTransitionEnd(Transition transition) {
             DisplayUtility.showKeyboard(getContext(), searchEditText);
+            searchEditText.animate().alpha(1.0f).setDuration(300);
         }
 
         @Override
@@ -149,6 +154,31 @@ public class SearchFragment extends BaseFragment {
         @Override
         public void onTransitionResume(Transition transition) {
 
+        }
+    };
+
+    private Transition.TransitionListener returnTransitionTransitionListener = new Transition.TransitionListener() {
+        @Override
+        public void onTransitionStart(Transition transition) {
+            Timber.d("");
+            searchEditText.animate().alpha(0.0f).setDuration(300);
+        }
+
+        @Override
+        public void onTransitionEnd(Transition transition) {
+            appbar.animate().alpha(0.0f).setDuration(300);
+        }
+
+        @Override
+        public void onTransitionCancel(Transition transition) {
+        }
+
+        @Override
+        public void onTransitionPause(Transition transition) {
+        }
+
+        @Override
+        public void onTransitionResume(Transition transition) {
         }
     };
 
@@ -286,7 +316,10 @@ public class SearchFragment extends BaseFragment {
         setHasOptionsMenu(true);
 
         sharedElementEnterTransition = getActivity().getWindow().getSharedElementEnterTransition();
-        sharedElementEnterTransition.addListener(transitionTransitionListener);
+        sharedElementEnterTransition.addListener(enterTransitionTransitionListener);
+//        sharedElementReturnTransition = getActivity().getWindow().getSharedElementReturnTransition();
+//        sharedElementReturnTransition.addListener(returnTransitionTransitionListener);
+
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
     }
@@ -356,6 +389,8 @@ public class SearchFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+//        searchEditText.animate().alpha(0.0f).setDuration(300);
+
         removeListeners();
         unbinder.unbind();
     }
@@ -375,6 +410,7 @@ public class SearchFragment extends BaseFragment {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
                 DisplayUtility.hideKeyboard(getContext(), searchEditText);
+//                searchEditText.animate().alpha(0.0f).setDuration(300);
                 getActivity().supportFinishAfterTransition();
 //                NavUtils.navigateUpFromSameTask(this);
                 return true;
@@ -384,7 +420,8 @@ public class SearchFragment extends BaseFragment {
 
     // region Helper Methods
     private void removeListeners() {
-        sharedElementEnterTransition.removeListener(transitionTransitionListener);
+        sharedElementEnterTransition.removeListener(enterTransitionTransitionListener);
+//        sharedElementReturnTransition.removeListener(returnTransitionTransitionListener);
 //        moviesAdapter.setOnItemClickListener(null);
     }
 
