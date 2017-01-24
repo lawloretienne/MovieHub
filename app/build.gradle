@@ -54,7 +54,8 @@ android {
 }
 
 ext {
-    supportLibVersion = '25.1.0'
+    supportLibVersion = '25.0.1'
+//    supportLibVersion = '25.1.0' // Buggy - (https://code.google.com/p/android/issues/detail?id=230295)
 }
 
 dependencies {
