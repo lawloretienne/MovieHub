@@ -95,7 +95,7 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
-                    <com.etiennelawlor.moviehub.ui.CustomFontTextView
+                    <com.etiennelawlor.moviehub.ui.common.widget.CustomFontTextView
                         android:id="@+id/title_tv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -119,7 +119,7 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <com.etiennelawlor.moviehub.ui.CustomFontTextView
+                <com.etiennelawlor.moviehub.ui.common.widget.CustomFontTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Bio"
@@ -127,7 +127,7 @@
                     android:textSize="18sp"
                     app:textFont="lato_medium" />
 
-                <com.etiennelawlor.moviehub.ui.CustomFontTextView
+                <com.etiennelawlor.moviehub.ui.common.widget.CustomFontTextView
                     android:id="@+id/bio_tv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -135,7 +135,7 @@
                     android:textSize="16sp"
                     app:textFont="lato_medium" />
 
-                <com.etiennelawlor.moviehub.ui.CustomFontTextView
+                <com.etiennelawlor.moviehub.ui.common.widget.CustomFontTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -144,7 +144,7 @@
                     android:textSize="18sp"
                     app:textFont="lato_medium" />
 
-                <com.etiennelawlor.moviehub.ui.CustomFontTextView
+                <com.etiennelawlor.moviehub.ui.common.widget.CustomFontTextView
                     android:id="@+id/birthplace_tv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -152,7 +152,7 @@
                     android:textSize="16sp"
                     app:textFont="lato_medium" />
 
-                <com.etiennelawlor.moviehub.ui.CustomFontTextView
+                <com.etiennelawlor.moviehub.ui.common.widget.CustomFontTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -161,7 +161,7 @@
                     android:textSize="18sp"
                     app:textFont="lato_medium" />
 
-                <com.etiennelawlor.moviehub.ui.CustomFontTextView
+                <com.etiennelawlor.moviehub.ui.common.widget.CustomFontTextView
                     android:id="@+id/dob_tv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -176,7 +176,7 @@
                     android:orientation="vertical"
                     android:visibility="gone">
 
-                    <com.etiennelawlor.moviehub.ui.CustomFontTextView
+                    <com.etiennelawlor.moviehub.ui.common.widget.CustomFontTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
@@ -185,7 +185,7 @@
                         android:textSize="18sp"
                         app:textFont="lato_medium" />
 
-                    <com.etiennelawlor.moviehub.ui.CustomFontTextView
+                    <com.etiennelawlor.moviehub.ui.common.widget.CustomFontTextView
                         android:id="@+id/dod_tv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
