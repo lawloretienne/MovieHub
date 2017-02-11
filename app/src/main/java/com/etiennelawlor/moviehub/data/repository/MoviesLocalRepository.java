@@ -9,12 +9,12 @@ import retrofit2.Call;
  * Created by etiennelawlor on 2/9/17.
  */
 
-public class LocalMoviesRepository implements MoviesRepository {
+public class MoviesLocalRepository implements MoviesRepository {
 
     private Realm realm;
 
     // region Constructors
-    public LocalMoviesRepository(Realm realm){
+    public MoviesLocalRepository(Realm realm){
         this.realm = realm;
     }
     // endregion

@@ -8,12 +8,12 @@ import retrofit2.Call;
  * Created by etiennelawlor on 2/9/17.
  */
 
-public class RemoteMoviesRepository implements MoviesRepository {
+public class MoviesRemoteRepository implements MoviesRepository {
 
     private MovieHubService service;
 
     // region Constructors
-    public RemoteMoviesRepository(MovieHubService service){
+    public MoviesRemoteRepository(MovieHubService service){
         this.service = service;
     }
     // endregion
