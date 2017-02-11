@@ -11,6 +11,8 @@ import com.squareup.leakcanary.RefWatcher;
 
 import java.io.File;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import timber.log.Timber;
 
 /**
@@ -37,6 +39,7 @@ public class MovieHubApplication extends Application {
 
         initializeTimber();
         initializeLeakCanary();
+        initializeRealm();
 
         currentApplication = this;
     }
@@ -69,6 +72,15 @@ public class MovieHubApplication extends Application {
             return;
         }
         refWatcher = LeakCanary.install(this);
+    }
+
+    private void initializeRealm(){
+        Realm.init(this);
+        RealmConfiguration config =
+                new RealmConfiguration.Builder()
+                        .deleteRealmIfMigrationNeeded()
+                        .build();
+        Realm.setDefaultConfiguration(config);
     }
 
     private void initializeTimber() {
