@@ -2,6 +2,8 @@ package com.etiennelawlor.moviehub.ui.movies;
 
 import com.etiennelawlor.moviehub.data.repository.MoviesRepository;
 
+import rx.subscriptions.CompositeSubscription;
+
 /**
  * Created by etiennelawlor on 2/9/17.
  */
@@ -11,6 +13,8 @@ public class MoviesPresenter implements MoviesContract.Presenter {
     // region Fields
     private final MoviesRepository moviesRepository;
     private final MoviesContract.View moviesView;
+
+    private CompositeSubscription compositeSubscription;
     // endregion
 
     // region Constructors
@@ -54,5 +58,20 @@ public class MoviesPresenter implements MoviesContract.Presenter {
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onAttachView(MoviesContract.View view) {
+
+    }
+
+    @Override
+    public void onDetachView() {
+
+    }
+
+    @Override
+    public void unsubscribeCompositeSubscription() {
+        compositeSubscription.unsubscribe();
     }
 }

@@ -29,5 +29,9 @@ public interface MoviesContract {
 
         void loadMovies(PageType pageType);
         void reloadMovies(PageType pageType);
+
+        void onAttachView(View view);
+        void onDetachView();
+        void unsubscribeCompositeSubscription();
     }
 }
