@@ -30,14 +30,17 @@ public interface MoviesContract {
         void addMoviesToAdapter(List<Movie> movies);
         void setIsLastPage(boolean isLastPage);
         void setIsLoading(boolean isLoading);
+        void viewMovieDetails(Movie movie);
     }
 
     interface Presenter {
         void loadMovies(int currentPage);
         void reloadMovies(int currentPage);
+//        void getConfiguration();
 
         void onAttachView(View view);
         void onDetachView();
         void unsubscribeCompositeSubscription();
+        void viewMovieDetails(Movie movie);
     }
 }

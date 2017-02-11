@@ -85,6 +85,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     private boolean isLastPage = false;
     private boolean isLoading = false;
     private MoviesContract.Presenter moviesPresenter;
+    private View selectedMovieView;
     // endregion
 
     // region Listeners
@@ -342,24 +343,26 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     // region MoviesAdapter.OnItemClickListener Methods
     @Override
     public void onItemClick(int position, View view) {
+        selectedMovieView = view;
         Movie movie = moviesAdapter.getItem(position);
         if(movie != null){
-            Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putParcelable(KEY_MOVIE, movie);
-//            bundle.putInt(MovieDetailsActivity.KEY_STATUS_BAR_COLOR, getActivity().getWindow().getStatusBarColor());
-            intent.putExtras(bundle);
-
-            Window window = getActivity().getWindow();
-//            window.setStatusBarColor(ContextCompat.getColor(getContext(), R.color.status_bar_color));
-
-            Resources resources = view.getResources();
-            Pair<View, String> moviePair  = getPair(view, resources.getString(R.string.transition_movie_thumbnail));
-
-            ActivityOptionsCompat options = getActivityOptionsCompat(moviePair);
-
-            window.setExitTransition(null);
-            ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+//            Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
+//            Bundle bundle = new Bundle();
+//            bundle.putParcelable(KEY_MOVIE, movie);
+////            bundle.putInt(MovieDetailsActivity.KEY_STATUS_BAR_COLOR, getActivity().getWindow().getStatusBarColor());
+//            intent.putExtras(bundle);
+//
+//            Window window = getActivity().getWindow();
+////            window.setStatusBarColor(ContextCompat.getColor(getContext(), R.color.status_bar_color));
+//
+//            Resources resources = view.getResources();
+//            Pair<View, String> moviePair  = getPair(view, resources.getString(R.string.transition_movie_thumbnail));
+//
+//            ActivityOptionsCompat options = getActivityOptionsCompat(moviePair);
+//
+//            window.setExitTransition(null);
+//            ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+            moviesPresenter.viewMovieDetails(movie);
         }
     }
     // endregion
@@ -456,6 +459,26 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     @Override
     public void setIsLoading(boolean isLoading) {
         this.isLoading = isLoading;
+    }
+
+    @Override
+    public void viewMovieDetails(Movie movie) {
+        Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(KEY_MOVIE, movie);
+//            bundle.putInt(MovieDetailsActivity.KEY_STATUS_BAR_COLOR, getActivity().getWindow().getStatusBarColor());
+        intent.putExtras(bundle);
+
+        Window window = getActivity().getWindow();
+//            window.setStatusBarColor(ContextCompat.getColor(getContext(), R.color.status_bar_color));
+
+        Resources resources = selectedMovieView.getResources();
+        Pair<View, String> moviePair  = getPair(selectedMovieView, resources.getString(R.string.transition_movie_thumbnail));
+
+        ActivityOptionsCompat options = getActivityOptionsCompat(moviePair);
+
+        window.setExitTransition(null);
+        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
     }
 
     // endregion

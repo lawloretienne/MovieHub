@@ -1,7 +1,10 @@
 package com.etiennelawlor.moviehub.ui.movies;
 
 import android.os.NetworkOnMainThreadException;
+import android.view.View;
 
+import com.etiennelawlor.moviehub.data.local.PreferencesHelper;
+import com.etiennelawlor.moviehub.data.remote.response.Configuration;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
 import com.etiennelawlor.moviehub.data.remote.response.MoviesEnvelope;
 import com.etiennelawlor.moviehub.data.repository.MoviesRepository;
@@ -14,6 +17,10 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
@@ -173,6 +180,38 @@ public class MoviesPresenter implements MoviesContract.Presenter {
         }
     }
 
+//    @Override
+//    public void getConfiguration() {
+//        Subscription subscription = movieHubService.getConfiguration()
+//                .subscribeOn(Schedulers.newThread())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Action1<Configuration>() {
+//                    @Override
+//                    public void call(Configuration configuration) {
+//                        if(configuration != null){
+//                            PreferencesHelper.setConfiguration(getContext(), configuration);
+//
+////                                Call getPopularMoviesCall = movieHubService.getPopularMovies(currentPage);
+////                                calls.add(getPopularMoviesCall);
+////                                getPopularMoviesCall.enqueue(getPopularMoviesFirstFetchCallback);
+//
+//                            loadMovies(0);
+//                        }
+//                    }
+//                }, new Action1<Throwable>() {
+//                    @Override
+//                    public void call(Throwable throwable) {
+//                        throwable.printStackTrace();
+//                        progressBar.setVisibility(View.GONE);
+//                        if (NetworkUtility.isKnownException(throwable)) {
+//                            errorTextView.setText("Can't load data.\nCheck your network connection.");
+//                            errorLinearLayout.setVisibility(View.VISIBLE);
+//                        }
+//                    }
+//                });
+//        compositeSubscription.add(subscription);
+//    }
+
     @Override
     public void onAttachView(MoviesContract.View view) {
         calls = new ArrayList<>();
@@ -200,5 +239,10 @@ public class MoviesPresenter implements MoviesContract.Presenter {
     @Override
     public void unsubscribeCompositeSubscription() {
         compositeSubscription.unsubscribe();
+    }
+
+    @Override
+    public void viewMovieDetails(Movie movie) {
+        moviesView.viewMovieDetails(movie);
     }
 }
