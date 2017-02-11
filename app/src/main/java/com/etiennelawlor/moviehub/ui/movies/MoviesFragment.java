@@ -437,6 +437,16 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
         moviesAdapter.addAll(movies);
     }
 
+    @Override
+    public void setIsLastPage(boolean isLastPage) {
+        this.isLastPage = isLastPage;
+    }
+
+    @Override
+    public void setIsLoading(boolean isLoading) {
+        this.isLoading = isLoading;
+    }
+
     // endregion
 
     // region Helper Methods

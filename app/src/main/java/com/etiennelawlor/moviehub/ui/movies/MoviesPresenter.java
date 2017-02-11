@@ -1,12 +1,10 @@
 package com.etiennelawlor.moviehub.ui.movies;
 
 import android.os.NetworkOnMainThreadException;
-import android.view.View;
 
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
 import com.etiennelawlor.moviehub.data.remote.response.MoviesEnvelope;
 import com.etiennelawlor.moviehub.data.repository.MoviesRepository;
-import com.etiennelawlor.moviehub.ui.base.BaseAdapter;
 import com.etiennelawlor.moviehub.util.NetworkLogUtility;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 
@@ -35,8 +33,6 @@ public class MoviesPresenter implements MoviesContract.Presenter {
 
     private CompositeSubscription compositeSubscription;
     private List<Call> calls;
-    private boolean isLastPage = false;
-    private boolean isLoading = false;
     // endregion
 
     // region Callbacks
@@ -44,7 +40,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
         @Override
         public void onResponse(Call<MoviesEnvelope> call, Response<MoviesEnvelope> response) {
             moviesView.hideLoadingView();
-            isLoading = false;
+            moviesView.setIsLoading(false);
 
             if (!response.isSuccessful()) {
                 int responseCode = response.code();
@@ -67,7 +63,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                     if(movies.size() >= PAGE_SIZE){
                         moviesView.addFooter();
                     } else {
-                        isLastPage = true;
+                        moviesView.setIsLastPage(true);
                     }
                 }
             }
@@ -82,7 +78,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
             NetworkLogUtility.logFailure(call, t);
 
             if (!call.isCanceled()){
-                isLoading = false;
+                moviesView.setIsLoading(false);
                 moviesView.hideLoadingView();
 
                 if(NetworkUtility.isKnownException(t)){
@@ -107,7 +103,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
             }
 
             moviesView.removeFooter();
-            isLoading = false;
+            moviesView.setIsLoading(false);
 
             MoviesEnvelope moviesEnvelope = response.body();
 
@@ -117,11 +113,10 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                     if(movies.size()>0)
                         moviesView.addMoviesToAdapter(movies);
 
-
                     if(movies.size() >= PAGE_SIZE){
                         moviesView.addFooter();
                     } else {
-                        isLastPage = true;
+                        moviesView.setIsLastPage(true);
                     }
                 }
             }
