@@ -45,8 +45,8 @@ public class MoviesPresenter implements MoviesContract.Presenter {
             if (!response.isSuccessful()) {
                 int responseCode = response.code();
                 if(responseCode == 504) { // 504 Unsatisfiable Request (only-if-cached)
-//                    errorTextView.setText("Can't load data.\nCheck your network connection.");
-//                    errorLinearLayout.setVisibility(View.VISIBLE);
+//                    moviesView.setErrorText("Can't load data.\nCheck your network connection.");
+//                    moviesView.showErrorView();
 
                     return;
                 }
@@ -97,7 +97,6 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                 if(responseCode == 504) { // 504 Unsatisfiable Request (only-if-cached)
 //                    errorTextView.setText("Can't load data.\nCheck your network connection.");
 //                    errorLinearLayout.setVisibility(View.VISIBLE);
-
                     return;
                 }
             }

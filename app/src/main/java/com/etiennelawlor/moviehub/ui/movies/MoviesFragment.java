@@ -25,6 +25,7 @@ import com.etiennelawlor.moviehub.data.remote.ServiceGenerator;
 import com.etiennelawlor.moviehub.data.remote.response.Configuration;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
 import com.etiennelawlor.moviehub.data.remote.response.MoviesEnvelope;
+import com.etiennelawlor.moviehub.data.repository.MoviesRemoteRepository;
 import com.etiennelawlor.moviehub.ui.base.BaseAdapter;
 import com.etiennelawlor.moviehub.ui.base.BaseFragment;
 import com.etiennelawlor.moviehub.ui.moviedetails.MovieDetailsActivity;
@@ -83,18 +84,21 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     private int currentPage = 1;
     private boolean isLastPage = false;
     private boolean isLoading = false;
+    private MoviesContract.Presenter moviesPresenter;
     // endregion
 
     // region Listeners
     @OnClick(R.id.reload_btn)
     public void onReloadButtonClicked() {
-        emptyLinearLayout.setVisibility(View.GONE);
-        errorLinearLayout.setVisibility(View.GONE);
-        progressBar.setVisibility(View.VISIBLE);
+//        emptyLinearLayout.setVisibility(View.GONE);
+//        errorLinearLayout.setVisibility(View.GONE);
+//        progressBar.setVisibility(View.VISIBLE);
+//
+//        Call getPopularMoviesCall = movieHubService.getPopularMovies(currentPage);
+//        calls.add(getPopularMoviesCall);
+//        getPopularMoviesCall.enqueue(getPopularMoviesFirstFetchCallback);
 
-        Call getPopularMoviesCall = movieHubService.getPopularMovies(currentPage);
-        calls.add(getPopularMoviesCall);
-        getPopularMoviesCall.enqueue(getPopularMoviesFirstFetchCallback);
+        moviesPresenter.reloadMovies(currentPage);
     }
 
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
@@ -250,6 +254,8 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
                 MovieHubService.BASE_URL,
                 new AuthorizedNetworkInterceptor(getContext()));
 
+        moviesPresenter = new MoviesPresenter(new MoviesRemoteRepository(movieHubService), this);
+
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
     }
 
@@ -281,9 +287,10 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
         configuration = PreferencesHelper.getConfiguration(getContext());
 
         if(configuration != null){
-            Call getPopularMoviesCall = movieHubService.getPopularMovies(currentPage);
-            calls.add(getPopularMoviesCall);
-            getPopularMoviesCall.enqueue(getPopularMoviesFirstFetchCallback);
+//            Call getPopularMoviesCall = movieHubService.getPopularMovies(currentPage);
+//            calls.add(getPopularMoviesCall);
+//            getPopularMoviesCall.enqueue(getPopularMoviesFirstFetchCallback);
+            moviesPresenter.loadMovies(currentPage);
         } else {
             Subscription subscription = movieHubService.getConfiguration()
                     .subscribeOn(Schedulers.newThread())
@@ -294,9 +301,11 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
                             if(configuration != null){
                                 PreferencesHelper.setConfiguration(getContext(), configuration);
 
-                                Call getPopularMoviesCall = movieHubService.getPopularMovies(currentPage);
-                                calls.add(getPopularMoviesCall);
-                                getPopularMoviesCall.enqueue(getPopularMoviesFirstFetchCallback);
+//                                Call getPopularMoviesCall = movieHubService.getPopularMovies(currentPage);
+//                                calls.add(getPopularMoviesCall);
+//                                getPopularMoviesCall.enqueue(getPopularMoviesFirstFetchCallback);
+
+                                moviesPresenter.loadMovies(currentPage);
                             }
                         }
                     }, new Action1<Throwable>() {
@@ -358,11 +367,13 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     // region MoviesAdapter.OnReloadClickListener Methods
     @Override
     public void onReloadClick() {
-        moviesAdapter.updateFooter(BaseAdapter.FooterType.LOAD_MORE);
+//        moviesAdapter.updateFooter(BaseAdapter.FooterType.LOAD_MORE);
+//
+//        Call getPopularMoviesCall = movieHubService.getPopularMovies(currentPage);
+//        calls.add(getPopularMoviesCall);
+//        getPopularMoviesCall.enqueue(getPopularMoviesNextFetchCallback);
 
-        Call getPopularMoviesCall = movieHubService.getPopularMovies(currentPage);
-        calls.add(getPopularMoviesCall);
-        getPopularMoviesCall.enqueue(getPopularMoviesNextFetchCallback);
+        moviesPresenter.reloadMovies(currentPage);
     }
     // endregion
 
@@ -458,9 +469,11 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
         isLoading = true;
         currentPage += 1;
 
-        Call getPopularMoviesCall = movieHubService.getPopularMovies(currentPage);
-        calls.add(getPopularMoviesCall);
-        getPopularMoviesCall.enqueue(getPopularMoviesNextFetchCallback);
+//        Call getPopularMoviesCall = movieHubService.getPopularMovies(currentPage);
+//        calls.add(getPopularMoviesCall);
+//        getPopularMoviesCall.enqueue(getPopularMoviesNextFetchCallback);
+
+        moviesPresenter.loadMovies(currentPage);
     }
 
     private ActivityOptionsCompat getActivityOptionsCompat(Pair pair){
