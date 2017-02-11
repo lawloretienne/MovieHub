@@ -1,5 +1,9 @@
 package com.etiennelawlor.moviehub.ui.movies;
 
+import com.etiennelawlor.moviehub.data.remote.response.Movie;
+
+import java.util.List;
+
 /**
  * Created by etiennelawlor on 2/9/17.
  */
@@ -18,17 +22,17 @@ public interface MoviesContract {
         void hideErrorView();
         void showLoadingView();
         void hideLoadingView();
+        void addFooter();
+        void removeFooter();
         void updateFooter(FooterType footerType);
+        boolean isAdapterEmpty();
+        void setErrorText(String errorText);
+        void addMoviesToAdapter(List<Movie> movies);
     }
 
     interface Presenter {
-        enum PageType {
-            FIRST_PAGE,
-            NEXT_PAGE
-        }
-
-        void loadMovies(PageType pageType);
-        void reloadMovies(PageType pageType);
+        void loadMovies(int currentPage);
+        void reloadMovies(int currentPage);
 
         void onAttachView(View view);
         void onDetachView();

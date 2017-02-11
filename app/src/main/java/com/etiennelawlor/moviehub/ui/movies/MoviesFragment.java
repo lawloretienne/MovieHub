@@ -399,6 +399,16 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     }
 
     @Override
+    public void addFooter() {
+        moviesAdapter.addFooter();
+    }
+
+    @Override
+    public void removeFooter() {
+        moviesAdapter.removeFooter();
+    }
+
+    @Override
     public void updateFooter(FooterType footerType) {
         switch (footerType){
             case LOAD_MORE:
@@ -410,6 +420,21 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
             default:
                 break;
         }
+    }
+
+    @Override
+    public boolean isAdapterEmpty() {
+        return moviesAdapter.isEmpty();
+    }
+
+    @Override
+    public void setErrorText(String errorText) {
+        errorTextView.setText(errorText);
+    }
+
+    @Override
+    public void addMoviesToAdapter(List<Movie> movies) {
+        moviesAdapter.addAll(movies);
     }
 
     // endregion
