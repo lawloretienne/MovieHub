@@ -180,37 +180,41 @@ public class MoviesPresenter implements MoviesContract.Presenter {
         }
     }
 
-//    @Override
-//    public void getConfiguration() {
-//        Subscription subscription = movieHubService.getConfiguration()
-//                .subscribeOn(Schedulers.newThread())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Action1<Configuration>() {
-//                    @Override
-//                    public void call(Configuration configuration) {
-//                        if(configuration != null){
+    @Override
+    public void getConfiguration() {
+        Subscription subscription = moviesRepository.getConfiguration()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Configuration>() {
+                    @Override
+                    public void call(Configuration configuration) {
+                        if(configuration != null){
 //                            PreferencesHelper.setConfiguration(getContext(), configuration);
-//
-////                                Call getPopularMoviesCall = movieHubService.getPopularMovies(currentPage);
-////                                calls.add(getPopularMoviesCall);
-////                                getPopularMoviesCall.enqueue(getPopularMoviesFirstFetchCallback);
-//
-//                            loadMovies(0);
-//                        }
-//                    }
-//                }, new Action1<Throwable>() {
-//                    @Override
-//                    public void call(Throwable throwable) {
-//                        throwable.printStackTrace();
+                            moviesView.saveConfiguration(configuration);
+
+//                                Call getPopularMoviesCall = movieHubService.getPopularMovies(currentPage);
+//                                calls.add(getPopularMoviesCall);
+//                                getPopularMoviesCall.enqueue(getPopularMoviesFirstFetchCallback);
+
+                            loadMovies(0);
+                        }
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        throwable.printStackTrace();
 //                        progressBar.setVisibility(View.GONE);
-//                        if (NetworkUtility.isKnownException(throwable)) {
+                        moviesView.showLoadingView();
+                        if (NetworkUtility.isKnownException(throwable)) {
 //                            errorTextView.setText("Can't load data.\nCheck your network connection.");
 //                            errorLinearLayout.setVisibility(View.VISIBLE);
-//                        }
-//                    }
-//                });
-//        compositeSubscription.add(subscription);
-//    }
+                            moviesView.setErrorText("Can't load data.\nCheck your network connection.");
+                            moviesView.showErrorView();
+                        }
+                    }
+                });
+        compositeSubscription.add(subscription);
+    }
 
     @Override
     public void onAttachView(MoviesContract.View view) {

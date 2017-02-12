@@ -1,5 +1,6 @@
 package com.etiennelawlor.moviehub.ui.movies;
 
+import com.etiennelawlor.moviehub.data.remote.response.Configuration;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
 
 import java.util.List;
@@ -31,12 +32,13 @@ public interface MoviesContract {
         void setIsLastPage(boolean isLastPage);
         void setIsLoading(boolean isLoading);
         void viewMovieDetails(Movie movie);
+        void saveConfiguration(Configuration configuration);
     }
 
     interface Presenter {
         void loadMovies(int currentPage);
         void reloadMovies(int currentPage);
-//        void getConfiguration();
+        void getConfiguration();
 
         void onAttachView(View view);
         void onDetachView();

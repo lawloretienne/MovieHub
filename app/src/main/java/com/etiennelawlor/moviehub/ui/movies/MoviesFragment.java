@@ -462,6 +462,11 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     }
 
     @Override
+    public void saveConfiguration(Configuration configuration) {
+        PreferencesHelper.setConfiguration(getContext(), configuration);
+    }
+
+    @Override
     public void viewMovieDetails(Movie movie) {
         Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
         Bundle bundle = new Bundle();
