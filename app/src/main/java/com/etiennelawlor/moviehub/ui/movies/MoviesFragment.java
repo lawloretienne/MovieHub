@@ -293,34 +293,36 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
 //            getPopularMoviesCall.enqueue(getPopularMoviesFirstFetchCallback);
             moviesPresenter.loadMovies(currentPage);
         } else {
-            Subscription subscription = movieHubService.getConfiguration()
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Action1<Configuration>() {
-                        @Override
-                        public void call(Configuration configuration) {
-                            if(configuration != null){
-                                PreferencesHelper.setConfiguration(getContext(), configuration);
+//            Subscription subscription = movieHubService.getConfiguration()
+//                    .subscribeOn(Schedulers.newThread())
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe(new Action1<Configuration>() {
+//                        @Override
+//                        public void call(Configuration configuration) {
+//                            if(configuration != null){
+//                                PreferencesHelper.setConfiguration(getContext(), configuration);
+//
+////                                Call getPopularMoviesCall = movieHubService.getPopularMovies(currentPage);
+////                                calls.add(getPopularMoviesCall);
+////                                getPopularMoviesCall.enqueue(getPopularMoviesFirstFetchCallback);
+//
+//                                moviesPresenter.loadMovies(currentPage);
+//                            }
+//                        }
+//                    }, new Action1<Throwable>() {
+//                        @Override
+//                        public void call(Throwable throwable) {
+//                            throwable.printStackTrace();
+//                            progressBar.setVisibility(View.GONE);
+//                            if (NetworkUtility.isKnownException(throwable)) {
+//                                errorTextView.setText("Can't load data.\nCheck your network connection.");
+//                                errorLinearLayout.setVisibility(View.VISIBLE);
+//                            }
+//                        }
+//                    });
+//            compositeSubscription.add(subscription);
 
-//                                Call getPopularMoviesCall = movieHubService.getPopularMovies(currentPage);
-//                                calls.add(getPopularMoviesCall);
-//                                getPopularMoviesCall.enqueue(getPopularMoviesFirstFetchCallback);
-
-                                moviesPresenter.loadMovies(currentPage);
-                            }
-                        }
-                    }, new Action1<Throwable>() {
-                        @Override
-                        public void call(Throwable throwable) {
-                            throwable.printStackTrace();
-                            progressBar.setVisibility(View.GONE);
-                            if (NetworkUtility.isKnownException(throwable)) {
-                                errorTextView.setText("Can't load data.\nCheck your network connection.");
-                                errorLinearLayout.setVisibility(View.VISIBLE);
-                            }
-                        }
-                    });
-            compositeSubscription.add(subscription);
+            moviesPresenter.getConfiguration();
         }
     }
 
