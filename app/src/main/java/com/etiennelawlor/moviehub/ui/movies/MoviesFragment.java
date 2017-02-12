@@ -57,7 +57,6 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
 
     // region Constants
     public static final String KEY_MOVIE = "KEY_MOVIE";
-    private static final int PAGE_SIZE = 20;
     // endregion
 
     // region Views
@@ -91,14 +90,6 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     // region Listeners
     @OnClick(R.id.reload_btn)
     public void onReloadButtonClicked() {
-//        emptyLinearLayout.setVisibility(View.GONE);
-//        errorLinearLayout.setVisibility(View.GONE);
-//        progressBar.setVisibility(View.VISIBLE);
-//
-//        Call getPopularMoviesCall = movieHubService.getPopularMovies(currentPage);
-//        calls.add(getPopularMoviesCall);
-//        getPopularMoviesCall.enqueue(getPopularMoviesFirstFetchCallback);
-
         moviesPresenter.reloadMovies(currentPage);
     }
 
@@ -119,107 +110,6 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
             if (!isLoading && !isLastPage) {
                 if ((visibleItemCount + firstVisibleItem) >= totalItemCount && totalItemCount > 0) {
                     loadMoreItems();
-                }
-            }
-        }
-    };
-
-    // endregion
-
-    // region Callbacks
-    private Callback<MoviesEnvelope> getPopularMoviesFirstFetchCallback = new Callback<MoviesEnvelope>() {
-        @Override
-        public void onResponse(Call<MoviesEnvelope> call, Response<MoviesEnvelope> response) {
-            progressBar.setVisibility(View.GONE);
-            isLoading = false;
-
-            if (!response.isSuccessful()) {
-                int responseCode = response.code();
-                if(responseCode == 504) { // 504 Unsatisfiable Request (only-if-cached)
-//                    errorTextView.setText("Can't load data.\nCheck your network connection.");
-//                    errorLinearLayout.setVisibility(View.VISIBLE);
-
-                    return;
-                }
-            }
-
-            MoviesEnvelope moviesEnvelope = response.body();
-
-            if(moviesEnvelope != null){
-                List<Movie> movies = moviesEnvelope.getMovies();
-                if(movies != null){
-                    if(movies.size()>0)
-                        moviesAdapter.addAll(movies);
-
-                    if(movies.size() >= PAGE_SIZE){
-                        moviesAdapter.addFooter();
-                    } else {
-                        isLastPage = true;
-                    }
-                }
-            }
-
-            if(moviesAdapter.isEmpty()){
-                emptyLinearLayout.setVisibility(View.VISIBLE);
-            }
-        }
-
-        @Override
-        public void onFailure(Call<MoviesEnvelope> call, Throwable t) {
-            NetworkLogUtility.logFailure(call, t);
-
-            if (!call.isCanceled()){
-                isLoading = false;
-                progressBar.setVisibility(View.GONE);
-
-                if(NetworkUtility.isKnownException(t)){
-                    errorTextView.setText("Can't load data.\nCheck your network connection.");
-                    errorLinearLayout.setVisibility(View.VISIBLE);
-                }
-            }
-        }
-    };
-
-    private Callback<MoviesEnvelope> getPopularMoviesNextFetchCallback = new Callback<MoviesEnvelope>() {
-        @Override
-        public void onResponse(Call<MoviesEnvelope> call, Response<MoviesEnvelope> response) {
-            if (!response.isSuccessful()) {
-                int responseCode = response.code();
-                if(responseCode == 504) { // 504 Unsatisfiable Request (only-if-cached)
-//                    errorTextView.setText("Can't load data.\nCheck your network connection.");
-//                    errorLinearLayout.setVisibility(View.VISIBLE);
-
-                    return;
-                }
-            }
-
-            moviesAdapter.removeFooter();
-            isLoading = false;
-
-            MoviesEnvelope moviesEnvelope = response.body();
-
-            if(moviesEnvelope != null){
-                List<Movie> movies = moviesEnvelope.getMovies();
-                if(movies != null){
-                    if(movies.size()>0)
-                        moviesAdapter.addAll(movies);
-
-                    if(movies.size() >= PAGE_SIZE){
-                        moviesAdapter.addFooter();
-                    } else {
-                        isLastPage = true;
-                    }
-                }
-            }
-        }
-
-        @Override
-        public void onFailure(Call<MoviesEnvelope> call, Throwable t) {
-            NetworkLogUtility.logFailure(call, t);
-
-            if (!call.isCanceled()){
-                if(NetworkUtility.isKnownException(t)){
-                    moviesAdapter.updateFooter(BaseAdapter.FooterType.ERROR);
                 }
             }
         }
@@ -288,40 +178,8 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
         configuration = PreferencesHelper.getConfiguration(getContext());
 
         if(configuration != null){
-//            Call getPopularMoviesCall = movieHubService.getPopularMovies(currentPage);
-//            calls.add(getPopularMoviesCall);
-//            getPopularMoviesCall.enqueue(getPopularMoviesFirstFetchCallback);
             moviesPresenter.loadMovies(currentPage);
         } else {
-//            Subscription subscription = movieHubService.getConfiguration()
-//                    .subscribeOn(Schedulers.newThread())
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .subscribe(new Action1<Configuration>() {
-//                        @Override
-//                        public void call(Configuration configuration) {
-//                            if(configuration != null){
-//                                PreferencesHelper.setConfiguration(getContext(), configuration);
-//
-////                                Call getPopularMoviesCall = movieHubService.getPopularMovies(currentPage);
-////                                calls.add(getPopularMoviesCall);
-////                                getPopularMoviesCall.enqueue(getPopularMoviesFirstFetchCallback);
-//
-//                                moviesPresenter.loadMovies(currentPage);
-//                            }
-//                        }
-//                    }, new Action1<Throwable>() {
-//                        @Override
-//                        public void call(Throwable throwable) {
-//                            throwable.printStackTrace();
-//                            progressBar.setVisibility(View.GONE);
-//                            if (NetworkUtility.isKnownException(throwable)) {
-//                                errorTextView.setText("Can't load data.\nCheck your network connection.");
-//                                errorLinearLayout.setVisibility(View.VISIBLE);
-//                            }
-//                        }
-//                    });
-//            compositeSubscription.add(subscription);
-
             moviesPresenter.getConfiguration();
         }
     }
@@ -348,22 +206,6 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
         selectedMovieView = view;
         Movie movie = moviesAdapter.getItem(position);
         if(movie != null){
-//            Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
-//            Bundle bundle = new Bundle();
-//            bundle.putParcelable(KEY_MOVIE, movie);
-////            bundle.putInt(MovieDetailsActivity.KEY_STATUS_BAR_COLOR, getActivity().getWindow().getStatusBarColor());
-//            intent.putExtras(bundle);
-//
-//            Window window = getActivity().getWindow();
-////            window.setStatusBarColor(ContextCompat.getColor(getContext(), R.color.status_bar_color));
-//
-//            Resources resources = view.getResources();
-//            Pair<View, String> moviePair  = getPair(view, resources.getString(R.string.transition_movie_thumbnail));
-//
-//            ActivityOptionsCompat options = getActivityOptionsCompat(moviePair);
-//
-//            window.setExitTransition(null);
-//            ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
             moviesPresenter.viewMovieDetails(movie);
         }
     }
@@ -372,12 +214,6 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     // region MoviesAdapter.OnReloadClickListener Methods
     @Override
     public void onReloadClick() {
-//        moviesAdapter.updateFooter(BaseAdapter.FooterType.LOAD_MORE);
-//
-//        Call getPopularMoviesCall = movieHubService.getPopularMovies(currentPage);
-//        calls.add(getPopularMoviesCall);
-//        getPopularMoviesCall.enqueue(getPopularMoviesNextFetchCallback);
-
         moviesPresenter.reloadMovies(currentPage);
     }
     // endregion
