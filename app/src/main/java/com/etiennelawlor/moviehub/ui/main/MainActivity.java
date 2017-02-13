@@ -1,4 +1,4 @@
-package com.etiennelawlor.moviehub.ui.common;
+package com.etiennelawlor.moviehub.ui.main;
 
 import android.content.Intent;
 import android.content.res.Resources;
@@ -11,6 +11,7 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
@@ -18,7 +19,9 @@ import android.view.View;
 import android.view.Window;
 
 import com.etiennelawlor.moviehub.R;
+import com.etiennelawlor.moviehub.data.repository.MoviesRemoteRepository;
 import com.etiennelawlor.moviehub.ui.movies.MoviesFragment;
+import com.etiennelawlor.moviehub.ui.movies.MoviesPresenter;
 import com.etiennelawlor.moviehub.ui.persons.PersonsFragment;
 import com.etiennelawlor.moviehub.ui.search.SearchActivity;
 import com.etiennelawlor.moviehub.ui.televisionshows.TelevisionShowsFragment;
@@ -29,33 +32,24 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainContract.View {
 
     // region Views
     @BindView(R.id.bottom_navigation)
     BottomNavigationView bottomNavigationView;
+    @BindView(R.id.search_cv)
+    CardView searchCardView;
     // endregion
 
     // region Member Variables
     private Typeface font;
+    private MainContract.Presenter mainPresenter;
     // endregion
 
     // region Listeners
     @OnClick(R.id.search_cv)
     public void onSearchCardViewClicked(View view) {
-        Intent intent = new Intent(this, SearchActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-
-        Window window = getWindow();
-//        window.setStatusBarColor(primaryDark);
-
-        Resources resources = view.getResources();
-        Pair<View, String> searchPair  = getPair(view, resources.getString(R.string.transition_search));
-
-        ActivityOptionsCompat options = getActivityOptionsCompat(searchPair);
-
-        window.setExitTransition(null);
-        ActivityCompat.startActivity(this, intent, options.toBundle());
+        mainPresenter.viewSearch();
     }
     // endregion
 
@@ -66,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        mainPresenter = new MainPresenter(this);
 
         font = FontCache.getTypeface("Lato-Medium.ttf", this);
 
@@ -118,6 +114,27 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
+    // endregion
+
+    // region MainContract.View Methods
+
+    @Override
+    public void viewSearch() {
+        Intent intent = new Intent(this, SearchActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+        Window window = getWindow();
+//        window.setStatusBarColor(primaryDark);
+
+        Resources resources = searchCardView.getResources();
+        Pair<View, String> searchPair  = getPair(searchCardView, resources.getString(R.string.transition_search));
+
+        ActivityOptionsCompat options = getActivityOptionsCompat(searchPair);
+
+        window.setExitTransition(null);
+        ActivityCompat.startActivity(this, intent, options.toBundle());
+    }
+
     // endregion
 
     // region Helper Methods
