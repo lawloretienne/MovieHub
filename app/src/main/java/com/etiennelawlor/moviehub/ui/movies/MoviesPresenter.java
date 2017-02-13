@@ -150,7 +150,18 @@ public class MoviesPresenter implements MoviesContract.Presenter {
 
     @Override
     public void loadMovies(int currentPage) {
-        if(currentPage == 0){
+        if(currentPage == 0) {
+
+//            moviesRepository.getPopularMovies(currentPage, Callback() {
+//                @Override
+//                public void onResponse () {
+//                }
+//
+//                @Override
+//                public void onFailure () {
+//                }
+//            }
+
             Call getPopularMoviesCall = moviesRepository.getPopularMovies(currentPage);
             calls.add(getPopularMoviesCall);
             getPopularMoviesCall.enqueue(getPopularMoviesFirstFetchCallback);
