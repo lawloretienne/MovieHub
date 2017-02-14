@@ -52,12 +52,12 @@ public class MoviesRemoteDataSource implements MoviesDataSource {
     }
 
     @Override
-    public void getMoviesFirstPage(GetMoviesCallback<?> callback) {
+    public void loadFirstPage(GetMoviesCallback<?> callback) {
 
     }
 
     @Override
-    public void getMoviesNextPage(GetMoviesCallback<?> callback) {
+    public void loadNextPage(GetMoviesCallback<?> callback) {
 
     }
     // endregion

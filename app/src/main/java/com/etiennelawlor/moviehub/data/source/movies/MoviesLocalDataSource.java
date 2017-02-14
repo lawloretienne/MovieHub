@@ -30,5 +30,15 @@ public class MoviesLocalDataSource implements MoviesDataSource {
 
     }
 
+    @Override
+    public void loadFirstPage(GetMoviesCallback<?> callback) {
+
+    }
+
+    @Override
+    public void loadNextPage(GetMoviesCallback<?> callback) {
+
+    }
+
     // endregion
 }
