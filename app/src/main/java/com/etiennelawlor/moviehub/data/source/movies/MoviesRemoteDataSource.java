@@ -2,20 +2,15 @@ package com.etiennelawlor.moviehub.data.source.movies;
 
 import android.content.Context;
 
-import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.data.remote.AuthorizedNetworkInterceptor;
 import com.etiennelawlor.moviehub.data.remote.MovieHubService;
 import com.etiennelawlor.moviehub.data.remote.ServiceGenerator;
-import com.etiennelawlor.moviehub.data.remote.response.Movie;
-import com.etiennelawlor.moviehub.data.repository.*;
-import com.etiennelawlor.moviehub.data.repository.MoviesRepository;
 
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import rx.Observable;
 
 /**
  * Created by etiennelawlor on 2/13/17.
