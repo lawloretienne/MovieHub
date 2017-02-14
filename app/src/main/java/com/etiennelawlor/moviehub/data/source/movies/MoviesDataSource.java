@@ -7,6 +7,8 @@ package com.etiennelawlor.moviehub.data.source.movies;
 public interface MoviesDataSource {
 
     void getMovies(int currentPage, GetMoviesCallback<?> callback);
+    void getMoviesFirstPage(GetMoviesCallback<?> callback);
+    void getMoviesNextPage(GetMoviesCallback<?> callback);
 
     interface GetMoviesCallback<R> {
         void onSuccess(R response, int currentPage);

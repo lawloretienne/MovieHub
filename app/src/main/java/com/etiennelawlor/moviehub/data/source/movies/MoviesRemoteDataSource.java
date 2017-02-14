@@ -23,6 +23,7 @@ public class MoviesRemoteDataSource implements MoviesDataSource {
     private List<Call> calls;
     // endregion
 
+    // region Constructors
     public MoviesRemoteDataSource(Context context) {
         movieHubService = ServiceGenerator.createService(
                 MovieHubService.class,
@@ -30,8 +31,9 @@ public class MoviesRemoteDataSource implements MoviesDataSource {
                 new AuthorizedNetworkInterceptor(context));
 //        MovieHubApplication.getInstance().getApplicationContext();
     }
+    // endregion
 
-
+    // region MoviesDataSource Methods
     @Override
     public void getMovies(int currentPage, final GetMoviesCallback<?> callback) {
         Call getPopularMoviesCall = movieHubService.getPopularMovies(currentPage);
@@ -48,4 +50,15 @@ public class MoviesRemoteDataSource implements MoviesDataSource {
             }
         });
     }
+
+    @Override
+    public void getMoviesFirstPage(GetMoviesCallback<?> callback) {
+
+    }
+
+    @Override
+    public void getMoviesNextPage(GetMoviesCallback<?> callback) {
+
+    }
+    // endregion
 }
