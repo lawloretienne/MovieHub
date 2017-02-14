@@ -287,6 +287,7 @@ public class MoviesPresenter implements MoviesContract.Presenter, MoviesReposito
 //        calls.add(getPopularMoviesCall);
 //        getPopularMoviesCall.enqueue(getPopularMoviesNextFetchCallback);
 
+
         moviesDataSource.getMovies(1, new MoviesDataSource.GetMoviesCallback<List<Movie>>() {
             @Override
             public void onSuccess(List<Movie> response, int currentPage) {

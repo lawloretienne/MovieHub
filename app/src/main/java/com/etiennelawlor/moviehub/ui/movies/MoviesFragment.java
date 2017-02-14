@@ -78,14 +78,10 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     // region Member Variables
     private MoviesAdapter moviesAdapter;
     private Typeface font;
-//    private MovieHubService movieHubService;
     private Unbinder unbinder;
     private StaggeredGridLayoutManager layoutManager;
     private Configuration configuration;
     private CompositeSubscription compositeSubscription;
-    private int currentPage = 1;
-    private boolean isLastPage = false;
-    private boolean isLoading = false;
     private MoviesContract.Presenter moviesPresenter;
     private View selectedMovieView;
     // endregion
@@ -93,7 +89,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     // region Listeners
     @OnClick(R.id.reload_btn)
     public void onReloadButtonClicked() {
-        moviesPresenter.reloadMovies(currentPage);
+        moviesPresenter.reloadFirstPage();
     }
 
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
@@ -110,10 +106,9 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
             int totalItemCount = recyclerView.getAdapter().getItemCount();
             int[] positions = layoutManager.findFirstVisibleItemPositions(null);
             int firstVisibleItem = positions[1];
-            if (!isLoading && !isLastPage) {
-                if ((visibleItemCount + firstVisibleItem) >= totalItemCount && totalItemCount > 0) {
-                    loadMoreItems();
-                }
+
+            if ((visibleItemCount + firstVisibleItem) >= totalItemCount && totalItemCount > 0) {
+                loadMoreItems();
             }
         }
     };
@@ -180,7 +175,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
         configuration = PreferencesHelper.getConfiguration(getContext());
 
         if(configuration != null){
-            moviesPresenter.loadMovies(currentPage);
+            moviesPresenter.loadFirstPage();
         } else {
             moviesPresenter.getConfiguration();
         }
@@ -216,7 +211,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     // region MoviesAdapter.OnReloadClickListener Methods
     @Override
     public void onReloadClick() {
-        moviesPresenter.reloadMovies(currentPage);
+        moviesPresenter.reloadNextPage();
     }
     // endregion
 
@@ -292,16 +287,6 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     }
 
     @Override
-    public void setIsLastPage(boolean isLastPage) {
-        this.isLastPage = isLastPage;
-    }
-
-    @Override
-    public void setIsLoading(boolean isLoading) {
-        this.isLoading = isLoading;
-    }
-
-    @Override
     public void saveConfiguration(Configuration configuration) {
         PreferencesHelper.setConfiguration(getContext(), configuration);
     }
@@ -334,14 +319,16 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     }
 
     private void loadMoreItems() {
-        isLoading = true;
-        currentPage += 1;
+//        isLoading = true;
+//        currentPage += 1;
 
 //        Call getPopularMoviesCall = movieHubService.getPopularMovies(currentPage);
 //        calls.add(getPopularMoviesCall);
 //        getPopularMoviesCall.enqueue(getPopularMoviesNextFetchCallback);
 
-        moviesPresenter.loadMovies(currentPage);
+//        moviesPresenter.loadMovies(currentPage);
+        moviesPresenter.loadNextPage();
+
     }
 
     private ActivityOptionsCompat getActivityOptionsCompat(Pair pair){

@@ -29,8 +29,8 @@ public interface MoviesContract {
         boolean isAdapterEmpty();
         void setErrorText(String errorText);
         void addMoviesToAdapter(List<Movie> movies);
-        void setIsLastPage(boolean isLastPage);
-        void setIsLoading(boolean isLoading);
+//        void setIsLastPage(boolean isLastPage);
+//        void setIsLoading(boolean isLoading);
         void viewMovieDetails(Movie movie);
         void saveConfiguration(Configuration configuration);
     }
