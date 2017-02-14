@@ -2,6 +2,7 @@ package com.etiennelawlor.moviehub.data.source.movies;
 
 import android.content.Context;
 
+import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.data.remote.AuthorizedNetworkInterceptor;
 import com.etiennelawlor.moviehub.data.remote.MovieHubService;
 import com.etiennelawlor.moviehub.data.remote.ServiceGenerator;
@@ -32,28 +33,23 @@ public class MoviesRemoteDataSource implements MoviesDataSource {
                 MovieHubService.class,
                 MovieHubService.BASE_URL,
                 new AuthorizedNetworkInterceptor(context));
+//        MovieHubApplication.getInstance().getApplicationContext();
     }
 
-//    @Override
-//    public void getMovies(int currentPage, MoviesRepository.GetMoviesCallback callback) {
-//        movieHubService.getPopularMovies(currentPage, callback);
-//    }
 
     @Override
-    public void getMovies(int currentPage, GetMoviesCallback callback) {
-//        movieHubService.getPopularMovies(currentPage, callback);
-
+    public void getMovies(int currentPage, final GetMoviesCallback<?> callback) {
         Call getPopularMoviesCall = movieHubService.getPopularMovies(currentPage);
         calls.add(getPopularMoviesCall);
         getPopularMoviesCall.enqueue(new Callback() {
             @Override
             public void onResponse(Call call, Response response) {
-
+                callback.onSuccess(null,1);
             }
 
             @Override
             public void onFailure(Call call, Throwable t) {
-
+                callback.onError(t,0);
             }
         });
     }
