@@ -18,7 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.local.PreferencesHelper;
+import com.etiennelawlor.moviehub.data.local.sharedpreferences.PreferencesHelper;
 import com.etiennelawlor.moviehub.data.remote.AuthorizedNetworkInterceptor;
 import com.etiennelawlor.moviehub.data.remote.MovieHubService;
 import com.etiennelawlor.moviehub.data.remote.ServiceGenerator;

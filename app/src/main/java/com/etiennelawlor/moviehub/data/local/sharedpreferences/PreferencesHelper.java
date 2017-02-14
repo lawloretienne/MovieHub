@@ -1,4 +1,4 @@
-package com.etiennelawlor.moviehub.data.local;
+package com.etiennelawlor.moviehub.data.local.sharedpreferences;
 
 import android.content.Context;
 import android.content.SharedPreferences;

@@ -18,14 +18,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.local.PreferencesHelper;
-import com.etiennelawlor.moviehub.data.remote.AuthorizedNetworkInterceptor;
-import com.etiennelawlor.moviehub.data.remote.MovieHubService;
-import com.etiennelawlor.moviehub.data.remote.ServiceGenerator;
+import com.etiennelawlor.moviehub.data.local.sharedpreferences.PreferencesHelper;
 import com.etiennelawlor.moviehub.data.remote.response.Configuration;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
-import com.etiennelawlor.moviehub.data.remote.response.MoviesEnvelope;
-import com.etiennelawlor.moviehub.data.repository.MoviesRemoteRepository;
 import com.etiennelawlor.moviehub.data.source.movies.MoviesLocalDataSource;
 import com.etiennelawlor.moviehub.data.source.movies.MoviesRemoteDataSource;
 import com.etiennelawlor.moviehub.data.source.movies.MoviesRepository;
@@ -33,8 +28,6 @@ import com.etiennelawlor.moviehub.ui.base.BaseAdapter;
 import com.etiennelawlor.moviehub.ui.base.BaseFragment;
 import com.etiennelawlor.moviehub.ui.moviedetails.MovieDetailsActivity;
 import com.etiennelawlor.moviehub.util.FontCache;
-import com.etiennelawlor.moviehub.util.NetworkLogUtility;
-import com.etiennelawlor.moviehub.util.NetworkUtility;
 
 import java.util.List;
 
@@ -43,13 +36,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**

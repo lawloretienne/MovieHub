@@ -2,7 +2,7 @@ package com.etiennelawlor.moviehub.util;
 
 import android.content.Context;
 
-import com.etiennelawlor.moviehub.data.local.PreferencesHelper;
+import com.etiennelawlor.moviehub.data.local.sharedpreferences.PreferencesHelper;
 import com.etiennelawlor.moviehub.data.remote.response.Configuration;
 import com.etiennelawlor.moviehub.data.remote.response.Images;
 

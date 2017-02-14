@@ -44,7 +44,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.local.PreferencesHelper;
+import com.etiennelawlor.moviehub.data.local.sharedpreferences.PreferencesHelper;
 import com.etiennelawlor.moviehub.data.model.FullMovie;
 import com.etiennelawlor.moviehub.data.remote.AuthorizedNetworkInterceptor;
 import com.etiennelawlor.moviehub.data.remote.MovieHubService;

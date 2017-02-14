@@ -1,9 +1,7 @@
 package com.etiennelawlor.moviehub.ui.movies;
 
 import android.os.NetworkOnMainThreadException;
-import android.view.View;
 
-import com.etiennelawlor.moviehub.data.local.PreferencesHelper;
 import com.etiennelawlor.moviehub.data.remote.response.Configuration;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
 import com.etiennelawlor.moviehub.data.remote.response.MoviesEnvelope;
