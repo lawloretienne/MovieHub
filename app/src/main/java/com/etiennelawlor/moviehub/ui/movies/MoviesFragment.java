@@ -26,6 +26,9 @@ import com.etiennelawlor.moviehub.data.remote.response.Configuration;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
 import com.etiennelawlor.moviehub.data.remote.response.MoviesEnvelope;
 import com.etiennelawlor.moviehub.data.repository.MoviesRemoteRepository;
+import com.etiennelawlor.moviehub.data.source.movies.MoviesLocalDataSource;
+import com.etiennelawlor.moviehub.data.source.movies.MoviesRemoteDataSource;
+import com.etiennelawlor.moviehub.data.source.movies.MoviesRepository;
 import com.etiennelawlor.moviehub.ui.base.BaseAdapter;
 import com.etiennelawlor.moviehub.ui.base.BaseFragment;
 import com.etiennelawlor.moviehub.ui.moviedetails.MovieDetailsActivity;
@@ -75,7 +78,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     // region Member Variables
     private MoviesAdapter moviesAdapter;
     private Typeface font;
-    private MovieHubService movieHubService;
+//    private MovieHubService movieHubService;
     private Unbinder unbinder;
     private StaggeredGridLayoutManager layoutManager;
     private Configuration configuration;
@@ -140,12 +143,13 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
 
         compositeSubscription = new CompositeSubscription();
 
-        movieHubService = ServiceGenerator.createService(
-                MovieHubService.class,
-                MovieHubService.BASE_URL,
-                new AuthorizedNetworkInterceptor(getContext()));
+//        movieHubService = ServiceGenerator.createService(
+//                MovieHubService.class,
+//                MovieHubService.BASE_URL,
+//                new AuthorizedNetworkInterceptor(getContext()));
 
-        moviesPresenter = new MoviesPresenter(new MoviesRemoteRepository(movieHubService), this);
+//        moviesPresenter = new MoviesPresenter(new MoviesRemoteRepository(movieHubService), this);
+        moviesPresenter = new MoviesPresenter(new MoviesRepository(new MoviesRemoteDataSource(), new MoviesLocalDataSource()), this);
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
     }

@@ -7,7 +7,8 @@ import com.etiennelawlor.moviehub.data.local.PreferencesHelper;
 import com.etiennelawlor.moviehub.data.remote.response.Configuration;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
 import com.etiennelawlor.moviehub.data.remote.response.MoviesEnvelope;
-import com.etiennelawlor.moviehub.data.repository.MoviesRepository;
+import com.etiennelawlor.moviehub.data.source.movies.MoviesDataSource;
+import com.etiennelawlor.moviehub.data.source.movies.MoviesRepository;
 import com.etiennelawlor.moviehub.util.NetworkLogUtility;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 
@@ -35,7 +36,7 @@ public class MoviesPresenter implements MoviesContract.Presenter, MoviesReposito
     // endregion
 
     // region Member Variables
-    private final MoviesRepository moviesRepository;
+    private final MoviesDataSource moviesDataSource;
     private final MoviesContract.View moviesView;
 
     private CompositeSubscription compositeSubscription;
@@ -142,8 +143,8 @@ public class MoviesPresenter implements MoviesContract.Presenter, MoviesReposito
     // endregion
 
     // region Constructors
-    public MoviesPresenter(MoviesRepository moviesRepository, MoviesContract.View moviesView) {
-        this.moviesRepository = moviesRepository;
+    public MoviesPresenter(MoviesDataSource moviesDataSource, MoviesContract.View moviesView) {
+        this.moviesDataSource = moviesDataSource;
         this.moviesView = moviesView;
     }
     // endregion
@@ -162,11 +163,11 @@ public class MoviesPresenter implements MoviesContract.Presenter, MoviesReposito
 //                }
 //            }
 
-            Call getPopularMoviesCall = moviesRepository.getPopularMovies(currentPage);
+            Call getPopularMoviesCall = moviesDataSource.getPopularMovies(currentPage);
             calls.add(getPopularMoviesCall);
             getPopularMoviesCall.enqueue(getPopularMoviesFirstFetchCallback);
         } else {
-            Call getPopularMoviesCall = moviesRepository.getPopularMovies(currentPage);
+            Call getPopularMoviesCall = moviesDataSource.getPopularMovies(currentPage);
             calls.add(getPopularMoviesCall);
             getPopularMoviesCall.enqueue(getPopularMoviesNextFetchCallback);
         }
@@ -179,13 +180,13 @@ public class MoviesPresenter implements MoviesContract.Presenter, MoviesReposito
             moviesView.hideErrorView();
             moviesView.showLoadingView();
 
-            Call getPopularMoviesCall = moviesRepository.getPopularMovies(currentPage);
+            Call getPopularMoviesCall = moviesDataSource.getPopularMovies(currentPage);
             calls.add(getPopularMoviesCall);
             getPopularMoviesCall.enqueue(getPopularMoviesFirstFetchCallback);
         } else {
             moviesView.updateFooter(MoviesContract.View.FooterType.LOAD_MORE);
 
-            Call getPopularMoviesCall = moviesRepository.getPopularMovies(currentPage);
+            Call getPopularMoviesCall = moviesDataSource.getPopularMovies(currentPage);
             calls.add(getPopularMoviesCall);
             getPopularMoviesCall.enqueue(getPopularMoviesNextFetchCallback);
         }
@@ -193,7 +194,7 @@ public class MoviesPresenter implements MoviesContract.Presenter, MoviesReposito
 
     @Override
     public void getConfiguration() {
-        Subscription subscription = moviesRepository.getConfiguration()
+        Subscription subscription = moviesDataSource.getConfiguration()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Configuration>() {
@@ -267,7 +268,17 @@ public class MoviesPresenter implements MoviesContract.Presenter, MoviesReposito
 //        calls.add(getPopularMoviesCall);
 //        getPopularMoviesCall.enqueue(getPopularMoviesFirstFetchCallback);
 
-        moviesRepository.getPopularMovies(this);
+        moviesDataSource.getMovies(0, new MoviesDataSource.GetMoviesCallback<List<Movie>>() {
+            @Override
+            public void onSuccess(List<Movie> response, int currentPage) {
+
+            }
+
+            @Override
+            public void onError(Throwable throwable, int currentPage) {
+
+            }
+        });
     }
 
     @Override
@@ -276,7 +287,17 @@ public class MoviesPresenter implements MoviesContract.Presenter, MoviesReposito
 //        calls.add(getPopularMoviesCall);
 //        getPopularMoviesCall.enqueue(getPopularMoviesNextFetchCallback);
 
-        moviesRepository.getPopularMovies(this);
+        moviesDataSource.getMovies(1, new MoviesDataSource.GetMoviesCallback<List<Movie>>() {
+            @Override
+            public void onSuccess(List<Movie> response, int currentPage) {
+
+            }
+
+            @Override
+            public void onError(Throwable throwable, int currentPage) {
+
+            }
+        });
     }
 
     @Override
