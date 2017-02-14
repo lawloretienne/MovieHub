@@ -28,7 +28,7 @@ import timber.log.Timber;
  * Created by etiennelawlor on 2/9/17.
  */
 
-public class MoviesPresenter implements MoviesContract.Presenter {
+public class MoviesPresenter implements MoviesContract.Presenter, MoviesRepository.GetMoviesCallback<List<Movie>> {
 
     // region Constants
     private static final int PAGE_SIZE = 20;
@@ -259,5 +259,48 @@ public class MoviesPresenter implements MoviesContract.Presenter {
     @Override
     public void viewMovieDetails(Movie movie) {
         moviesView.viewMovieDetails(movie);
+    }
+
+    @Override
+    public void loadFirstPage() {
+//        Call getPopularMoviesCall = moviesRepository.getPopularMovies(currentPage);
+//        calls.add(getPopularMoviesCall);
+//        getPopularMoviesCall.enqueue(getPopularMoviesFirstFetchCallback);
+
+        moviesRepository.getPopularMovies(this);
+    }
+
+    @Override
+    public void loadNextPage() {
+//        Call getPopularMoviesCall = moviesRepository.getPopularMovies(currentPage);
+//        calls.add(getPopularMoviesCall);
+//        getPopularMoviesCall.enqueue(getPopularMoviesNextFetchCallback);
+
+        moviesRepository.getPopularMovies(this);
+    }
+
+    @Override
+    public void reloadFirstPage() {
+
+    }
+
+    @Override
+    public void reloadNextPage() {
+
+    }
+
+//    public interface NextPageCallback<R> {
+//        void onSuccess(R response);
+//        void onError(Throwable throwable);
+//    }
+
+    @Override
+    public void onSuccess(List<Movie> response, int currentPage) {
+
+    }
+
+    @Override
+    public void onError(Throwable throwable, int currentPage) {
+
     }
 }

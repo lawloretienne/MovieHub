@@ -36,6 +36,11 @@ public interface MoviesContract {
     }
 
     interface Presenter {
+        void loadFirstPage();
+        void loadNextPage();
+        void reloadFirstPage();
+        void reloadNextPage();
+
         void loadMovies(int currentPage);
         void reloadMovies(int currentPage);
         void getConfiguration();
