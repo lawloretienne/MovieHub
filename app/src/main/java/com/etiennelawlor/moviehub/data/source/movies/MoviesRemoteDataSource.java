@@ -1,5 +1,7 @@
 package com.etiennelawlor.moviehub.data.source.movies;
 
+import android.content.Context;
+
 import com.etiennelawlor.moviehub.data.remote.AuthorizedNetworkInterceptor;
 import com.etiennelawlor.moviehub.data.remote.MovieHubService;
 import com.etiennelawlor.moviehub.data.remote.ServiceGenerator;
@@ -10,6 +12,8 @@ import com.etiennelawlor.moviehub.data.repository.MoviesRepository;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import rx.Observable;
 
 /**
@@ -23,11 +27,11 @@ public class MoviesRemoteDataSource implements MoviesDataSource {
     private List<Call> calls;
     // endregion
 
-    public MoviesRemoteDataSource() {
+    public MoviesRemoteDataSource(Context context) {
         movieHubService = ServiceGenerator.createService(
                 MovieHubService.class,
                 MovieHubService.BASE_URL,
-                new AuthorizedNetworkInterceptor(getContext()));
+                new AuthorizedNetworkInterceptor(context));
     }
 
 //    @Override
@@ -37,10 +41,20 @@ public class MoviesRemoteDataSource implements MoviesDataSource {
 
     @Override
     public void getMovies(int currentPage, GetMoviesCallback callback) {
-        movieHubService.getPopularMovies(currentPage, callback);
+//        movieHubService.getPopularMovies(currentPage, callback);
 
         Call getPopularMoviesCall = movieHubService.getPopularMovies(currentPage);
         calls.add(getPopularMoviesCall);
-        getPopularMoviesCall.enqueue(getPopularMoviesNextFetchCallback);
+        getPopularMoviesCall.enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) {
+
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+
+            }
+        });
     }
 }

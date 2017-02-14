@@ -1,5 +1,7 @@
 package com.etiennelawlor.moviehub.data.source.movies;
 
+import android.content.Context;
+
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
 
 import java.util.List;
@@ -13,7 +15,7 @@ import rx.Observable;
 public class MoviesLocalDataSource implements MoviesDataSource {
 
     // region Constructors
-    public MoviesLocalDataSource() {
+    public MoviesLocalDataSource(Context context) {
     }
     // endregion
 

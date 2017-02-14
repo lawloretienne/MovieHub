@@ -14,14 +14,14 @@ import rx.Observable;
 public class MoviesRepository implements MoviesDataSource {
 
     // region Member Variables
-    private MoviesDataSource moviesRemoteDataSource;
     private MoviesDataSource moviesLocalDataSource;
+    private MoviesDataSource moviesRemoteDataSource;
     // endregion
 
     // region Constructors
-    public MoviesRepository(MoviesDataSource moviesRemoteDataSource, MoviesDataSource moviesLocalDataSource) {
-        this.moviesRemoteDataSource = moviesRemoteDataSource;
+    public MoviesRepository(MoviesDataSource moviesLocalDataSource, MoviesDataSource moviesRemoteDataSource) {
         this.moviesLocalDataSource = moviesLocalDataSource;
+        this.moviesRemoteDataSource = moviesRemoteDataSource;
     }
     // endregion
 

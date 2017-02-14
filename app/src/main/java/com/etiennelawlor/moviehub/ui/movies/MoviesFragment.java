@@ -143,13 +143,11 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
 
         compositeSubscription = new CompositeSubscription();
 
-//        movieHubService = ServiceGenerator.createService(
-//                MovieHubService.class,
-//                MovieHubService.BASE_URL,
-//                new AuthorizedNetworkInterceptor(getContext()));
-
-//        moviesPresenter = new MoviesPresenter(new MoviesRemoteRepository(movieHubService), this);
-        moviesPresenter = new MoviesPresenter(new MoviesRepository(new MoviesRemoteDataSource(), new MoviesLocalDataSource()), this);
+        moviesPresenter = new MoviesPresenter(
+                new MoviesRepository(
+                        new MoviesRemoteDataSource(getContext()),
+                        new MoviesLocalDataSource(getContext())),
+                this);
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
     }
