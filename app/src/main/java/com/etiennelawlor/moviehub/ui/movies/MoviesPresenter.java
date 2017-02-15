@@ -7,6 +7,7 @@ import com.etiennelawlor.moviehub.data.remote.response.Movie;
 import com.etiennelawlor.moviehub.data.remote.response.MoviesEnvelope;
 import com.etiennelawlor.moviehub.data.source.movies.MoviesDataSource;
 import com.etiennelawlor.moviehub.data.source.movies.MoviesRepository;
+import com.etiennelawlor.moviehub.ui.base.BasePresenter;
 import com.etiennelawlor.moviehub.util.NetworkLogUtility;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 
@@ -16,6 +17,8 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import rx.Observable;
+import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -38,7 +41,6 @@ public class MoviesPresenter implements MoviesContract.Presenter, MoviesReposito
     private final MoviesContract.View moviesView;
 
     private CompositeSubscription compositeSubscription;
-    private List<Call> calls;
     // endregion
 
     // region Callbacks
@@ -146,6 +148,22 @@ public class MoviesPresenter implements MoviesContract.Presenter, MoviesReposito
         this.moviesView = moviesView;
     }
     // endregion
+
+    public void setUpCompositeSubscription(){
+        compositeSubscription = new CompositeSubscription();
+    }
+
+    public void tearDownCompositeSubscription(){
+        compositeSubscription.unsubscribe();
+    }
+
+    public void addSubscription(Observable observable, Subscriber subscriber){
+        Subscription subscription = observable
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+        compositeSubscription.add(subscription);
+    }
 
     @Override
     public void loadMovies(int currentPage) {

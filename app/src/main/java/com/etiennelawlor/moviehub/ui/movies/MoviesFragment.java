@@ -67,7 +67,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     private Unbinder unbinder;
     private StaggeredGridLayoutManager layoutManager;
     private Configuration configuration;
-    private CompositeSubscription compositeSubscription;
+//    private CompositeSubscription compositeSubscription;
     private MoviesContract.Presenter moviesPresenter;
     private View selectedMovieView;
     // endregion
@@ -122,7 +122,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        compositeSubscription = new CompositeSubscription();
+//        compositeSubscription = new CompositeSubscription();
 
         moviesPresenter = new MoviesPresenter(
                 new MoviesRepository(
@@ -138,6 +138,8 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_movies, container, false);
         unbinder = ButterKnife.bind(this, rootView);
+
+        moviesPresenter.setUpCompositeSubscription();
 
         return rootView;
     }
@@ -172,13 +174,14 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
         super.onDestroyView();
         removeListeners();
         unbinder.unbind();
+        moviesPresenter.tearDownCompositeSubscription();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
 
-        compositeSubscription.unsubscribe();
+//        compositeSubscription.unsubscribe();
     }
 
     // endregion

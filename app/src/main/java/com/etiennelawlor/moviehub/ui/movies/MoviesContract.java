@@ -2,6 +2,7 @@ package com.etiennelawlor.moviehub.ui.movies;
 
 import com.etiennelawlor.moviehub.data.remote.response.Configuration;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
+import com.etiennelawlor.moviehub.ui.base.BasePresenter;
 
 import java.util.List;
 
@@ -35,7 +36,7 @@ public interface MoviesContract {
         void saveConfiguration(Configuration configuration);
     }
 
-    interface Presenter {
+    interface Presenter extends BasePresenter {
         void loadFirstPage();
         void loadNextPage();
         void reloadFirstPage();
@@ -45,9 +46,9 @@ public interface MoviesContract {
         void reloadMovies(int currentPage);
         void getConfiguration();
 
-        void onAttachView(View view);
-        void onDetachView();
-        void unsubscribeCompositeSubscription();
+//        void onAttachView(View view);
+//        void onDetachView();
+//        void unsubscribeCompositeSubscription();
         void viewMovieDetails(Movie movie);
     }
 }
