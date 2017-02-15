@@ -42,11 +42,14 @@ import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import rx.Observer;
+import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
 /**
  * Created by etiennelawlor on 12/16/16.
@@ -92,9 +95,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
         errorLinearLayout.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
 
-        Call getPopularMoviesCall = movieHubService.getPopularMovies(currentPage);
-        calls.add(getPopularMoviesCall);
-        getPopularMoviesCall.enqueue(getPopularMoviesFirstFetchCallback);
+        addPopularMoviesSubscription();
     }
 
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
@@ -121,106 +122,6 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
 
     // endregion
 
-    // region Callbacks
-    private Callback<MoviesEnvelope> getPopularMoviesFirstFetchCallback = new Callback<MoviesEnvelope>() {
-        @Override
-        public void onResponse(Call<MoviesEnvelope> call, Response<MoviesEnvelope> response) {
-            progressBar.setVisibility(View.GONE);
-            isLoading = false;
-
-            if (!response.isSuccessful()) {
-                int responseCode = response.code();
-                if(responseCode == 504) { // 504 Unsatisfiable Request (only-if-cached)
-//                    errorTextView.setText("Can't load data.\nCheck your network connection.");
-//                    errorLinearLayout.setVisibility(View.VISIBLE);
-
-                    return;
-                }
-            }
-
-            MoviesEnvelope moviesEnvelope = response.body();
-
-            if(moviesEnvelope != null){
-                List<Movie> movies = moviesEnvelope.getMovies();
-                if(movies != null){
-                    if(movies.size()>0)
-                        moviesAdapter.addAll(movies);
-
-                    if(movies.size() >= PAGE_SIZE){
-                        moviesAdapter.addFooter();
-                    } else {
-                        isLastPage = true;
-                    }
-                }
-            }
-
-            if(moviesAdapter.isEmpty()){
-                emptyLinearLayout.setVisibility(View.VISIBLE);
-            }
-        }
-
-        @Override
-        public void onFailure(Call<MoviesEnvelope> call, Throwable t) {
-            NetworkLogUtility.logFailure(call, t);
-
-            if (!call.isCanceled()){
-                isLoading = false;
-                progressBar.setVisibility(View.GONE);
-
-                if(NetworkUtility.isKnownException(t)){
-                    errorTextView.setText("Can't load data.\nCheck your network connection.");
-                    errorLinearLayout.setVisibility(View.VISIBLE);
-                }
-            }
-        }
-    };
-
-    private Callback<MoviesEnvelope> getPopularMoviesNextFetchCallback = new Callback<MoviesEnvelope>() {
-        @Override
-        public void onResponse(Call<MoviesEnvelope> call, Response<MoviesEnvelope> response) {
-            if (!response.isSuccessful()) {
-                int responseCode = response.code();
-                if(responseCode == 504) { // 504 Unsatisfiable Request (only-if-cached)
-//                    errorTextView.setText("Can't load data.\nCheck your network connection.");
-//                    errorLinearLayout.setVisibility(View.VISIBLE);
-
-                    return;
-                }
-            }
-
-            moviesAdapter.removeFooter();
-            isLoading = false;
-
-            MoviesEnvelope moviesEnvelope = response.body();
-
-            if(moviesEnvelope != null){
-                List<Movie> movies = moviesEnvelope.getMovies();
-                if(movies != null){
-                    if(movies.size()>0)
-                        moviesAdapter.addAll(movies);
-
-                    if(movies.size() >= PAGE_SIZE){
-                        moviesAdapter.addFooter();
-                    } else {
-                        isLastPage = true;
-                    }
-                }
-            }
-        }
-
-        @Override
-        public void onFailure(Call<MoviesEnvelope> call, Throwable t) {
-            NetworkLogUtility.logFailure(call, t);
-
-            if (!call.isCanceled()){
-                if(NetworkUtility.isKnownException(t)){
-                    moviesAdapter.updateFooter(BaseAdapter.FooterType.ERROR);
-                }
-            }
-        }
-    };
-    // endregion
-
     // region Constructors
     public MoviesFragment() {
     }
@@ -243,8 +144,6 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        compositeSubscription = new CompositeSubscription();
-
         movieHubService = ServiceGenerator.createService(
                 MovieHubService.class,
                 MovieHubService.BASE_URL,
@@ -258,6 +157,8 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_movies, container, false);
         unbinder = ButterKnife.bind(this, rootView);
+
+        compositeSubscription = new CompositeSubscription();
 
         return rootView;
     }
@@ -281,9 +182,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
         configuration = MovieHubPrefs.getConfiguration(getContext());
 
         if(configuration != null){
-            Call getPopularMoviesCall = movieHubService.getPopularMovies(currentPage);
-            calls.add(getPopularMoviesCall);
-            getPopularMoviesCall.enqueue(getPopularMoviesFirstFetchCallback);
+            addPopularMoviesSubscription();
         } else {
             Subscription subscription = movieHubService.getConfiguration()
                     .subscribeOn(Schedulers.newThread())
@@ -294,9 +193,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
                             if(configuration != null){
                                 MovieHubPrefs.setConfiguration(getContext(), configuration);
 
-                                Call getPopularMoviesCall = movieHubService.getPopularMovies(currentPage);
-                                calls.add(getPopularMoviesCall);
-                                getPopularMoviesCall.enqueue(getPopularMoviesFirstFetchCallback);
+                                addPopularMoviesSubscription();
                             }
                         }
                     }, new Action1<Throwable>() {
@@ -317,15 +214,10 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+
         removeListeners();
-        unbinder.unbind();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
         compositeSubscription.unsubscribe();
+        unbinder.unbind();
     }
 
     // endregion
@@ -360,9 +252,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     public void onReloadClick() {
         moviesAdapter.updateFooter(BaseAdapter.FooterType.LOAD_MORE);
 
-        Call getPopularMoviesCall = movieHubService.getPopularMovies(currentPage);
-        calls.add(getPopularMoviesCall);
-        getPopularMoviesCall.enqueue(getPopularMoviesNextFetchCallback);
+        addPopularMoviesSubscription();
     }
     // endregion
 
@@ -375,9 +265,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
         isLoading = true;
         currentPage += 1;
 
-        Call getPopularMoviesCall = movieHubService.getPopularMovies(currentPage);
-        calls.add(getPopularMoviesCall);
-        getPopularMoviesCall.enqueue(getPopularMoviesNextFetchCallback);
+        addPopularMoviesSubscription();
     }
 
     private ActivityOptionsCompat getActivityOptionsCompat(Pair pair){
@@ -456,6 +344,82 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
             pair = Pair.create(appBar, resources.getString(R.string.transition_app_bar));
         }
         return pair;
+    }
+
+    private void addPopularMoviesSubscription(){
+        Subscription popularMoviesSubscription = movieHubService.getPopularMovies(currentPage)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<MoviesEnvelope>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        throwable.printStackTrace();
+
+                        if(currentPage == 1){
+                            isLoading = false;
+                            progressBar.setVisibility(View.GONE);
+
+                            if(NetworkUtility.isKnownException(throwable)){
+                                errorTextView.setText("Can't load data.\nCheck your network connection.");
+                                errorLinearLayout.setVisibility(View.VISIBLE);
+                            }
+                        } else {
+                            if(NetworkUtility.isKnownException(throwable)){
+                                moviesAdapter.updateFooter(BaseAdapter.FooterType.ERROR);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onNext(MoviesEnvelope moviesEnvelope) {
+                        if(currentPage == 1){
+                            progressBar.setVisibility(View.GONE);
+                            isLoading = false;
+
+                            if(moviesEnvelope != null){
+                                List<Movie> movies = moviesEnvelope.getMovies();
+                                if(movies != null){
+                                    if(movies.size()>0)
+                                        moviesAdapter.addAll(movies);
+
+                                    if(movies.size() >= PAGE_SIZE){
+                                        moviesAdapter.addFooter();
+                                    } else {
+                                        isLastPage = true;
+                                    }
+                                }
+                            }
+
+                            if(moviesAdapter.isEmpty()){
+                                emptyLinearLayout.setVisibility(View.VISIBLE);
+                            }
+                        } else {
+                            moviesAdapter.removeFooter();
+                            isLoading = false;
+
+                            if(moviesEnvelope != null){
+                                List<Movie> movies = moviesEnvelope.getMovies();
+                                if(movies != null){
+                                    if(movies.size()>0)
+                                        moviesAdapter.addAll(movies);
+
+                                    if(movies.size() >= PAGE_SIZE){
+                                        moviesAdapter.addFooter();
+                                    } else {
+                                        isLastPage = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+
+        compositeSubscription.add(popularMoviesSubscription);
     }
 
     // endregion

@@ -13,7 +13,6 @@ import com.etiennelawlor.moviehub.network.models.TelevisionShowContentRatingsEnv
 import com.etiennelawlor.moviehub.network.models.TelevisionShowCreditsEnvelope;
 import com.etiennelawlor.moviehub.network.models.TelevisionShowsEnvelope;
 
-import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -27,7 +26,7 @@ public interface MovieHubService {
     String BASE_URL = "https://api.themoviedb.org/3/";
 
     @GET("movie/popular")
-    Call<MoviesEnvelope> getPopularMovies(@Query("page") int page);
+    Observable<MoviesEnvelope> getPopularMovies(@Query("page") int page);
 
     @GET("movie/{movieId}")
     Observable<Movie> getMovieDetails(@Path("movieId") long movieId);
@@ -42,7 +41,7 @@ public interface MovieHubService {
     Observable<MovieReleaseDatesEnvelope> getMovieReleaseDates(@Path("movieId") long movieId);
 
     @GET("tv/popular")
-    Call<TelevisionShowsEnvelope> getPopularTelevisionShows(@Query("page") int page);
+    Observable<TelevisionShowsEnvelope> getPopularTelevisionShows(@Query("page") int page);
 
     @GET("tv/{tvId}")
     Observable<TelevisionShow> getTelevisionShowDetails(@Path("tvId") long tvId);
@@ -57,7 +56,7 @@ public interface MovieHubService {
     Observable<TelevisionShowContentRatingsEnvelope> getTelevisionShowContentRatings(@Path("tvId") long tvId);
 
     @GET("person/popular")
-    Call<PeopleEnvelope> getPopularPeople(@Query("page") int page);
+    Observable<PeopleEnvelope> getPopularPeople(@Query("page") int page);
 
     @GET("person/{personId}?append_to_response=images")
     Observable<Person> getPersonDetails(@Path("personId") long personId);

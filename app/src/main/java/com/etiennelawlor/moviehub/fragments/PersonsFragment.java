@@ -42,6 +42,7 @@ import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -92,9 +93,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
         errorLinearLayout.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
 
-        Call getPopularPeopleCall = movieHubService.getPopularPeople(currentPage);
-        calls.add(getPopularPeopleCall);
-        getPopularPeopleCall.enqueue(getPopularPeopleFirstFetchCallback);
+        addPopularPeopleSubscription();
     }
 
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
@@ -121,106 +120,6 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
 
     // endregion
 
-    // region Callbacks
-    private Callback<PeopleEnvelope> getPopularPeopleFirstFetchCallback = new Callback<PeopleEnvelope>() {
-        @Override
-        public void onResponse(Call<PeopleEnvelope> call, Response<PeopleEnvelope> response) {
-            progressBar.setVisibility(View.GONE);
-            isLoading = false;
-
-            if (!response.isSuccessful()) {
-                int responseCode = response.code();
-                if(responseCode == 504) { // 504 Unsatisfiable Request (only-if-cached)
-//                    errorTextView.setText("Can't load data.\nCheck your network connection.");
-//                    errorLinearLayout.setVisibility(View.VISIBLE);
-
-                    return;
-                }
-            }
-
-            PeopleEnvelope peopleEnvelope = response.body();
-
-            if(peopleEnvelope != null){
-                List<Person> persons = peopleEnvelope.getPersons();
-                if(persons != null){
-                    if(persons.size()>0)
-                        personsAdapter.addAll(persons);
-
-                    if(persons.size() >= PAGE_SIZE){
-                        personsAdapter.addFooter();
-                    } else {
-                        isLastPage = true;
-                    }
-                }
-            }
-
-            if(personsAdapter.isEmpty()){
-                emptyLinearLayout.setVisibility(View.VISIBLE);
-            }
-        }
-
-        @Override
-        public void onFailure(Call<PeopleEnvelope> call, Throwable t) {
-            NetworkLogUtility.logFailure(call, t);
-
-            if (!call.isCanceled()){
-                isLoading = false;
-                progressBar.setVisibility(View.GONE);
-
-                if(NetworkUtility.isKnownException(t)){
-                    errorTextView.setText("Can't load data.\nCheck your network connection.");
-                    errorLinearLayout.setVisibility(View.VISIBLE);
-                }
-            }
-        }
-    };
-
-    private Callback<PeopleEnvelope> getPopularPeopleNextFetchCallback = new Callback<PeopleEnvelope>() {
-        @Override
-        public void onResponse(Call<PeopleEnvelope> call, Response<PeopleEnvelope> response) {
-            if (!response.isSuccessful()) {
-                int responseCode = response.code();
-                if(responseCode == 504) { // 504 Unsatisfiable Request (only-if-cached)
-//                    errorTextView.setText("Can't load data.\nCheck your network connection.");
-//                    errorLinearLayout.setVisibility(View.VISIBLE);
-
-                    return;
-                }
-            }
-
-            personsAdapter.removeFooter();
-            isLoading = false;
-
-            PeopleEnvelope peopleEnvelope = response.body();
-
-            if(peopleEnvelope != null){
-                List<Person> persons = peopleEnvelope.getPersons();
-                if(persons != null){
-                    if(persons.size()>0)
-                        personsAdapter.addAll(persons);
-
-                    if(persons.size() >= PAGE_SIZE){
-                        personsAdapter.addFooter();
-                    } else {
-                        isLastPage = true;
-                    }
-                }
-            }
-        }
-
-        @Override
-        public void onFailure(Call<PeopleEnvelope> call, Throwable t) {
-            NetworkLogUtility.logFailure(call, t);
-
-            if (!call.isCanceled()){
-                if(NetworkUtility.isKnownException(t)){
-                    personsAdapter.updateFooter(BaseAdapter.FooterType.ERROR);
-                }
-            }
-        }
-    };
-    // endregion
-
     // region Constructors
     public PersonsFragment() {
     }
@@ -243,8 +142,6 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        compositeSubscription = new CompositeSubscription();
-
         movieHubService = ServiceGenerator.createService(
                 MovieHubService.class,
                 MovieHubService.BASE_URL,
@@ -258,6 +155,8 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_people, container, false);
         unbinder = ButterKnife.bind(this, rootView);
+
+        compositeSubscription = new CompositeSubscription();
 
         return rootView;
     }
@@ -281,9 +180,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
         configuration = MovieHubPrefs.getConfiguration(getContext());
 
         if(configuration != null){
-            Call getPopularPeopleCall = movieHubService.getPopularPeople(currentPage);
-            calls.add(getPopularPeopleCall);
-            getPopularPeopleCall.enqueue(getPopularPeopleFirstFetchCallback);
+            addPopularPeopleSubscription();
         } else {
             Subscription subscription = movieHubService.getConfiguration()
                     .subscribeOn(Schedulers.newThread())
@@ -294,9 +191,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
                             if(configuration != null){
                                 MovieHubPrefs.setConfiguration(getContext(), configuration);
 
-                                Call getPopularPeopleCall = movieHubService.getPopularPeople(currentPage);
-                                calls.add(getPopularPeopleCall);
-                                getPopularPeopleCall.enqueue(getPopularPeopleFirstFetchCallback);
+                                addPopularPeopleSubscription();
                             }
                         }
                     }, new Action1<Throwable>() {
@@ -318,14 +213,8 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     public void onDestroyView() {
         super.onDestroyView();
         removeListeners();
-        unbinder.unbind();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
         compositeSubscription.unsubscribe();
+        unbinder.unbind();
     }
 
     // endregion
@@ -359,9 +248,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     public void onReloadClick() {
         personsAdapter.updateFooter(BaseAdapter.FooterType.LOAD_MORE);
 
-        Call getPopularPeopleCall = movieHubService.getPopularPeople(currentPage);
-        calls.add(getPopularPeopleCall);
-        getPopularPeopleCall.enqueue(getPopularPeopleNextFetchCallback);
+        addPopularPeopleSubscription();
     }
     // endregion
 
@@ -374,9 +261,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
         isLoading = true;
         currentPage += 1;
 
-        Call getPopularPeopleCall = movieHubService.getPopularPeople(currentPage);
-        calls.add(getPopularPeopleCall);
-        getPopularPeopleCall.enqueue(getPopularPeopleNextFetchCallback);
+        addPopularPeopleSubscription();
     }
 
     private ActivityOptionsCompat getActivityOptionsCompat(Pair pair){
@@ -457,5 +342,80 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
         return pair;
     }
 
+    private void addPopularPeopleSubscription(){
+        Subscription popularPeopleSubscription = movieHubService.getPopularPeople(currentPage)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<PeopleEnvelope>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        throwable.printStackTrace();
+
+                        if(currentPage == 1){
+                            isLoading = false;
+                            progressBar.setVisibility(View.GONE);
+
+                            if(NetworkUtility.isKnownException(throwable)){
+                                errorTextView.setText("Can't load data.\nCheck your network connection.");
+                                errorLinearLayout.setVisibility(View.VISIBLE);
+                            }
+                        } else {
+                            if(NetworkUtility.isKnownException(throwable)){
+                                personsAdapter.updateFooter(BaseAdapter.FooterType.ERROR);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onNext(PeopleEnvelope peopleEnvelope) {
+                        if(currentPage == 1){
+                            progressBar.setVisibility(View.GONE);
+                            isLoading = false;
+
+                            if(peopleEnvelope != null){
+                                List<Person> persons = peopleEnvelope.getPersons();
+                                if(persons != null){
+                                    if(persons.size()>0)
+                                        personsAdapter.addAll(persons);
+
+                                    if(persons.size() >= PAGE_SIZE){
+                                        personsAdapter.addFooter();
+                                    } else {
+                                        isLastPage = true;
+                                    }
+                                }
+                            }
+
+                            if(personsAdapter.isEmpty()){
+                                emptyLinearLayout.setVisibility(View.VISIBLE);
+                            }
+                        } else {
+                            personsAdapter.removeFooter();
+                            isLoading = false;
+
+                            if(peopleEnvelope != null){
+                                List<Person> persons = peopleEnvelope.getPersons();
+                                if(persons != null){
+                                    if(persons.size()>0)
+                                        personsAdapter.addAll(persons);
+
+                                    if(persons.size() >= PAGE_SIZE){
+                                        personsAdapter.addFooter();
+                                    } else {
+                                        isLastPage = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+
+        compositeSubscription.add(popularPeopleSubscription);
+    }
     // endregion
 }

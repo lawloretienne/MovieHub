@@ -42,6 +42,7 @@ import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -92,9 +93,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
         errorLinearLayout.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
 
-        Call getPopularTelevisionShowsCall = movieHubService.getPopularTelevisionShows(currentPage);
-        calls.add(getPopularTelevisionShowsCall);
-        getPopularTelevisionShowsCall.enqueue(getPopularTelevisionShowsFirstFetchCallback);
+        addPopularTelevisionShowsSubscription();
     }
 
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
@@ -121,106 +120,6 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
 
     // endregion
 
-    // region Callbacks
-    private Callback<TelevisionShowsEnvelope> getPopularTelevisionShowsFirstFetchCallback = new Callback<TelevisionShowsEnvelope>() {
-        @Override
-        public void onResponse(Call<TelevisionShowsEnvelope> call, Response<TelevisionShowsEnvelope> response) {
-            progressBar.setVisibility(View.GONE);
-            isLoading = false;
-
-            if (!response.isSuccessful()) {
-                int responseCode = response.code();
-                if(responseCode == 504) { // 504 Unsatisfiable Request (only-if-cached)
-//                    errorTextView.setText("Can't load data.\nCheck your network connection.");
-//                    errorLinearLayout.setVisibility(View.VISIBLE);
-
-                    return;
-                }
-            }
-
-            TelevisionShowsEnvelope televisionShowsEnvelope = response.body();
-
-            if(televisionShowsEnvelope != null){
-                List<TelevisionShow> televisionShows = televisionShowsEnvelope.getTelevisionShows();
-                if(televisionShows != null){
-                    if(televisionShows.size()>0)
-                        televisionShowsAdapter.addAll(televisionShows);
-
-                    if(televisionShows.size() >= PAGE_SIZE){
-                        televisionShowsAdapter.addFooter();
-                    } else {
-                        isLastPage = true;
-                    }
-                }
-            }
-
-            if(televisionShowsAdapter.isEmpty()){
-                emptyLinearLayout.setVisibility(View.VISIBLE);
-            }
-        }
-
-        @Override
-        public void onFailure(Call<TelevisionShowsEnvelope> call, Throwable t) {
-            NetworkLogUtility.logFailure(call, t);
-
-            if (!call.isCanceled()){
-                isLoading = false;
-                progressBar.setVisibility(View.GONE);
-
-                if(NetworkUtility.isKnownException(t)){
-                    errorTextView.setText("Can't load data.\nCheck your network connection.");
-                    errorLinearLayout.setVisibility(View.VISIBLE);
-                }
-            }
-        }
-    };
-
-    private Callback<TelevisionShowsEnvelope> getPopularTelevisionShowsNextFetchCallback = new Callback<TelevisionShowsEnvelope>() {
-        @Override
-        public void onResponse(Call<TelevisionShowsEnvelope> call, Response<TelevisionShowsEnvelope> response) {
-            if (!response.isSuccessful()) {
-                int responseCode = response.code();
-                if(responseCode == 504) { // 504 Unsatisfiable Request (only-if-cached)
-//                    errorTextView.setText("Can't load data.\nCheck your network connection.");
-//                    errorLinearLayout.setVisibility(View.VISIBLE);
-
-                    return;
-                }
-            }
-
-            televisionShowsAdapter.removeFooter();
-            isLoading = false;
-
-            TelevisionShowsEnvelope televisionShowsEnvelope = response.body();
-
-            if(televisionShowsEnvelope != null){
-                List<TelevisionShow> televisionShows = televisionShowsEnvelope.getTelevisionShows();
-                if(televisionShows != null){
-                    if(televisionShows.size()>0)
-                        televisionShowsAdapter.addAll(televisionShows);
-
-                    if(televisionShows.size() >= PAGE_SIZE){
-                        televisionShowsAdapter.addFooter();
-                    } else {
-                        isLastPage = true;
-                    }
-                }
-            }
-        }
-
-        @Override
-        public void onFailure(Call<TelevisionShowsEnvelope> call, Throwable t) {
-            NetworkLogUtility.logFailure(call, t);
-
-            if (!call.isCanceled()){
-                if(NetworkUtility.isKnownException(t)){
-                    televisionShowsAdapter.updateFooter(BaseAdapter.FooterType.ERROR);
-                }
-            }
-        }
-    };
-    // endregion
-
     // region Constructors
     public TelevisionShowsFragment() {
     }
@@ -243,8 +142,6 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        compositeSubscription = new CompositeSubscription();
-
         movieHubService = ServiceGenerator.createService(
                 MovieHubService.class,
                 MovieHubService.BASE_URL,
@@ -258,6 +155,8 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_television_shows, container, false);
         unbinder = ButterKnife.bind(this, rootView);
+
+        compositeSubscription = new CompositeSubscription();
 
         return rootView;
     }
@@ -281,9 +180,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
         configuration = MovieHubPrefs.getConfiguration(getContext());
 
         if(configuration != null){
-            Call getPopularTelevisionShowsCall = movieHubService.getPopularTelevisionShows(currentPage);
-            calls.add(getPopularTelevisionShowsCall);
-            getPopularTelevisionShowsCall.enqueue(getPopularTelevisionShowsFirstFetchCallback);
+            addPopularTelevisionShowsSubscription();
         } else {
             Subscription subscription = movieHubService.getConfiguration()
                     .subscribeOn(Schedulers.newThread())
@@ -294,9 +191,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
                             if(configuration != null){
                                 MovieHubPrefs.setConfiguration(getContext(), configuration);
 
-                                Call getPopularTelevisionShowsCall = movieHubService.getPopularTelevisionShows(currentPage);
-                                calls.add(getPopularTelevisionShowsCall);
-                                getPopularTelevisionShowsCall.enqueue(getPopularTelevisionShowsFirstFetchCallback);
+                                addPopularTelevisionShowsSubscription();
                             }
                         }
                     }, new Action1<Throwable>() {
@@ -318,14 +213,8 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
     public void onDestroyView() {
         super.onDestroyView();
         removeListeners();
-        unbinder.unbind();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
         compositeSubscription.unsubscribe();
+        unbinder.unbind();
     }
 
     // endregion
@@ -359,9 +248,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
     public void onReloadClick() {
         televisionShowsAdapter.updateFooter(BaseAdapter.FooterType.LOAD_MORE);
 
-        Call getPopularTelevisionShowsCall = movieHubService.getPopularTelevisionShows(currentPage);
-        calls.add(getPopularTelevisionShowsCall);
-        getPopularTelevisionShowsCall.enqueue(getPopularTelevisionShowsNextFetchCallback);
+        addPopularTelevisionShowsSubscription();
     }
     // endregion
 
@@ -374,9 +261,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
         isLoading = true;
         currentPage += 1;
 
-        Call getPopularTelevisionShowsCall = movieHubService.getPopularTelevisionShows(currentPage);
-        calls.add(getPopularTelevisionShowsCall);
-        getPopularTelevisionShowsCall.enqueue(getPopularTelevisionShowsNextFetchCallback);
+        addPopularTelevisionShowsSubscription();
     }
 
     private ActivityOptionsCompat getActivityOptionsCompat(Pair pair){
@@ -455,6 +340,82 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
             pair = Pair.create(appBar, resources.getString(R.string.transition_app_bar));
         }
         return pair;
+    }
+
+    private void addPopularTelevisionShowsSubscription(){
+        Subscription popularTelevisionShowsSubscription = movieHubService.getPopularTelevisionShows(currentPage)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<TelevisionShowsEnvelope>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        throwable.printStackTrace();
+
+                        if(currentPage == 1){
+                            isLoading = false;
+                            progressBar.setVisibility(View.GONE);
+
+                            if(NetworkUtility.isKnownException(throwable)){
+                                errorTextView.setText("Can't load data.\nCheck your network connection.");
+                                errorLinearLayout.setVisibility(View.VISIBLE);
+                            }
+                        } else {
+                            if(NetworkUtility.isKnownException(throwable)){
+                                televisionShowsAdapter.updateFooter(BaseAdapter.FooterType.ERROR);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onNext(TelevisionShowsEnvelope televisionShowsEnvelope) {
+                        if(currentPage == 1){
+                            progressBar.setVisibility(View.GONE);
+                            isLoading = false;
+
+                            if(televisionShowsEnvelope != null){
+                                List<TelevisionShow> televisionShows = televisionShowsEnvelope.getTelevisionShows();
+                                if(televisionShows != null){
+                                    if(televisionShows.size()>0)
+                                        televisionShowsAdapter.addAll(televisionShows);
+
+                                    if(televisionShows.size() >= PAGE_SIZE){
+                                        televisionShowsAdapter.addFooter();
+                                    } else {
+                                        isLastPage = true;
+                                    }
+                                }
+                            }
+
+                            if(televisionShowsAdapter.isEmpty()){
+                                emptyLinearLayout.setVisibility(View.VISIBLE);
+                            }
+                        } else {
+                            televisionShowsAdapter.removeFooter();
+                            isLoading = false;
+
+                            if(televisionShowsEnvelope != null){
+                                List<TelevisionShow> televisionShows = televisionShowsEnvelope.getTelevisionShows();
+                                if(televisionShows != null){
+                                    if(televisionShows.size()>0)
+                                        televisionShowsAdapter.addAll(televisionShows);
+
+                                    if(televisionShows.size() >= PAGE_SIZE){
+                                        televisionShowsAdapter.addFooter();
+                                    } else {
+                                        isLastPage = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+        compositeSubscription.add(popularTelevisionShowsSubscription);
+
     }
     // endregion
 }
