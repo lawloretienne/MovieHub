@@ -136,8 +136,6 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
         View rootView = inflater.inflate(R.layout.fragment_movies, container, false);
         unbinder = ButterKnife.bind(this, rootView);
 
-        moviesPresenter.setUpCompositeSubscription();
-
         return rootView;
     }
 
@@ -172,7 +170,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
         super.onDestroyView();
         removeListeners();
         unbinder.unbind();
-        moviesPresenter.tearDownCompositeSubscription();
+        moviesPresenter.clearSubscriptions();
     }
 
     @Override
