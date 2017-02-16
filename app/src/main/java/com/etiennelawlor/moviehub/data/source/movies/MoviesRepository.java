@@ -1,5 +1,7 @@
 package com.etiennelawlor.moviehub.data.source.movies;
 
+import rx.Observable;
+
 /**
  * Created by etiennelawlor on 2/13/17.
  */
@@ -21,20 +23,8 @@ public class MoviesRepository implements MoviesDataSource {
 
     // region MoviesDataSource Methods
     @Override
-    public void getMovies(int currentPage, GetMoviesCallback callback) {
-        moviesRemoteDataSource.getMovies(currentPage, callback);
+    public Observable getMovies(int currentPage) {
+        return moviesRemoteDataSource.getMovies(currentPage);
     }
-
-    @Override
-    public void getMoviesFirstPage(GetMoviesCallback<?> callback) {
-        moviesRemoteDataSource.getMovies(currentPage, callback);
-    }
-
-    @Override
-    public void getMoviesNextPage(GetMoviesCallback<?> callback) {
-        currentPage += 1;
-        moviesRemoteDataSource.getMovies(currentPage, callback);
-    }
-
     // endregion
 }

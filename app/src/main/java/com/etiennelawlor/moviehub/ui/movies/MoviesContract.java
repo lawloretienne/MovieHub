@@ -30,25 +30,19 @@ public interface MoviesContract {
         boolean isAdapterEmpty();
         void setErrorText(String errorText);
         void addMoviesToAdapter(List<Movie> movies);
-//        void setIsLastPage(boolean isLastPage);
-//        void setIsLoading(boolean isLoading);
         void viewMovieDetails(Movie movie);
         void saveConfiguration(Configuration configuration);
     }
 
-    interface Presenter extends BasePresenter {
-        void loadFirstPage();
-        void loadNextPage();
-        void reloadFirstPage();
-        void reloadNextPage();
+    interface Presenter {
+//        void loadFirstPage();
+//        void loadNextPage();
+//        void reloadFirstPage();
+//        void reloadNextPage();
 
         void loadMovies(int currentPage);
-        void reloadMovies(int currentPage);
+//        void reloadMovies(int currentPage);
         void getConfiguration();
-
-//        void onAttachView(View view);
-//        void onDetachView();
-//        void unsubscribeCompositeSubscription();
         void viewMovieDetails(Movie movie);
     }
 }

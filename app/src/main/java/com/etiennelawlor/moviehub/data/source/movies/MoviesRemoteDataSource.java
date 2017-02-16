@@ -5,12 +5,17 @@ import android.content.Context;
 import com.etiennelawlor.moviehub.data.remote.AuthorizedNetworkInterceptor;
 import com.etiennelawlor.moviehub.data.remote.MovieHubService;
 import com.etiennelawlor.moviehub.data.remote.ServiceGenerator;
+import com.etiennelawlor.moviehub.data.remote.response.Movie;
+import com.etiennelawlor.moviehub.data.remote.response.MoviesEnvelope;
+import com.etiennelawlor.moviehub.data.viewmodel.MoviesViewModel;
 
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import rx.Observable;
+import rx.functions.Func1;
 
 /**
  * Created by etiennelawlor on 2/13/17.
@@ -18,9 +23,12 @@ import retrofit2.Response;
 
 public class MoviesRemoteDataSource implements MoviesDataSource {
 
+    // region Constants
+    private static final int PAGE_SIZE = 20;
+    // endregion
+
     // region Member Variables
     private MovieHubService movieHubService;
-    private List<Call> calls;
     // endregion
 
     // region Constructors
@@ -35,30 +43,18 @@ public class MoviesRemoteDataSource implements MoviesDataSource {
 
     // region MoviesDataSource Methods
     @Override
-    public void getMovies(int currentPage, final GetMoviesCallback<?> callback) {
-        Call getPopularMoviesCall = movieHubService.getPopularMovies(currentPage);
-        calls.add(getPopularMoviesCall);
-        getPopularMoviesCall.enqueue(new Callback() {
-            @Override
-            public void onResponse(Call call, Response response) {
-                callback.onSuccess(null,1);
-            }
+    public Observable getMovies(int currentPage) {
+        return movieHubService.getPopularMovies(currentPage)
+                .map(new Func1<MoviesEnvelope, MoviesViewModel>() {
+                    @Override
+                    public MoviesViewModel call(MoviesEnvelope moviesEnvelope) {
+                        List<Movie> movies = moviesEnvelope.getMovies();
+                        int currentPage = moviesEnvelope.getPage();
+                        boolean isLastPage = moviesEnvelope.getMovies().size() < PAGE_SIZE ? true : false;
 
-            @Override
-            public void onFailure(Call call, Throwable t) {
-                callback.onError(t,0);
-            }
-        });
-    }
-
-    @Override
-    public void loadFirstPage(GetMoviesCallback<?> callback) {
-
-    }
-
-    @Override
-    public void loadNextPage(GetMoviesCallback<?> callback) {
-
+                        return new MoviesViewModel(movies, currentPage, isLastPage);
+                    }
+                });
     }
     // endregion
 }

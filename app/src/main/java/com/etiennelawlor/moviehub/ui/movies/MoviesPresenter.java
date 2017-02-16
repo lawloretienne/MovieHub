@@ -7,6 +7,7 @@ import com.etiennelawlor.moviehub.data.remote.response.Movie;
 import com.etiennelawlor.moviehub.data.remote.response.MoviesEnvelope;
 import com.etiennelawlor.moviehub.data.source.movies.MoviesDataSource;
 import com.etiennelawlor.moviehub.data.source.movies.MoviesRepository;
+import com.etiennelawlor.moviehub.data.viewmodel.MoviesViewModel;
 import com.etiennelawlor.moviehub.ui.base.BasePresenter;
 import com.etiennelawlor.moviehub.util.NetworkLogUtility;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
@@ -30,7 +31,7 @@ import timber.log.Timber;
  * Created by etiennelawlor on 2/9/17.
  */
 
-public class MoviesPresenter implements MoviesContract.Presenter, MoviesRepository.GetMoviesCallback<List<Movie>> {
+public class MoviesPresenter implements MoviesContract.Presenter {
 
     // region Constants
     private static final int PAGE_SIZE = 20;
@@ -44,102 +45,102 @@ public class MoviesPresenter implements MoviesContract.Presenter, MoviesReposito
     // endregion
 
     // region Callbacks
-    private Callback<MoviesEnvelope> getPopularMoviesFirstFetchCallback = new Callback<MoviesEnvelope>() {
-        @Override
-        public void onResponse(Call<MoviesEnvelope> call, Response<MoviesEnvelope> response) {
-            moviesView.hideLoadingView();
-            moviesView.setIsLoading(false);
-
-            if (!response.isSuccessful()) {
-                int responseCode = response.code();
-                if(responseCode == 504) { // 504 Unsatisfiable Request (only-if-cached)
+//    private Callback<MoviesEnvelope> getPopularMoviesFirstFetchCallback = new Callback<MoviesEnvelope>() {
+//        @Override
+//        public void onResponse(Call<MoviesEnvelope> call, Response<MoviesEnvelope> response) {
+//            moviesView.hideLoadingView();
+//            moviesView.setIsLoading(false);
+//
+//            if (!response.isSuccessful()) {
+//                int responseCode = response.code();
+//                if(responseCode == 504) { // 504 Unsatisfiable Request (only-if-cached)
+////                    moviesView.setErrorText("Can't load data.\nCheck your network connection.");
+////                    moviesView.showErrorView();
+//
+//                    return;
+//                }
+//            }
+//
+//            MoviesEnvelope moviesEnvelope = response.body();
+//
+//            if(moviesEnvelope != null){
+//                List<Movie> movies = moviesEnvelope.getMovies();
+//                if(movies != null){
+//                    if(movies.size()>0)
+//                        moviesView.addMoviesToAdapter(movies);
+//
+//                    if(movies.size() >= PAGE_SIZE){
+//                        moviesView.addFooter();
+//                    } else {
+//                        moviesView.setIsLastPage(true);
+//                    }
+//                }
+//            }
+//
+//            if(moviesView.isAdapterEmpty()){
+//                moviesView.hideEmptyView();
+//            }
+//        }
+//
+//        @Override
+//        public void onFailure(Call<MoviesEnvelope> call, Throwable t) {
+//            NetworkLogUtility.logFailure(call, t);
+//
+//            if (!call.isCanceled()){
+//                moviesView.setIsLoading(false);
+//                moviesView.hideLoadingView();
+//
+//                if(NetworkUtility.isKnownException(t)){
 //                    moviesView.setErrorText("Can't load data.\nCheck your network connection.");
 //                    moviesView.showErrorView();
-
-                    return;
-                }
-            }
-
-            MoviesEnvelope moviesEnvelope = response.body();
-
-            if(moviesEnvelope != null){
-                List<Movie> movies = moviesEnvelope.getMovies();
-                if(movies != null){
-                    if(movies.size()>0)
-                        moviesView.addMoviesToAdapter(movies);
-
-                    if(movies.size() >= PAGE_SIZE){
-                        moviesView.addFooter();
-                    } else {
-                        moviesView.setIsLastPage(true);
-                    }
-                }
-            }
-
-            if(moviesView.isAdapterEmpty()){
-                moviesView.hideEmptyView();
-            }
-        }
-
-        @Override
-        public void onFailure(Call<MoviesEnvelope> call, Throwable t) {
-            NetworkLogUtility.logFailure(call, t);
-
-            if (!call.isCanceled()){
-                moviesView.setIsLoading(false);
-                moviesView.hideLoadingView();
-
-                if(NetworkUtility.isKnownException(t)){
-                    moviesView.setErrorText("Can't load data.\nCheck your network connection.");
-                    moviesView.showErrorView();
-                }
-            }
-        }
-    };
-
-    private Callback<MoviesEnvelope> getPopularMoviesNextFetchCallback = new Callback<MoviesEnvelope>() {
-        @Override
-        public void onResponse(Call<MoviesEnvelope> call, Response<MoviesEnvelope> response) {
-            if (!response.isSuccessful()) {
-                int responseCode = response.code();
-                if(responseCode == 504) { // 504 Unsatisfiable Request (only-if-cached)
-//                    errorTextView.setText("Can't load data.\nCheck your network connection.");
-//                    errorLinearLayout.setVisibility(View.VISIBLE);
-                    return;
-                }
-            }
-
-            moviesView.removeFooter();
-            moviesView.setIsLoading(false);
-
-            MoviesEnvelope moviesEnvelope = response.body();
-
-            if(moviesEnvelope != null){
-                List<Movie> movies = moviesEnvelope.getMovies();
-                if(movies != null){
-                    if(movies.size()>0)
-                        moviesView.addMoviesToAdapter(movies);
-
-                    if(movies.size() >= PAGE_SIZE){
-                        moviesView.addFooter();
-                    } else {
-                        moviesView.setIsLastPage(true);
-                    }
-                }
-            }
-        }
-
-        @Override
-        public void onFailure(Call<MoviesEnvelope> call, Throwable t) {
-            NetworkLogUtility.logFailure(call, t);
-
-            if (!call.isCanceled()){
-                if(NetworkUtility.isKnownException(t)){
-                    moviesView.updateFooter(MoviesContract.View.FooterType.ERROR);
-                }
-            }
-        }
-    };
+//                }
+//            }
+//        }
+//    };
+//
+//    private Callback<MoviesEnvelope> getPopularMoviesNextFetchCallback = new Callback<MoviesEnvelope>() {
+//        @Override
+//        public void onResponse(Call<MoviesEnvelope> call, Response<MoviesEnvelope> response) {
+//            if (!response.isSuccessful()) {
+//                int responseCode = response.code();
+//                if(responseCode == 504) { // 504 Unsatisfiable Request (only-if-cached)
+////                    errorTextView.setText("Can't load data.\nCheck your network connection.");
+////                    errorLinearLayout.setVisibility(View.VISIBLE);
+//                    return;
+//                }
+//            }
+//
+//            moviesView.removeFooter();
+//            moviesView.setIsLoading(false);
+//
+//            MoviesEnvelope moviesEnvelope = response.body();
+//
+//            if(moviesEnvelope != null){
+//                List<Movie> movies = moviesEnvelope.getMovies();
+//                if(movies != null){
+//                    if(movies.size()>0)
+//                        moviesView.addMoviesToAdapter(movies);
+//
+//                    if(movies.size() >= PAGE_SIZE){
+//                        moviesView.addFooter();
+//                    } else {
+//                        moviesView.setIsLastPage(true);
+//                    }
+//                }
+//            }
+//        }
+//
+//        @Override
+//        public void onFailure(Call<MoviesEnvelope> call, Throwable t) {
+//            NetworkLogUtility.logFailure(call, t);
+//
+//            if (!call.isCanceled()){
+//                if(NetworkUtility.isKnownException(t)){
+//                    moviesView.updateFooter(MoviesContract.View.FooterType.ERROR);
+//                }
+//            }
+//        }
+//    };
     // endregion
 
     // region Constructors
@@ -167,110 +168,106 @@ public class MoviesPresenter implements MoviesContract.Presenter, MoviesReposito
 
     @Override
     public void loadMovies(int currentPage) {
-        if(currentPage == 0) {
-
-//            moviesRepository.getPopularMovies(currentPage, Callback() {
-//                @Override
-//                public void onResponse () {
-//                }
-//
-//                @Override
-//                public void onFailure () {
-//                }
-//            }
-
-            Call getPopularMoviesCall = moviesDataSource.getPopularMovies(currentPage);
-            calls.add(getPopularMoviesCall);
-            getPopularMoviesCall.enqueue(getPopularMoviesFirstFetchCallback);
-        } else {
-            Call getPopularMoviesCall = moviesDataSource.getPopularMovies(currentPage);
-            calls.add(getPopularMoviesCall);
-            getPopularMoviesCall.enqueue(getPopularMoviesNextFetchCallback);
-        }
-    }
-
-    @Override
-    public void reloadMovies(int currentPage) {
-        if(currentPage == 0){
+        if(currentPage == 1){
             moviesView.hideEmptyView();
             moviesView.hideErrorView();
             moviesView.showLoadingView();
-
-            Call getPopularMoviesCall = moviesDataSource.getPopularMovies(currentPage);
-            calls.add(getPopularMoviesCall);
-            getPopularMoviesCall.enqueue(getPopularMoviesFirstFetchCallback);
-        } else {
+        } else{
             moviesView.updateFooter(MoviesContract.View.FooterType.LOAD_MORE);
-
-            Call getPopularMoviesCall = moviesDataSource.getPopularMovies(currentPage);
-            calls.add(getPopularMoviesCall);
-            getPopularMoviesCall.enqueue(getPopularMoviesNextFetchCallback);
         }
+
+        addSubscription(moviesDataSource.getMovies(currentPage), new Subscriber<MoviesViewModel>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                moviesView.hideLoadingView();
+
+            }
+
+            @Override
+            public void onNext(MoviesViewModel moviesViewModel) {
+                moviesView.hideLoadingView();
+
+                if(moviesViewModel != null){
+                    int currentPage = moviesViewModel.getCurrentPage();
+                    List<Movie> movies = moviesViewModel.getMovies();
+                    if(currentPage == 1){
+
+                        if(movies != null){
+                            if(movies.size()>0)
+                                moviesView.addMoviesToAdapter(movies);
+
+                            if(movies.size() >= PAGE_SIZE){
+                                moviesView.addFooter();
+                            } else {
+//                                    moviesView.setIsLastPage(true);
+                            }
+                        }
+
+//                        moviesView.displayMovies(moviesViewModel.getMovies());
+
+                        if(moviesView.isAdapterEmpty()){
+                            moviesView.hideEmptyView();
+                        }
+                    } else {
+                        moviesView.removeFooter();
+//                        moviesView.setIsLoading(false);
+
+                        if(movies != null){
+                            if(movies.size()>0)
+                                moviesView.addMoviesToAdapter(movies);
+
+                            if(movies.size() >= PAGE_SIZE){
+                                moviesView.addFooter();
+                            } else {
+//                                moviesView.setIsLastPage(true);
+                            }
+                        }
+                    }
+
+                }
+            }
+        });
     }
 
     @Override
     public void getConfiguration() {
-        Subscription subscription = moviesDataSource.getConfiguration()
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Configuration>() {
-                    @Override
-                    public void call(Configuration configuration) {
-                        if(configuration != null){
-//                            PreferencesHelper.setConfiguration(getContext(), configuration);
-                            moviesView.saveConfiguration(configuration);
-
-//                                Call getPopularMoviesCall = movieHubService.getPopularMovies(currentPage);
-//                                calls.add(getPopularMoviesCall);
-//                                getPopularMoviesCall.enqueue(getPopularMoviesFirstFetchCallback);
-
-                            loadMovies(0);
-                        }
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        throwable.printStackTrace();
-//                        progressBar.setVisibility(View.GONE);
-                        moviesView.showLoadingView();
-                        if (NetworkUtility.isKnownException(throwable)) {
-//                            errorTextView.setText("Can't load data.\nCheck your network connection.");
-//                            errorLinearLayout.setVisibility(View.VISIBLE);
-                            moviesView.setErrorText("Can't load data.\nCheck your network connection.");
-                            moviesView.showErrorView();
-                        }
-                    }
-                });
-        compositeSubscription.add(subscription);
-    }
-
-    @Override
-    public void onAttachView(MoviesContract.View view) {
-        calls = new ArrayList<>();
-        compositeSubscription = new CompositeSubscription();
-    }
-
-    @Override
-    public void onDetachView() {
-        compositeSubscription.unsubscribe();
-
-        for (final Call call : calls) {
-            Timber.d("onDetachView() : call.cancel() - " + call.toString());
-
-            try {
-                call.cancel();
-            } catch (NetworkOnMainThreadException e) {
-                Timber.e("onDetachView() : NetworkOnMainThreadException thrown");
-                e.printStackTrace();
-            }
-        }
-
-        calls.clear();
-    }
-
-    @Override
-    public void unsubscribeCompositeSubscription() {
-        compositeSubscription.unsubscribe();
+//        Subscription subscription = moviesDataSource.getConfiguration()
+//                .subscribeOn(Schedulers.newThread())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Action1<Configuration>() {
+//                    @Override
+//                    public void call(Configuration configuration) {
+//                        if(configuration != null){
+////                            PreferencesHelper.setConfiguration(getContext(), configuration);
+//                            moviesView.saveConfiguration(configuration);
+//
+////                                Call getPopularMoviesCall = movieHubService.getPopularMovies(currentPage);
+////                                calls.add(getPopularMoviesCall);
+////                                getPopularMoviesCall.enqueue(getPopularMoviesFirstFetchCallback);
+//
+//                            loadMovies(0);
+//                        }
+//                    }
+//                }, new Action1<Throwable>() {
+//                    @Override
+//                    public void call(Throwable throwable) {
+//                        throwable.printStackTrace();
+////                        progressBar.setVisibility(View.GONE);
+//                        moviesView.showLoadingView();
+//                        if (NetworkUtility.isKnownException(throwable)) {
+////                            errorTextView.setText("Can't load data.\nCheck your network connection.");
+////                            errorLinearLayout.setVisibility(View.VISIBLE);
+//                            moviesView.setErrorText("Can't load data.\nCheck your network connection.");
+//                            moviesView.showErrorView();
+//                        }
+//                    }
+//                });
+//        compositeSubscription.add(subscription);
     }
 
     @Override
@@ -278,67 +275,4 @@ public class MoviesPresenter implements MoviesContract.Presenter, MoviesReposito
         moviesView.viewMovieDetails(movie);
     }
 
-    @Override
-    public void loadFirstPage() {
-//        Call getPopularMoviesCall = moviesRepository.getPopularMovies(currentPage);
-//        calls.add(getPopularMoviesCall);
-//        getPopularMoviesCall.enqueue(getPopularMoviesFirstFetchCallback);
-
-        moviesDataSource.getMovies(0, new MoviesDataSource.GetMoviesCallback<List<Movie>>() {
-            @Override
-            public void onSuccess(List<Movie> response, int currentPage) {
-
-            }
-
-            @Override
-            public void onError(Throwable throwable, int currentPage) {
-
-            }
-        });
-    }
-
-    @Override
-    public void loadNextPage() {
-//        Call getPopularMoviesCall = moviesRepository.getPopularMovies(currentPage);
-//        calls.add(getPopularMoviesCall);
-//        getPopularMoviesCall.enqueue(getPopularMoviesNextFetchCallback);
-
-
-        moviesDataSource.getMovies(1, new MoviesDataSource.GetMoviesCallback<List<Movie>>() {
-            @Override
-            public void onSuccess(List<Movie> response, int currentPage) {
-
-            }
-
-            @Override
-            public void onError(Throwable throwable, int currentPage) {
-
-            }
-        });
-    }
-
-    @Override
-    public void reloadFirstPage() {
-
-    }
-
-    @Override
-    public void reloadNextPage() {
-
-    }
-
-//    public interface NextPageCallback<R> {
-//        void onSuccess(R response);
-//        void onError(Throwable throwable);
-//    }
-
-    @Override
-    public void onSuccess(List<Movie> response, int currentPage) {
-
-    }
-
-    @Override
-    public void onError(Throwable throwable, int currentPage) {
-
-    }
 }

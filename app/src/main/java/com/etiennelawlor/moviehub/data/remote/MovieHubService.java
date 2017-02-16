@@ -27,7 +27,7 @@ public interface MovieHubService {
     String BASE_URL = "https://api.themoviedb.org/3/";
 
     @GET("movie/popular")
-    Call<MoviesEnvelope> getPopularMovies(@Query("page") int page);
+    Observable<MoviesEnvelope> getPopularMovies(@Query("page") int page);
 
     @GET("movie/{movieId}")
     Observable<Movie> getMovieDetails(@Path("movieId") long movieId);

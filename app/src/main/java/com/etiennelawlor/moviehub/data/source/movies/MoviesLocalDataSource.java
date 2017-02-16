@@ -20,24 +20,9 @@ public class MoviesLocalDataSource implements MoviesDataSource {
     // endregion
 
     // region MoviesDataSource Methods
-//    @Override
-//    public Observable<List<Movie>> getMovies(int currentPage) {
-//        return null;
-//    }
-
     @Override
-    public void getMovies(int currentPage, GetMoviesCallback callback) {
-
-    }
-
-    @Override
-    public void loadFirstPage(GetMoviesCallback<?> callback) {
-
-    }
-
-    @Override
-    public void loadNextPage(GetMoviesCallback<?> callback) {
-
+    public Observable getMovies(int currentPage) {
+        return null;
     }
 
     // endregion
