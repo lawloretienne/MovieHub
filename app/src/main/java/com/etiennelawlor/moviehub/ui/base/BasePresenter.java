@@ -9,7 +9,6 @@ import rx.Subscriber;
 
 public interface BasePresenter {
 
-    void setUpCompositeSubscription();
-    void tearDownCompositeSubscription();
+    void clearSubscriptions();
     void addSubscription(Observable observable, Subscriber subscriber);
 }

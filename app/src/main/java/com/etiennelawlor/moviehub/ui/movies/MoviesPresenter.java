@@ -41,7 +41,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
     private final MoviesDataSource moviesDataSource;
     private final MoviesContract.View moviesView;
 
-    private CompositeSubscription compositeSubscription;
+    private CompositeSubscription compositeSubscription = new CompositeSubscription();;
     // endregion
 
     // region Callbacks
@@ -150,12 +150,10 @@ public class MoviesPresenter implements MoviesContract.Presenter {
     }
     // endregion
 
-    public void setUpCompositeSubscription(){
-        compositeSubscription = new CompositeSubscription();
-    }
-
-    public void tearDownCompositeSubscription(){
-        compositeSubscription.unsubscribe();
+    // region MoviesContract.Presenter Methods
+    @Override
+    public void clearSubscriptions() {
+        compositeSubscription.clear();
     }
 
     public void addSubscription(Observable observable, Subscriber subscriber){
@@ -274,5 +272,6 @@ public class MoviesPresenter implements MoviesContract.Presenter {
     public void viewMovieDetails(Movie movie) {
         moviesView.viewMovieDetails(movie);
     }
+    // endregion
 
 }
