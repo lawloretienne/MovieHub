@@ -34,7 +34,7 @@ public interface MoviesContract {
         void saveConfiguration(Configuration configuration);
     }
 
-    interface Presenter {
+    interface Presenter extends BasePresenter {
 //        void loadFirstPage();
 //        void loadNextPage();
 //        void reloadFirstPage();

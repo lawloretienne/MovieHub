@@ -36,7 +36,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by etiennelawlor on 12/16/16.
@@ -67,7 +66,6 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     private Unbinder unbinder;
     private StaggeredGridLayoutManager layoutManager;
     private Configuration configuration;
-//    private CompositeSubscription compositeSubscription;
     private MoviesContract.Presenter moviesPresenter;
     private View selectedMovieView;
     // endregion
@@ -75,7 +73,8 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     // region Listeners
     @OnClick(R.id.reload_btn)
     public void onReloadButtonClicked() {
-        moviesPresenter.reloadFirstPage();
+//        moviesPresenter.reloadFirstPage();
+        moviesPresenter.loadMovies(0);
     }
 
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
@@ -122,8 +121,6 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        compositeSubscription = new CompositeSubscription();
-
         moviesPresenter = new MoviesPresenter(
                 new MoviesRepository(
                         new MoviesRemoteDataSource(getContext()),
@@ -163,7 +160,8 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
         configuration = PreferencesHelper.getConfiguration(getContext());
 
         if(configuration != null){
-            moviesPresenter.loadFirstPage();
+//            moviesPresenter.loadFirstPage();
+            moviesPresenter.loadMovies(0);
         } else {
             moviesPresenter.getConfiguration();
         }
@@ -200,7 +198,8 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     // region MoviesAdapter.OnReloadClickListener Methods
     @Override
     public void onReloadClick() {
-        moviesPresenter.reloadNextPage();
+//        moviesPresenter.reloadNextPage();
+        moviesPresenter.loadMovies(0);
     }
     // endregion
 
@@ -316,7 +315,8 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
 //        getPopularMoviesCall.enqueue(getPopularMoviesNextFetchCallback);
 
 //        moviesPresenter.loadMovies(currentPage);
-        moviesPresenter.loadNextPage();
+//        moviesPresenter.loadNextPage();
+        moviesPresenter.loadMovies(0);
 
     }
 
