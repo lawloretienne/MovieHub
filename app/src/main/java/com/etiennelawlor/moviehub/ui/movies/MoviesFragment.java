@@ -123,8 +123,8 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
 
         moviesPresenter = new MoviesPresenter(
                 new MoviesRepository(
-                        new MoviesRemoteDataSource(getContext()),
-                        new MoviesLocalDataSource(getContext())),
+                        new MoviesLocalDataSource(getContext()),
+                        new MoviesRemoteDataSource(getContext())),
                 this);
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
@@ -153,13 +153,13 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
         recyclerView.setAdapter(moviesAdapter);
 
         // Pagination
-        recyclerView.addOnScrollListener(recyclerViewOnScrollListener);
+//        recyclerView.addOnScrollListener(recyclerViewOnScrollListener);
 
         configuration = PreferencesHelper.getConfiguration(getContext());
 
         if(configuration != null){
 //            moviesPresenter.loadFirstPage();
-            moviesPresenter.loadMovies(0);
+            moviesPresenter.loadMovies(1);
         } else {
             moviesPresenter.getConfiguration();
         }
@@ -171,13 +171,6 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
         removeListeners();
         unbinder.unbind();
         moviesPresenter.clearSubscriptions();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-//        compositeSubscription.unsubscribe();
     }
 
     // endregion

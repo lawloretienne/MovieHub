@@ -19,9 +19,7 @@ import android.view.View;
 import android.view.Window;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.repository.MoviesRemoteRepository;
 import com.etiennelawlor.moviehub.ui.movies.MoviesFragment;
-import com.etiennelawlor.moviehub.ui.movies.MoviesPresenter;
 import com.etiennelawlor.moviehub.ui.persons.PersonsFragment;
 import com.etiennelawlor.moviehub.ui.search.SearchActivity;
 import com.etiennelawlor.moviehub.ui.televisionshows.TelevisionShowsFragment;

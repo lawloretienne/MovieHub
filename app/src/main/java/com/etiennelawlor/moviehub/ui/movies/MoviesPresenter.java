@@ -44,105 +44,6 @@ public class MoviesPresenter implements MoviesContract.Presenter {
     private CompositeSubscription compositeSubscription = new CompositeSubscription();;
     // endregion
 
-    // region Callbacks
-//    private Callback<MoviesEnvelope> getPopularMoviesFirstFetchCallback = new Callback<MoviesEnvelope>() {
-//        @Override
-//        public void onResponse(Call<MoviesEnvelope> call, Response<MoviesEnvelope> response) {
-//            moviesView.hideLoadingView();
-//            moviesView.setIsLoading(false);
-//
-//            if (!response.isSuccessful()) {
-//                int responseCode = response.code();
-//                if(responseCode == 504) { // 504 Unsatisfiable Request (only-if-cached)
-////                    moviesView.setErrorText("Can't load data.\nCheck your network connection.");
-////                    moviesView.showErrorView();
-//
-//                    return;
-//                }
-//            }
-//
-//            MoviesEnvelope moviesEnvelope = response.body();
-//
-//            if(moviesEnvelope != null){
-//                List<Movie> movies = moviesEnvelope.getMovies();
-//                if(movies != null){
-//                    if(movies.size()>0)
-//                        moviesView.addMoviesToAdapter(movies);
-//
-//                    if(movies.size() >= PAGE_SIZE){
-//                        moviesView.addFooter();
-//                    } else {
-//                        moviesView.setIsLastPage(true);
-//                    }
-//                }
-//            }
-//
-//            if(moviesView.isAdapterEmpty()){
-//                moviesView.hideEmptyView();
-//            }
-//        }
-//
-//        @Override
-//        public void onFailure(Call<MoviesEnvelope> call, Throwable t) {
-//            NetworkLogUtility.logFailure(call, t);
-//
-//            if (!call.isCanceled()){
-//                moviesView.setIsLoading(false);
-//                moviesView.hideLoadingView();
-//
-//                if(NetworkUtility.isKnownException(t)){
-//                    moviesView.setErrorText("Can't load data.\nCheck your network connection.");
-//                    moviesView.showErrorView();
-//                }
-//            }
-//        }
-//    };
-//
-//    private Callback<MoviesEnvelope> getPopularMoviesNextFetchCallback = new Callback<MoviesEnvelope>() {
-//        @Override
-//        public void onResponse(Call<MoviesEnvelope> call, Response<MoviesEnvelope> response) {
-//            if (!response.isSuccessful()) {
-//                int responseCode = response.code();
-//                if(responseCode == 504) { // 504 Unsatisfiable Request (only-if-cached)
-////                    errorTextView.setText("Can't load data.\nCheck your network connection.");
-////                    errorLinearLayout.setVisibility(View.VISIBLE);
-//                    return;
-//                }
-//            }
-//
-//            moviesView.removeFooter();
-//            moviesView.setIsLoading(false);
-//
-//            MoviesEnvelope moviesEnvelope = response.body();
-//
-//            if(moviesEnvelope != null){
-//                List<Movie> movies = moviesEnvelope.getMovies();
-//                if(movies != null){
-//                    if(movies.size()>0)
-//                        moviesView.addMoviesToAdapter(movies);
-//
-//                    if(movies.size() >= PAGE_SIZE){
-//                        moviesView.addFooter();
-//                    } else {
-//                        moviesView.setIsLastPage(true);
-//                    }
-//                }
-//            }
-//        }
-//
-//        @Override
-//        public void onFailure(Call<MoviesEnvelope> call, Throwable t) {
-//            NetworkLogUtility.logFailure(call, t);
-//
-//            if (!call.isCanceled()){
-//                if(NetworkUtility.isKnownException(t)){
-//                    moviesView.updateFooter(MoviesContract.View.FooterType.ERROR);
-//                }
-//            }
-//        }
-//    };
-    // endregion
-
     // region Constructors
     public MoviesPresenter(MoviesDataSource moviesDataSource, MoviesContract.View moviesView) {
         this.moviesDataSource = moviesDataSource;
@@ -156,9 +57,10 @@ public class MoviesPresenter implements MoviesContract.Presenter {
         compositeSubscription.clear();
     }
 
-    public void addSubscription(Observable observable, Subscriber subscriber){
+    @Override
+    public void addSubscription(Observable observable, Subscriber subscriber) {
         Subscription subscription = observable
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);
         compositeSubscription.add(subscription);
@@ -205,11 +107,10 @@ public class MoviesPresenter implements MoviesContract.Presenter {
 //                                    moviesView.setIsLastPage(true);
                             }
                         }
-
 //                        moviesView.displayMovies(moviesViewModel.getMovies());
 
                         if(moviesView.isAdapterEmpty()){
-                            moviesView.hideEmptyView();
+                            moviesView.showEmptyView();
                         }
                     } else {
                         moviesView.removeFooter();
