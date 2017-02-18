@@ -309,6 +309,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
 //        moviesPresenter.loadNextPage();
         moviesPresenter.loadMovies(0);
 
+
     }
 
     private ActivityOptionsCompat getActivityOptionsCompat(Pair pair){

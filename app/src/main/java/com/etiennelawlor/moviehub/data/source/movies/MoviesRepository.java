@@ -11,7 +11,7 @@ public class MoviesRepository implements MoviesDataSource {
     // region Member Variables
     private MoviesDataSource moviesLocalDataSource;
     private MoviesDataSource moviesRemoteDataSource;
-    private int currentPage = 0;
+    private int currentPage = 1;
     // endregion
 
     // region Constructors
@@ -22,9 +22,21 @@ public class MoviesRepository implements MoviesDataSource {
     // endregion
 
     // region MoviesDataSource Methods
+
+
     @Override
     public Observable getMovies(int currentPage) {
         return moviesRemoteDataSource.getMovies(currentPage);
     }
+
+    public Observable loadCurrentPage() {
+        return getMovies(currentPage);
+    }
+
+    public Observable loadNextPage() {
+        currentPage+=1;
+        return getMovies(currentPage);
+    }
+
     // endregion
 }
