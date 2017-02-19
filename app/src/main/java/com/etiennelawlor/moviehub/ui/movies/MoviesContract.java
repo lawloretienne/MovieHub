@@ -44,5 +44,7 @@ public interface MoviesContract {
 //        void reloadMovies(int currentPage);
         void getConfiguration();
         void viewMovieDetails(Movie movie);
+//        void showMovieDetails(Movie movie);
+//        void openMovieDetails(Movie movie);
     }
 }
