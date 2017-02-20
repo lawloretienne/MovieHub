@@ -200,7 +200,7 @@ public class SearchPersonsAdapter extends BaseAdapter<Person> {
 
             iv.setHeightRatio(heightRatio);
 
-            String profileUrl = person.getProfileUrl(iv.getContext());
+            String profileUrl = person.getProfileUrl();
             if (!TextUtils.isEmpty(profileUrl)) {
                 Picasso.with(iv.getContext())
                         .load(profileUrl)

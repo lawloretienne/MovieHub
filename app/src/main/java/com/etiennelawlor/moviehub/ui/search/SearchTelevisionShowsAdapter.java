@@ -202,7 +202,7 @@ public class SearchTelevisionShowsAdapter extends BaseAdapter<TelevisionShow> {
 
             iv.setHeightRatio(heightRatio);
 
-            String posterUrl = televisionShow.getPosterUrl(iv.getContext());
+            String posterUrl = televisionShow.getPosterUrl();
             if (!TextUtils.isEmpty(posterUrl)) {
                 Picasso.with(iv.getContext())
                         .load(posterUrl)

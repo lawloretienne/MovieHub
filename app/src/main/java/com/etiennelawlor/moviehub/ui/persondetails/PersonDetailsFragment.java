@@ -44,13 +44,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.local.sharedpreferences.PreferencesHelper;
 import com.etiennelawlor.moviehub.data.model.FullPerson;
 import com.etiennelawlor.moviehub.data.remote.AuthorizedNetworkInterceptor;
 import com.etiennelawlor.moviehub.data.remote.MovieHubService;
 import com.etiennelawlor.moviehub.data.remote.ServiceGenerator;
-import com.etiennelawlor.moviehub.data.remote.response.Configuration;
-import com.etiennelawlor.moviehub.data.remote.response.Images;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
 import com.etiennelawlor.moviehub.data.remote.response.Person;
 import com.etiennelawlor.moviehub.data.remote.response.PersonCredit;
@@ -102,6 +99,9 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     public static final String KEY_TELEVISION_SHOW = "KEY_TELEVISION_SHOW";
     private static final float SCRIM_ADJUSTMENT = 0.075f;
     private static final int DELAY = 0;
+    public static final String SECURE_BASE_URL = "https://image.tmdb.org/t/p/";
+    public static final String POSTER_SIZE = "w780";
+    public static final String PROFILE_SIZE = "h632";
     // endregion
 
     // region Views
@@ -582,66 +582,26 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     }
 
     private String getProfileUrl(Person person){
-        String profileUrl = "";
-        Configuration configuration = PreferencesHelper.getConfiguration(getContext());
-        if(configuration != null) {
-            Images images = configuration.getImages();
-            if (images != null) {
-
-                List<String> posterSizes = images.getPosterSizes();
-                if (posterSizes != null && posterSizes.size() > 0) {
-                    String posterSize;
-                    if (posterSizes.size() > 1) {
-                        posterSize = posterSizes.get(posterSizes.size() - 2);
-                    } else {
-                        posterSize = posterSizes.get(posterSizes.size() - 1);
-                    }
-
-                    String secureBaseUrl = images.getSecureBaseUrl();
-                    String profilePath = person.getProfilePath();
-
-                    profileUrl = String.format("%s%s%s", secureBaseUrl, posterSize, profilePath);
-                }
-            }
-        }
+        String profilePath = person.getProfilePath();
+        String profileUrl = String.format("%s%s%s", SECURE_BASE_URL, POSTER_SIZE, profilePath);
         return profileUrl;
     }
 
     private String getBackdropUrl(Person person){
         String backdropUrl = "";
 
-        Configuration configuration = PreferencesHelper.getConfiguration(getContext());
-        if(configuration != null) {
-            Images images = configuration.getImages();
-            if (images != null) {
+        ProfileImages profileImages = person.getImages();
+        if(profileImages != null){
+            List<ProfileImage> profileImagesList = profileImages.getProfiles();
+            if(profileImagesList != null && profileImagesList.size()>0){
+                ProfileImage profileImage = profileImagesList.get(profileImagesList.size()-1);
+                if(profileImage != null){
+                    String filePath = profileImage.getFilePath();
 
-                List<String> profileSizes = images.getProfileSizes();
-                if (profileSizes != null && profileSizes.size() > 0) {
-                    String profileSize;
-                    if (profileSizes.size() > 1) {
-                        profileSize = profileSizes.get(profileSizes.size() - 2);
-                    } else {
-                        profileSize = profileSizes.get(profileSizes.size() - 1);
-                    }
-
-                    String secureBaseUrl = images.getSecureBaseUrl();
-
-                    ProfileImages profileImages = person.getImages();
-                    if(profileImages != null){
-                        List<ProfileImage> profileImagesList = profileImages.getProfiles();
-                        if(profileImagesList != null && profileImagesList.size()>0){
-                            ProfileImage profileImage = profileImagesList.get(profileImagesList.size()-1);
-                            if(profileImage != null){
-                                String filePath = profileImage.getFilePath();
-
-                                backdropUrl = String.format("%s%s%s", secureBaseUrl, profileSize, filePath);
-                            }
-                        }
-
-                    }
-
+                    backdropUrl = String.format("%s%s%s", SECURE_BASE_URL, PROFILE_SIZE, filePath);
                 }
             }
+
         }
 
         return backdropUrl;

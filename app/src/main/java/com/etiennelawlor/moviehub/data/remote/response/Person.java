@@ -1,11 +1,9 @@
 package com.etiennelawlor.moviehub.data.remote.response;
 
-import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v7.graphics.Palette;
 
-import com.etiennelawlor.moviehub.util.ConfigurationUtility;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -13,6 +11,11 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class Person implements Parcelable {
+
+    // region Constants
+    public static final String SECURE_BASE_URL = "https://image.tmdb.org/t/p/";
+    public static final String PROFILE_SIZE = "h632";
+    // endregion
 
     // region Fields
     @SerializedName("biography")
@@ -96,11 +99,8 @@ public class Person implements Parcelable {
         return profilePalette;
     }
 
-    public String getProfileUrl(Context context){
-        String secureBaseUrl = ConfigurationUtility.getSecureBaseUrl(context);
-        String profileSize = ConfigurationUtility.getProfileSize(context);
-        String profileUrl = String.format("%s%s%s", secureBaseUrl, profileSize, profilePath);
-
+    public String getProfileUrl(){
+        String profileUrl = String.format("%s%s%s", SECURE_BASE_URL, PROFILE_SIZE, profilePath);
         return profileUrl;
     }
     // endregion

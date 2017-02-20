@@ -1,12 +1,10 @@
 package com.etiennelawlor.moviehub.data.remote.response;
 
-import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v7.graphics.Palette;
 import android.text.TextUtils;
 
-import com.etiennelawlor.moviehub.util.ConfigurationUtility;
 import com.etiennelawlor.moviehub.util.DateUtility;
 import com.google.gson.annotations.SerializedName;
 
@@ -22,6 +20,8 @@ public class TelevisionShow implements Parcelable {
 
     // region Constants
     public static final String PATTERN = "yyyy-MM-dd";
+    public static final String SECURE_BASE_URL = "https://image.tmdb.org/t/p/";
+    public static final String POSTER_SIZE = "w780";
     // endregion
 
     // region Fields
@@ -223,11 +223,8 @@ public class TelevisionShow implements Parcelable {
         return firstAirDateYear;
     }
 
-    public String getPosterUrl(Context context){
-        String secureBaseUrl = ConfigurationUtility.getSecureBaseUrl(context);
-        String posterSize = ConfigurationUtility.getPosterSize(context);
-        String profileUrl = String.format("%s%s%s", secureBaseUrl, posterSize, posterPath);
-
+    public String getPosterUrl(){
+        String profileUrl = String.format("%s%s%s", SECURE_BASE_URL, POSTER_SIZE, posterPath);
         return profileUrl;
     }
 

@@ -209,7 +209,7 @@ public class MoviesAdapter extends BaseAdapter<Movie> {
 
             iv.setHeightRatio(heightRatio);
 
-            String posterUrl = movie.getPosterUrl(iv.getContext());
+            String posterUrl = movie.getPosterUrl();
             if (!TextUtils.isEmpty(posterUrl)) {
                 Picasso.with(iv.getContext())
                         .load(posterUrl)

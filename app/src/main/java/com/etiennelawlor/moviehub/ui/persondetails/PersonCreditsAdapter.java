@@ -206,7 +206,7 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCredit> {
 
             iv.setHeightRatio(heightRatio);
 
-            String posterUrl = personCredit.getPosterUrl(iv.getContext());
+            String posterUrl = personCredit.getPosterUrl();
             if (!TextUtils.isEmpty(posterUrl)) {
                 Picasso.with(iv.getContext())
                         .load(posterUrl)

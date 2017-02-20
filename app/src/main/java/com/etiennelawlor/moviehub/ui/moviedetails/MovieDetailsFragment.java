@@ -44,14 +44,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.local.sharedpreferences.PreferencesHelper;
 import com.etiennelawlor.moviehub.data.model.FullMovie;
 import com.etiennelawlor.moviehub.data.remote.AuthorizedNetworkInterceptor;
 import com.etiennelawlor.moviehub.data.remote.MovieHubService;
 import com.etiennelawlor.moviehub.data.remote.ServiceGenerator;
-import com.etiennelawlor.moviehub.data.remote.response.Configuration;
 import com.etiennelawlor.moviehub.data.remote.response.Genre;
-import com.etiennelawlor.moviehub.data.remote.response.Images;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
 import com.etiennelawlor.moviehub.data.remote.response.MovieCredit;
 import com.etiennelawlor.moviehub.data.remote.response.MovieCreditsEnvelope;
@@ -104,6 +101,9 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsCo
     public static final String KEY_PERSON = "KEY_PERSON";
     private static final float SCRIM_ADJUSTMENT = 0.075f;
     private static final int DELAY = 0;
+    public static final String BACKDROP_SIZE = "w1280";
+    public static final String POSTER_SIZE = "w780";
+    public static final String SECURE_BASE_URL = "https://image.tmdb.org/t/p/";
     // endregion
 
     // region Views
@@ -556,56 +556,14 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsCo
     }
 
     private String getPosterUrl(Movie movie){
-        String posterUrl = "";
-        Configuration configuration = PreferencesHelper.getConfiguration(getContext());
-        if(configuration != null) {
-            Images images = configuration.getImages();
-            if (images != null) {
-
-                List<String> posterSizes = images.getPosterSizes();
-                if (posterSizes != null && posterSizes.size() > 0) {
-                    String posterSize;
-                    if (posterSizes.size() > 1) {
-                        posterSize = posterSizes.get(posterSizes.size() - 2);
-                    } else {
-                        posterSize = posterSizes.get(posterSizes.size() - 1);
-                    }
-
-                    String secureBaseUrl = images.getSecureBaseUrl();
-                    String posterPath = movie.getPosterPath();
-
-                    posterUrl = String.format("%s%s%s", secureBaseUrl, posterSize, posterPath);
-                }
-            }
-        }
+        String posterPath = movie.getPosterPath();
+        String posterUrl = String.format("%s%s%s", SECURE_BASE_URL, POSTER_SIZE, posterPath);
         return posterUrl;
     }
 
     private String getBackdropUrl(Movie movie){
-        String backdropUrl = "";
-
-        Configuration configuration = PreferencesHelper.getConfiguration(getContext());
-        if(configuration != null) {
-            Images images = configuration.getImages();
-            if (images != null) {
-
-                List<String> backdropSizes = images.getBackdropSizes();
-                if (backdropSizes != null && backdropSizes.size() > 0) {
-                    String backdropSize;
-                    if (backdropSizes.size() > 1) {
-                        backdropSize = backdropSizes.get(backdropSizes.size() - 2);
-                    } else {
-                        backdropSize = backdropSizes.get(backdropSizes.size() - 1);
-                    }
-
-                    String secureBaseUrl = images.getSecureBaseUrl();
-                    String backdropPath = movie.getBackdropPath();
-
-                    backdropUrl = String.format("%s%s%s", secureBaseUrl, backdropSize, backdropPath);
-                }
-            }
-        }
-
+        String backdropPath = movie.getBackdropPath();
+        String backdropUrl = String.format("%s%s%s", SECURE_BASE_URL, BACKDROP_SIZE, backdropPath);
         return backdropUrl;
     }
 

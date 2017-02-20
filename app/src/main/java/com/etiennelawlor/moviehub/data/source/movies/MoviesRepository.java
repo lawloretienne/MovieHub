@@ -30,7 +30,7 @@ public class MoviesRepository implements MoviesDataContract.Repository {
         // Observable.merge(local, remote (which saves to local))
         return moviesRemoteDataSource.getPopularMovies(currentPage);
         // Do the mapping and getting config info and put that into a viewmodel to be returned
-        // 1. RemoteMove.getMovies()
+        // 1. RemoteMovise.getMovies()
         // 2. RemoteConfig.getConfig()
         // 3. combineLatest create ViewModel
         // 4. Persist the ViewModel in moviesLocalDataSource

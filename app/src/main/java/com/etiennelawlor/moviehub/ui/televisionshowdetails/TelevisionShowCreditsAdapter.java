@@ -202,7 +202,7 @@ public class TelevisionShowCreditsAdapter extends BaseAdapter<TelevisionShowCred
 
             iv.setHeightRatio(heightRatio);
 
-            String posterUrl = televisionShowCredit.getProfileUrl(iv.getContext());
+            String posterUrl = televisionShowCredit.getProfileUrl();
             if (!TextUtils.isEmpty(posterUrl)) {
                 Picasso.with(iv.getContext())
                         .load(posterUrl)
