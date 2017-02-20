@@ -38,7 +38,6 @@ public class MoviesRepository implements MoviesDataContract.Repository {
     // region MoviesDataContract.Repository Methods
     @Override
     public Observable<MoviesModel> getPopularMovies(int currentPage) {
-
         return moviesRemoteDataSource.getPopularMovies(currentPage)
             .map(new Func1<MoviesEnvelope, MoviesModel>() {
                 @Override
@@ -56,6 +55,13 @@ public class MoviesRepository implements MoviesDataContract.Repository {
                     }
                 });
     }
+
+//  Create an Observable that emits a particular item
+//  Observable.just(List<Movie> movies)
+//  Observable.just(MoviesModel movies)
+
+//  Create an Observable that emits no items but terminates normally
+//  Observable.empty();
 
     // endregion
 }

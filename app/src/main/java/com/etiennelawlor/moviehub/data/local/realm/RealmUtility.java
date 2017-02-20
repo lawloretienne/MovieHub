@@ -18,6 +18,8 @@ import io.realm.RealmResults;
  */
 public class RealmUtility {
 
+//    https://github.com/Innovatube/android-tdd-approach/blob/04c09ca0048c507e9492ff646b23b58e801dc9c0/app/src/main/java/com/example/androidtdd/data/model/Address.java
+
     public static Configuration getCachedConfiguration() {
         Configuration configuration = new Configuration();
 
