@@ -1,7 +1,5 @@
 package com.etiennelawlor.moviehub.ui.main;
 
-import com.etiennelawlor.moviehub.ui.movies.MoviesContract;
-
 /**
  * Created by etiennelawlor on 2/12/17.
  */

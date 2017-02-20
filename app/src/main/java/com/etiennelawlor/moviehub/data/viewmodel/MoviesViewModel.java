@@ -40,7 +40,7 @@ public class MoviesViewModel {
         return isLastPage;
     }
 
-    // endregion
+// endregion
 
     // region Setters
 
@@ -60,6 +60,8 @@ public class MoviesViewModel {
 
     // Helper Methods
     public void incrementPage() { this.currentPage += 1; }
+
+    public boolean hasMovies() { return movies.size() > 0;}
     // endregion
 
 }

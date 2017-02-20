@@ -18,8 +18,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.local.sharedpreferences.PreferencesHelper;
-import com.etiennelawlor.moviehub.data.remote.response.Configuration;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
 import com.etiennelawlor.moviehub.data.source.movies.MoviesLocalDataSource;
 import com.etiennelawlor.moviehub.data.source.movies.MoviesRemoteDataSource;
@@ -42,7 +40,7 @@ import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
  * Created by etiennelawlor on 12/16/16.
  */
 
-public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItemClickListener, MoviesAdapter.OnReloadClickListener, MoviesContract.View {
+public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItemClickListener, MoviesAdapter.OnReloadClickListener, MoviesUIContract.View {
 
     // region Constants
     public static final String KEY_MOVIE = "KEY_MOVIE";
@@ -66,8 +64,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     private Typeface font;
     private Unbinder unbinder;
     private StaggeredGridLayoutManager layoutManager;
-    private Configuration configuration;
-    private MoviesContract.Presenter moviesPresenter;
+    private MoviesUIContract.Presenter moviesPresenter;
     private View selectedMovieView;
     private MoviesViewModel moviesViewModel;
     // endregion
@@ -75,7 +72,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     // region Listeners
     @OnClick(R.id.reload_btn)
     public void onReloadButtonClicked() {
-        moviesPresenter.loadPopularMovies(moviesViewModel.getCurrentPage());
+        moviesPresenter.onLoadPopularMovies(moviesViewModel.getCurrentPage());
     }
 
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
@@ -94,8 +91,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
             int firstVisibleItem = positions[1];
 
             if ((visibleItemCount + firstVisibleItem) >= totalItemCount && totalItemCount > 0) {
-                loadMoreItems();
-                moviesPresenter.onScrolledToEndOfList();
+                moviesPresenter.onScrollToEndOfList();
             }
         }
     };
@@ -155,17 +151,9 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
         recyclerView.setAdapter(moviesAdapter);
 
         // Pagination
-//        recyclerView.addOnScrollListener(recyclerViewOnScrollListener);
+        recyclerView.addOnScrollListener(recyclerViewOnScrollListener);
 
-//        configuration = PreferencesHelper.getConfiguration(getContext());
-//
-//        if(configuration != null){
-//            moviesPresenter.loadPopularMovies(moviesViewModel == null ? 1 : moviesViewModel.getCurrentPage());
-//        } else {
-//            moviesPresenter.getConfiguration();
-//        }
-
-        moviesPresenter.loadPopularMovies(moviesViewModel == null ? 1 : moviesViewModel.getCurrentPage());
+        moviesPresenter.onLoadPopularMovies(moviesViewModel == null ? 1 : moviesViewModel.getCurrentPage());
     }
 
     @Override
@@ -173,7 +161,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
         super.onDestroyView();
         removeListeners();
         unbinder.unbind();
-        moviesPresenter.clearSubscriptions();
+        moviesPresenter.onDestroyView();
     }
 
     // endregion
@@ -184,7 +172,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
         selectedMovieView = view;
         Movie movie = moviesAdapter.getItem(position);
         if(movie != null){
-            moviesPresenter.onMovieItemClick(movie);
+            moviesPresenter.onMovieClick(movie);
         }
     }
     // endregion
@@ -192,11 +180,11 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     // region MoviesAdapter.OnReloadClickListener Methods
     @Override
     public void onReloadClick() {
-        moviesPresenter.loadPopularMovies(moviesViewModel.getCurrentPage());
+        moviesPresenter.onLoadPopularMovies(moviesViewModel.getCurrentPage());
     }
     // endregion
 
-    // region MoviesContract.View Methods
+    // region MoviesUIContract.View Methods
 
     @Override
     public void showEmptyView() {
@@ -253,11 +241,6 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     }
 
     @Override
-    public boolean isAdapterEmpty() {
-        return moviesAdapter.isEmpty();
-    }
-
-    @Override
     public void setErrorText(String errorText) {
         errorTextView.setText(errorText);
     }
@@ -296,7 +279,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     public void loadMoreItems() {
         //        isLoading = true;
         moviesViewModel.incrementPage();
-        moviesPresenter.loadPopularMovies(moviesViewModel.getCurrentPage());
+        moviesPresenter.onLoadPopularMovies(moviesViewModel.getCurrentPage());
     }
 
     // endregion

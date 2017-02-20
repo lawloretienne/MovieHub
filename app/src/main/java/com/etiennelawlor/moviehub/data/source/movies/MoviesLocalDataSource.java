@@ -16,12 +16,6 @@ public class MoviesLocalDataSource implements MoviesDataContract.LocalDateSource
     // endregion
 
     // region MoviesDataContract.LocalDateSource Methods
-//    @Override
-//    public Observable getMovies(int currentPage) {
-//        return null;
-//    }
-
-
 
     // endregion
 }

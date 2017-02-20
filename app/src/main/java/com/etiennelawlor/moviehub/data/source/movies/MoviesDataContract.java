@@ -11,7 +11,6 @@ import rx.Observable;
 public interface MoviesDataContract {
 
     interface Repository {
-//        Observable<MoviesEnvelope> getMovies(int currentPage);
 //        Restful VERB is the first part of method name GET , POST , DELETE, PUT
         Observable<MoviesViewModel> getPopularMovies(int currentPage);
     }
@@ -23,6 +22,4 @@ public interface MoviesDataContract {
     interface RemoteDateSource {
          Observable<MoviesViewModel> getPopularMovies(int currentPage);
     }
-
-
 }

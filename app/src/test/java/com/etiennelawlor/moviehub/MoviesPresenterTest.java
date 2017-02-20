@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub;
 
 import com.etiennelawlor.moviehub.data.repository.MoviesRepository;
-import com.etiennelawlor.moviehub.ui.movies.MoviesContract;
+import com.etiennelawlor.moviehub.ui.movies.MoviesUIContract;
 import com.etiennelawlor.moviehub.ui.movies.MoviesPresenter;
 
 import org.junit.Before;
@@ -21,7 +21,7 @@ public class MoviesPresenterTest {
     @Mock
     private MoviesRepository moviesRepository;
     @Mock
-    private MoviesContract.View moviesView;
+    private MoviesUIContract.View moviesView;
     private MoviesPresenter moviesPresenter;
     // endregion
 

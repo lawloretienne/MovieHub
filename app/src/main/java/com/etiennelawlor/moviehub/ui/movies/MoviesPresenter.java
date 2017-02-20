@@ -17,51 +17,35 @@ import rx.subscriptions.CompositeSubscription;
  * Created by etiennelawlor on 2/9/17.
  */
 
-public class MoviesPresenter implements MoviesContract.Presenter {
-
-    // region Constants
-    private static final int PAGE_SIZE = 20;
-    // endregion
+public class MoviesPresenter implements MoviesUIContract.Presenter {
 
     // region Member Variables
     private final MoviesDataContract.Repository moviesRepository;
-    private final MoviesContract.View moviesView;
-
-    private CompositeSubscription compositeSubscription = new CompositeSubscription();;
+    private final MoviesUIContract.View moviesView;
+    private CompositeSubscription compositeSubscription = new CompositeSubscription();
     // endregion
 
     // region Constructors
-    public MoviesPresenter(MoviesDataContract.Repository moviesRepository, MoviesContract.View moviesView) {
+    public MoviesPresenter(MoviesDataContract.Repository moviesRepository, MoviesUIContract.View moviesView) {
         this.moviesRepository = moviesRepository;
         this.moviesView = moviesView;
     }
     // endregion
 
-    // region MoviesContract.Presenter Methods
+    // region MoviesUIContract.Presenter Methods
     @Override
-    public void clearSubscriptions() {
+    public void onDestroyView() {
         compositeSubscription.clear();
     }
 
     @Override
-    public void addSubscription(Observable observable, Subscriber subscriber) {
-        Subscription subscription = observable
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(subscriber);
-        compositeSubscription.add(subscription);
-
-        // Create RxUtils for this call
-    }
-
-    @Override
-    public void loadPopularMovies(final int currentPage) {
+    public void onLoadPopularMovies(final int currentPage) {
         if(currentPage == 1){
             moviesView.hideEmptyView();
             moviesView.hideErrorView();
             moviesView.showLoadingView();
         } else{
-            moviesView.updateFooter(MoviesContract.View.FooterType.LOAD_MORE);
+            moviesView.updateFooter(MoviesUIContract.View.FooterType.LOAD_MORE);
         }
 
         addSubscription(moviesRepository.getPopularMovies(currentPage), new Subscriber<MoviesViewModel>() {
@@ -90,41 +74,29 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                     int currentPage = moviesViewModel.getCurrentPage();
                     List<Movie> movies = moviesViewModel.getMovies();
                     if(currentPage == 1){
+                        if(moviesViewModel.hasMovies()){
+                            moviesView.addMoviesToAdapter(movies);
 
-                        if(movies != null){
-                            if(movies.size()>0)
-                                moviesView.addMoviesToAdapter(movies);
-
-                            if(movies.size() >= PAGE_SIZE){  // instead do if !(viewmodel.islastPage) the add footer
+                            if(!moviesViewModel.isLastPage())
                                 moviesView.addFooter();
-                            } else {
-//                                    moviesView.setIsLastPage(true);
-                            }
-                        }
-//                        moviesView.displayMovies(moviesViewModel.getMovies());
-
-                        if(moviesView.isAdapterEmpty()){
+                        } else {
                             moviesView.showEmptyView();
                         }
                     } else {
                         moviesView.removeFooter();
 //                        moviesView.setIsLoading(false);
 
-                        if(movies != null){
-                            if(movies.size()>0)
-                                moviesView.addMoviesToAdapter(movies);
+                        if(moviesViewModel.hasMovies()){
+                            moviesView.addMoviesToAdapter(movies);
 
-                            if(movies.size() >= PAGE_SIZE){
+                            if(!moviesViewModel.isLastPage())
                                 moviesView.addFooter();
-                            } else {
-//                                moviesView.setIsLastPage(true);
-                            }
                         }
                     }
 
                 }
 
-//                moviesView.setViewModel(moviesViewModel);
+                moviesView.setViewModel(moviesViewModel);
             }
         });
     }
@@ -178,15 +150,27 @@ public class MoviesPresenter implements MoviesContract.Presenter {
 
 
     @Override
-    public void onMovieItemClick(Movie movie) {
+    public void onMovieClick(Movie movie) {
         moviesView.openMovieDetails(movie);
     }
 
     @Override
-    public void onScrolledToEndOfList() {
+    public void onScrollToEndOfList() {
         moviesView.loadMoreItems();
     }
 
+    // endregion
+
+    // region Helper Methods
+    public void addSubscription(Observable observable, Subscriber subscriber) {
+        Subscription subscription = observable
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+        compositeSubscription.add(subscription);
+
+        // Create RxUtils for this call
+    }
     // endregion
 
 }

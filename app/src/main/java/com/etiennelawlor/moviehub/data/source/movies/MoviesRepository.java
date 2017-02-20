@@ -23,10 +23,7 @@ public class MoviesRepository implements MoviesDataContract.Repository {
     }
     // endregion
 
-    // region MoviesDataContract Methods
-
-
-
+    // region MoviesDataContract.Repository Methods
 
     @Override
     public Observable<MoviesViewModel> getPopularMovies(int currentPage) {

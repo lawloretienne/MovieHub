@@ -11,7 +11,7 @@ import java.util.List;
  * Created by etiennelawlor on 2/9/17.
  */
 
-public interface MoviesContract {
+public interface MoviesUIContract {
 
     interface View {
         enum FooterType {
@@ -23,26 +23,23 @@ public interface MoviesContract {
         void hideEmptyView();
         void showErrorView();
         void hideErrorView();
+        void setErrorText(String errorText);
         void showLoadingView();
         void hideLoadingView();
         void addFooter();
         void removeFooter();
         void updateFooter(FooterType footerType);
-        boolean isAdapterEmpty();
-        void setErrorText(String errorText);
         void addMoviesToAdapter(List<Movie> movies);
-        void setViewModel(MoviesViewModel moviesViewModel);
         void loadMoreItems();
+        void setViewModel(MoviesViewModel moviesViewModel);
 
         // Navigation methods
         void openMovieDetails(Movie movie);
     }
 
     interface Presenter extends BasePresenter {
-        void loadPopularMovies(int currentPage); // new way to go about pagination  : currentPage comes from ViewModel
-//        void getConfiguration();
-
-        void onMovieItemClick(Movie movie);
-        void onScrolledToEndOfList();
+        void onLoadPopularMovies(int currentPage);
+        void onMovieClick(Movie movie);
+        void onScrollToEndOfList();
     }
 }
