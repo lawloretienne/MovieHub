@@ -1,8 +1,7 @@
 package com.etiennelawlor.moviehub.ui.movies;
 
-import com.etiennelawlor.moviehub.data.remote.response.Configuration;
+import com.etiennelawlor.moviehub.data.model.MoviesModel;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
-import com.etiennelawlor.moviehub.data.viewmodel.MoviesViewModel;
 import com.etiennelawlor.moviehub.ui.base.BasePresenter;
 
 import java.util.List;
@@ -14,11 +13,6 @@ import java.util.List;
 public interface MoviesUIContract {
 
     interface View {
-        enum FooterType {
-            LOAD_MORE,
-            ERROR
-        }
-
         void showEmptyView();
         void hideEmptyView();
         void showErrorView();
@@ -28,10 +22,11 @@ public interface MoviesUIContract {
         void hideLoadingView();
         void addFooter();
         void removeFooter();
-        void updateFooter(FooterType footerType);
+        void showErrorFooter();
+        void showLoadingFooter();
         void addMoviesToAdapter(List<Movie> movies);
         void loadMoreItems();
-        void setViewModel(MoviesViewModel moviesViewModel);
+        void setModel(MoviesModel moviesModel);
 
         // Navigation methods
         void openMovieDetails(Movie movie);

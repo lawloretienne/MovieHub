@@ -1,14 +1,26 @@
 package com.etiennelawlor.moviehub.data.source.movies;
 
-import com.etiennelawlor.moviehub.data.viewmodel.MoviesViewModel;
+import com.etiennelawlor.moviehub.data.model.MoviesModel;
+import com.etiennelawlor.moviehub.data.remote.response.Movie;
+import com.etiennelawlor.moviehub.data.remote.response.MoviesEnvelope;
+
+import java.util.List;
 
 import rx.Observable;
+import rx.functions.Action1;
+import rx.functions.Func1;
 
 /**
  * Created by etiennelawlor on 2/13/17.
  */
 
 public class MoviesRepository implements MoviesDataContract.Repository {
+
+    // http://blog.danlew.net/2015/06/22/loading-data-from-multiple-sources-with-rxjava/
+
+    // region Constants
+    private static final int PAGE_SIZE = 20;
+    // endregion
 
     // region Member Variables
     private MoviesDataContract.LocalDateSource moviesLocalDataSource;
@@ -24,37 +36,25 @@ public class MoviesRepository implements MoviesDataContract.Repository {
     // endregion
 
     // region MoviesDataContract.Repository Methods
-
     @Override
-    public Observable<MoviesViewModel> getPopularMovies(int currentPage) {
-        // Observable.merge(local, remote (which saves to local))
-        return moviesRemoteDataSource.getPopularMovies(currentPage);
-        // Do the mapping and getting config info and put that into a viewmodel to be returned
-        // 1. RemoteMovise.getMovies()
-        // 2. RemoteConfig.getConfig()
-        // 3. combineLatest create ViewModel
-        // 4. Persist the ViewModel in moviesLocalDataSource
-        // 5. return ViewModel
+    public Observable<MoviesModel> getPopularMovies(int currentPage) {
 
+        return moviesRemoteDataSource.getPopularMovies(currentPage)
+            .map(new Func1<MoviesEnvelope, MoviesModel>() {
+                @Override
+                public MoviesModel call(MoviesEnvelope moviesEnvelope) {
+                    List<Movie> movies = moviesEnvelope.getMovies();
+                    int currentPage = moviesEnvelope.getPage();
+                    boolean isLastPage = moviesEnvelope.getMovies().size() < PAGE_SIZE ? true : false;
 
-        //                .map(new Func1<MoviesEnvelope, MoviesViewModel>() {
-//                    @Override
-//                    public MoviesViewModel call(MoviesEnvelope moviesEnvelope) {
-//                        List<Movie> movies = moviesEnvelope.getMovies();
-//                        int currentPage = moviesEnvelope.getPage();
-//                        boolean isLastPage = moviesEnvelope.getMovies().size() < PAGE_SIZE ? true : false;
-//
-//                        return new MoviesViewModel(movies, currentPage, isLastPage);
-//                    }
-//                }).doOnNext(new Action1<MoviesViewModel>() {
-//                    @Override
-//                    public void call(MoviesViewModel moviesViewModel) {
-//                        // todo: update realm
-//                    }
-//                });
-
-
-//        return moviesRemoteDataSource.getPopularMovies(currentPage);  Do this instead
+                    return new MoviesModel(movies, currentPage, isLastPage);
+                }
+            }).doOnNext(new Action1<MoviesModel>() {
+                    @Override
+                    public void call(MoviesModel moviesViewModel) {
+                        // todo: update realm
+                    }
+                });
     }
 
     // endregion

@@ -1,8 +1,9 @@
 package com.etiennelawlor.moviehub.ui.movies;
 
+import com.etiennelawlor.moviehub.data.model.MoviesModel;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
 import com.etiennelawlor.moviehub.data.source.movies.MoviesDataContract;
-import com.etiennelawlor.moviehub.data.viewmodel.MoviesViewModel;
+import com.etiennelawlor.moviehub.util.NetworkUtility;
 
 import java.util.List;
 
@@ -45,39 +46,43 @@ public class MoviesPresenter implements MoviesUIContract.Presenter {
             moviesView.hideErrorView();
             moviesView.showLoadingView();
         } else{
-            moviesView.updateFooter(MoviesUIContract.View.FooterType.LOAD_MORE);
+            moviesView.showLoadingFooter();
         }
 
-        addSubscription(moviesRepository.getPopularMovies(currentPage), new Subscriber<MoviesViewModel>() {
+        addSubscription(moviesRepository.getPopularMovies(currentPage), new Subscriber<MoviesModel>() {
             @Override
             public void onCompleted() {
 
             }
 
             @Override
-            public void onError(Throwable e) {
+            public void onError(Throwable throwable) {
                 if(currentPage == 1){
+                    moviesView.hideLoadingView();
 
+                    if (NetworkUtility.isKnownException(throwable)) {
+                        moviesView.setErrorText("Can't load data.\nCheck your network connection.");
+                        moviesView.showErrorView();
+                    }
                 } else {
-
+                    if(NetworkUtility.isKnownException(throwable)){
+                        moviesView.showErrorFooter();
+                    }
                 }
-
-                moviesView.hideLoadingView();
-
             }
 
             @Override
-            public void onNext(MoviesViewModel moviesViewModel) {
+            public void onNext(MoviesModel moviesModel) {
                 moviesView.hideLoadingView();
 
-                if(moviesViewModel != null){
-                    int currentPage = moviesViewModel.getCurrentPage();
-                    List<Movie> movies = moviesViewModel.getMovies();
+                if(moviesModel != null){
+                    int currentPage = moviesModel.getCurrentPage();
+                    List<Movie> movies = moviesModel.getMovies();
                     if(currentPage == 1){
-                        if(moviesViewModel.hasMovies()){
+                        if(moviesModel.hasMovies()){
                             moviesView.addMoviesToAdapter(movies);
 
-                            if(!moviesViewModel.isLastPage())
+                            if(!moviesModel.isLastPage())
                                 moviesView.addFooter();
                         } else {
                             moviesView.showEmptyView();
@@ -86,68 +91,20 @@ public class MoviesPresenter implements MoviesUIContract.Presenter {
                         moviesView.removeFooter();
 //                        moviesView.setIsLoading(false);
 
-                        if(moviesViewModel.hasMovies()){
+                        if(moviesModel.hasMovies()){
                             moviesView.addMoviesToAdapter(movies);
 
-                            if(!moviesViewModel.isLastPage())
+                            if(!moviesModel.isLastPage())
                                 moviesView.addFooter();
                         }
                     }
 
                 }
 
-                moviesView.setViewModel(moviesViewModel);
+                moviesView.setModel(moviesModel);
             }
         });
     }
-
-//    @Override
-//    public void getConfiguration() {
-//        // difference between map and flatMap is map returns an Object and flatMap returns Observable<Object>
-//
-//        ///
-////        moviesDataContract.getConfiguration().flatMap()
-//        // configuration should be a property of the view model for adapters
-//
-//        // 1. moviesDataContract.getConfiguration()
-//        // 2. moviesDataContract.getConfiguration().flatMap(v -> movieHubService.getPopularMovies(currentPage));
-//
-//        // then combineLatest(1, 2) - create view model wrapper object
-//
-////        Subscription subscription = moviesDataContract.getConfiguration()
-////                .subscribeOn(Schedulers.newThread())
-////                .observeOn(AndroidSchedulers.mainThread())
-////                .subscribe(new Action1<Configuration>() {
-////                    @Override
-////                    public void call(Configuration configuration) {
-////                        if(configuration != null){
-//////                            PreferencesHelper.setConfiguration(getContext(), configuration);
-////                            moviesView.saveConfiguration(configuration);
-////
-//////                                Call getPopularMoviesCall = movieHubService.getPopularMovies(currentPage);
-//////                                calls.add(getPopularMoviesCall);
-//////                                getPopularMoviesCall.enqueue(getPopularMoviesFirstFetchCallback);
-////
-////                            loadMovies(0);
-////                        }
-////                    }
-////                }, new Action1<Throwable>() {
-////                    @Override
-////                    public void call(Throwable throwable) {
-////                        throwable.printStackTrace();
-//////                        progressBar.setVisibility(View.GONE);
-////                        moviesView.showLoadingView();
-////                        if (NetworkUtility.isKnownException(throwable)) {
-//////                            errorTextView.setText("Can't load data.\nCheck your network connection.");
-//////                            errorLinearLayout.setVisibility(View.VISIBLE);
-////                            moviesView.setErrorText("Can't load data.\nCheck your network connection.");
-////                            moviesView.showErrorView();
-////                        }
-////                    }
-////                });
-////        compositeSubscription.add(subscription);
-//    }
-
 
     @Override
     public void onMovieClick(Movie movie) {
@@ -158,7 +115,6 @@ public class MoviesPresenter implements MoviesUIContract.Presenter {
     public void onScrollToEndOfList() {
         moviesView.loadMoreItems();
     }
-
     // endregion
 
     // region Helper Methods

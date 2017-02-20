@@ -1,14 +1,14 @@
-package com.etiennelawlor.moviehub.data.viewmodel;
+package com.etiennelawlor.moviehub.data.model;
 
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
 
 import java.util.List;
 
 /**
- * Created by etiennelawlor on 2/15/17.
+ * Created by etiennelawlor on 2/20/17.
  */
 
-public class MoviesViewModel {
+public class MoviesModel {
 
     // region Member Variables
     private List<Movie> movies;
@@ -18,7 +18,7 @@ public class MoviesViewModel {
 
     // region Constructors
 
-    public MoviesViewModel(List<Movie> movies, int currentPage, boolean isLastPage) {
+    public MoviesModel(List<Movie> movies, int currentPage, boolean isLastPage) {
         this.movies = movies;
         this.currentPage = currentPage;
         this.isLastPage = isLastPage;
@@ -40,7 +40,7 @@ public class MoviesViewModel {
         return isLastPage;
     }
 
-// endregion
+    // endregion
 
     // region Setters
 
@@ -63,5 +63,4 @@ public class MoviesViewModel {
 
     public boolean hasMovies() { return movies.size() > 0;}
     // endregion
-
 }

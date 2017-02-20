@@ -18,11 +18,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
+import com.etiennelawlor.moviehub.data.model.MoviesModel;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
 import com.etiennelawlor.moviehub.data.source.movies.MoviesLocalDataSource;
 import com.etiennelawlor.moviehub.data.source.movies.MoviesRemoteDataSource;
 import com.etiennelawlor.moviehub.data.source.movies.MoviesRepository;
-import com.etiennelawlor.moviehub.data.viewmodel.MoviesViewModel;
 import com.etiennelawlor.moviehub.ui.base.BaseAdapter;
 import com.etiennelawlor.moviehub.ui.base.BaseFragment;
 import com.etiennelawlor.moviehub.ui.moviedetails.MovieDetailsActivity;
@@ -66,13 +66,13 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     private StaggeredGridLayoutManager layoutManager;
     private MoviesUIContract.Presenter moviesPresenter;
     private View selectedMovieView;
-    private MoviesViewModel moviesViewModel;
+    private MoviesModel moviesModel;
     // endregion
 
     // region Listeners
     @OnClick(R.id.reload_btn)
     public void onReloadButtonClicked() {
-        moviesPresenter.onLoadPopularMovies(moviesViewModel.getCurrentPage());
+        moviesPresenter.onLoadPopularMovies(moviesModel.getCurrentPage());
     }
 
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
@@ -153,7 +153,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
         // Pagination
         recyclerView.addOnScrollListener(recyclerViewOnScrollListener);
 
-        moviesPresenter.onLoadPopularMovies(moviesViewModel == null ? 1 : moviesViewModel.getCurrentPage());
+        moviesPresenter.onLoadPopularMovies(moviesModel == null ? 1 : moviesModel.getCurrentPage());
     }
 
     @Override
@@ -180,7 +180,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     // region MoviesAdapter.OnReloadClickListener Methods
     @Override
     public void onReloadClick() {
-        moviesPresenter.onLoadPopularMovies(moviesViewModel.getCurrentPage());
+        moviesPresenter.onLoadPopularMovies(moviesModel.getCurrentPage());
     }
     // endregion
 
@@ -227,17 +227,13 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     }
 
     @Override
-    public void updateFooter(FooterType footerType) {
-        switch (footerType){
-            case LOAD_MORE:
-                moviesAdapter.updateFooter(BaseAdapter.FooterType.LOAD_MORE);
-                break;
-            case ERROR:
-                moviesAdapter.updateFooter(BaseAdapter.FooterType.ERROR);
-                break;
-            default:
-                break;
-        }
+    public void showErrorFooter() {
+        moviesAdapter.updateFooter(BaseAdapter.FooterType.ERROR);
+    }
+
+    @Override
+    public void showLoadingFooter() {
+        moviesAdapter.updateFooter(BaseAdapter.FooterType.LOAD_MORE);
     }
 
     @Override
@@ -251,8 +247,8 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     }
 
     @Override
-    public void setViewModel(MoviesViewModel moviesViewModel) {
-        this.moviesViewModel = moviesViewModel;
+    public void setModel(MoviesModel moviesModel) {
+        this.moviesModel = moviesModel;
     }
 
     @Override
@@ -278,8 +274,8 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     @Override
     public void loadMoreItems() {
         //        isLoading = true;
-        moviesViewModel.incrementPage();
-        moviesPresenter.onLoadPopularMovies(moviesViewModel.getCurrentPage());
+        moviesModel.incrementPage();
+        moviesPresenter.onLoadPopularMovies(moviesModel.getCurrentPage());
     }
 
     // endregion
@@ -287,7 +283,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     // region Helper Methods
     private void removeListeners() {
         moviesAdapter.setOnItemClickListener(null);
-//        recyclerView.removeOnScrollListener(recyclerViewOnScrollListener);
+        recyclerView.removeOnScrollListener(recyclerViewOnScrollListener);
     }
 
     private ActivityOptionsCompat getActivityOptionsCompat(Pair pair){

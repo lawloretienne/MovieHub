@@ -2,12 +2,12 @@ package com.etiennelawlor.moviehub.data.source.movies;
 
 import android.content.Context;
 
+import com.etiennelawlor.moviehub.data.model.MoviesModel;
 import com.etiennelawlor.moviehub.data.remote.AuthorizedNetworkInterceptor;
 import com.etiennelawlor.moviehub.data.remote.MovieHubService;
 import com.etiennelawlor.moviehub.data.remote.ServiceGenerator;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
 import com.etiennelawlor.moviehub.data.remote.response.MoviesEnvelope;
-import com.etiennelawlor.moviehub.data.viewmodel.MoviesViewModel;
 
 import java.util.List;
 
@@ -41,20 +41,20 @@ public class MoviesRemoteDataSource implements MoviesDataContract.RemoteDateSour
 
     // region MoviesDataContract.RemoteDateSource Methods
     @Override
-    public Observable<MoviesViewModel> getPopularMovies(int currentPage) {
+    public Observable<MoviesModel> getPopularMovies(int currentPage) {
         return movieHubService.getPopularMovies(currentPage)
-                .map(new Func1<MoviesEnvelope, MoviesViewModel>() {
+                .map(new Func1<MoviesEnvelope, MoviesModel>() {
                     @Override
-                    public MoviesViewModel call(MoviesEnvelope moviesEnvelope) {
+                    public MoviesModel call(MoviesEnvelope moviesEnvelope) {
                         List<Movie> movies = moviesEnvelope.getMovies();
                         int currentPage = moviesEnvelope.getPage();
                         boolean isLastPage = moviesEnvelope.getMovies().size() < PAGE_SIZE ? true : false;
 
-                        return new MoviesViewModel(movies, currentPage, isLastPage);
+                        return new MoviesModel(movies, currentPage, isLastPage);
                     }
-                }).doOnNext(new Action1<MoviesViewModel>() {
+                }).doOnNext(new Action1<MoviesModel>() {
                     @Override
-                    public void call(MoviesViewModel moviesViewModel) {
+                    public void call(MoviesModel moviesViewModel) {
                         // todo: update realm
                     }
                 });
