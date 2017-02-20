@@ -1,41 +1,63 @@
 package com.etiennelawlor.moviehub.data.source.movies;
 
+import com.etiennelawlor.moviehub.data.viewmodel.MoviesViewModel;
+
 import rx.Observable;
 
 /**
  * Created by etiennelawlor on 2/13/17.
  */
 
-public class MoviesRepository implements MoviesDataSource {
+public class MoviesRepository implements MoviesDataContract.Repository {
 
     // region Member Variables
-    private MoviesDataSource moviesLocalDataSource;
-    private MoviesDataSource moviesRemoteDataSource;
-    private int currentPage = 1;
+    private MoviesDataContract.LocalDateSource moviesLocalDataSource;
+    private MoviesDataContract.RemoteDateSource moviesRemoteDataSource;
     // endregion
 
     // region Constructors
-    public MoviesRepository(MoviesDataSource moviesLocalDataSource, MoviesDataSource moviesRemoteDataSource) {
+    // Additionally i need to pass in configRemoteDataSource as
+    public MoviesRepository(MoviesDataContract.LocalDateSource moviesLocalDataSource, MoviesDataContract.RemoteDateSource moviesRemoteDataSource) {
         this.moviesLocalDataSource = moviesLocalDataSource;
         this.moviesRemoteDataSource = moviesRemoteDataSource;
     }
     // endregion
 
-    // region MoviesDataSource Methods
+    // region MoviesDataContract Methods
+
+
 
 
     @Override
-    public Observable getMovies(int currentPage) {
-        return moviesRemoteDataSource.getMovies(currentPage);
-    }
+    public Observable<MoviesViewModel> getPopularMovies(int currentPage) {
+        // Observable.merge(local, remote (which saves to local))
+        return moviesRemoteDataSource.getPopularMovies(currentPage);
+        // Do the mapping and getting config info and put that into a viewmodel to be returned
+        // 1. RemoteMove.getMovies()
+        // 2. RemoteConfig.getConfig()
+        // 3. combineLatest create ViewModel
+        // 4. Persist the ViewModel in moviesLocalDataSource
+        // 5. return ViewModel
 
-    public Observable loadCurrentPage() {
-        return getMovies(currentPage);
-    }
 
-    public Observable loadNextPage() {
-        currentPage+=1;
-        return getMovies(currentPage);
+        //                .map(new Func1<MoviesEnvelope, MoviesViewModel>() {
+//                    @Override
+//                    public MoviesViewModel call(MoviesEnvelope moviesEnvelope) {
+//                        List<Movie> movies = moviesEnvelope.getMovies();
+//                        int currentPage = moviesEnvelope.getPage();
+//                        boolean isLastPage = moviesEnvelope.getMovies().size() < PAGE_SIZE ? true : false;
+//
+//                        return new MoviesViewModel(movies, currentPage, isLastPage);
+//                    }
+//                }).doOnNext(new Action1<MoviesViewModel>() {
+//                    @Override
+//                    public void call(MoviesViewModel moviesViewModel) {
+//                        // todo: update realm
+//                    }
+//                });
+
+
+//        return moviesRemoteDataSource.getPopularMovies(currentPage);  Do this instead
     }
 
     // endregion

@@ -11,17 +11,15 @@ import com.etiennelawlor.moviehub.data.viewmodel.MoviesViewModel;
 
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import rx.Observable;
+import rx.functions.Action1;
 import rx.functions.Func1;
 
 /**
  * Created by etiennelawlor on 2/13/17.
  */
 
-public class MoviesRemoteDataSource implements MoviesDataSource {
+public class MoviesRemoteDataSource implements MoviesDataContract.RemoteDateSource {
 
     // region Constants
     private static final int PAGE_SIZE = 20;
@@ -41,9 +39,9 @@ public class MoviesRemoteDataSource implements MoviesDataSource {
     }
     // endregion
 
-    // region MoviesDataSource Methods
+    // region MoviesDataContract.RemoteDateSource Methods
     @Override
-    public Observable getMovies(int currentPage) {
+    public Observable<MoviesViewModel> getPopularMovies(int currentPage) {
         return movieHubService.getPopularMovies(currentPage)
                 .map(new Func1<MoviesEnvelope, MoviesViewModel>() {
                     @Override
@@ -53,6 +51,11 @@ public class MoviesRemoteDataSource implements MoviesDataSource {
                         boolean isLastPage = moviesEnvelope.getMovies().size() < PAGE_SIZE ? true : false;
 
                         return new MoviesViewModel(movies, currentPage, isLastPage);
+                    }
+                }).doOnNext(new Action1<MoviesViewModel>() {
+                    @Override
+                    public void call(MoviesViewModel moviesViewModel) {
+                        // todo: update realm
                     }
                 });
     }

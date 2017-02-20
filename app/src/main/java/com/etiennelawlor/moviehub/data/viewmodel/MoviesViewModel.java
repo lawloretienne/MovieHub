@@ -58,4 +58,8 @@ public class MoviesViewModel {
 
     // endregion
 
+    // Helper Methods
+    public void incrementPage() { this.currentPage += 1; }
+    // endregion
+
 }

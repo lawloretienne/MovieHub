@@ -34,6 +34,8 @@ import butterknife.ButterKnife;
  * Created by etiennelawlor on 12/17/16.
  */
 
+// change from Movie to MovieViewModel
+
 public class MoviesAdapter extends BaseAdapter<Movie> {
 
     // region Constants

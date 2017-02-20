@@ -24,6 +24,7 @@ import com.etiennelawlor.moviehub.data.remote.response.Movie;
 import com.etiennelawlor.moviehub.data.source.movies.MoviesLocalDataSource;
 import com.etiennelawlor.moviehub.data.source.movies.MoviesRemoteDataSource;
 import com.etiennelawlor.moviehub.data.source.movies.MoviesRepository;
+import com.etiennelawlor.moviehub.data.viewmodel.MoviesViewModel;
 import com.etiennelawlor.moviehub.ui.base.BaseAdapter;
 import com.etiennelawlor.moviehub.ui.base.BaseFragment;
 import com.etiennelawlor.moviehub.ui.moviedetails.MovieDetailsActivity;
@@ -68,13 +69,13 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     private Configuration configuration;
     private MoviesContract.Presenter moviesPresenter;
     private View selectedMovieView;
+    private MoviesViewModel moviesViewModel;
     // endregion
 
     // region Listeners
     @OnClick(R.id.reload_btn)
     public void onReloadButtonClicked() {
-//        moviesPresenter.reloadFirstPage();
-        moviesPresenter.loadMovies(0);
+        moviesPresenter.loadPopularMovies(moviesViewModel.getCurrentPage());
     }
 
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
@@ -94,6 +95,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
 
             if ((visibleItemCount + firstVisibleItem) >= totalItemCount && totalItemCount > 0) {
                 loadMoreItems();
+                moviesPresenter.onScrolledToEndOfList();
             }
         }
     };
@@ -155,14 +157,15 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
         // Pagination
 //        recyclerView.addOnScrollListener(recyclerViewOnScrollListener);
 
-        configuration = PreferencesHelper.getConfiguration(getContext());
+//        configuration = PreferencesHelper.getConfiguration(getContext());
+//
+//        if(configuration != null){
+//            moviesPresenter.loadPopularMovies(moviesViewModel == null ? 1 : moviesViewModel.getCurrentPage());
+//        } else {
+//            moviesPresenter.getConfiguration();
+//        }
 
-        if(configuration != null){
-//            moviesPresenter.loadFirstPage();
-            moviesPresenter.loadMovies(1);
-        } else {
-            moviesPresenter.getConfiguration();
-        }
+        moviesPresenter.loadPopularMovies(moviesViewModel == null ? 1 : moviesViewModel.getCurrentPage());
     }
 
     @Override
@@ -181,7 +184,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
         selectedMovieView = view;
         Movie movie = moviesAdapter.getItem(position);
         if(movie != null){
-            moviesPresenter.viewMovieDetails(movie);
+            moviesPresenter.onMovieItemClick(movie);
         }
     }
     // endregion
@@ -189,8 +192,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     // region MoviesAdapter.OnReloadClickListener Methods
     @Override
     public void onReloadClick() {
-//        moviesPresenter.reloadNextPage();
-        moviesPresenter.loadMovies(0);
+        moviesPresenter.loadPopularMovies(moviesViewModel.getCurrentPage());
     }
     // endregion
 
@@ -266,12 +268,12 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     }
 
     @Override
-    public void saveConfiguration(Configuration configuration) {
-        PreferencesHelper.setConfiguration(getContext(), configuration);
+    public void setViewModel(MoviesViewModel moviesViewModel) {
+        this.moviesViewModel = moviesViewModel;
     }
 
     @Override
-    public void viewMovieDetails(Movie movie) {
+    public void openMovieDetails(Movie movie) {
         Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_MOVIE, movie);
@@ -290,26 +292,19 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
         ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
     }
 
+    @Override
+    public void loadMoreItems() {
+        //        isLoading = true;
+        moviesViewModel.incrementPage();
+        moviesPresenter.loadPopularMovies(moviesViewModel.getCurrentPage());
+    }
+
     // endregion
 
     // region Helper Methods
     private void removeListeners() {
         moviesAdapter.setOnItemClickListener(null);
-    }
-
-    private void loadMoreItems() {
-//        isLoading = true;
-//        currentPage += 1;
-
-//        Call getPopularMoviesCall = movieHubService.getPopularMovies(currentPage);
-//        calls.add(getPopularMoviesCall);
-//        getPopularMoviesCall.enqueue(getPopularMoviesNextFetchCallback);
-
-//        moviesPresenter.loadMovies(currentPage);
-//        moviesPresenter.loadNextPage();
-        moviesPresenter.loadMovies(0);
-
-
+//        recyclerView.removeOnScrollListener(recyclerViewOnScrollListener);
     }
 
     private ActivityOptionsCompat getActivityOptionsCompat(Pair pair){

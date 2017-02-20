@@ -2,6 +2,7 @@ package com.etiennelawlor.moviehub.ui.movies;
 
 import com.etiennelawlor.moviehub.data.remote.response.Configuration;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
+import com.etiennelawlor.moviehub.data.viewmodel.MoviesViewModel;
 import com.etiennelawlor.moviehub.ui.base.BasePresenter;
 
 import java.util.List;
@@ -30,21 +31,18 @@ public interface MoviesContract {
         boolean isAdapterEmpty();
         void setErrorText(String errorText);
         void addMoviesToAdapter(List<Movie> movies);
-        void viewMovieDetails(Movie movie);
-        void saveConfiguration(Configuration configuration);
+        void setViewModel(MoviesViewModel moviesViewModel);
+        void loadMoreItems();
+
+        // Navigation methods
+        void openMovieDetails(Movie movie);
     }
 
     interface Presenter extends BasePresenter {
-//        void loadFirstPage();
-//        void loadNextPage();
-//        void reloadFirstPage();
-//        void reloadNextPage();
+        void loadPopularMovies(int currentPage); // new way to go about pagination  : currentPage comes from ViewModel
+//        void getConfiguration();
 
-        void loadMovies(int currentPage);
-//        void reloadMovies(int currentPage);
-        void getConfiguration();
-        void viewMovieDetails(Movie movie);
-//        void showMovieDetails(Movie movie);
-//        void openMovieDetails(Movie movie);
+        void onMovieItemClick(Movie movie);
+        void onScrolledToEndOfList();
     }
 }

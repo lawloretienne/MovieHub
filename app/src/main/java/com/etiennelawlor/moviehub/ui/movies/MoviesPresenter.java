@@ -1,31 +1,17 @@
 package com.etiennelawlor.moviehub.ui.movies;
 
-import android.os.NetworkOnMainThreadException;
-
-import com.etiennelawlor.moviehub.data.remote.response.Configuration;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
-import com.etiennelawlor.moviehub.data.remote.response.MoviesEnvelope;
-import com.etiennelawlor.moviehub.data.source.movies.MoviesDataSource;
-import com.etiennelawlor.moviehub.data.source.movies.MoviesRepository;
+import com.etiennelawlor.moviehub.data.source.movies.MoviesDataContract;
 import com.etiennelawlor.moviehub.data.viewmodel.MoviesViewModel;
-import com.etiennelawlor.moviehub.ui.base.BasePresenter;
-import com.etiennelawlor.moviehub.util.NetworkLogUtility;
-import com.etiennelawlor.moviehub.util.NetworkUtility;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
-import timber.log.Timber;
 
 /**
  * Created by etiennelawlor on 2/9/17.
@@ -38,15 +24,15 @@ public class MoviesPresenter implements MoviesContract.Presenter {
     // endregion
 
     // region Member Variables
-    private final MoviesDataSource moviesDataSource;
+    private final MoviesDataContract.Repository moviesRepository;
     private final MoviesContract.View moviesView;
 
     private CompositeSubscription compositeSubscription = new CompositeSubscription();;
     // endregion
 
     // region Constructors
-    public MoviesPresenter(MoviesDataSource moviesDataSource, MoviesContract.View moviesView) {
-        this.moviesDataSource = moviesDataSource;
+    public MoviesPresenter(MoviesDataContract.Repository moviesRepository, MoviesContract.View moviesView) {
+        this.moviesRepository = moviesRepository;
         this.moviesView = moviesView;
     }
     // endregion
@@ -64,10 +50,12 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);
         compositeSubscription.add(subscription);
+
+        // Create RxUtils for this call
     }
 
     @Override
-    public void loadMovies(int currentPage) {
+    public void loadPopularMovies(final int currentPage) {
         if(currentPage == 1){
             moviesView.hideEmptyView();
             moviesView.hideErrorView();
@@ -76,7 +64,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
             moviesView.updateFooter(MoviesContract.View.FooterType.LOAD_MORE);
         }
 
-        addSubscription(moviesDataSource.getMovies(currentPage), new Subscriber<MoviesViewModel>() {
+        addSubscription(moviesRepository.getPopularMovies(currentPage), new Subscriber<MoviesViewModel>() {
             @Override
             public void onCompleted() {
 
@@ -84,6 +72,12 @@ public class MoviesPresenter implements MoviesContract.Presenter {
 
             @Override
             public void onError(Throwable e) {
+                if(currentPage == 1){
+
+                } else {
+
+                }
+
                 moviesView.hideLoadingView();
 
             }
@@ -101,7 +95,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                             if(movies.size()>0)
                                 moviesView.addMoviesToAdapter(movies);
 
-                            if(movies.size() >= PAGE_SIZE){
+                            if(movies.size() >= PAGE_SIZE){  // instead do if !(viewmodel.islastPage) the add footer
                                 moviesView.addFooter();
                             } else {
 //                                    moviesView.setIsLastPage(true);
@@ -129,50 +123,70 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                     }
 
                 }
+
+//                moviesView.setViewModel(moviesViewModel);
             }
         });
     }
 
+//    @Override
+//    public void getConfiguration() {
+//        // difference between map and flatMap is map returns an Object and flatMap returns Observable<Object>
+//
+//        ///
+////        moviesDataContract.getConfiguration().flatMap()
+//        // configuration should be a property of the view model for adapters
+//
+//        // 1. moviesDataContract.getConfiguration()
+//        // 2. moviesDataContract.getConfiguration().flatMap(v -> movieHubService.getPopularMovies(currentPage));
+//
+//        // then combineLatest(1, 2) - create view model wrapper object
+//
+////        Subscription subscription = moviesDataContract.getConfiguration()
+////                .subscribeOn(Schedulers.newThread())
+////                .observeOn(AndroidSchedulers.mainThread())
+////                .subscribe(new Action1<Configuration>() {
+////                    @Override
+////                    public void call(Configuration configuration) {
+////                        if(configuration != null){
+//////                            PreferencesHelper.setConfiguration(getContext(), configuration);
+////                            moviesView.saveConfiguration(configuration);
+////
+//////                                Call getPopularMoviesCall = movieHubService.getPopularMovies(currentPage);
+//////                                calls.add(getPopularMoviesCall);
+//////                                getPopularMoviesCall.enqueue(getPopularMoviesFirstFetchCallback);
+////
+////                            loadMovies(0);
+////                        }
+////                    }
+////                }, new Action1<Throwable>() {
+////                    @Override
+////                    public void call(Throwable throwable) {
+////                        throwable.printStackTrace();
+//////                        progressBar.setVisibility(View.GONE);
+////                        moviesView.showLoadingView();
+////                        if (NetworkUtility.isKnownException(throwable)) {
+//////                            errorTextView.setText("Can't load data.\nCheck your network connection.");
+//////                            errorLinearLayout.setVisibility(View.VISIBLE);
+////                            moviesView.setErrorText("Can't load data.\nCheck your network connection.");
+////                            moviesView.showErrorView();
+////                        }
+////                    }
+////                });
+////        compositeSubscription.add(subscription);
+//    }
+
+
     @Override
-    public void getConfiguration() {
-//        Subscription subscription = moviesDataSource.getConfiguration()
-//                .subscribeOn(Schedulers.newThread())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Action1<Configuration>() {
-//                    @Override
-//                    public void call(Configuration configuration) {
-//                        if(configuration != null){
-////                            PreferencesHelper.setConfiguration(getContext(), configuration);
-//                            moviesView.saveConfiguration(configuration);
-//
-////                                Call getPopularMoviesCall = movieHubService.getPopularMovies(currentPage);
-////                                calls.add(getPopularMoviesCall);
-////                                getPopularMoviesCall.enqueue(getPopularMoviesFirstFetchCallback);
-//
-//                            loadMovies(0);
-//                        }
-//                    }
-//                }, new Action1<Throwable>() {
-//                    @Override
-//                    public void call(Throwable throwable) {
-//                        throwable.printStackTrace();
-////                        progressBar.setVisibility(View.GONE);
-//                        moviesView.showLoadingView();
-//                        if (NetworkUtility.isKnownException(throwable)) {
-////                            errorTextView.setText("Can't load data.\nCheck your network connection.");
-////                            errorLinearLayout.setVisibility(View.VISIBLE);
-//                            moviesView.setErrorText("Can't load data.\nCheck your network connection.");
-//                            moviesView.showErrorView();
-//                        }
-//                    }
-//                });
-//        compositeSubscription.add(subscription);
+    public void onMovieItemClick(Movie movie) {
+        moviesView.openMovieDetails(movie);
     }
 
     @Override
-    public void viewMovieDetails(Movie movie) {
-        moviesView.viewMovieDetails(movie);
+    public void onScrolledToEndOfList() {
+        moviesView.loadMoreItems();
     }
+
     // endregion
 
 }
