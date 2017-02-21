@@ -15,5 +15,13 @@ public class MoviesLocalDataSource implements MoviesDataSourceContract.LocalDate
 
     // region MoviesDataSourceContract.LocalDateSource Methods
 
+//    getMovies() {
+//        Use mapper to convert from realm objects to POJOs
+//    }
+//
+//    saveMovies() {
+//        Use mapper to convert from POJOs to realm objects
+//    }
+
     // endregion
 }
