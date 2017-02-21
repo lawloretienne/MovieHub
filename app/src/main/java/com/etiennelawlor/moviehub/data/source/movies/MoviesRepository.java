@@ -14,28 +14,32 @@ import rx.functions.Func1;
  * Created by etiennelawlor on 2/13/17.
  */
 
-public class MoviesRepository implements MoviesDataContract.Repository {
+public class MoviesRepository implements MoviesDataSourceContract.Repository {
 
     // http://blog.danlew.net/2015/06/22/loading-data-from-multiple-sources-with-rxjava/
+//    https://github.com/millionsun93/HackerNews/blob/bd94c62ac658eb3281879c8018540f6dc2c2ec3d/app/src/main/java/com/innovatube/boilerplate/data/HackerNewsRepositoryImpl.java
+
+    // Uses mapper to go from POJO to RealmObject
+    // https://github.com/dcampogiani/Qwertee/blob/f71dbc318264bcc05a7f51c8cb8c40e54b53b57e/data/src/main/java/com/danielecampogiani/qwertee/data/local/model/MapperImpl.java
 
     // region Constants
     private static final int PAGE_SIZE = 20;
     // endregion
 
     // region Member Variables
-    private MoviesDataContract.LocalDateSource moviesLocalDataSource;
-    private MoviesDataContract.RemoteDateSource moviesRemoteDataSource;
+    private MoviesDataSourceContract.LocalDateSource moviesLocalDataSource;
+    private MoviesDataSourceContract.RemoteDateSource moviesRemoteDataSource;
     // endregion
 
     // region Constructors
     // Additionally i need to pass in configRemoteDataSource as
-    public MoviesRepository(MoviesDataContract.LocalDateSource moviesLocalDataSource, MoviesDataContract.RemoteDateSource moviesRemoteDataSource) {
+    public MoviesRepository(MoviesDataSourceContract.LocalDateSource moviesLocalDataSource, MoviesDataSourceContract.RemoteDateSource moviesRemoteDataSource) {
         this.moviesLocalDataSource = moviesLocalDataSource;
         this.moviesRemoteDataSource = moviesRemoteDataSource;
     }
     // endregion
 
-    // region MoviesDataContract.Repository Methods
+    // region MoviesDataSourceContract.Repository Methods
     @Override
     public Observable<MoviesModel> getPopularMovies(int currentPage) {
         return moviesRemoteDataSource.getPopularMovies(currentPage)

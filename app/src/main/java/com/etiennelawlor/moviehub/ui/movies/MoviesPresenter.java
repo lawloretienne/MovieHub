@@ -2,7 +2,7 @@ package com.etiennelawlor.moviehub.ui.movies;
 
 import com.etiennelawlor.moviehub.data.model.MoviesModel;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
-import com.etiennelawlor.moviehub.data.source.movies.MoviesDataContract;
+import com.etiennelawlor.moviehub.data.source.movies.MoviesDataSourceContract;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 
 import java.util.List;
@@ -21,13 +21,13 @@ import rx.subscriptions.CompositeSubscription;
 public class MoviesPresenter implements MoviesUIContract.Presenter {
 
     // region Member Variables
-    private final MoviesDataContract.Repository moviesRepository;
+    private final MoviesDataSourceContract.Repository moviesRepository;
     private final MoviesUIContract.View moviesView;
     private CompositeSubscription compositeSubscription = new CompositeSubscription();
     // endregion
 
     // region Constructors
-    public MoviesPresenter(MoviesDataContract.Repository moviesRepository, MoviesUIContract.View moviesView) {
+    public MoviesPresenter(MoviesDataSourceContract.Repository moviesRepository, MoviesUIContract.View moviesView) {
         this.moviesRepository = moviesRepository;
         this.moviesView = moviesView;
     }

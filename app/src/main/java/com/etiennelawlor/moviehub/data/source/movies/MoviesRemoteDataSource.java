@@ -19,7 +19,7 @@ import rx.functions.Func1;
  * Created by etiennelawlor on 2/13/17.
  */
 
-public class MoviesRemoteDataSource implements MoviesDataContract.RemoteDateSource {
+public class MoviesRemoteDataSource implements MoviesDataSourceContract.RemoteDateSource {
 
     // region Constants
     private static final int PAGE_SIZE = 20;
@@ -39,7 +39,7 @@ public class MoviesRemoteDataSource implements MoviesDataContract.RemoteDateSour
     }
     // endregion
 
-    // region MoviesDataContract.RemoteDateSource Methods
+    // region MoviesDataSourceContract.RemoteDateSource Methods
     @Override
     public Observable<MoviesModel> getPopularMovies(int currentPage) {
         return movieHubService.getPopularMovies(currentPage)
