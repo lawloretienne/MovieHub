@@ -7,11 +7,11 @@ import java.util.List;
  * Created by etiennelawlor on 2/20/17.
  */
 
-public class BaseMapper<Pojo, RealmObject> {
+public abstract class BaseMapper<Pojo, RealmObject> {
 
-    public Pojo mapFromRealmObject(RealmObject realmObject){ return null;}
+    public abstract Pojo mapFromRealmObject(RealmObject realmObject);
 
-    public RealmObject mapToRealmObject(Pojo pojo){ return null;}
+    public abstract RealmObject mapToRealmObject(Pojo pojo);
 
     public List<Pojo> mapFromRealmList(List<RealmObject> realmObjectList) {
         List<Pojo> pojoList = null;

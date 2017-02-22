@@ -72,7 +72,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     // region Listeners
     @OnClick(R.id.reload_btn)
     public void onReloadButtonClicked() {
-        moviesPresenter.onLoadPopularMovies(moviesModel.getCurrentPage());
+        moviesPresenter.onLoadPopularMovies(moviesModel == null ? 1 : moviesModel.getCurrentPage());
     }
 
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
@@ -273,7 +273,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
 
     @Override
     public void loadMoreItems() {
-        //        isLoading = true;
+//        isLoading = true;
         moviesModel.incrementPage();
         moviesPresenter.onLoadPopularMovies(moviesModel.getCurrentPage());
     }

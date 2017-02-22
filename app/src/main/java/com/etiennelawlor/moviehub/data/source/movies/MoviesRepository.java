@@ -16,8 +16,10 @@ import rx.functions.Func1;
 
 public class MoviesRepository implements MoviesDataSourceContract.Repository {
 
+    // Load data from local and remote
     // http://blog.danlew.net/2015/06/22/loading-data-from-multiple-sources-with-rxjava/
 //    https://github.com/millionsun93/HackerNews/blob/bd94c62ac658eb3281879c8018540f6dc2c2ec3d/app/src/main/java/com/innovatube/boilerplate/data/HackerNewsRepositoryImpl.java
+//    https://github.com/4ndrik/takestock_android/blob/19038a57675cdc88547e9695a81de9269b01dc4e/app/src/main/java/com/devabit/takestock/data/source/DataRepository.java
 
     // Uses mapper to go from POJO to RealmObject
     // https://github.com/ihorvitruk/buddysearch/blob/master/library/src/main/java/com/buddysearch/android/library/data/mapper/BaseMapper.java
@@ -42,21 +44,23 @@ public class MoviesRepository implements MoviesDataSourceContract.Repository {
 
     // region MoviesDataSourceContract.Repository Methods
     @Override
-    public Observable<MoviesModel> getPopularMovies(int currentPage) {
-        return moviesRemoteDataSource.getPopularMovies(currentPage)
-            .map(new Func1<MoviesEnvelope, MoviesModel>() {
-                @Override
-                public MoviesModel call(MoviesEnvelope moviesEnvelope) {
-                    List<Movie> movies = moviesEnvelope.getMovies();
-                    int currentPage = moviesEnvelope.getPage();
-                    boolean isLastPage = moviesEnvelope.getMovies().size() < PAGE_SIZE ? true : false;
+    public Observable<MoviesModel> getPopularMovies(final int currentPage) {
+        Observable<List<Movie>> local = moviesLocalDataSource.getPopularMovies(currentPage);
+        Observable<List<Movie>> remote = moviesRemoteDataSource.getPopularMovies(currentPage);
 
-                    return new MoviesModel(movies, currentPage, isLastPage);
-                }
-            }).doOnNext(new Action1<MoviesModel>() {
+        return Observable.concat(local, remote)
+                .first()
+                .map(new Func1<List<Movie>, MoviesModel>() {
+                    @Override
+                    public MoviesModel call(List<Movie> movies) {
+                        boolean isLastPage = movies.size() < PAGE_SIZE ? true : false;
+                        return new MoviesModel(movies, currentPage, isLastPage);
+                    }
+                }).doOnNext(new Action1<MoviesModel>() {
                     @Override
                     public void call(MoviesModel moviesViewModel) {
-                        // todo: update realm
+                        List<Movie> movies = moviesViewModel.getMovies();
+                        moviesLocalDataSource.savePopularMovies(movies);
                     }
                 });
     }

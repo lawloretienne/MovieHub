@@ -57,6 +57,7 @@ public class MoviesPresenter implements MoviesUIContract.Presenter {
 
             @Override
             public void onError(Throwable throwable) {
+                throwable.printStackTrace();
                 if(currentPage == 1){
                     moviesView.hideLoadingView();
 

@@ -41,21 +41,12 @@ public class MoviesRemoteDataSource implements MoviesDataSourceContract.RemoteDa
 
     // region MoviesDataSourceContract.RemoteDateSource Methods
     @Override
-    public Observable<MoviesModel> getPopularMovies(int currentPage) {
+    public Observable<List<Movie>> getPopularMovies(int currentPage) {
         return movieHubService.getPopularMovies(currentPage)
-                .map(new Func1<MoviesEnvelope, MoviesModel>() {
+                .flatMap(new Func1<MoviesEnvelope, Observable<List<Movie>>>() {
                     @Override
-                    public MoviesModel call(MoviesEnvelope moviesEnvelope) {
-                        List<Movie> movies = moviesEnvelope.getMovies();
-                        int currentPage = moviesEnvelope.getPage();
-                        boolean isLastPage = moviesEnvelope.getMovies().size() < PAGE_SIZE ? true : false;
-
-                        return new MoviesModel(movies, currentPage, isLastPage);
-                    }
-                }).doOnNext(new Action1<MoviesModel>() {
-                    @Override
-                    public void call(MoviesModel moviesViewModel) {
-                        // todo: update realm
+                    public Observable<List<Movie>> call(MoviesEnvelope moviesEnvelope) {
+                        return Observable.just(moviesEnvelope.getMovies());
                     }
                 });
     }
