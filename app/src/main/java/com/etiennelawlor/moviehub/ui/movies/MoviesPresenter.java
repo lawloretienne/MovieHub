@@ -58,6 +58,7 @@ public class MoviesPresenter implements MoviesUIContract.Presenter {
             @Override
             public void onError(Throwable throwable) {
                 throwable.printStackTrace();
+
                 if(currentPage == 1){
                     moviesView.hideLoadingView();
 
@@ -74,12 +75,12 @@ public class MoviesPresenter implements MoviesUIContract.Presenter {
 
             @Override
             public void onNext(MoviesModel moviesModel) {
-                moviesView.hideLoadingView();
-
                 if(moviesModel != null){
                     int currentPage = moviesModel.getCurrentPage();
                     List<Movie> movies = moviesModel.getMovies();
                     if(currentPage == 1){
+                        moviesView.hideLoadingView();
+
                         if(moviesModel.hasMovies()){
                             moviesView.addMoviesToAdapter(movies);
 
@@ -90,7 +91,6 @@ public class MoviesPresenter implements MoviesUIContract.Presenter {
                         }
                     } else {
                         moviesView.removeFooter();
-//                        moviesView.setIsLoading(false);
 
                         if(moviesModel.hasMovies()){
                             moviesView.addMoviesToAdapter(movies);
