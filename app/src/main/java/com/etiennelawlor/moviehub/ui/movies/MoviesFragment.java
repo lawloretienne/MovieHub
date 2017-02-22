@@ -67,6 +67,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     private MoviesUIContract.Presenter moviesPresenter;
     private View selectedMovieView;
     private MoviesModel moviesModel;
+    private boolean isLoading = false;
     // endregion
 
     // region Listeners
@@ -90,7 +91,9 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
             int[] positions = layoutManager.findFirstVisibleItemPositions(null);
             int firstVisibleItem = positions[1];
 
-            if ((visibleItemCount + firstVisibleItem) >= totalItemCount && totalItemCount > 0) {
+            if ((visibleItemCount + firstVisibleItem) >= totalItemCount
+                    && totalItemCount > 0
+                    && !isLoading) {
                 moviesPresenter.onScrollToEndOfList();
             }
         }
@@ -209,11 +212,13 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     @Override
     public void showLoadingView() {
         progressBar.setVisibility(View.VISIBLE);
+        isLoading = true;
     }
 
     @Override
     public void hideLoadingView() {
         progressBar.setVisibility(View.GONE);
+        isLoading = false;
     }
 
     @Override
@@ -234,6 +239,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     @Override
     public void showLoadingFooter() {
         moviesAdapter.updateFooter(BaseAdapter.FooterType.LOAD_MORE);
+        isLoading = true;
     }
 
     @Override
@@ -273,7 +279,6 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
 
     @Override
     public void loadMoreItems() {
-//        isLoading = true;
         moviesModel.incrementPage();
         moviesPresenter.onLoadPopularMovies(moviesModel.getCurrentPage());
     }
