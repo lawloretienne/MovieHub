@@ -78,13 +78,15 @@ public class MoviesPresenter implements MoviesUIContract.Presenter {
                 if(moviesModel != null){
                     int currentPage = moviesModel.getCurrentPage();
                     List<Movie> movies = moviesModel.getMovies();
+                    boolean isLastPage = moviesModel.isLastPage();
+                    boolean hasMovies = moviesModel.hasMovies();
                     if(currentPage == 1){
                         moviesView.hideLoadingView();
 
-                        if(moviesModel.hasMovies()){
+                        if(hasMovies){
                             moviesView.addMoviesToAdapter(movies);
 
-                            if(!moviesModel.isLastPage())
+                            if(!isLastPage)
                                 moviesView.addFooter();
                         } else {
                             moviesView.showEmptyView();
@@ -92,10 +94,10 @@ public class MoviesPresenter implements MoviesUIContract.Presenter {
                     } else {
                         moviesView.removeFooter();
 
-                        if(moviesModel.hasMovies()){
+                        if(hasMovies){
                             moviesView.addMoviesToAdapter(movies);
 
-                            if(!moviesModel.isLastPage())
+                            if(!isLastPage)
                                 moviesView.addFooter();
                         }
                     }

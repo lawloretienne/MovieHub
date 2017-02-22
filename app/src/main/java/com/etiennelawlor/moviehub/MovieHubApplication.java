@@ -110,19 +110,20 @@ public class MovieHubApplication extends Application {
 
         @Override
         protected boolean isLoggable(int priority) {
-            if (priority == Log.VERBOSE || priority == Log.DEBUG) {
+            if (priority == Log.VERBOSE || priority == Log.DEBUG || priority == Log.INFO) {
                 return false;
             }
 
-            // Only log WARN, INFO, ERROR, WTF
+            // Only log WARN, ERROR, WTF
             return true;
         }
 
         @Override
         protected void log(int priority, String tag, String message, Throwable t) {
             if (isLoggable(priority)) {
-                //            FakeCrashLibrary.log(priority, tag, message);
-//
+
+//            FakeCrashLibrary.log(priority, tag, message);
+
 //            if (t != null) {
 //                if (priority == Log.ERROR) {
 //                    FakeCrashLibrary.logError(t);
@@ -130,7 +131,6 @@ public class MovieHubApplication extends Application {
 //                    FakeCrashLibrary.logWarning(t);
 //                }
 //            }
-
 
                 // Message is short enough, does not need to be broken into chunks
                 if (message.length() < MAX_LOG_LENGTH) {

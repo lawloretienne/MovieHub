@@ -44,7 +44,10 @@ android {
             debuggable true
             minifyEnabled false
             // Run code coverage reports by default on debug builds.
-            testCoverageEnabled = true
+            // Causes issue with debugger
+//            testCoverageEnabled = true
+            // Turns off code coverage but doesn't mess with debugger
+            testCoverageEnabled = false
         }
     }
     lintOptions {
