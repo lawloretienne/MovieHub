@@ -229,6 +229,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     @Override
     public void removeFooter() {
         moviesAdapter.removeFooter();
+        isLoading = false;
     }
 
     @Override

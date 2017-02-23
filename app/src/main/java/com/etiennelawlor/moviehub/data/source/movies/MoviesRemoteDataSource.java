@@ -21,10 +21,6 @@ import rx.functions.Func1;
 
 public class MoviesRemoteDataSource implements MoviesDataSourceContract.RemoteDateSource {
 
-    // region Constants
-    private static final int PAGE_SIZE = 20;
-    // endregion
-
     // region Member Variables
     private MovieHubService movieHubService;
     // endregion

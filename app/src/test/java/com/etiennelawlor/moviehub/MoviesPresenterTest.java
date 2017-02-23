@@ -1,15 +1,13 @@
 package com.etiennelawlor.moviehub;
 
-import com.etiennelawlor.moviehub.data.repository.MoviesRepository;
-import com.etiennelawlor.moviehub.ui.movies.MoviesUIContract;
+import com.etiennelawlor.moviehub.data.source.movies.MoviesDataSourceContract;
 import com.etiennelawlor.moviehub.ui.movies.MoviesPresenter;
+import com.etiennelawlor.moviehub.ui.movies.MoviesUIContract;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import static org.mockito.Mockito.verify;
 
 /**
  * Created by etiennelawlor on 2/9/17.
@@ -19,7 +17,7 @@ public class MoviesPresenterTest {
 
     // region Member Variables
     @Mock
-    private MoviesRepository moviesRepository;
+    private MoviesDataSourceContract.Repository moviesRepository;
     @Mock
     private MoviesUIContract.View moviesView;
     private MoviesPresenter moviesPresenter;
