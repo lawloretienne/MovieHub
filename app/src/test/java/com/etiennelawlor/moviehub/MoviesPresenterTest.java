@@ -9,17 +9,16 @@ import com.etiennelawlor.moviehub.ui.movies.MoviesUIContract;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import rx.Observable;
-import rx.Subscriber;
 
-import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -36,15 +35,10 @@ public class MoviesPresenterTest {
     private MoviesDataSourceContract.Repository moviesRepository;
     @Mock
     private Observable<MoviesModel> mockObservable;
-
-    @Captor
-    private ArgumentCaptor<Subscriber<MoviesModel>> argumentCapture;
-
     @Rule
     public final RxSchedulersOverrideRule overrideSchedulersRule = new RxSchedulersOverrideRule();
 
-    private MoviesModel moviesModel;
-
+    private MoviesModel mockedMoviesModel;
     private MoviesPresenter moviesPresenter;
     // endregion
 
@@ -56,102 +50,183 @@ public class MoviesPresenterTest {
 
         // Get a reference to the class under test
         moviesPresenter = new MoviesPresenter(moviesView, moviesRepository);
-        moviesModel = new MoviesModel(new ArrayList<Movie>(), 0, false);
-
     }
 
-    // Test method names
-    // methodName_codepathExplanation
-    // methodName_StateUnderTest_ExpectedBehavior
-    // methodName_InputValues_ExpectedBehavior
-    // methodName_WithCertainState_ShouldDoSomething
-    // methodName_WhenX_ExpectY
-
-    @Test
-    public void loadMovies_whenX_expectY(){
-
-//        moviesPresenter.loadMovies();
-//        verify(moviesView)
-
-    }
-
-//    void onLoadPopularMovies(int currentPage);
-//    void onMovieClick(Movie movie);
-//    void onScrollToEndOfList();
-//    void onDestroyView();
-
+    // region Test Methods
     @Test
     public void onLoadPopularMovies_shouldShowError_whenFirstPageRequestFailed() {
-        // 1. Set up conditions required for the test
-        int currentPage = 1;
-        when(moviesRepository.getPopularMovies(currentPage)).thenReturn(mockObservable);
-        // 2. Then perform one or more actions
-        moviesPresenter.onLoadPopularMovies(currentPage);
-        // 3. Afterwards, verify that the state you are expecting is actually achieved
+        // 1. (Given) Set up conditions required for the test
+        mockedMoviesModel = new MoviesModel(getListOfMovies(0), 1, true);
+        when(moviesRepository.getPopularMovies(mockedMoviesModel.getCurrentPage())).thenReturn(Observable.<MoviesModel>error(new IOException()));
+
+        // 2. (When) Then perform one or more actions
+        moviesPresenter.onLoadPopularMovies(mockedMoviesModel.getCurrentPage());
+
+        // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
+        verify(moviesView).hideEmptyView();
+        verify(moviesView).hideErrorView();
+        verify(moviesView).showLoadingView();
+
         verify(moviesView).hideLoadingView();
         verify(moviesView).showErrorView();
-//        moviesPresenter.onLoadPopularMovies(anyInt());
     }
 
     @Test
-    public void onLoadPopularMovies_shouldShowEmpty_whenFirstPagResponseIsEmpty() {
-        // 1. Set up conditions required for the test
+    public void onLoadPopularMovies_shouldShowError_whenNextPageRequestFailed() {
+        // 1. (Given) Set up conditions required for the test
+        mockedMoviesModel = new MoviesModel(getListOfMovies(0), 2, true);
+        when(moviesRepository.getPopularMovies(mockedMoviesModel.getCurrentPage())).thenReturn(Observable.<MoviesModel>error(new IOException()));
 
-        int currentPage = 1;
-        moviesPresenter.onLoadPopularMovies(currentPage);
+        // 2. (When) Then perform one or more actions
+        moviesPresenter.onLoadPopularMovies(mockedMoviesModel.getCurrentPage());
 
-        // 2. Then perform one or more actions
+        // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
+        verify(moviesView).showLoadingFooter();
 
-//        moviesPresenter.onLoadPopularMovies(currentPage);
-
-        // 3. Afterwards, verify that the state you are expecting is actually achieved
-        when(moviesRepository.getPopularMovies(currentPage)).thenReturn(Observable.just(moviesModel));
-
-//        verify(moviesView).hideEmptyView();
-//        verify(moviesView).hideErrorView();
-//        verify(moviesView).showLoadingView();
-//
-//        verify(moviesView).hideLoadingView();
-//        verify(moviesView).showEmptyView();
-
-//        moviesPresenter.onLoadPopularMovies(anyInt());
+        verify(moviesView).showErrorFooter();
     }
 
     @Test
-    public void onLoadPopularMovies_shouldShowContent_whenFirstPagResponseIsSuccessful() {
-        // 1. Set up conditions required for the test
-        int currentPage = 1;
-        when(moviesRepository.getPopularMovies(currentPage)).thenReturn(mockObservable);
-        // 2. Then perform one or more actions
-        moviesPresenter.onLoadPopularMovies(currentPage);
-        // 3. Afterwards, verify that the state you are expecting is actually achieved
-        verify(mockObservable).subscribe(argumentCapture.capture());
-        argumentCapture.getValue().onNext(moviesModel);
+    public void onLoadPopularMovies_shouldShowEmpty_whenFirstPageHasNoMovies() {
+        // 1. (Given) Set up conditions required for the test
+        mockedMoviesModel = new MoviesModel(getListOfMovies(0), 1, true);
+        when(moviesRepository.getPopularMovies(mockedMoviesModel.getCurrentPage())).thenReturn(Observable.just(mockedMoviesModel));
+
+        // 2. (When) Then perform one or more actions
+        moviesPresenter.onLoadPopularMovies(mockedMoviesModel.getCurrentPage());
+
+        // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
+        verify(moviesView).hideEmptyView();
+        verify(moviesView).hideErrorView();
+        verify(moviesView).showLoadingView();
 
         verify(moviesView).hideLoadingView();
-        verify(moviesView).addMoviesToAdapter(moviesModel.getMovies());
-//        moviesPresenter.onLoadPopularMovies(anyInt());
+        verify(moviesView).showEmptyView();
+        verify(moviesView).setModel(mockedMoviesModel);
+    }
+
+    @Test
+    public void onLoadPopularMovies_shouldNotAddMovies_whenNextPageHasNoMovies() {
+        // 1. (Given) Set up conditions required for the test
+        mockedMoviesModel = new MoviesModel(getListOfMovies(0), 2, true);
+        when(moviesRepository.getPopularMovies(mockedMoviesModel.getCurrentPage())).thenReturn(Observable.just(mockedMoviesModel));
+
+        // 2. (When) Then perform one or more actions
+        moviesPresenter.onLoadPopularMovies(mockedMoviesModel.getCurrentPage());
+
+        // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
+        verify(moviesView).showLoadingFooter();
+
+        verify(moviesView).removeFooter();
+        verify(moviesView).setModel(mockedMoviesModel);
+    }
+
+    @Test
+    public void onLoadPopularMovies_shouldAddMovies_whenFirstPageHasMoviesAndIsLastPage() {
+        // 1. (Given) Set up conditions required for the test
+        mockedMoviesModel = new MoviesModel(getListOfMovies(5), 1, true);
+        when(moviesRepository.getPopularMovies(mockedMoviesModel.getCurrentPage())).thenReturn(Observable.just(mockedMoviesModel));
+
+        // 2. (When) Then perform one or more actions
+        moviesPresenter.onLoadPopularMovies(mockedMoviesModel.getCurrentPage());
+
+        // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
+        verify(moviesView).hideEmptyView();
+        verify(moviesView).hideErrorView();
+        verify(moviesView).showLoadingView();
+
+        verify(moviesView).hideLoadingView();
+        verify(moviesView).addMoviesToAdapter(mockedMoviesModel.getMovies());
+        verify(moviesView).setModel(mockedMoviesModel);
+    }
+
+    @Test
+    public void onLoadPopularMovies_shouldAddMovies_whenFirstPageHasMoviesAndIsNotLastPage() {
+        // 1. (Given) Set up conditions required for the test
+        mockedMoviesModel = new MoviesModel(getListOfMovies(5), 1, false);
+        when(moviesRepository.getPopularMovies(mockedMoviesModel.getCurrentPage())).thenReturn(Observable.just(mockedMoviesModel));
+
+        // 2. (When) Then perform one or more actions
+        moviesPresenter.onLoadPopularMovies(mockedMoviesModel.getCurrentPage());
+
+        // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
+        verify(moviesView).hideEmptyView();
+        verify(moviesView).hideErrorView();
+        verify(moviesView).showLoadingView();
+
+        verify(moviesView).hideLoadingView();
+        verify(moviesView).addMoviesToAdapter(mockedMoviesModel.getMovies());
+        verify(moviesView).addFooter();
+        verify(moviesView).setModel(mockedMoviesModel);
+    }
+
+    @Test
+    public void onLoadPopularMovies_shouldAddMovies_whenNextPageHasMoviesAndIsLastPage() {
+        // 1. (Given) Set up conditions required for the test
+        mockedMoviesModel = new MoviesModel(getListOfMovies(5), 2, true);
+        when(moviesRepository.getPopularMovies(mockedMoviesModel.getCurrentPage())).thenReturn(Observable.just(mockedMoviesModel));
+
+        // 2. (When) Then perform one or more actions
+        moviesPresenter.onLoadPopularMovies(mockedMoviesModel.getCurrentPage());
+
+        // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
+        verify(moviesView).showLoadingFooter();
+
+        verify(moviesView).removeFooter();
+        verify(moviesView).addMoviesToAdapter(mockedMoviesModel.getMovies());
+        verify(moviesView).setModel(mockedMoviesModel);
+    }
+
+    @Test
+    public void onLoadPopularMovies_shouldAddMovies_whenNextPageHasMoviesAndIsNotLastPage() {
+        // 1. (Given) Set up conditions required for the test
+        mockedMoviesModel = new MoviesModel(getListOfMovies(5), 2, false);
+        when(moviesRepository.getPopularMovies(mockedMoviesModel.getCurrentPage())).thenReturn(Observable.just(mockedMoviesModel));
+
+        // 2. (When) Then perform one or more actions
+        moviesPresenter.onLoadPopularMovies(mockedMoviesModel.getCurrentPage());
+
+        // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
+        verify(moviesView).showLoadingFooter();
+
+        verify(moviesView).removeFooter();
+        verify(moviesView).addMoviesToAdapter(mockedMoviesModel.getMovies());
+        verify(moviesView).addFooter();
+        verify(moviesView).setModel(mockedMoviesModel);
     }
 
     @Test
     public void onMovieClick_shouldOpenMovieDetails() throws Exception {
-        // 1. Set up conditions required for the test
+        // 1. (Given) Set up conditions required for the test
         Movie movie = new Movie();
 
-        // 2. Then perform one or more actions
+        // 2. (When) Then perform one or more actions
         moviesPresenter.onMovieClick(movie);
 
-        // 3. Afterwards, verify that the state you are expecting is actually achieved
+        // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(moviesView).openMovieDetails(movie);
     }
 
     @Test
     public void onScrollToEndOfList_shouldLoadMoreItems() throws Exception {
-        // 1. Set up conditions required for the test
+        // 1. (Given) Set up conditions required for the test
 
-        // 2. Then perform one or more actions
+        // 2. (When) Then perform one or more actions
         moviesPresenter.onScrollToEndOfList();
-        // 3. Afterwards, verify that the state you are expecting is actually achieved
+
+        // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(moviesView).loadMoreItems();
     }
+    // endregion
+
+    // region Helper Methods
+    private List<Movie> getListOfMovies(int numOfMovies){
+        List<Movie> movies = new ArrayList<>();
+        for(int i=0; i<numOfMovies; i++){
+            Movie movie = new Movie();
+            movies.add(movie);
+        }
+        return movies;
+    }
+    // endregion
 }
