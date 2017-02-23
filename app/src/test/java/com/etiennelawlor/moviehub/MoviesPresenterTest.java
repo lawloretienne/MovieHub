@@ -128,4 +128,26 @@ public class MoviesPresenterTest {
         verify(moviesView).addMoviesToAdapter(moviesModel.getMovies());
 //        moviesPresenter.onLoadPopularMovies(anyInt());
     }
+
+    @Test
+    public void onMovieClick_shouldOpenMovieDetails() throws Exception {
+        // 1. Set up conditions required for the test
+        Movie movie = new Movie();
+
+        // 2. Then perform one or more actions
+        moviesPresenter.onMovieClick(movie);
+
+        // 3. Afterwards, verify that the state you are expecting is actually achieved
+        verify(moviesView).openMovieDetails(movie);
+    }
+
+    @Test
+    public void onScrollToEndOfList_shouldLoadMoreItems() throws Exception {
+        // 1. Set up conditions required for the test
+
+        // 2. Then perform one or more actions
+        moviesPresenter.onScrollToEndOfList();
+        // 3. Afterwards, verify that the state you are expecting is actually achieved
+        verify(moviesView).loadMoreItems();
+    }
 }
