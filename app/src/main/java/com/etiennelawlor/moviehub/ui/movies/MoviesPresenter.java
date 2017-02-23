@@ -49,7 +49,8 @@ public class MoviesPresenter implements MoviesUIContract.Presenter {
             moviesView.showLoadingFooter();
         }
 
-        addSubscription(moviesRepository.getPopularMovies(currentPage), new Subscriber<MoviesModel>() {
+        Observable<MoviesModel> moviesModelObservable = moviesRepository.getPopularMovies(currentPage);
+        addSubscription(moviesModelObservable, new Subscriber<MoviesModel>() {
             @Override
             public void onCompleted() {
 
