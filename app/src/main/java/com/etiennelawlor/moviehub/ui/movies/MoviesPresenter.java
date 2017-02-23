@@ -21,15 +21,15 @@ import rx.subscriptions.CompositeSubscription;
 public class MoviesPresenter implements MoviesUIContract.Presenter {
 
     // region Member Variables
-    private final MoviesDataSourceContract.Repository moviesRepository;
     private final MoviesUIContract.View moviesView;
+    private final MoviesDataSourceContract.Repository moviesRepository;
     private CompositeSubscription compositeSubscription = new CompositeSubscription();
     // endregion
 
     // region Constructors
-    public MoviesPresenter(MoviesDataSourceContract.Repository moviesRepository, MoviesUIContract.View moviesView) {
-        this.moviesRepository = moviesRepository;
+    public MoviesPresenter(MoviesUIContract.View moviesView, MoviesDataSourceContract.Repository moviesRepository) {
         this.moviesView = moviesView;
+        this.moviesRepository = moviesRepository;
     }
     // endregion
 

@@ -123,10 +123,11 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
         super.onCreate(savedInstanceState);
 
         moviesPresenter = new MoviesPresenter(
+                this,
                 new MoviesRepository(
                         new MoviesLocalDataSource(getContext()),
-                        new MoviesRemoteDataSource(getContext())),
-                this);
+                        new MoviesRemoteDataSource(getContext()))
+                );
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
     }
