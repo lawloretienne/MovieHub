@@ -13,6 +13,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
 /**
  * Created by etiennelawlor on 2/9/17.
@@ -36,7 +37,8 @@ public class MoviesPresenter implements MoviesUIContract.Presenter {
     // region MoviesUIContract.Presenter Methods
     @Override
     public void onDestroyView() {
-        compositeSubscription.clear();
+        if(compositeSubscription != null && compositeSubscription.hasSubscriptions())
+            compositeSubscription.clear();
     }
 
     @Override
