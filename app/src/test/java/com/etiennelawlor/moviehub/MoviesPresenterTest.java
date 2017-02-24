@@ -18,8 +18,10 @@ import java.util.List;
 
 import rx.Observable;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
@@ -212,10 +214,11 @@ public class MoviesPresenterTest {
         verify(moviesView).addMoviesToAdapter(moviesModel.getMovies());
         verify(moviesView).addFooter();
         verify(moviesView).setModel(moviesModel);
+//        verify(moviesView, times(1)).setModel(any(MoviesModel.class)); // Alternative verify check
     }
 
     @Test
-    public void onMovieClick_shouldOpenMovieDetails() throws Exception {
+    public void onMovieClick_shouldOpenMovieDetails() {
         // 1. (Given) Set up conditions required for the test
         Movie movie = new Movie();
 
@@ -229,7 +232,7 @@ public class MoviesPresenterTest {
     }
 
     @Test
-    public void onScrollToEndOfList_shouldLoadMoreItems() throws Exception {
+    public void onScrollToEndOfList_shouldLoadMoreItems() {
         // 1. (Given) Set up conditions required for the test
 
         // 2. (When) Then perform one or more actions
@@ -240,6 +243,18 @@ public class MoviesPresenterTest {
 
         verifyZeroInteractions(moviesRepository);
     }
+
+    @Test
+    public void onDestroyView_shouldNotHaveInteractions() {
+        // 1. (Given) Set up conditions required for the test
+
+        // 2. (When) Then perform one or more actions
+        moviesPresenter.onDestroyView();
+        // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
+        verifyZeroInteractions(moviesView);
+        verifyZeroInteractions(moviesRepository);
+    }
+
     // endregion
 
     // region Helper Methods
