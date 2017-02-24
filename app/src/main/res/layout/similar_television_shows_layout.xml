@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <com.etiennelawlor.moviehub.ui.CustomFontTextView
+    <com.etiennelawlor.moviehub.ui.common.widget.CustomFontTextView
         android:id="@+id/similar_telvision_shows_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

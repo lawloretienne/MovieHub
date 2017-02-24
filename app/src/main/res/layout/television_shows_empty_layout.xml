@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/ic_tv_shows_large" />
 
-    <com.etiennelawlor.moviehub.ui.CustomFontTextView
+    <com.etiennelawlor.moviehub.ui.common.widget.CustomFontTextView
         android:id="@+id/empty_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

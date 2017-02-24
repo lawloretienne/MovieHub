@@ -24,7 +24,7 @@
             app:cardCornerRadius="0dp"
             app:cardElevation="8dp">
 
-            <com.etiennelawlor.moviehub.ui.CustomFontTextView
+            <com.etiennelawlor.moviehub.ui.common.widget.CustomFontTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_search_wrapped"

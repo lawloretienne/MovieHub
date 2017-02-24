@@ -11,6 +11,8 @@ import com.squareup.leakcanary.RefWatcher;
 
 import java.io.File;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import timber.log.Timber;
 
 /**
@@ -37,6 +39,7 @@ public class MovieHubApplication extends Application {
 
         initializeTimber();
         initializeLeakCanary();
+        initializeRealm();
 
         currentApplication = this;
     }
@@ -71,6 +74,15 @@ public class MovieHubApplication extends Application {
         refWatcher = LeakCanary.install(this);
     }
 
+    private void initializeRealm(){
+        Realm.init(this);
+        RealmConfiguration config =
+                new RealmConfiguration.Builder()
+                        .deleteRealmIfMigrationNeeded()
+                        .build();
+        Realm.setDefaultConfiguration(config);
+    }
+
     private void initializeTimber() {
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree() {
@@ -98,19 +110,20 @@ public class MovieHubApplication extends Application {
 
         @Override
         protected boolean isLoggable(int priority) {
-            if (priority == Log.VERBOSE || priority == Log.DEBUG) {
+            if (priority == Log.VERBOSE || priority == Log.DEBUG || priority == Log.INFO) {
                 return false;
             }
 
-            // Only log WARN, INFO, ERROR, WTF
+            // Only log WARN, ERROR, WTF
             return true;
         }
 
         @Override
         protected void log(int priority, String tag, String message, Throwable t) {
             if (isLoggable(priority)) {
-                //            FakeCrashLibrary.log(priority, tag, message);
-//
+
+//            FakeCrashLibrary.log(priority, tag, message);
+
 //            if (t != null) {
 //                if (priority == Log.ERROR) {
 //                    FakeCrashLibrary.logError(t);
@@ -118,7 +131,6 @@ public class MovieHubApplication extends Application {
 //                    FakeCrashLibrary.logWarning(t);
 //                }
 //            }
-
 
                 // Message is short enough, does not need to be broken into chunks
                 if (message.length() < MAX_LOG_LENGTH) {

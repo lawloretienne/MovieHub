@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.etiennelawlor.moviehub.ui.DynamicHeightImageView
+        <com.etiennelawlor.moviehub.ui.common.widget.DynamicHeightImageView
             android:id="@+id/thumbnail_iv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -27,7 +27,7 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <com.etiennelawlor.moviehub.ui.CustomFontTextView
+            <com.etiennelawlor.moviehub.ui.common.widget.CustomFontTextView
                 android:id="@+id/title_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -37,7 +37,7 @@
                 android:textSize="18sp"
                 app:textFont="lato_medium" />
 
-            <com.etiennelawlor.moviehub.ui.CustomFontTextView
+            <com.etiennelawlor.moviehub.ui.common.widget.CustomFontTextView
                 android:id="@+id/subtitle_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

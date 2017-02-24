@@ -16,7 +16,7 @@
         android:contentDescription="@string/content_desc"
         android:src="@drawable/ic_error_view_cloud" />
 
-    <com.etiennelawlor.moviehub.ui.CustomFontTextView
+    <com.etiennelawlor.moviehub.ui.common.widget.CustomFontTextView
         android:id="@+id/error_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
         app:textFont="lato_medium"
         tools:text="Can't load data.\nCheck your network connection." />
 
-    <com.etiennelawlor.moviehub.ui.CustomFontButton
+    <com.etiennelawlor.moviehub.ui.common.widget.CustomFontButton
         android:id="@+id/reload_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

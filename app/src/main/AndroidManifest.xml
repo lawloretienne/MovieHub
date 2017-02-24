@@ -14,7 +14,7 @@
 
         <!-- Activities -->
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".ui.main.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MovieHub.MainActivity.Launcher" />
@@ -24,7 +24,7 @@
         <activity-alias
             android:name=".Launcher"
             android:label="@string/app_name"
-            android:targetActivity=".activities.MainActivity">
+            android:targetActivity=".ui.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -32,25 +32,25 @@
         </activity-alias>
 
         <activity
-            android:name=".activities.MovieDetailsActivity"
+            android:name=".ui.moviedetails.MovieDetailsActivity"
             android:screenOrientation="portrait"
             android:label=""
             android:theme="@style/Theme.MovieHub.MovieDetailsActivity"/>
 
         <activity
-            android:name=".activities.TelevisionShowDetailsActivity"
+            android:name=".ui.televisionshowdetails.TelevisionShowDetailsActivity"
             android:screenOrientation="portrait"
             android:label=""
             android:theme="@style/Theme.MovieHub.TelevisionShowDetailsActivity"/>
 
         <activity
-            android:name=".activities.PersonDetailsActivity"
+            android:name=".ui.persondetails.PersonDetailsActivity"
             android:screenOrientation="portrait"
             android:label=""
             android:theme="@style/Theme.MovieHub.PersonDetailsActivity"/>
 
         <activity
-            android:name=".activities.SearchActivity"
+            android:name=".ui.search.SearchActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
             android:label=""

@@ -1,12 +1,13 @@
 apply plugin: 'com.android.application'
+apply plugin: 'realm-android'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.0"
+    compileSdkVersion rootProject.compileSdkVersion
+    buildToolsVersion rootProject.buildToolsVersion
     defaultConfig {
         applicationId "com.etiennelawlor.moviehub"
-        minSdkVersion 21
-        targetSdkVersion 25
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
         versionCode 3
         versionName "0.0.3"
         // Enabling multidex support.
@@ -42,59 +43,124 @@ android {
         debug {
             debuggable true
             minifyEnabled false
+            // Run code coverage reports by default on debug builds.
+            // Causes issue with debugger
+//            testCoverageEnabled = true
+            // Turns off code coverage but doesn't mess with debugger
+            testCoverageEnabled = false
         }
     }
     lintOptions {
         checkReleaseBuilds true
         abortOnError false
     }
+    // Encapsulates options for running tests.
+    testOptions {
+        // Encapsulates options for unit tests.
+        unitTests {
+            // Encapsulates options for controlling how Gradle executes unit tests.
+            all {
+                // Always show the result of every unit test, even if it passes.
+                testLogging {
+                    events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+                }
+            }
+        }
+    }
     packagingOptions {
         exclude 'META-INF/services/javax.annotation.processing.Processor'
     }
 }
 
-ext {
-    supportLibVersion = '25.1.1'
-}
-
+/*
+ Dependency versions are defined in the top level build.gradle file. This helps keeping track of
+ all versions in a single place. This improves readability and helps managing project complexity.
+ */
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+
+    compile "com.squareup.picasso:picasso:$rootProject.picassoVersion"
+    compile "com.squareup.retrofit2:retrofit:$rootProject.retrofit2Version"
+    compile "com.squareup.retrofit2:converter-gson:$rootProject.retrofit2Version"
+    compile "com.squareup.retrofit2:adapter-rxjava:$rootProject.retrofit2Version"
+    compile "com.squareup.okhttp3:okhttp:$rootProject.okhttp3Version"
+    compile "com.squareup.okhttp3:okhttp-urlconnection:$rootProject.okhttp3Version"
+    compile "com.squareup.okhttp3:logging-interceptor:$rootProject.okhttp3Version"
+    debugCompile "com.squareup.leakcanary:leakcanary-android-no-op:$rootProject.leakcanaryVersion"
+    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$rootProject.leakcanaryVersion"
+
+    compile "com.android.support:design:$rootProject.supportLibraryVersion"
+    compile "com.android.support:cardview-v7:$rootProject.supportLibraryVersion"
+    compile "com.android.support:palette-v7:$rootProject.supportLibraryVersion"
+    compile "com.android.support:support-v4:$rootProject.supportLibraryVersion"
+    compile "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
+
+    compile "de.hdodenhof:circleimageview:$rootProject.circleimageviewVersion"
+
+    compile "com.jakewharton:butterknife:$rootProject.butterknifeVersion"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterknifeVersion"
+//    apt 'com.jakewharton:butterknife-compiler:$rootProject.butterknifeVersion'
+    compile "com.jakewharton.timber:timber:$rootProject.timberVersion"
+
+    compile "jp.wasabeef:recyclerview-animators:$rootProject.recyclerviewAnimatorsVersion" // Stable
+
+    compile "com.github.lawloretienne:trestle:$rootProject.trestleVersion"
+
+    compile "com.android.support:multidex:$rootProject.multidexVersion" //
+
+    compile "io.reactivex:rxjava:$rootProject.rxjavaVersion" // RxJava // Should update at some point
+    compile "io.reactivex:rxandroid:$rootProject.rxandroidVersion" // RxAndroid providing Android Scheduler // Should update at some point
+    compile "com.jakewharton.rxbinding:rxbinding:$rootProject.rxbindingVersion" // RxBinding
+
+    compile "com.makeramen:roundedimageview:$rootProject.roundedimageviewVersion"
+
+    compile "com.google.guava:guava:$rootProject.guavaVersion"
+
+    // Dependencies for local unit tests
+    testCompile "junit:junit:$rootProject.junitVersion"
+    testCompile "org.mockito:mockito-all:$rootProject.mockitoVersion"
+    testCompile "org.hamcrest:hamcrest-all:$rootProject.hamcrestVersion"
+    testCompile "org.powermock:powermock-module-junit4:$rootProject.powerMockito"
+    testCompile "org.powermock:powermock-api-mockito:$rootProject.powerMockito"
+
+    // Required for instrumented tests
+    androidTestCompile "com.android.support:support-annotations:$rootProject.supportAnnotations"
+
+    // Android Testing Support Library's runner and rules
+    androidTestCompile "com.android.support.test:runner:$rootProject.runnerVersion"
+    androidTestCompile "com.android.support.test:rules:$rootProject.rulesVersion"
+
+    // Espresso UI Testing dependencies.
+//    androidTestCompile "com.android.support.test.espresso:espresso-core:$rootProject.espressoVersion"
+    androidTestCompile("com.android.support.test.espresso:espresso-core:$rootProject.espressoVersion", {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    androidTestCompile "com.android.support.test.espresso:espresso-contrib:$rootProject.espressoVersion"
+    androidTestCompile "com.android.support.test.espresso:espresso-intents:$rootProject.espressoVersion"
+    compile "com.android.support.test.espresso:espresso-idling-resource:$rootProject.espressoVersion"
 
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.squareup.retrofit2:retrofit:2.1.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
-    compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
-    compile 'com.squareup.okhttp3:okhttp:3.5.0'
-    compile 'com.squareup.okhttp3:okhttp-urlconnection:3.5.0'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.5.0'
-    debugCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
 
-    compile "com.android.support:design:${supportLibVersion}"
-    compile "com.android.support:cardview-v7:${supportLibVersion}"
-    compile "com.android.support:palette-v7:${supportLibVersion}"
+    // UI testing with UI Automator
+//    androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
+}
 
-    compile 'de.hdodenhof:circleimageview:2.1.0'
+/*
+Resolves dependency versions across test and production APKs, specifically, transitive
+dependencies. This is required since Espresso internally has a dependency on support-annotations.
+*/
+configurations.all {
+    resolutionStrategy.force "com.android.support:support-annotations:$rootProject.supportLibraryVersion"
+}
 
-    compile 'com.jakewharton:butterknife:8.4.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
-//    apt 'com.jakewharton:butterknife-compiler:8.4.0'
-    compile 'com.jakewharton.timber:timber:4.4.0'
-
-    compile 'jp.wasabeef:recyclerview-animators:2.0.0' // Stable
-
-    compile 'com.github.lawloretienne:trestle:0.0.7'
-
-    compile 'com.android.support:multidex:1.0.1' //
-
-    compile 'io.reactivex:rxjava:1.1.8' // RxJava // Should update at some point
-    compile 'io.reactivex:rxandroid:1.2.1' // RxAndroid providing Android Scheduler // Should update at some point
-    compile 'com.jakewharton.rxbinding:rxbinding:1.0.0' // RxBinding
-
-    compile 'com.makeramen:roundedimageview:2.3.0'
-
-    testCompile 'junit:junit:4.12'
+/*
+All direct/transitive dependencies shared between your test and production APKs need to be
+excluded from the test APK! This is necessary because both APKs will contain the same classes. Not
+excluding these dependencies from your test configuration will result in an dex pre-verifier error
+at runtime. More info in this tools bug: (https://code.google.com/p/android/issues/detail?id=192497)
+*/
+configurations.compile.dependencies.each { compileDependency ->
+    println "Excluding compile dependency: ${compileDependency.getName()}"
+    configurations.androidTestCompile.dependencies.each { androidTestCompileDependency ->
+        configurations.androidTestCompile.exclude module: "${compileDependency.getName()}"
+    }
 }
