@@ -3,6 +3,7 @@ package com.etiennelawlor.moviehub.ui.movies;
 import com.etiennelawlor.moviehub.data.model.MoviesModel;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
 import com.etiennelawlor.moviehub.data.source.movies.MoviesDataSourceContract;
+import com.etiennelawlor.moviehub.util.EspressoIdlingResource;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
@@ -50,6 +52,10 @@ public class MoviesPresenter implements MoviesUIContract.Presenter {
         } else{
             moviesView.showLoadingFooter();
         }
+
+        // The network request might be handled in a different thread so make sure Espresso knows
+        // that the app is busy until the response is handled.
+        EspressoIdlingResource.increment(); // App is busy until further notice
 
         Observable<MoviesModel> moviesModelObservable = moviesRepository.getPopularMovies(currentPage);
         addSubscription(moviesModelObservable, new Subscriber<MoviesModel>() {
@@ -128,6 +134,14 @@ public class MoviesPresenter implements MoviesUIContract.Presenter {
         Subscription subscription = observable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnTerminate(new Action0() {
+                    @Override
+                    public void call() {
+                        if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
+                            EspressoIdlingResource.decrement(); // Set app as idle.
+                        }
+                    }
+                })
                 .subscribe(subscriber);
         compositeSubscription.add(subscription);
 

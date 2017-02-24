@@ -33,6 +33,7 @@ ext {
 
     // App dependencies
     supportLibraryVersion = '25.1.1'
+    guavaVersion = '18.0'
     picassoVersion = '2.5.2'
     retrofit2Version = '2.1.0'
     okhttp3Version = '3.5.0'
