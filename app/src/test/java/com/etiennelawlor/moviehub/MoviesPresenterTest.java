@@ -19,8 +19,8 @@ import java.util.List;
 import rx.Observable;
 
 import static org.mockito.Matchers.anyInt;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 /**
@@ -68,6 +68,8 @@ public class MoviesPresenterTest {
         verify(moviesView).hideErrorView();
         verify(moviesView).showLoadingView();
 
+        verify(moviesRepository).getPopularMovies(moviesModel.getCurrentPage());
+
         verify(moviesView).hideLoadingView();
         verify(moviesView).showErrorView();
     }
@@ -83,6 +85,8 @@ public class MoviesPresenterTest {
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(moviesView).showLoadingFooter();
+
+        verify(moviesRepository).getPopularMovies(moviesModel.getCurrentPage());
 
         verify(moviesView).showErrorFooter();
     }
@@ -101,6 +105,8 @@ public class MoviesPresenterTest {
         verify(moviesView).hideErrorView();
         verify(moviesView).showLoadingView();
 
+        verify(moviesRepository).getPopularMovies(moviesModel.getCurrentPage());
+
         verify(moviesView).hideLoadingView();
         verify(moviesView).showEmptyView();
         verify(moviesView).setModel(moviesModel);
@@ -117,6 +123,8 @@ public class MoviesPresenterTest {
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(moviesView).showLoadingFooter();
+
+        verify(moviesRepository).getPopularMovies(moviesModel.getCurrentPage());
 
         verify(moviesView).removeFooter();
         verify(moviesView).setModel(moviesModel);
@@ -135,6 +143,8 @@ public class MoviesPresenterTest {
         verify(moviesView).hideEmptyView();
         verify(moviesView).hideErrorView();
         verify(moviesView).showLoadingView();
+
+        verify(moviesRepository).getPopularMovies(moviesModel.getCurrentPage());
 
         verify(moviesView).hideLoadingView();
         verify(moviesView).addMoviesToAdapter(moviesModel.getMovies());
@@ -155,6 +165,8 @@ public class MoviesPresenterTest {
         verify(moviesView).hideErrorView();
         verify(moviesView).showLoadingView();
 
+        verify(moviesRepository).getPopularMovies(moviesModel.getCurrentPage());
+
         verify(moviesView).hideLoadingView();
         verify(moviesView).addMoviesToAdapter(moviesModel.getMovies());
         verify(moviesView).addFooter();
@@ -173,6 +185,8 @@ public class MoviesPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(moviesView).showLoadingFooter();
 
+        verify(moviesRepository).getPopularMovies(moviesModel.getCurrentPage());
+
         verify(moviesView).removeFooter();
         verify(moviesView).addMoviesToAdapter(moviesModel.getMovies());
         verify(moviesView).setModel(moviesModel);
@@ -190,6 +204,8 @@ public class MoviesPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(moviesView).showLoadingFooter();
 
+        verify(moviesRepository).getPopularMovies(moviesModel.getCurrentPage());
+
         verify(moviesView).removeFooter();
         verify(moviesView).addMoviesToAdapter(moviesModel.getMovies());
         verify(moviesView).addFooter();
@@ -206,6 +222,8 @@ public class MoviesPresenterTest {
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(moviesView).openMovieDetails(movie);
+
+        verifyZeroInteractions(moviesRepository);
     }
 
     @Test
@@ -217,6 +235,8 @@ public class MoviesPresenterTest {
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(moviesView).loadMoreItems();
+
+        verifyZeroInteractions(moviesRepository);
     }
     // endregion
 
