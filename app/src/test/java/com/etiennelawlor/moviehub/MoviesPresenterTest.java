@@ -19,6 +19,7 @@ import java.util.List;
 import rx.Observable;
 
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
@@ -71,6 +72,7 @@ public class MoviesPresenterTest {
         verify(moviesRepository).getPopularMovies(anyInt());
 
         verify(moviesView).hideLoadingView();
+        verify(moviesView).setErrorText(anyString());
         verify(moviesView).showErrorView();
     }
 
