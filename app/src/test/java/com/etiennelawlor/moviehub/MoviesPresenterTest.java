@@ -68,7 +68,7 @@ public class MoviesPresenterTest {
         verify(moviesView).hideErrorView();
         verify(moviesView).showLoadingView();
 
-        verify(moviesRepository).getPopularMovies(moviesModel.getCurrentPage());
+        verify(moviesRepository).getPopularMovies(anyInt());
 
         verify(moviesView).hideLoadingView();
         verify(moviesView).showErrorView();
@@ -86,7 +86,7 @@ public class MoviesPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(moviesView).showLoadingFooter();
 
-        verify(moviesRepository).getPopularMovies(moviesModel.getCurrentPage());
+        verify(moviesRepository).getPopularMovies(anyInt());
 
         verify(moviesView).showErrorFooter();
     }
@@ -105,7 +105,7 @@ public class MoviesPresenterTest {
         verify(moviesView).hideErrorView();
         verify(moviesView).showLoadingView();
 
-        verify(moviesRepository).getPopularMovies(moviesModel.getCurrentPage());
+        verify(moviesRepository).getPopularMovies(anyInt());
 
         verify(moviesView).hideLoadingView();
         verify(moviesView).showEmptyView();
@@ -124,7 +124,7 @@ public class MoviesPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(moviesView).showLoadingFooter();
 
-        verify(moviesRepository).getPopularMovies(moviesModel.getCurrentPage());
+        verify(moviesRepository).getPopularMovies(anyInt());
 
         verify(moviesView).removeFooter();
         verify(moviesView).setModel(moviesModel);
@@ -144,7 +144,7 @@ public class MoviesPresenterTest {
         verify(moviesView).hideErrorView();
         verify(moviesView).showLoadingView();
 
-        verify(moviesRepository).getPopularMovies(moviesModel.getCurrentPage());
+        verify(moviesRepository).getPopularMovies(anyInt());
 
         verify(moviesView).hideLoadingView();
         verify(moviesView).addMoviesToAdapter(moviesModel.getMovies());
@@ -165,7 +165,7 @@ public class MoviesPresenterTest {
         verify(moviesView).hideErrorView();
         verify(moviesView).showLoadingView();
 
-        verify(moviesRepository).getPopularMovies(moviesModel.getCurrentPage());
+        verify(moviesRepository).getPopularMovies(anyInt());
 
         verify(moviesView).hideLoadingView();
         verify(moviesView).addMoviesToAdapter(moviesModel.getMovies());
@@ -185,7 +185,7 @@ public class MoviesPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(moviesView).showLoadingFooter();
 
-        verify(moviesRepository).getPopularMovies(moviesModel.getCurrentPage());
+        verify(moviesRepository).getPopularMovies(anyInt());
 
         verify(moviesView).removeFooter();
         verify(moviesView).addMoviesToAdapter(moviesModel.getMovies());
@@ -204,7 +204,7 @@ public class MoviesPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(moviesView).showLoadingFooter();
 
-        verify(moviesRepository).getPopularMovies(moviesModel.getCurrentPage());
+        verify(moviesRepository).getPopularMovies(anyInt());
 
         verify(moviesView).removeFooter();
         verify(moviesView).addMoviesToAdapter(moviesModel.getMovies());
