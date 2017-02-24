@@ -59,6 +59,7 @@ public class ServiceGenerator {
         return retrofit.create(serviceClass);
     }
 
+    // region Helper Methods
     private static Cache getCache() {
 
         Cache cache = null;
@@ -81,5 +82,6 @@ public class ServiceGenerator {
         }
         return httpLoggingInterceptor;
     }
+    // endregion
 }
 

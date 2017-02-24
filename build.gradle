@@ -36,7 +36,7 @@ ext {
     guavaVersion = '18.0'
     picassoVersion = '2.5.2'
     retrofit2Version = '2.1.0'
-    okhttp3Version = '3.5.0'
+    okhttp3Version = '3.6.0'
     leakcanaryVersion = '1.5'
     circleimageviewVersion = '2.1.0'
     butterknifeVersion = '8.4.0'
