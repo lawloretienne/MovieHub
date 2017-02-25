@@ -1,4 +1,4 @@
-package com.etiennelawlor.moviehub.injection.module;
+package com.etiennelawlor.moviehub.di.module;
 
 /**
  * Created by etiennelawlor on 2/9/17.

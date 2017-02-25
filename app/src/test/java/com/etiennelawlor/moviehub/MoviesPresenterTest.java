@@ -5,6 +5,7 @@ import com.etiennelawlor.moviehub.data.remote.response.Movie;
 import com.etiennelawlor.moviehub.data.source.movies.MoviesDataSourceContract;
 import com.etiennelawlor.moviehub.ui.movies.MoviesPresenter;
 import com.etiennelawlor.moviehub.ui.movies.MoviesUIContract;
+import com.etiennelawlor.moviehub.util.rxjava.TestSchedulerTransformer;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -39,8 +40,6 @@ public class MoviesPresenterTest {
     private MoviesDataSourceContract.Repository moviesRepository;
     @Mock
     private Observable<MoviesModel> mockObservable;
-    @Rule
-    public final RxSchedulersOverrideRule overrideSchedulersRule = new RxSchedulersOverrideRule();
 
     private MoviesModel moviesModel;
     private MoviesPresenter moviesPresenter;
@@ -53,10 +52,11 @@ public class MoviesPresenterTest {
         MockitoAnnotations.initMocks(this);
 
         // Get a reference to the class under test
-        moviesPresenter = new MoviesPresenter(moviesView, moviesRepository);
+        moviesPresenter = new MoviesPresenter(moviesView, moviesRepository, new TestSchedulerTransformer<MoviesModel>());
     }
 
     // region Test Methods
+//    @Test(expected = IOException.class)
     @Test
     public void onLoadPopularMovies_shouldShowError_whenFirstPageRequestFailed() {
         // 1. (Given) Set up conditions required for the test

@@ -5,15 +5,13 @@ import com.etiennelawlor.moviehub.data.remote.response.Movie;
 import com.etiennelawlor.moviehub.data.source.movies.MoviesDataSourceContract;
 import com.etiennelawlor.moviehub.util.EspressoIdlingResource;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
+import com.etiennelawlor.moviehub.util.rxjava.SchedulerTransformer;
 
 import java.util.List;
 
-import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
-import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -25,13 +23,15 @@ public class MoviesPresenter implements MoviesUIContract.Presenter {
     // region Member Variables
     private final MoviesUIContract.View moviesView;
     private final MoviesDataSourceContract.Repository moviesRepository;
+    private final SchedulerTransformer<MoviesModel> schedulerTransformer;
     private CompositeSubscription compositeSubscription = new CompositeSubscription();
     // endregion
 
     // region Constructors
-    public MoviesPresenter(MoviesUIContract.View moviesView, MoviesDataSourceContract.Repository moviesRepository) {
+    public MoviesPresenter(MoviesUIContract.View moviesView, MoviesDataSourceContract.Repository moviesRepository, SchedulerTransformer<MoviesModel> schedulerTransformer) {
         this.moviesView = moviesView;
         this.moviesRepository = moviesRepository;
+        this.schedulerTransformer = schedulerTransformer;
     }
     // endregion
 
@@ -56,65 +56,75 @@ public class MoviesPresenter implements MoviesUIContract.Presenter {
         // that the app is busy until the response is handled.
         EspressoIdlingResource.increment(); // App is busy until further notice
 
-        Observable<MoviesModel> moviesModelObservable = moviesRepository.getPopularMovies(currentPage);
-        addSubscription(moviesModelObservable, new Subscriber<MoviesModel>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                throwable.printStackTrace();
-
-                if(currentPage == 1){
-                    moviesView.hideLoadingView();
-
-                    if (NetworkUtility.isKnownException(throwable)) {
-                        moviesView.setErrorText("Can't load data.\nCheck your network connection.");
-                        moviesView.showErrorView();
+        Subscription subscription = moviesRepository.getPopularMovies(currentPage)
+                .compose(schedulerTransformer)
+                .doOnTerminate(new Action0() {
+                    @Override
+                    public void call() {
+                        if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
+                            EspressoIdlingResource.decrement(); // Set app as idle.
+                        }
                     }
-                } else {
-                    if(NetworkUtility.isKnownException(throwable)){
-                        moviesView.showErrorFooter();
+                })
+                .subscribe(new Subscriber<MoviesModel>() {
+                    @Override
+                    public void onCompleted() {
+
                     }
-                }
-            }
 
-            @Override
-            public void onNext(MoviesModel moviesModel) {
-                if(moviesModel != null){
-                    int currentPage = moviesModel.getCurrentPage();
-                    List<Movie> movies = moviesModel.getMovies();
-                    boolean isLastPage = moviesModel.isLastPage();
-                    boolean hasMovies = moviesModel.hasMovies();
-                    if(currentPage == 1){
-                        moviesView.hideLoadingView();
+                    @Override
+                    public void onError(Throwable throwable) {
+                        throwable.printStackTrace();
 
-                        if(hasMovies){
-                            moviesView.addMoviesToAdapter(movies);
+                        if(currentPage == 1){
+                            moviesView.hideLoadingView();
 
-                            if(!isLastPage)
-                                moviesView.addFooter();
+                            if (NetworkUtility.isKnownException(throwable)) {
+                                moviesView.setErrorText("Can't load data.\nCheck your network connection.");
+                                moviesView.showErrorView();
+                            }
                         } else {
-                            moviesView.showEmptyView();
-                        }
-                    } else {
-                        moviesView.removeFooter();
-
-                        if(hasMovies){
-                            moviesView.addMoviesToAdapter(movies);
-
-                            if(!isLastPage)
-                                moviesView.addFooter();
+                            if(NetworkUtility.isKnownException(throwable)){
+                                moviesView.showErrorFooter();
+                            }
                         }
                     }
 
-                }
+                    @Override
+                    public void onNext(MoviesModel moviesModel) {
+                        if(moviesModel != null){
+                            int currentPage = moviesModel.getCurrentPage();
+                            List<Movie> movies = moviesModel.getMovies();
+                            boolean isLastPage = moviesModel.isLastPage();
+                            boolean hasMovies = moviesModel.hasMovies();
+                            if(currentPage == 1){
+                                moviesView.hideLoadingView();
 
-                moviesView.setModel(moviesModel);
-            }
-        });
+                                if(hasMovies){
+                                    moviesView.addMoviesToAdapter(movies);
+
+                                    if(!isLastPage)
+                                        moviesView.addFooter();
+                                } else {
+                                    moviesView.showEmptyView();
+                                }
+                            } else {
+                                moviesView.removeFooter();
+
+                                if(hasMovies){
+                                    moviesView.addMoviesToAdapter(movies);
+
+                                    if(!isLastPage)
+                                        moviesView.addFooter();
+                                }
+                            }
+
+                        }
+
+                        moviesView.setModel(moviesModel);
+                    }
+                });
+        compositeSubscription.add(subscription);
     }
 
     @Override
@@ -125,26 +135,6 @@ public class MoviesPresenter implements MoviesUIContract.Presenter {
     @Override
     public void onScrollToEndOfList() {
         moviesView.loadMoreItems();
-    }
-    // endregion
-
-    // region Helper Methods
-    public void addSubscription(Observable observable, Subscriber subscriber) {
-        Subscription subscription = observable
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnTerminate(new Action0() {
-                    @Override
-                    public void call() {
-                        if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
-                            EspressoIdlingResource.decrement(); // Set app as idle.
-                        }
-                    }
-                })
-                .subscribe(subscriber);
-        compositeSubscription.add(subscription);
-
-        // Create RxUtils for this call
     }
     // endregion
 
