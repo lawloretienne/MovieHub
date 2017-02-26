@@ -27,7 +27,7 @@ import com.etiennelawlor.moviehub.ui.base.BaseAdapter;
 import com.etiennelawlor.moviehub.ui.base.BaseFragment;
 import com.etiennelawlor.moviehub.ui.moviedetails.MovieDetailsActivity;
 import com.etiennelawlor.moviehub.util.FontCache;
-import com.etiennelawlor.moviehub.util.rxjava.AndroidSchedulerTransformer;
+import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 
 import java.util.List;
 
@@ -128,7 +128,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
                 new MoviesRepository(
                         new MoviesLocalDataSource(getContext()),
                         new MoviesRemoteDataSource(getContext())),
-                new AndroidSchedulerTransformer<MoviesModel>()
+                new ProductionSchedulerTransformer<MoviesModel>()
                 );
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
