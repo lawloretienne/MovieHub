@@ -2,7 +2,6 @@ package com.etiennelawlor.moviehub.data.source.movies;
 
 import com.etiennelawlor.moviehub.data.model.MoviesModel;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
-import com.etiennelawlor.moviehub.data.remote.response.MoviesEnvelope;
 
 import java.util.List;
 

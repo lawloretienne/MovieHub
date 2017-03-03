@@ -2,7 +2,6 @@ package com.etiennelawlor.moviehub.data.source.movies;
 
 import android.content.Context;
 
-import com.etiennelawlor.moviehub.data.model.MoviesModel;
 import com.etiennelawlor.moviehub.data.remote.AuthorizedNetworkInterceptor;
 import com.etiennelawlor.moviehub.data.remote.MovieHubService;
 import com.etiennelawlor.moviehub.data.remote.ServiceGenerator;
@@ -12,7 +11,6 @@ import com.etiennelawlor.moviehub.data.remote.response.MoviesEnvelope;
 import java.util.List;
 
 import rx.Observable;
-import rx.functions.Action1;
 import rx.functions.Func1;
 
 /**
