@@ -76,11 +76,15 @@ public class MovieHubApplication extends Application {
 
     private void initializeRealm(){
         Realm.init(this);
-        RealmConfiguration config =
+        RealmConfiguration realmConfiguration =
                 new RealmConfiguration.Builder()
                         .deleteRealmIfMigrationNeeded()
                         .build();
-        Realm.setDefaultConfiguration(config);
+
+        // Deletes the realm
+        // Use when you want a clean slate for dev
+//        Realm.deleteRealm(realmConfiguration);
+        Realm.setDefaultConfiguration(realmConfiguration);
     }
 
     private void initializeTimber() {

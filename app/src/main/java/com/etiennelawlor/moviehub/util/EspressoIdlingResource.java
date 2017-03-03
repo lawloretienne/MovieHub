@@ -10,18 +10,18 @@ public class EspressoIdlingResource {
 
     private static final String RESOURCE = "GLOBAL";
 
-    private static SimpleCountingIdlingResource mCountingIdlingResource =
+    private static SimpleCountingIdlingResource countingIdlingResource =
             new SimpleCountingIdlingResource(RESOURCE);
 
     public static void increment() {
-        mCountingIdlingResource.increment();
+        countingIdlingResource.increment();
     }
 
     public static void decrement() {
-        mCountingIdlingResource.decrement();
+        countingIdlingResource.decrement();
     }
 
     public static IdlingResource getIdlingResource() {
-        return mCountingIdlingResource;
+        return countingIdlingResource;
     }
 }

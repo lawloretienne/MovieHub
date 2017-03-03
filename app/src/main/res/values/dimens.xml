@@ -2,7 +2,7 @@
 <resources>
 
     <!-- Z-axis elevations -->
-    <dimen name="touch_raise">6dp</dimen>
+    <dimen name="touch_raise">8dp</dimen>
 
     <dimen name="detail_backdrop_height">256dp</dimen>
 
