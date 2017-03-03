@@ -31,15 +31,17 @@ import static org.mockito.Mockito.when;
 
 public class MoviesPresenterTest {
 
-    // region Mocks
+    // region Test Doubles
+
+    // Mocks
     @Mock
     private MoviesUIContract.View mockMoviesView;
     @Mock
     private MoviesDataSourceContract.Repository mockMoviesRepository;
-    // endregion
 
-    // region Stubs
+    // Stubs
     private Observable stub;
+
     // endregion
 
     // region Member Variables
