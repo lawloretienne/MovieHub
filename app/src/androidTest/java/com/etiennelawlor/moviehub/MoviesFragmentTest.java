@@ -18,6 +18,7 @@ import org.junit.runner.RunWith;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.core.IsNot.not;
@@ -49,7 +50,7 @@ public class MoviesFragmentTest {
 
         // 2. (When) Then perform one or more actions
 //        onView(withId(R.id.rv)).perform(RecyclerViewActions.scrollToPosition(1));
-        onView(withId(R.id.rv)).perform(RecyclerViewActions.actionOnItemAtPosition(2, click()));
+        onView(withId(R.id.rv)).perform(actionOnItemAtPosition(2, click()));
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         onView(withId(R.id.backdrop_iv)).check(matches(isDisplayed()));
