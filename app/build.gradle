@@ -115,8 +115,6 @@ dependencies {
 
     compile "com.makeramen:roundedimageview:$rootProject.roundedimageviewVersion"
 
-    compile "com.google.guava:guava:$rootProject.guavaVersion"
-
     // Dependencies for local unit tests
     testCompile "junit:junit:$rootProject.junitVersion"
     testCompile "org.mockito:mockito-all:$rootProject.mockitoVersion"

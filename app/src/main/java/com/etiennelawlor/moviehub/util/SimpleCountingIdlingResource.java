@@ -4,8 +4,6 @@ import android.support.test.espresso.IdlingResource;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 /**
  * An simple counter implementation of {@link IdlingResource} that determines idleness by
  * maintaining an internal counter. When the counter is 0 - it is considered to be idle, when it is
@@ -17,7 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public final class SimpleCountingIdlingResource implements IdlingResource {
 
-    private final String mResourceName;
+    private final String resourceName;
 
     private final AtomicInteger counter = new AtomicInteger(0);
 
@@ -30,12 +28,12 @@ public final class SimpleCountingIdlingResource implements IdlingResource {
      * @param resourceName the resource name this resource should report to Espresso.
      */
     public SimpleCountingIdlingResource(String resourceName) {
-        mResourceName = checkNotNull(resourceName);
+        this.resourceName = resourceName;
     }
 
     @Override
     public String getName() {
-        return mResourceName;
+        return resourceName;
     }
 
     @Override
