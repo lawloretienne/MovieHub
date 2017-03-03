@@ -258,6 +258,12 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     }
 
     @Override
+    public void loadMoreItems() {
+        moviesModel.incrementPage();
+        moviesPresenter.onLoadPopularMovies(moviesModel.getCurrentPage());
+    }
+
+    @Override
     public void setModel(MoviesModel moviesModel) {
         this.moviesModel = moviesModel;
     }
@@ -280,12 +286,6 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
 
         window.setExitTransition(null);
         ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
-    }
-
-    @Override
-    public void loadMoreItems() {
-        moviesModel.incrementPage();
-        moviesPresenter.onLoadPopularMovies(moviesModel.getCurrentPage());
     }
 
     // endregion

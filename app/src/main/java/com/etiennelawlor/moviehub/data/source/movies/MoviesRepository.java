@@ -34,7 +34,6 @@ public class MoviesRepository implements MoviesDataSourceContract.Repository {
     // endregion
 
     // region Constructors
-    // Additionally i need to pass in configRemoteDataSource as
     public MoviesRepository(MoviesDataSourceContract.LocalDateSource moviesLocalDataSource, MoviesDataSourceContract.RemoteDateSource moviesRemoteDataSource) {
         this.moviesLocalDataSource = moviesLocalDataSource;
         this.moviesRemoteDataSource = moviesRemoteDataSource;
@@ -57,8 +56,8 @@ public class MoviesRepository implements MoviesDataSourceContract.Repository {
                     }
                 }).doOnNext(new Action1<MoviesModel>() {
                     @Override
-                    public void call(MoviesModel moviesViewModel) {
-                        List<Movie> movies = moviesViewModel.getMovies();
+                    public void call(MoviesModel moviesModel) {
+                        List<Movie> movies = moviesModel.getMovies();
                         moviesLocalDataSource.savePopularMovies(movies);
                     }
                 });

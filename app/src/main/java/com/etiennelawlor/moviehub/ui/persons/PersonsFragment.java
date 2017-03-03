@@ -18,19 +18,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.local.sharedpreferences.PreferencesHelper;
-import com.etiennelawlor.moviehub.data.remote.AuthorizedNetworkInterceptor;
-import com.etiennelawlor.moviehub.data.remote.MovieHubService;
-import com.etiennelawlor.moviehub.data.remote.ServiceGenerator;
-import com.etiennelawlor.moviehub.data.remote.response.Configuration;
-import com.etiennelawlor.moviehub.data.remote.response.PeopleEnvelope;
+import com.etiennelawlor.moviehub.data.model.PersonsModel;
 import com.etiennelawlor.moviehub.data.remote.response.Person;
+import com.etiennelawlor.moviehub.data.source.persons.PersonsLocalDataSource;
+import com.etiennelawlor.moviehub.data.source.persons.PersonsRemoteDataSource;
+import com.etiennelawlor.moviehub.data.source.persons.PersonsRepository;
 import com.etiennelawlor.moviehub.ui.base.BaseAdapter;
 import com.etiennelawlor.moviehub.ui.base.BaseFragment;
 import com.etiennelawlor.moviehub.ui.persondetails.PersonDetailsActivity;
 import com.etiennelawlor.moviehub.util.FontCache;
-import com.etiennelawlor.moviehub.util.NetworkLogUtility;
-import com.etiennelawlor.moviehub.util.NetworkUtility;
+import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 
 import java.util.List;
 
@@ -39,25 +36,15 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by etiennelawlor on 12/16/16.
  */
 
-public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnItemClickListener, PersonsAdapter.OnReloadClickListener, PersonsContract.View {
+public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnItemClickListener, PersonsAdapter.OnReloadClickListener, PersonsUIContract.View {
 
     // region Constants
     public static final String KEY_PERSON = "KEY_PERSON";
-    private static final int PAGE_SIZE = 20;
     // endregion
 
     // region Views
@@ -71,29 +58,24 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     ProgressBar progressBar;
     @BindView(android.R.id.empty)
     LinearLayout emptyLinearLayout;
+
+    private View selectedPersonView;
     // endregion
 
     // region Member Variables
     private PersonsAdapter personsAdapter;
     private Typeface font;
-    private MovieHubService movieHubService;
     private Unbinder unbinder;
     private StaggeredGridLayoutManager layoutManager;
-    private Configuration configuration;
-    private CompositeSubscription compositeSubscription;
-    private int currentPage = 1;
-    private boolean isLastPage = false;
+    private PersonsUIContract.Presenter personsPresenter;
+    private PersonsModel personsModel;
     private boolean isLoading = false;
     // endregion
 
     // region Listeners
     @OnClick(R.id.reload_btn)
     public void onReloadButtonClicked() {
-        emptyLinearLayout.setVisibility(View.GONE);
-        errorLinearLayout.setVisibility(View.GONE);
-        progressBar.setVisibility(View.VISIBLE);
-
-        addPopularPeopleSubscription();
+        personsPresenter.onLoadPopularPersons(personsModel == null ? 1 : personsModel.getCurrentPage());
     }
 
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
@@ -110,10 +92,11 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
             int totalItemCount = recyclerView.getAdapter().getItemCount();
             int[] positions = layoutManager.findFirstVisibleItemPositions(null);
             int firstVisibleItem = positions[1];
-            if (!isLoading && !isLastPage) {
-                if ((visibleItemCount + firstVisibleItem) >= totalItemCount && totalItemCount > 0) {
-                    loadMoreItems();
-                }
+
+            if ((visibleItemCount + firstVisibleItem) >= totalItemCount
+                    && totalItemCount > 0
+                    && !isLoading) {
+                personsPresenter.onScrollToEndOfList();
             }
         }
     };
@@ -142,10 +125,13 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        movieHubService = ServiceGenerator.createService(
-                MovieHubService.class,
-                MovieHubService.BASE_URL,
-                new AuthorizedNetworkInterceptor(getContext()));
+        personsPresenter = new PersonsPresenter(
+                this,
+                new PersonsRepository(
+                        new PersonsLocalDataSource(getContext()),
+                        new PersonsRemoteDataSource(getContext())),
+                new ProductionSchedulerTransformer<PersonsModel>()
+        );
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
     }
@@ -155,8 +141,6 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_people, container, false);
         unbinder = ButterKnife.bind(this, rootView);
-
-        compositeSubscription = new CompositeSubscription();
 
         return rootView;
     }
@@ -177,43 +161,13 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
         // Pagination
         recyclerView.addOnScrollListener(recyclerViewOnScrollListener);
 
-        configuration = PreferencesHelper.getConfiguration(getContext());
-
-        if(configuration != null){
-            addPopularPeopleSubscription();
-        } else {
-            Subscription subscription = movieHubService.getConfiguration()
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Action1<Configuration>() {
-                        @Override
-                        public void call(Configuration configuration) {
-                            if(configuration != null){
-                                PreferencesHelper.setConfiguration(getContext(), configuration);
-
-                                addPopularPeopleSubscription();
-                            }
-                        }
-                    }, new Action1<Throwable>() {
-                        @Override
-                        public void call(Throwable throwable) {
-                            throwable.printStackTrace();
-                            progressBar.setVisibility(View.GONE);
-                            if (NetworkUtility.isKnownException(throwable)) {
-                                errorTextView.setText("Can't load data.\nCheck your network connection.");
-                                errorLinearLayout.setVisibility(View.VISIBLE);
-                            }
-                        }
-                    });
-            compositeSubscription.add(subscription);
-        }
+        personsPresenter.onLoadPopularPersons(personsModel == null ? 1 : personsModel.getCurrentPage());
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         removeListeners();
-        compositeSubscription.unsubscribe();
         unbinder.unbind();
     }
 
@@ -222,23 +176,10 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     // region PersonsAdapter.OnItemClickListener Methods
     @Override
     public void onItemClick(int position, View view) {
+        selectedPersonView = view;
         Person person = personsAdapter.getItem(position);
         if(person != null){
-            Intent intent = new Intent(getActivity(), PersonDetailsActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putParcelable(KEY_PERSON, person);
-            intent.putExtras(bundle);
-
-            Window window = getActivity().getWindow();
-//            window.setStatusBarColor(primaryDark);
-
-            Resources resources = view.getResources();
-            Pair<View, String> personPair  = getPair(view, resources.getString(R.string.transition_person_thumbnail));
-
-            ActivityOptionsCompat options = getActivityOptionsCompat(personPair);
-
-            window.setExitTransition(null);
-            ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+            personsPresenter.onPersonClick(person);
         }
     }
     // endregion
@@ -246,22 +187,111 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     // region PersonsAdapter.OnReloadClickListener Methods
     @Override
     public void onReloadClick() {
-        personsAdapter.updateFooter(BaseAdapter.FooterType.LOAD_MORE);
-
-        addPopularPeopleSubscription();
+        personsPresenter.onLoadPopularPersons(personsModel.getCurrentPage());
     }
+    // endregion
+
+    // region PersonsUIContract.View Methods
+
+    @Override
+    public void showEmptyView() {
+        emptyLinearLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideEmptyView() {
+        emptyLinearLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showErrorView() {
+        errorLinearLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideErrorView() {
+        errorLinearLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void setErrorText(String errorText) {
+        errorTextView.setText(errorText);
+    }
+
+    @Override
+    public void showLoadingView() {
+        progressBar.setVisibility(View.VISIBLE);
+        isLoading = true;
+    }
+
+    @Override
+    public void hideLoadingView() {
+        progressBar.setVisibility(View.GONE);
+        isLoading = false;
+    }
+
+    @Override
+    public void addFooter() {
+        personsAdapter.addFooter();
+    }
+
+    @Override
+    public void removeFooter() {
+        personsAdapter.removeFooter();
+        isLoading = false;
+    }
+
+    @Override
+    public void showErrorFooter() {
+        personsAdapter.updateFooter(BaseAdapter.FooterType.ERROR);
+    }
+
+    @Override
+    public void showLoadingFooter() {
+        personsAdapter.updateFooter(BaseAdapter.FooterType.LOAD_MORE);
+        isLoading = true;
+    }
+
+    @Override
+    public void addPersonsToAdapter(List<Person> persons) {
+        personsAdapter.addAll(persons);
+    }
+
+    @Override
+    public void loadMoreItems() {
+        personsModel.incrementPage();
+        personsPresenter.onLoadPopularPersons(personsModel.getCurrentPage());
+    }
+
+    @Override
+    public void setModel(PersonsModel personsModel) {
+        this.personsModel = personsModel;
+    }
+
+    @Override
+    public void openPersonDetails(Person person) {
+        Intent intent = new Intent(getActivity(), PersonDetailsActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(KEY_PERSON, person);
+        intent.putExtras(bundle);
+
+        Window window = getActivity().getWindow();
+//            window.setStatusBarColor(primaryDark);
+
+        Resources resources = selectedPersonView.getResources();
+        Pair<View, String> personPair  = getPair(selectedPersonView, resources.getString(R.string.transition_person_thumbnail));
+
+        ActivityOptionsCompat options = getActivityOptionsCompat(personPair);
+
+        window.setExitTransition(null);
+        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+    }
+
     // endregion
 
     // region Helper Methods
     private void removeListeners() {
         personsAdapter.setOnItemClickListener(null);
-    }
-
-    private void loadMoreItems() {
-        isLoading = true;
-        currentPage += 1;
-
-        addPopularPeopleSubscription();
     }
 
     private ActivityOptionsCompat getActivityOptionsCompat(Pair pair){
@@ -340,82 +370,6 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
             pair = Pair.create(appBar, resources.getString(R.string.transition_app_bar));
         }
         return pair;
-    }
-
-    private void addPopularPeopleSubscription(){
-        Subscription popularPeopleSubscription = movieHubService.getPopularPeople(currentPage)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<PeopleEnvelope>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable throwable) {
-                        throwable.printStackTrace();
-
-                        if(currentPage == 1){
-                            isLoading = false;
-                            progressBar.setVisibility(View.GONE);
-
-                            if(NetworkUtility.isKnownException(throwable)){
-                                errorTextView.setText("Can't load data.\nCheck your network connection.");
-                                errorLinearLayout.setVisibility(View.VISIBLE);
-                            }
-                        } else {
-                            if(NetworkUtility.isKnownException(throwable)){
-                                personsAdapter.updateFooter(BaseAdapter.FooterType.ERROR);
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onNext(PeopleEnvelope peopleEnvelope) {
-                        if(currentPage == 1){
-                            progressBar.setVisibility(View.GONE);
-                            isLoading = false;
-
-                            if(peopleEnvelope != null){
-                                List<Person> persons = peopleEnvelope.getPersons();
-                                if(persons != null){
-                                    if(persons.size()>0)
-                                        personsAdapter.addAll(persons);
-
-                                    if(persons.size() >= PAGE_SIZE){
-                                        personsAdapter.addFooter();
-                                    } else {
-                                        isLastPage = true;
-                                    }
-                                }
-                            }
-
-                            if(personsAdapter.isEmpty()){
-                                emptyLinearLayout.setVisibility(View.VISIBLE);
-                            }
-                        } else {
-                            personsAdapter.removeFooter();
-                            isLoading = false;
-
-                            if(peopleEnvelope != null){
-                                List<Person> persons = peopleEnvelope.getPersons();
-                                if(persons != null){
-                                    if(persons.size()>0)
-                                        personsAdapter.addAll(persons);
-
-                                    if(persons.size() >= PAGE_SIZE){
-                                        personsAdapter.addFooter();
-                                    } else {
-                                        isLastPage = true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-
-        compositeSubscription.add(popularPeopleSubscription);
     }
     // endregion
 }

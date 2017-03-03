@@ -259,6 +259,12 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
     }
 
     @Override
+    public void loadMoreItems() {
+        televisionShowsModel.incrementPage();
+        televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsModel.getCurrentPage());
+    }
+
+    @Override
     public void setModel(TelevisionShowsModel televisionShowsModel) {
         this.televisionShowsModel = televisionShowsModel;
     }
@@ -281,13 +287,6 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
         window.setExitTransition(null);
         ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
     }
-
-    @Override
-    public void loadMoreItems() {
-        televisionShowsModel.incrementPage();
-        televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsModel.getCurrentPage());
-    }
-
     // endregion
 
     // region Helper Methods

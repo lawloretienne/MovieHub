@@ -95,14 +95,14 @@ public class TelevisionShowsPresenter implements TelevisionShowsUIContract.Prese
                     public void onNext(TelevisionShowsModel televisionShowsModel) {
                         if(televisionShowsModel != null){
                             int currentPage = televisionShowsModel.getCurrentPage();
-                            List<TelevisionShow> movies = televisionShowsModel.getTelevisionShows();
+                            List<TelevisionShow> televisionShows = televisionShowsModel.getTelevisionShows();
                             boolean isLastPage = televisionShowsModel.isLastPage();
-                            boolean hasMovies = televisionShowsModel.hasTelevisionShows();
+                            boolean hasTelevisionShows = televisionShowsModel.hasTelevisionShows();
                             if(currentPage == 1){
                                 televisionShowsView.hideLoadingView();
 
-                                if(hasMovies){
-                                    televisionShowsView.addTelevisionShowsToAdapter(movies);
+                                if(hasTelevisionShows){
+                                    televisionShowsView.addTelevisionShowsToAdapter(televisionShows);
 
                                     if(!isLastPage)
                                         televisionShowsView.addFooter();
@@ -112,8 +112,8 @@ public class TelevisionShowsPresenter implements TelevisionShowsUIContract.Prese
                             } else {
                                 televisionShowsView.removeFooter();
 
-                                if(hasMovies){
-                                    televisionShowsView.addTelevisionShowsToAdapter(movies);
+                                if(hasTelevisionShows){
+                                    televisionShowsView.addTelevisionShowsToAdapter(televisionShows);
 
                                     if(!isLastPage)
                                         televisionShowsView.addFooter();
