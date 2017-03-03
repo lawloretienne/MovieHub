@@ -58,6 +58,8 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     ProgressBar progressBar;
     @BindView(android.R.id.empty)
     LinearLayout emptyLinearLayout;
+
+    private View selectedMovieView;
     // endregion
 
     // region Member Variables
@@ -66,7 +68,6 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     private Unbinder unbinder;
     private StaggeredGridLayoutManager layoutManager;
     private MoviesUIContract.Presenter moviesPresenter;
-    private View selectedMovieView;
     private MoviesModel moviesModel;
     private boolean isLoading = false;
     // endregion
@@ -213,6 +214,11 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     }
 
     @Override
+    public void setErrorText(String errorText) {
+        errorTextView.setText(errorText);
+    }
+
+    @Override
     public void showLoadingView() {
         progressBar.setVisibility(View.VISIBLE);
         isLoading = true;
@@ -244,11 +250,6 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     public void showLoadingFooter() {
         moviesAdapter.updateFooter(BaseAdapter.FooterType.LOAD_MORE);
         isLoading = true;
-    }
-
-    @Override
-    public void setErrorText(String errorText) {
-        errorTextView.setText(errorText);
     }
 
     @Override
