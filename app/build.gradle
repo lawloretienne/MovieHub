@@ -69,6 +69,7 @@ android {
     }
     packagingOptions {
         exclude 'META-INF/services/javax.annotation.processing.Processor'
+        exclude 'META-INF/rxjava.properties'
     }
 }
 
@@ -110,7 +111,9 @@ dependencies {
     compile "com.android.support:multidex:$rootProject.multidexVersion" //
 
     compile "io.reactivex:rxjava:$rootProject.rxjavaVersion" // RxJava // Should update at some point
+    compile "io.reactivex.rxjava2:rxjava:$rootProject.rxjava2Version" // RxJava // Should update at some point
     compile "io.reactivex:rxandroid:$rootProject.rxandroidVersion" // RxAndroid providing Android Scheduler // Should update at some point
+    compile "io.reactivex.rxjava2:rxandroid:$rootProject.rxjava2RxandroidVersion" // RxAndroid providing Android Scheduler // Should update at some point
     compile "com.jakewharton.rxbinding:rxbinding:$rootProject.rxbindingVersion" // RxBinding
 
     compile "com.makeramen:roundedimageview:$rootProject.roundedimageviewVersion"
