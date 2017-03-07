@@ -146,6 +146,11 @@ public class SearchMoviesAdapter extends BaseAdapter<Movie> {
     }
 
     @Override
+    public void addHeader() {
+
+    }
+
+    @Override
     public void addFooter() {
         isFooterAdded = true;
         add(new Movie());

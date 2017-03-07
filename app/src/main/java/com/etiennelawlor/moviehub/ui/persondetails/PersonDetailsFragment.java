@@ -345,9 +345,6 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     };
     // endregion
 
-    // region Callbacks
-    // endregion
-
     // region Constructors
     public PersonDetailsFragment() {
     }

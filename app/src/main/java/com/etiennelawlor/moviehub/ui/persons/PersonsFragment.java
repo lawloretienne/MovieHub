@@ -41,7 +41,7 @@ import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
  * Created by etiennelawlor on 12/16/16.
  */
 
-public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnItemClickListener, PersonsAdapter.OnReloadClickListener, PersonsUIContract.View {
+public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnItemClickListener, PersonsAdapter.OnReloadClickListener, PersonsUiContract.View {
 
     // region Constants
     public static final String KEY_PERSON = "KEY_PERSON";
@@ -67,7 +67,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     private Typeface font;
     private Unbinder unbinder;
     private StaggeredGridLayoutManager layoutManager;
-    private PersonsUIContract.Presenter personsPresenter;
+    private PersonsUiContract.Presenter personsPresenter;
     private PersonsModel personsModel;
     private boolean isLoading = false;
     // endregion
@@ -95,7 +95,8 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
 
             if ((visibleItemCount + firstVisibleItem) >= totalItemCount
                     && totalItemCount > 0
-                    && !isLoading) {
+                    && !isLoading
+                    && !personsModel.isLastPage()) {
                 personsPresenter.onScrollToEndOfList();
             }
         }
@@ -191,7 +192,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     }
     // endregion
 
-    // region PersonsUIContract.View Methods
+    // region PersonsUiContract.View Methods
 
     @Override
     public void showEmptyView() {
@@ -228,6 +229,11 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     public void hideLoadingView() {
         progressBar.setVisibility(View.GONE);
         isLoading = false;
+    }
+
+    @Override
+    public void addHeader() {
+        personsAdapter.addHeader();
     }
 
     @Override

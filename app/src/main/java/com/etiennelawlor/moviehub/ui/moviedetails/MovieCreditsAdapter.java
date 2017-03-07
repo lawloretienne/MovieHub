@@ -146,6 +146,11 @@ public class MovieCreditsAdapter extends BaseAdapter<MovieCredit> {
     }
 
     @Override
+    public void addHeader() {
+
+    }
+
+    @Override
     public void addFooter() {
         isFooterAdded = true;
         add(new MovieCredit());

@@ -146,6 +146,11 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCredit> {
     }
 
     @Override
+    public void addHeader() {
+
+    }
+
+    @Override
     public void addFooter() {
         isFooterAdded = true;
         add(new PersonCredit());

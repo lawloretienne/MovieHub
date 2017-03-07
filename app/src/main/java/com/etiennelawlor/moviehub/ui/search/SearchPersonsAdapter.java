@@ -146,6 +146,11 @@ public class SearchPersonsAdapter extends BaseAdapter<Person> {
     }
 
     @Override
+    public void addHeader() {
+
+    }
+
+    @Override
     public void addFooter() {
         isFooterAdded = true;
         add(new Person());

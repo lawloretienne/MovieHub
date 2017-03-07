@@ -101,6 +101,8 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
 
     protected abstract void displayErrorFooter();
 
+    public abstract void addHeader();
+
     public abstract void addFooter();
     // endregion
 

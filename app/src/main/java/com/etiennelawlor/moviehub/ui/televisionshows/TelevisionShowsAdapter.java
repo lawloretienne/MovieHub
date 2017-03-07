@@ -155,6 +155,11 @@ public class TelevisionShowsAdapter extends BaseAdapter<TelevisionShow> {
     }
 
     @Override
+    public void addHeader() {
+        add(new TelevisionShow());
+    }
+
+    @Override
     public void addFooter() {
         isFooterAdded = true;
         add(new TelevisionShow());

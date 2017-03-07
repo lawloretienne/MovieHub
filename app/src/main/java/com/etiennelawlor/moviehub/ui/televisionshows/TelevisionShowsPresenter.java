@@ -18,24 +18,24 @@ import rx.subscriptions.CompositeSubscription;
  * Created by etiennelawlor on 2/9/17.
  */
 
-public class TelevisionShowsPresenter implements TelevisionShowsUIContract.Presenter {
+public class TelevisionShowsPresenter implements TelevisionShowsUiContract.Presenter {
 
     // region Member Variables
-    private final TelevisionShowsUIContract.View televisionShowsView;
+    private final TelevisionShowsUiContract.View televisionShowsView;
     private final TelevisionShowsDataSourceContract.Repository televisionShowsRepository;
     private final SchedulerTransformer<TelevisionShowsModel> schedulerTransformer;
     private CompositeSubscription compositeSubscription = new CompositeSubscription();
     // endregion
 
     // region Constructors
-    public TelevisionShowsPresenter(TelevisionShowsUIContract.View televisionShowsView, TelevisionShowsDataSourceContract.Repository televisionShowsRepository, SchedulerTransformer<TelevisionShowsModel> schedulerTransformer) {
+    public TelevisionShowsPresenter(TelevisionShowsUiContract.View televisionShowsView, TelevisionShowsDataSourceContract.Repository televisionShowsRepository, SchedulerTransformer<TelevisionShowsModel> schedulerTransformer) {
         this.televisionShowsView = televisionShowsView;
         this.televisionShowsRepository = televisionShowsRepository;
         this.schedulerTransformer = schedulerTransformer;
     }
     // endregion
 
-    // region TelevisionShowsUIContract.Presenter Methods
+    // region TelevisionShowsUiContract.Presenter Methods
 
     @Override
     public void onDestroyView() {
@@ -102,6 +102,7 @@ public class TelevisionShowsPresenter implements TelevisionShowsUIContract.Prese
                                 televisionShowsView.hideLoadingView();
 
                                 if(hasTelevisionShows){
+                                    televisionShowsView.addHeader();
                                     televisionShowsView.addTelevisionShowsToAdapter(televisionShows);
 
                                     if(!isLastPage)

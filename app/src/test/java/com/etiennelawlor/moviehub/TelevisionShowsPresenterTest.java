@@ -4,7 +4,7 @@ import com.etiennelawlor.moviehub.data.model.TelevisionShowsModel;
 import com.etiennelawlor.moviehub.data.remote.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.source.televisionshows.TelevisionShowsDataSourceContract;
 import com.etiennelawlor.moviehub.ui.televisionshows.TelevisionShowsPresenter;
-import com.etiennelawlor.moviehub.ui.televisionshows.TelevisionShowsUIContract;
+import com.etiennelawlor.moviehub.ui.televisionshows.TelevisionShowsUiContract;
 import com.etiennelawlor.moviehub.util.rxjava.TestSchedulerTransformer;
 
 import org.junit.Before;
@@ -34,7 +34,7 @@ public class TelevisionShowsPresenterTest {
 
     // Mocks
     @Mock
-    private TelevisionShowsUIContract.View mockTelevisionShowsView;
+    private TelevisionShowsUiContract.View mockTelevisionShowsView;
     @Mock
     private TelevisionShowsDataSourceContract.Repository mockTelevisionShowsRepository;
 
@@ -159,6 +159,7 @@ public class TelevisionShowsPresenterTest {
         verify(mockTelevisionShowsRepository).getPopularTelevisionShows(anyInt());
 
         verify(mockTelevisionShowsView).hideLoadingView();
+        verify(mockTelevisionShowsView).addHeader();
         verify(mockTelevisionShowsView).addTelevisionShowsToAdapter(televisionShowsModel.getTelevisionShows());
         verify(mockTelevisionShowsView).setModel(televisionShowsModel);
     }
@@ -181,6 +182,7 @@ public class TelevisionShowsPresenterTest {
         verify(mockTelevisionShowsRepository).getPopularTelevisionShows(anyInt());
 
         verify(mockTelevisionShowsView).hideLoadingView();
+        verify(mockTelevisionShowsView).addHeader();
         verify(mockTelevisionShowsView).addTelevisionShowsToAdapter(televisionShowsModel.getTelevisionShows());
         verify(mockTelevisionShowsView).addFooter();
         verify(mockTelevisionShowsView).setModel(televisionShowsModel);

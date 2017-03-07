@@ -313,9 +313,6 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     };
     // endregion
 
-    // region Callbacks
-    // endregion
-
     // region Constructors
     public TelevisionShowDetailsFragment() {
     }

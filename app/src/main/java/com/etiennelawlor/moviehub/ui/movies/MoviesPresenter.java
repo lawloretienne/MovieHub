@@ -1,6 +1,7 @@
 package com.etiennelawlor.moviehub.ui.movies;
 
-import com.etiennelawlor.moviehub.data.model.MoviesModel;
+import com.etiennelawlor.moviehub.data.model.MoviesWrapper;
+import com.etiennelawlor.moviehub.data.model.PagingInfo;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
 import com.etiennelawlor.moviehub.data.source.movies.MoviesDataSourceContract;
 import com.etiennelawlor.moviehub.util.EspressoIdlingResource;
@@ -18,24 +19,24 @@ import rx.subscriptions.CompositeSubscription;
  * Created by etiennelawlor on 2/9/17.
  */
 
-public class MoviesPresenter implements MoviesUIContract.Presenter {
+public class MoviesPresenter implements MoviesUiContract.Presenter {
 
     // region Member Variables
-    private final MoviesUIContract.View moviesView;
+    private final MoviesUiContract.View moviesView;
     private final MoviesDataSourceContract.Repository moviesRepository;
-    private final SchedulerTransformer<MoviesModel> schedulerTransformer;
+    private final SchedulerTransformer<MoviesWrapper> schedulerTransformer;
     private CompositeSubscription compositeSubscription = new CompositeSubscription();
     // endregion
 
     // region Constructors
-    public MoviesPresenter(MoviesUIContract.View moviesView, MoviesDataSourceContract.Repository moviesRepository, SchedulerTransformer<MoviesModel> schedulerTransformer) {
+    public MoviesPresenter(MoviesUiContract.View moviesView, MoviesDataSourceContract.Repository moviesRepository, SchedulerTransformer<MoviesWrapper> schedulerTransformer) {
         this.moviesView = moviesView;
         this.moviesRepository = moviesRepository;
         this.schedulerTransformer = schedulerTransformer;
     }
     // endregion
 
-    // region MoviesUIContract.Presenter Methods
+    // region MoviesUiContract.Presenter Methods
     @Override
     public void onDestroyView() {
         if(compositeSubscription != null && compositeSubscription.hasSubscriptions())
@@ -66,7 +67,7 @@ public class MoviesPresenter implements MoviesUIContract.Presenter {
                         }
                     }
                 })
-                .subscribe(new Subscriber<MoviesModel>() {
+                .subscribe(new Subscriber<MoviesWrapper>() {
                     @Override
                     public void onCompleted() {
 
@@ -91,16 +92,19 @@ public class MoviesPresenter implements MoviesUIContract.Presenter {
                     }
 
                     @Override
-                    public void onNext(MoviesModel moviesModel) {
-                        if(moviesModel != null){
-                            int currentPage = moviesModel.getCurrentPage();
-                            List<Movie> movies = moviesModel.getMovies();
-                            boolean isLastPage = moviesModel.isLastPage();
-                            boolean hasMovies = moviesModel.hasMovies();
+                    public void onNext(MoviesWrapper moviesWrapper) {
+                        if(moviesWrapper != null){
+                            PagingInfo pagingInfo = moviesWrapper.getPagingInfo();
+                            int currentPage = pagingInfo.getCurrentPage();
+                            boolean isLastPage = pagingInfo.isLastPage();
+
+                            List<Movie> movies = moviesWrapper.getMovies();
+                            boolean hasMovies = moviesWrapper.hasMovies();
                             if(currentPage == 1){
                                 moviesView.hideLoadingView();
 
                                 if(hasMovies){
+                                    moviesView.addHeader();
                                     moviesView.addMoviesToAdapter(movies);
 
                                     if(!isLastPage)
@@ -119,9 +123,8 @@ public class MoviesPresenter implements MoviesUIContract.Presenter {
                                 }
                             }
 
+                            moviesView.setPagingInfo(pagingInfo);
                         }
-
-                        moviesView.setModel(moviesModel);
                     }
                 });
         compositeSubscription.add(subscription);

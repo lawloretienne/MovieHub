@@ -146,6 +146,11 @@ public class SimilarTelevisionShowsAdapter extends BaseAdapter<TelevisionShow> {
     }
 
     @Override
+    public void addHeader() {
+
+    }
+
+    @Override
     public void addFooter() {
         isFooterAdded = true;
         add(new TelevisionShow());

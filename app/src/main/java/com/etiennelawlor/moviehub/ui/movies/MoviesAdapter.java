@@ -154,6 +154,11 @@ public class MoviesAdapter extends BaseAdapter<Movie> {
     }
 
     @Override
+    public void addHeader() {
+        add(new Movie());
+    }
+
+    @Override
     public void addFooter() {
         isFooterAdded = true;
         add(new Movie());

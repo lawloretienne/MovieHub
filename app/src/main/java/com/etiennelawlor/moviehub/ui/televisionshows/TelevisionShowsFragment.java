@@ -41,7 +41,7 @@ import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
  * Created by etiennelawlor on 12/16/16.
  */
 
-public class TelevisionShowsFragment extends BaseFragment implements TelevisionShowsAdapter.OnItemClickListener, TelevisionShowsAdapter.OnReloadClickListener, TelevisionShowsUIContract.View {
+public class TelevisionShowsFragment extends BaseFragment implements TelevisionShowsAdapter.OnItemClickListener, TelevisionShowsAdapter.OnReloadClickListener, TelevisionShowsUiContract.View {
 
     // region Constants
     public static final String KEY_TELEVISION_SHOW = "KEY_TELEVISION_SHOW";
@@ -69,7 +69,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
     private StaggeredGridLayoutManager layoutManager;
     private boolean isLoading = false;
     private TelevisionShowsModel televisionShowsModel;
-    private TelevisionShowsUIContract.Presenter televisionShowsPresenter;
+    private TelevisionShowsUiContract.Presenter televisionShowsPresenter;
     // endregion
 
     // region Listeners
@@ -95,7 +95,8 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
 
             if ((visibleItemCount + firstVisibleItem) >= totalItemCount
                     && totalItemCount > 0
-                    && !isLoading) {
+                    && !isLoading
+                    && !televisionShowsModel.isLastPage()) {
                 televisionShowsPresenter.onScrollToEndOfList();
             }
         }
@@ -192,7 +193,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
     }
     // endregion
 
-    // region TelevisionShowsUIContract.View Methods
+    // region TelevisionShowsUiContract.View Methods
 
     @Override
     public void showEmptyView() {
@@ -229,6 +230,11 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
     public void hideLoadingView() {
         progressBar.setVisibility(View.GONE);
         isLoading = false;
+    }
+
+    @Override
+    public void addHeader() {
+        televisionShowsAdapter.addHeader();
     }
 
     @Override

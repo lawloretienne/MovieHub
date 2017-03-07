@@ -18,24 +18,24 @@ import rx.subscriptions.CompositeSubscription;
  * Created by etiennelawlor on 2/9/17.
  */
 
-public class PersonsPresenter implements PersonsUIContract.Presenter {
+public class PersonsPresenter implements PersonsUiContract.Presenter {
 
     // region Member Variables
-    private final PersonsUIContract.View personsView;
+    private final PersonsUiContract.View personsView;
     private final PersonsDataSourceContract.Repository personsRepository;
     private final SchedulerTransformer<PersonsModel> schedulerTransformer;
     private CompositeSubscription compositeSubscription = new CompositeSubscription();
     // endregion
 
     // region Constructors
-    public PersonsPresenter(PersonsUIContract.View personsView, PersonsDataSourceContract.Repository personsRepository, SchedulerTransformer<PersonsModel> schedulerTransformer) {
+    public PersonsPresenter(PersonsUiContract.View personsView, PersonsDataSourceContract.Repository personsRepository, SchedulerTransformer<PersonsModel> schedulerTransformer) {
         this.personsView = personsView;
         this.personsRepository = personsRepository;
         this.schedulerTransformer = schedulerTransformer;
     }
     // endregion
 
-    // region PersonsUIContract.Presenter Methods
+    // region PersonsUiContract.Presenter Methods
     @Override
     public void onDestroyView() {
         if(compositeSubscription != null && compositeSubscription.hasSubscriptions())
@@ -101,6 +101,7 @@ public class PersonsPresenter implements PersonsUIContract.Presenter {
                                 personsView.hideLoadingView();
 
                                 if(hasPersons){
+                                    personsView.addHeader();
                                     personsView.addPersonsToAdapter(persons);
 
                                     if(!isLastPage)

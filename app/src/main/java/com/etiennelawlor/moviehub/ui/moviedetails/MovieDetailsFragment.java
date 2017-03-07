@@ -44,19 +44,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.model.FullMovie;
-import com.etiennelawlor.moviehub.data.remote.AuthorizedNetworkInterceptor;
-import com.etiennelawlor.moviehub.data.remote.MovieHubService;
-import com.etiennelawlor.moviehub.data.remote.ServiceGenerator;
+import com.etiennelawlor.moviehub.data.model.MovieDetailsWrapper;
 import com.etiennelawlor.moviehub.data.remote.response.Genre;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
 import com.etiennelawlor.moviehub.data.remote.response.MovieCredit;
-import com.etiennelawlor.moviehub.data.remote.response.MovieCreditsEnvelope;
-import com.etiennelawlor.moviehub.data.remote.response.MovieReleaseDate;
-import com.etiennelawlor.moviehub.data.remote.response.MovieReleaseDateEnvelope;
-import com.etiennelawlor.moviehub.data.remote.response.MovieReleaseDatesEnvelope;
-import com.etiennelawlor.moviehub.data.remote.response.MoviesEnvelope;
 import com.etiennelawlor.moviehub.data.remote.response.Person;
+import com.etiennelawlor.moviehub.data.source.moviedetails.MovieDetailsLocalDataSource;
+import com.etiennelawlor.moviehub.data.source.moviedetails.MovieDetailsRemoteDataSource;
+import com.etiennelawlor.moviehub.data.source.moviedetails.MovieDetailsRepository;
 import com.etiennelawlor.moviehub.ui.base.BaseAdapter;
 import com.etiennelawlor.moviehub.ui.base.BaseFragment;
 import com.etiennelawlor.moviehub.ui.common.GravitySnapHelper;
@@ -66,8 +61,8 @@ import com.etiennelawlor.moviehub.util.ColorUtility;
 import com.etiennelawlor.moviehub.util.DateUtility;
 import com.etiennelawlor.moviehub.util.DisplayUtility;
 import com.etiennelawlor.moviehub.util.FontCache;
-import com.etiennelawlor.moviehub.util.NetworkUtility;
 import com.etiennelawlor.moviehub.util.ViewUtility;
+import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -81,19 +76,12 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import rx.Observable;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func4;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by etiennelawlor on 12/18/16.
  */
 
-public class MovieDetailsFragment extends BaseFragment implements MovieDetailsContract.View {
+public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUiContract.View {
 
     // region Constants
     public static final String PATTERN = "yyyy-MM-dd";
@@ -151,14 +139,15 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsCo
     ViewStub crewViewStub;
     @BindView(R.id.similar_movies_vs)
     ViewStub similarMoviesViewStub;
+
+    private View selectedPersonView;
+    private View selectedMovieView;
     // endregion
 
     // region Member Variables
     private Movie movie;
     private Unbinder unbinder;
     private Typeface font;
-    private MovieHubService movieHubService;
-    private CompositeSubscription compositeSubscription;
     private int moviePosterHeight;
     private int padding;
     private int scrollThreshold;
@@ -167,9 +156,8 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsCo
     private MovieCreditsAdapter castAdapter;
     private MovieCreditsAdapter crewAdapter;
     private Transition sharedElementEnterTransition;
-    private MovieCreditsEnvelope movieCreditsEnvelope;
-    private MoviesEnvelope moviesEnvelope;
-    private MovieReleaseDatesEnvelope movieReleaseDatesEnvelope;
+    private MovieDetailsWrapper movieDetailsWrapper;
+    private MovieDetailsUiContract.Presenter movieDetailsPresenter;
     private final Handler handler = new Handler();
     // endregion
 
@@ -178,40 +166,19 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsCo
         @Override
         public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
             scrollThreshold = moviePosterHeight - movieDetailsHeaderLinearLayout.getMeasuredHeight() + padding;
-            if (scrollY >= scrollThreshold) {
-                String name = "";
-                if (movie != null) {
-                    name = movie.getTitle();
-                }
-                setCollapsingToolbarTitle(name);
 
-            } else {
-                setCollapsingToolbarTitle("");
-            }
+            boolean isScrolledPastThreshold = (scrollY >= scrollThreshold);
+            movieDetailsPresenter.onScrollChange(isScrolledPastThreshold);
         }
     };
 
     private BaseAdapter.OnItemClickListener similarMoviesAdapterOnItemClickListener = new BaseAdapter.OnItemClickListener() {
         @Override
         public void onItemClick(int position, View view) {
+            selectedMovieView = view;
             Movie movie = similarMoviesAdapter.getItem(position);
             if(movie != null){
-                Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putParcelable(KEY_MOVIE, movie);
-//                bundle.putInt(MovieDetailsActivity.KEY_STATUS_BAR_COLOR, getActivity().getWindow().getStatusBarColor());
-                intent.putExtras(bundle);
-
-                Window window = getActivity().getWindow();
-//                window.setStatusBarColor(statusBarColor);
-
-                Resources resources = view.getResources();
-                Pair<View, String> moviePair  = getPair(view, resources.getString(R.string.transition_movie_thumbnail));
-
-                ActivityOptionsCompat options = getActivityOptionsCompat(moviePair);
-
-                window.setExitTransition(null);
-                ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+                movieDetailsPresenter.onMovieClick(movie);
             }
         }
     };
@@ -224,7 +191,8 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsCo
 
         @Override
         public void onTransitionEnd(Transition transition) {
-            setUpFullMovieSubscription();
+            if(movie != null)
+                movieDetailsPresenter.onLoadMovieDetails(movie.getId());
         }
 
         @Override
@@ -260,6 +228,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsCo
     private BaseAdapter.OnItemClickListener castAdapterOnItemClickListener = new BaseAdapter.OnItemClickListener() {
         @Override
         public void onItemClick(int position, View view) {
+            selectedPersonView = view;
             MovieCredit movieCredit = castAdapter.getItem(position);
             if(movieCredit != null){
                 Person person = new Person();
@@ -268,21 +237,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsCo
                 person.setId(movieCredit.getId());
                 person.setProfilePath(movieCredit.getProfilePath());
 
-                Intent intent = new Intent(getActivity(), PersonDetailsActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putParcelable(KEY_PERSON, person);
-                intent.putExtras(bundle);
-
-                Window window = getActivity().getWindow();
-//            window.setStatusBarColor(primaryDark);
-
-                Resources resources = view.getResources();
-                Pair<View, String> personPair  = getPair(view, resources.getString(R.string.transition_person_thumbnail));
-
-                ActivityOptionsCompat options = getActivityOptionsCompat(personPair);
-
-                window.setExitTransition(null);
-                ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+                movieDetailsPresenter.onPersonClick(person);
             }
         }
     };
@@ -290,6 +245,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsCo
     private BaseAdapter.OnItemClickListener crewAdapterOnItemClickListener = new BaseAdapter.OnItemClickListener() {
         @Override
         public void onItemClick(int position, View view) {
+            selectedPersonView = view;
             MovieCredit movieCredit = crewAdapter.getItem(position);
             if(movieCredit != null){
                 Person person = new Person();
@@ -298,27 +254,142 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsCo
                 person.setId(movieCredit.getId());
                 person.setProfilePath(movieCredit.getProfilePath());
 
-                Intent intent = new Intent(getActivity(), PersonDetailsActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putParcelable(KEY_PERSON, person);
-                intent.putExtras(bundle);
-
-                Window window = getActivity().getWindow();
-//            window.setStatusBarColor(primaryDark);
-
-                Resources resources = view.getResources();
-                Pair<View, String> personPair  = getPair(view, resources.getString(R.string.transition_person_thumbnail));
-
-                ActivityOptionsCompat options = getActivityOptionsCompat(personPair);
-
-                window.setExitTransition(null);
-                ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+                movieDetailsPresenter.onPersonClick(person);
             }
+        }
+    };
+
+    private Animation.AnimationListener movieDetailsBodyAnimationListener = new Animation.AnimationListener() {
+        @Override
+        public void onAnimationStart(Animation animation) {
+
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    setUpCast();
+                    setUpCrew();
+                    setUpSimilarMovies();
+                }
+            }, DELAY);
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
         }
     };
     // endregion
 
     // region Callbacks
+    private Callback backdropCallback = new Callback() {
+        @Override
+        public void onSuccess() {
+            final Bitmap bitmap = ((BitmapDrawable) backdropImageView.getDrawable()).getBitmap();
+            Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                public void onGenerated(Palette palette) {
+                    boolean isDark;
+                    @ColorUtility.Lightness int lightness = ColorUtility.isDark(palette);
+                    if (lightness == ColorUtility.LIGHTNESS_UNKNOWN) {
+                        isDark = ColorUtility.isDark(bitmap, bitmap.getWidth() / 2, 0);
+                    } else {
+                        isDark = lightness == ColorUtility.IS_DARK;
+                    }
+
+                    if (!isDark && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        // Make back icon dark on light images
+                        ImageButton backButton = (ImageButton) toolbar.getChildAt(0);
+                        backButton.setColorFilter(ContextCompat.getColor(getContext(), R.color.dark_icon));
+
+                        // Make toolbar title text color dark
+                        collapsingToolbarLayout.setCollapsedTitleTextColor(ContextCompat.getColor(getContext(), R.color.eighty_percent_transparency_black));
+                    }
+
+                    // color the status bar. Set a complementary dark color on L,
+                    // light or dark color on M (with matching status bar icons)
+                    statusBarColor = getActivity().getWindow().getStatusBarColor();
+                    final Palette.Swatch topColor =
+                            ColorUtility.getMostPopulousSwatch(palette);
+                    if (topColor != null
+                            && (isDark || Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
+                        statusBarColor = ColorUtility.scrimify(topColor.getRgb(),
+                                isDark, SCRIM_ADJUSTMENT);
+                        // set a light status bar on M+
+                        if (!isDark && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            ViewUtility.setLightStatusBar(getActivity().getWindow().getDecorView());
+                        }
+                    }
+
+                    if (statusBarColor != getActivity().getWindow().getStatusBarColor()) {
+                        ValueAnimator statusBarColorAnim = ValueAnimator.ofArgb(
+                                getActivity().getWindow().getStatusBarColor(), statusBarColor);
+                        statusBarColorAnim.addUpdateListener(new ValueAnimator
+                                .AnimatorUpdateListener() {
+                            @Override
+                            public void onAnimationUpdate(ValueAnimator animation) {
+                                if(getActivity() != null){
+                                    getActivity().getWindow().setStatusBarColor(
+                                            (int) animation.getAnimatedValue());
+                                }
+                            }
+                        });
+                        statusBarColorAnim.setDuration(500L);
+                        statusBarColorAnim.setInterpolator(
+                                AnimationUtility.getFastOutSlowInInterpolator(getContext()));
+                        statusBarColorAnim.start();
+                    }
+
+                    if (isDark || Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        GradientDrawable gradientDrawable = new GradientDrawable(
+                                GradientDrawable.Orientation.BOTTOM_TOP,
+                                new int[] {
+                                        ContextCompat.getColor(getContext(), android.R.color.transparent),
+                                        statusBarColor});
+
+                        backdropFrameLayout.setForeground(gradientDrawable);
+                        collapsingToolbarLayout.setContentScrim(new ColorDrawable(ColorUtility.modifyAlpha(statusBarColor, 0.9f)));
+                    } else {
+                        GradientDrawable gradientDrawable = new GradientDrawable(
+                                GradientDrawable.Orientation.BOTTOM_TOP,
+                                new int[] {
+                                        ContextCompat.getColor(getContext(), android.R.color.transparent),
+                                        ContextCompat.getColor(getContext(), R.color.status_bar_color)});
+
+                        backdropFrameLayout.setForeground(gradientDrawable);
+                        collapsingToolbarLayout.setContentScrim(new ColorDrawable(ColorUtility.modifyAlpha(ContextCompat.getColor(getContext(), R.color.status_bar_color), 0.9f)));
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onError() {
+
+        }
+    };
+
+    private Callback posterCallback = new Callback() {
+        @Override
+        public void onSuccess() {
+            final Bitmap bitmap = ((BitmapDrawable) moviePosterImageView.getDrawable()).getBitmap();
+            Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                public void onGenerated(Palette palette) {
+                    setUpMovieHeaderBackgroundColor(palette);
+                    setUpTitleTextColor(titleTextView, palette);
+
+                    getActivity().supportStartPostponedEnterTransition();
+                }
+            });
+        }
+
+        @Override
+        public void onError() {
+            getActivity().supportStartPostponedEnterTransition();
+        }
+    };
     // endregion
 
     // region Constructors
@@ -345,12 +416,13 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsCo
 
         getActivity().supportPostponeEnterTransition();
 
-        compositeSubscription = new CompositeSubscription();
-
-        movieHubService = ServiceGenerator.createService(
-                MovieHubService.class,
-                MovieHubService.BASE_URL,
-                new AuthorizedNetworkInterceptor(getContext()));
+        movieDetailsPresenter = new MovieDetailsPresenter(
+                this,
+                new MovieDetailsRepository(
+                        new MovieDetailsLocalDataSource(getContext()),
+                        new MovieDetailsRemoteDataSource(getContext())),
+                new ProductionSchedulerTransformer<MovieDetailsWrapper>()
+        );
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
 
@@ -405,13 +477,84 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsCo
         removeListeners();
         unbinder.unbind();
     }
+    // endregion
+
+    // region MovieDetailsUiContract.View Methods
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void showMovieDetails(MovieDetailsWrapper movieDetailsWrapper) {
+        this.movieDetailsWrapper = movieDetailsWrapper;
+        final Palette posterPalette = movie.getPosterPalette();
 
-        compositeSubscription.unsubscribe();
+        movie = movieDetailsWrapper.getMovie();
+        movie.setPosterPalette(posterPalette);
+
+        setUpBackdrop();
+        setUpOverview();
+        setUpDuration();
+        setUpGenres();
+        setUpStatus();
+        setUpReleaseDate();
+        setUpBudget();
+        setUpRevenue();
+        setUpRating();
+
+        showMovieDetailsBody();
     }
+
+    @Override
+    public void showToolbarTitle() {
+        String name = "";
+        if (movie != null) {
+            name = movie.getTitle();
+        }
+        setCollapsingToolbarTitle(name);
+    }
+
+    @Override
+    public void hideToolbarTitle() {
+        setCollapsingToolbarTitle("");
+    }
+
+    @Override
+    public void openPersonDetails(Person person) {
+        Intent intent = new Intent(getActivity(), PersonDetailsActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(KEY_PERSON, person);
+        intent.putExtras(bundle);
+
+        Window window = getActivity().getWindow();
+//            window.setStatusBarColor(primaryDark);
+
+        Resources resources = selectedPersonView.getResources();
+        Pair<View, String> personPair  = getPair(selectedPersonView, resources.getString(R.string.transition_person_thumbnail));
+
+        ActivityOptionsCompat options = getActivityOptionsCompat(personPair);
+
+        window.setExitTransition(null);
+        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+    }
+
+    @Override
+    public void openMovieDetails(Movie movie) {
+        Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(KEY_MOVIE, movie);
+//                bundle.putInt(MovieDetailsActivity.KEY_STATUS_BAR_COLOR, getActivity().getWindow().getStatusBarColor());
+        intent.putExtras(bundle);
+
+        Window window = getActivity().getWindow();
+//                window.setStatusBarColor(statusBarColor);
+
+        Resources resources = selectedMovieView.getResources();
+        Pair<View, String> moviePair  = getPair(selectedMovieView, resources.getString(R.string.transition_movie_thumbnail));
+
+        ActivityOptionsCompat options = getActivityOptionsCompat(moviePair);
+
+        window.setExitTransition(null);
+        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+    }
+
     // endregion
 
     // region Helper Methods
@@ -438,91 +581,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsCo
                     .load(backdropUrl)
                     .resize((int)(1.5D*height), height)
                     .centerCrop()
-                    .into(backdropImageView, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            final Bitmap bitmap = ((BitmapDrawable) backdropImageView.getDrawable()).getBitmap();
-                            Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-                                public void onGenerated(Palette palette) {
-                                    boolean isDark;
-                                    @ColorUtility.Lightness int lightness = ColorUtility.isDark(palette);
-                                    if (lightness == ColorUtility.LIGHTNESS_UNKNOWN) {
-                                        isDark = ColorUtility.isDark(bitmap, bitmap.getWidth() / 2, 0);
-                                    } else {
-                                        isDark = lightness == ColorUtility.IS_DARK;
-                                    }
-
-                                    if (!isDark && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                        // Make back icon dark on light images
-                                        ImageButton backButton = (ImageButton) toolbar.getChildAt(0);
-                                        backButton.setColorFilter(ContextCompat.getColor(getContext(), R.color.dark_icon));
-
-                                        // Make toolbar title text color dark
-                                        collapsingToolbarLayout.setCollapsedTitleTextColor(ContextCompat.getColor(getContext(), R.color.eighty_percent_transparency_black));
-                                    }
-
-                                    // color the status bar. Set a complementary dark color on L,
-                                    // light or dark color on M (with matching status bar icons)
-                                    statusBarColor = getActivity().getWindow().getStatusBarColor();
-                                    final Palette.Swatch topColor =
-                                            ColorUtility.getMostPopulousSwatch(palette);
-                                    if (topColor != null
-                                            && (isDark || Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
-                                        statusBarColor = ColorUtility.scrimify(topColor.getRgb(),
-                                                isDark, SCRIM_ADJUSTMENT);
-                                        // set a light status bar on M+
-                                        if (!isDark && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                            ViewUtility.setLightStatusBar(getActivity().getWindow().getDecorView());
-                                        }
-                                    }
-
-                                    if (statusBarColor != getActivity().getWindow().getStatusBarColor()) {
-                                        ValueAnimator statusBarColorAnim = ValueAnimator.ofArgb(
-                                                getActivity().getWindow().getStatusBarColor(), statusBarColor);
-                                        statusBarColorAnim.addUpdateListener(new ValueAnimator
-                                                .AnimatorUpdateListener() {
-                                            @Override
-                                            public void onAnimationUpdate(ValueAnimator animation) {
-                                                if(getActivity() != null){
-                                                    getActivity().getWindow().setStatusBarColor(
-                                                            (int) animation.getAnimatedValue());
-                                                }
-                                            }
-                                        });
-                                        statusBarColorAnim.setDuration(500L);
-                                        statusBarColorAnim.setInterpolator(
-                                                AnimationUtility.getFastOutSlowInInterpolator(getContext()));
-                                        statusBarColorAnim.start();
-                                    }
-
-                                    if (isDark || Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                        GradientDrawable gradientDrawable = new GradientDrawable(
-                                                GradientDrawable.Orientation.BOTTOM_TOP,
-                                                new int[] {
-                                                        ContextCompat.getColor(getContext(), android.R.color.transparent),
-                                                        statusBarColor});
-
-                                        backdropFrameLayout.setForeground(gradientDrawable);
-                                        collapsingToolbarLayout.setContentScrim(new ColorDrawable(ColorUtility.modifyAlpha(statusBarColor, 0.9f)));
-                                    } else {
-                                        GradientDrawable gradientDrawable = new GradientDrawable(
-                                                GradientDrawable.Orientation.BOTTOM_TOP,
-                                                new int[] {
-                                                        ContextCompat.getColor(getContext(), android.R.color.transparent),
-                                                        ContextCompat.getColor(getContext(), R.color.status_bar_color)});
-
-                                        backdropFrameLayout.setForeground(gradientDrawable);
-                                        collapsingToolbarLayout.setContentScrim(new ColorDrawable(ColorUtility.modifyAlpha(ContextCompat.getColor(getContext(), R.color.status_bar_color), 0.9f)));
-                                    }
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onError() {
-
-                        }
-                    });
+                    .into(backdropImageView, backdropCallback);
         }
     }
 
@@ -533,25 +592,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsCo
                     .load(posterUrl)
                     .resize(DisplayUtility.dp2px(moviePosterImageView.getContext(), 104), DisplayUtility.dp2px(moviePosterImageView.getContext(), 156))
                     .centerCrop()
-                    .into(moviePosterImageView, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            final Bitmap bitmap = ((BitmapDrawable) moviePosterImageView.getDrawable()).getBitmap();
-                            Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-                                public void onGenerated(Palette palette) {
-                                    setUpMovieHeaderBackgroundColor(palette);
-                                    setUpTitleTextColor(titleTextView, palette);
-
-                                    getActivity().supportStartPostponedEnterTransition();
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onError() {
-                            getActivity().supportStartPostponedEnterTransition();
-                        }
-                    });
+                    .into(moviePosterImageView, posterCallback);
         }
     }
 
@@ -567,175 +608,92 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsCo
         return backdropUrl;
     }
 
-    private void setUpFullMovieSubscription(){
-        int movieId = movie.getId();
-        final Palette posterPalette = movie.getPosterPalette();
-
-        Subscription fullMovieSubscription = Observable.combineLatest(
-                movieHubService.getMovieDetails(movieId),
-                movieHubService.getMovieCredits(movieId),
-                movieHubService.getSimilarMovies(movieId),
-                movieHubService.getMovieReleaseDates(movieId),
-                new Func4<Movie, MovieCreditsEnvelope, MoviesEnvelope, MovieReleaseDatesEnvelope, FullMovie>() {
-                    @Override
-                    public FullMovie call(Movie movie, MovieCreditsEnvelope movieCreditsEnvelope, MoviesEnvelope moviesEnvelope, MovieReleaseDatesEnvelope movieReleaseDatesEnvelope) {
-                        return new FullMovie(movie, movieCreditsEnvelope, moviesEnvelope, movieReleaseDatesEnvelope);
-                    }
-                })
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<FullMovie>() {
-                    @Override
-                    public void call(FullMovie fullMovie) {
-                        if (fullMovie != null) {
-                            movie = fullMovie.getMovie();
-                            movie.setPosterPalette(posterPalette);
-                            movieCreditsEnvelope = fullMovie.getMovieCreditsEnvelope();
-                            moviesEnvelope = fullMovie.getMoviesEnvelope();
-                            movieReleaseDatesEnvelope = fullMovie.getMovieReleaseDatesEnvelope();
-
-                            setUpBackdrop();
-                            setUpOverview();
-                            setUpDuration();
-                            setUpGenres();
-                            setUpStatus();
-                            setUpReleaseDate();
-                            setUpBudget();
-                            setUpRevenue();
-                            setUpRating();
-
-                            showMovieDetailsBody();
-                        }
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable t) {
-
-                        t.printStackTrace();
-                        if (NetworkUtility.isKnownException(t)) {
-//                            errorTextView.setText("Can't load data.\nCheck your network connection.");
-//                            errorLinearLayout.setVisibility(View.VISIBLE);
-                        }
-                    }
-                });
-
-        compositeSubscription.add(fullMovieSubscription);
-    }
-
     private void showMovieDetailsBody(){
         final int targetHeight = AnimationUtility.getTargetHeight(movieDetailsBodyLinearLayout);
         Animation animation = AnimationUtility.getExpandHeightAnimation(movieDetailsBodyLinearLayout, targetHeight);
         // 1dp/ms
         animation.setDuration((int)(targetHeight / movieDetailsBodyLinearLayout.getContext().getResources().getDisplayMetrics().density));
-        animation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        setUpCast(movieCreditsEnvelope);
-                        setUpCrew(movieCreditsEnvelope);
-                        setUpSimilarMovies(moviesEnvelope);
-                    }
-                }, DELAY);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
+        animation.setAnimationListener(movieDetailsBodyAnimationListener);
         animation.setInterpolator(new AccelerateDecelerateInterpolator());
         movieDetailsBodyLinearLayout.startAnimation(animation);
     }
 
-    private void setUpCast(MovieCreditsEnvelope movieCreditsEnvelope){
-        if(movieCreditsEnvelope != null){
-            List<MovieCredit> cast = movieCreditsEnvelope.getCast();
-            if(cast != null && cast.size()>0){
-                View castView = castViewStub.inflate();
+    private void setUpCast(){
+        List<MovieCredit> cast = movieDetailsWrapper.getCast();
+        if(cast != null && cast.size()>0){
+            View castView = castViewStub.inflate();
 
-                RecyclerView castRecyclerView = ButterKnife.findById(castView, R.id.cast_rv);
+            RecyclerView castRecyclerView = ButterKnife.findById(castView, R.id.cast_rv);
 
-                LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-                castRecyclerView.setLayoutManager(layoutManager);
-                castAdapter = new MovieCreditsAdapter(getContext());
-                castAdapter.setOnItemClickListener(castAdapterOnItemClickListener);
-                castRecyclerView.setAdapter(castAdapter);
-                SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
-                snapHelper.attachToRecyclerView(castRecyclerView);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+            castRecyclerView.setLayoutManager(layoutManager);
+            castAdapter = new MovieCreditsAdapter(getContext());
+            castAdapter.setOnItemClickListener(castAdapterOnItemClickListener);
+            castRecyclerView.setAdapter(castAdapter);
+            SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
+            snapHelper.attachToRecyclerView(castRecyclerView);
 
-                castAdapter.addAll(cast);
-            }
+            castAdapter.addAll(cast);
         }
     }
 
-    private void setUpCrew(MovieCreditsEnvelope movieCreditsEnvelope){
-        if(movieCreditsEnvelope != null){
-            List<MovieCredit> crew = movieCreditsEnvelope.getCrew();
-            if(crew != null && crew.size()>0){
-                View crewView = crewViewStub.inflate();
+    private void setUpCrew(){
+        List<MovieCredit> crew = movieDetailsWrapper.getCrew();
+        if(crew != null && crew.size()>0){
+            View crewView = crewViewStub.inflate();
 
-                RecyclerView crewRecyclerView = ButterKnife.findById(crewView, R.id.crew_rv);
+            RecyclerView crewRecyclerView = ButterKnife.findById(crewView, R.id.crew_rv);
 
-                LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-                crewRecyclerView.setLayoutManager(layoutManager);
-                crewAdapter = new MovieCreditsAdapter(getContext());
-                crewAdapter.setOnItemClickListener(crewAdapterOnItemClickListener);
-                crewRecyclerView.setAdapter(crewAdapter);
-                SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
-                snapHelper.attachToRecyclerView(crewRecyclerView);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+            crewRecyclerView.setLayoutManager(layoutManager);
+            crewAdapter = new MovieCreditsAdapter(getContext());
+            crewAdapter.setOnItemClickListener(crewAdapterOnItemClickListener);
+            crewRecyclerView.setAdapter(crewAdapter);
+            SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
+            snapHelper.attachToRecyclerView(crewRecyclerView);
 
-                crewAdapter.addAll(crew);
-            }
+            crewAdapter.addAll(crew);
         }
     }
 
-    private void setUpSimilarMovies(MoviesEnvelope moviesEnvelope){
-        if(moviesEnvelope != null){
-            List<Movie> similarMovies = moviesEnvelope.getMovies();
-            if(similarMovies != null && similarMovies.size()>0){
-                View similarMoviesView = similarMoviesViewStub.inflate();
+    private void setUpSimilarMovies(){
+        List<Movie> similarMovies = movieDetailsWrapper.getSimilarMovies();
+        if(similarMovies != null && similarMovies.size()>0){
+            View similarMoviesView = similarMoviesViewStub.inflate();
 
-                RecyclerView similarMoviesRecyclerView = ButterKnife.findById(similarMoviesView, R.id.similar_movies_rv);
+            RecyclerView similarMoviesRecyclerView = ButterKnife.findById(similarMoviesView, R.id.similar_movies_rv);
 
-                LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-                similarMoviesRecyclerView.setLayoutManager(layoutManager);
-                similarMoviesAdapter = new SimilarMoviesAdapter(getContext());
-                similarMoviesAdapter.setOnItemClickListener(similarMoviesAdapterOnItemClickListener);
-                similarMoviesRecyclerView.setAdapter(similarMoviesAdapter);
-                SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
-                snapHelper.attachToRecyclerView(similarMoviesRecyclerView);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+            similarMoviesRecyclerView.setLayoutManager(layoutManager);
+            similarMoviesAdapter = new SimilarMoviesAdapter(getContext());
+            similarMoviesAdapter.setOnItemClickListener(similarMoviesAdapterOnItemClickListener);
+            similarMoviesRecyclerView.setAdapter(similarMoviesAdapter);
+            SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
+            snapHelper.attachToRecyclerView(similarMoviesRecyclerView);
 
-                Collections.sort(similarMovies, new Comparator<Movie>() {
-                    @Override
-                    public int compare(Movie m1, Movie m2) {
-                        int year1 = -1;
-                        if(m1.getReleaseDateYear() != -1){
-                            year1 = m1.getReleaseDateYear();
-                        }
-
-                        int year2 = -1;
-                        if(m2.getReleaseDateYear() != -1){
-                            year2 = m2.getReleaseDateYear();
-                        }
-
-                        if(year1 > year2)
-                            return -1;
-                        else if(year1 < year2)
-                            return 1;
-                        else
-                            return 0;
+            Collections.sort(similarMovies, new Comparator<Movie>() {
+                @Override
+                public int compare(Movie m1, Movie m2) {
+                    int year1 = -1;
+                    if(m1.getReleaseDateYear() != -1){
+                        year1 = m1.getReleaseDateYear();
                     }
-                });
 
-                similarMoviesAdapter.addAll(similarMovies);
-            }
+                    int year2 = -1;
+                    if(m2.getReleaseDateYear() != -1){
+                        year2 = m2.getReleaseDateYear();
+                    }
+
+                    if(year1 > year2)
+                        return -1;
+                    else if(year1 < year2)
+                        return 1;
+                    else
+                        return 0;
+                }
+            });
+
+            similarMoviesAdapter.addAll(similarMovies);
         }
     }
 
@@ -854,26 +812,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsCo
     }
 
     private void setUpRating(){
-        String rating = "";
-        List<MovieReleaseDateEnvelope> movieReleaseDateEnvelopes = movieReleaseDatesEnvelope.getMovieReleaseDateEnvelopes();
-        if(movieReleaseDateEnvelopes != null && movieReleaseDateEnvelopes.size()>0){
-            for(MovieReleaseDateEnvelope movieReleaseDateEnvelope : movieReleaseDateEnvelopes){
-                if(movieReleaseDateEnvelope != null){
-                    String iso31661 = movieReleaseDateEnvelope.getIso31661();
-                    if(iso31661.equals("US")){
-                        List<MovieReleaseDate> movieReleaseDates = movieReleaseDateEnvelope.getMovieReleaseDates();
-                        if(movieReleaseDates != null && movieReleaseDates.size()>0){
-                            for(MovieReleaseDate movieReleaseDate : movieReleaseDates){
-                                if(!TextUtils.isEmpty(movieReleaseDate.getCertification())){
-                                    rating = movieReleaseDate.getCertification();
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        String rating = movieDetailsWrapper.getRating();
 
         if(!TextUtils.isEmpty(rating)){
             ratingTextView.setText(rating);

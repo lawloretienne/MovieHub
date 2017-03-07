@@ -4,7 +4,7 @@ import com.etiennelawlor.moviehub.data.model.PersonsModel;
 import com.etiennelawlor.moviehub.data.remote.response.Person;
 import com.etiennelawlor.moviehub.data.source.persons.PersonsDataSourceContract;
 import com.etiennelawlor.moviehub.ui.persons.PersonsPresenter;
-import com.etiennelawlor.moviehub.ui.persons.PersonsUIContract;
+import com.etiennelawlor.moviehub.ui.persons.PersonsUiContract;
 import com.etiennelawlor.moviehub.util.rxjava.TestSchedulerTransformer;
 
 import org.junit.Before;
@@ -34,7 +34,7 @@ public class PersonsPresenterTest {
 
     // Mocks
     @Mock
-    private PersonsUIContract.View mockPersonsView;
+    private PersonsUiContract.View mockPersonsView;
     @Mock
     private PersonsDataSourceContract.Repository mockPersonsRepository;
 
@@ -159,6 +159,7 @@ public class PersonsPresenterTest {
         verify(mockPersonsRepository).getPopularPersons(anyInt());
 
         verify(mockPersonsView).hideLoadingView();
+        verify(mockPersonsView).addHeader();
         verify(mockPersonsView).addPersonsToAdapter(personsModel.getPersons());
         verify(mockPersonsView).setModel(personsModel);
     }
@@ -181,6 +182,7 @@ public class PersonsPresenterTest {
         verify(mockPersonsRepository).getPopularPersons(anyInt());
 
         verify(mockPersonsView).hideLoadingView();
+        verify(mockPersonsView).addHeader();
         verify(mockPersonsView).addPersonsToAdapter(personsModel.getPersons());
         verify(mockPersonsView).addFooter();
         verify(mockPersonsView).setModel(personsModel);

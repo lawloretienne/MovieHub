@@ -146,6 +146,11 @@ public class TelevisionShowCreditsAdapter extends BaseAdapter<TelevisionShowCred
     }
 
     @Override
+    public void addHeader() {
+
+    }
+
+    @Override
     public void addFooter() {
         isFooterAdded = true;
         add(new TelevisionShowCredit());

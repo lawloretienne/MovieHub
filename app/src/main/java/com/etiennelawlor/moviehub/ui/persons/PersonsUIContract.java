@@ -10,7 +10,7 @@ import java.util.List;
  * Created by etiennelawlor on 2/9/17.
  */
 
-public interface PersonsUIContract {
+public interface PersonsUiContract {
 
     interface View {
         void showEmptyView();
@@ -20,6 +20,7 @@ public interface PersonsUIContract {
         void setErrorText(String errorText);
         void showLoadingView();
         void hideLoadingView();
+        void addHeader();
         void addFooter();
         void removeFooter();
         void showErrorFooter();

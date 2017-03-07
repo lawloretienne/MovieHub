@@ -1,6 +1,7 @@
 package com.etiennelawlor.moviehub.data.source.movies;
 
-import com.etiennelawlor.moviehub.data.model.MoviesModel;
+import com.etiennelawlor.moviehub.data.model.MoviesWrapper;
+import com.etiennelawlor.moviehub.data.model.PagingInfo;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
 
 import java.util.List;
@@ -42,22 +43,23 @@ public class MoviesRepository implements MoviesDataSourceContract.Repository {
 
     // region MoviesDataSourceContract.Repository Methods
     @Override
-    public Observable<MoviesModel> getPopularMovies(final int currentPage) {
+    public Observable<MoviesWrapper> getPopularMovies(final int currentPage) {
         Observable<List<Movie>> local = moviesLocalDataSource.getPopularMovies(currentPage);
         Observable<List<Movie>> remote = moviesRemoteDataSource.getPopularMovies(currentPage);
 
         return Observable.concat(local, remote)
                 .first()
-                .map(new Func1<List<Movie>, MoviesModel>() {
+                .map(new Func1<List<Movie>, MoviesWrapper>() {
                     @Override
-                    public MoviesModel call(List<Movie> movies) {
+                    public MoviesWrapper call(List<Movie> movies) {
                         boolean isLastPage = movies.size() < PAGE_SIZE ? true : false;
-                        return new MoviesModel(movies, currentPage, isLastPage);
+                        PagingInfo pagingInfo = new PagingInfo(currentPage, isLastPage);
+                        return new MoviesWrapper(movies, pagingInfo);
                     }
-                }).doOnNext(new Action1<MoviesModel>() {
+                }).doOnNext(new Action1<MoviesWrapper>() {
                     @Override
-                    public void call(MoviesModel moviesModel) {
-                        List<Movie> movies = moviesModel.getMovies();
+                    public void call(MoviesWrapper moviesWrapper) {
+                        List<Movie> movies = moviesWrapper.getMovies();
                         moviesLocalDataSource.savePopularMovies(movies);
                     }
                 });

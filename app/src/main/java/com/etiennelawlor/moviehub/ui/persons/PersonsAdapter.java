@@ -154,6 +154,11 @@ public class PersonsAdapter extends BaseAdapter<Person> {
     }
 
     @Override
+    public void addHeader() {
+        add(new Person());
+    }
+
+    @Override
     public void addFooter() {
         isFooterAdded = true;
         add(new Person());
