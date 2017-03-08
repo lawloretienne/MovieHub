@@ -18,7 +18,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.model.TelevisionShowsModel;
+import com.etiennelawlor.moviehub.data.model.PagingInfo;
+import com.etiennelawlor.moviehub.data.model.TelevisionShowsWrapper;
 import com.etiennelawlor.moviehub.data.remote.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.source.televisionshows.TelevisionShowsLocalDataSource;
 import com.etiennelawlor.moviehub.data.source.televisionshows.TelevisionShowsRemoteDataSource;
@@ -68,14 +69,14 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
     private Unbinder unbinder;
     private StaggeredGridLayoutManager layoutManager;
     private boolean isLoading = false;
-    private TelevisionShowsModel televisionShowsModel;
+    private PagingInfo pagingInfo;
     private TelevisionShowsUiContract.Presenter televisionShowsPresenter;
     // endregion
 
     // region Listeners
     @OnClick(R.id.reload_btn)
     public void onReloadButtonClicked() {
-        televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsModel == null ? 1 : televisionShowsModel.getCurrentPage());
+        televisionShowsPresenter.onLoadPopularTelevisionShows(pagingInfo == null ? 1 : pagingInfo.getCurrentPage());
     }
 
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
@@ -96,7 +97,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
             if ((visibleItemCount + firstVisibleItem) >= totalItemCount
                     && totalItemCount > 0
                     && !isLoading
-                    && !televisionShowsModel.isLastPage()) {
+                    && !pagingInfo.isLastPage()) {
                 televisionShowsPresenter.onScrollToEndOfList();
             }
         }
@@ -131,7 +132,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
                 new TelevisionShowsRepository(
                         new TelevisionShowsLocalDataSource(getContext()),
                         new TelevisionShowsRemoteDataSource(getContext())),
-                new ProductionSchedulerTransformer<TelevisionShowsModel>()
+                new ProductionSchedulerTransformer<TelevisionShowsWrapper>()
         );
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
@@ -162,7 +163,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
         // Pagination
         recyclerView.addOnScrollListener(recyclerViewOnScrollListener);
 
-        televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsModel == null ? 1 : televisionShowsModel.getCurrentPage());
+        televisionShowsPresenter.onLoadPopularTelevisionShows(pagingInfo == null ? 1 : pagingInfo.getCurrentPage());
     }
 
     @Override
@@ -189,7 +190,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
     // region TelevisionShowsAdapter.OnReloadClickListener Methods
     @Override
     public void onReloadClick() {
-        televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsModel.getCurrentPage());
+        televisionShowsPresenter.onLoadPopularTelevisionShows(pagingInfo.getCurrentPage());
     }
     // endregion
 
@@ -266,13 +267,13 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
 
     @Override
     public void loadMoreItems() {
-        televisionShowsModel.incrementPage();
-        televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsModel.getCurrentPage());
+        pagingInfo.incrementPage();
+        televisionShowsPresenter.onLoadPopularTelevisionShows(pagingInfo.getCurrentPage());
     }
 
     @Override
-    public void setModel(TelevisionShowsModel televisionShowsModel) {
-        this.televisionShowsModel = televisionShowsModel;
+    public void setPagingInfo(PagingInfo pagingInfo) {
+        this.pagingInfo = pagingInfo;
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.data.source.televisionshows;
 
-import com.etiennelawlor.moviehub.data.model.TelevisionShowsModel;
+import com.etiennelawlor.moviehub.data.model.TelevisionShowsWrapper;
 import com.etiennelawlor.moviehub.data.remote.response.TelevisionShow;
 
 import java.util.List;
@@ -15,7 +15,7 @@ public interface TelevisionShowsDataSourceContract {
 
     interface Repository {
 //        Restful VERB is the first part of method name GET , POST , DELETE, PUT
-        Observable<TelevisionShowsModel> getPopularTelevisionShows(int currentPage);
+        Observable<TelevisionShowsWrapper> getPopularTelevisionShows(int currentPage);
     }
 
     interface LocalDateSource {

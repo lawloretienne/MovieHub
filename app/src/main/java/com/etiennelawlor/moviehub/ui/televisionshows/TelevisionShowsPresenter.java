@@ -1,6 +1,7 @@
 package com.etiennelawlor.moviehub.ui.televisionshows;
 
-import com.etiennelawlor.moviehub.data.model.TelevisionShowsModel;
+import com.etiennelawlor.moviehub.data.model.PagingInfo;
+import com.etiennelawlor.moviehub.data.model.TelevisionShowsWrapper;
 import com.etiennelawlor.moviehub.data.remote.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.source.televisionshows.TelevisionShowsDataSourceContract;
 import com.etiennelawlor.moviehub.util.EspressoIdlingResource;
@@ -23,12 +24,12 @@ public class TelevisionShowsPresenter implements TelevisionShowsUiContract.Prese
     // region Member Variables
     private final TelevisionShowsUiContract.View televisionShowsView;
     private final TelevisionShowsDataSourceContract.Repository televisionShowsRepository;
-    private final SchedulerTransformer<TelevisionShowsModel> schedulerTransformer;
+    private final SchedulerTransformer<TelevisionShowsWrapper> schedulerTransformer;
     private CompositeSubscription compositeSubscription = new CompositeSubscription();
     // endregion
 
     // region Constructors
-    public TelevisionShowsPresenter(TelevisionShowsUiContract.View televisionShowsView, TelevisionShowsDataSourceContract.Repository televisionShowsRepository, SchedulerTransformer<TelevisionShowsModel> schedulerTransformer) {
+    public TelevisionShowsPresenter(TelevisionShowsUiContract.View televisionShowsView, TelevisionShowsDataSourceContract.Repository televisionShowsRepository, SchedulerTransformer<TelevisionShowsWrapper> schedulerTransformer) {
         this.televisionShowsView = televisionShowsView;
         this.televisionShowsRepository = televisionShowsRepository;
         this.schedulerTransformer = schedulerTransformer;
@@ -67,7 +68,7 @@ public class TelevisionShowsPresenter implements TelevisionShowsUiContract.Prese
                         }
                     }
                 })
-                .subscribe(new Subscriber<TelevisionShowsModel>() {
+                .subscribe(new Subscriber<TelevisionShowsWrapper>() {
                     @Override
                     public void onCompleted() {
 
@@ -92,12 +93,14 @@ public class TelevisionShowsPresenter implements TelevisionShowsUiContract.Prese
                     }
 
                     @Override
-                    public void onNext(TelevisionShowsModel televisionShowsModel) {
-                        if(televisionShowsModel != null){
-                            int currentPage = televisionShowsModel.getCurrentPage();
-                            List<TelevisionShow> televisionShows = televisionShowsModel.getTelevisionShows();
-                            boolean isLastPage = televisionShowsModel.isLastPage();
-                            boolean hasTelevisionShows = televisionShowsModel.hasTelevisionShows();
+                    public void onNext(TelevisionShowsWrapper televisionShowsWrapper) {
+                        if(televisionShowsWrapper != null){
+                            PagingInfo pagingInfo = televisionShowsWrapper.getPagingInfo();
+                            int currentPage = pagingInfo.getCurrentPage();
+                            boolean isLastPage = pagingInfo.isLastPage();
+
+                            List<TelevisionShow> televisionShows = televisionShowsWrapper.getTelevisionShows();
+                            boolean hasTelevisionShows = televisionShowsWrapper.hasTelevisionShows();
                             if(currentPage == 1){
                                 televisionShowsView.hideLoadingView();
 
@@ -121,9 +124,9 @@ public class TelevisionShowsPresenter implements TelevisionShowsUiContract.Prese
                                 }
                             }
 
+                            televisionShowsView.setPagingInfo(pagingInfo);
                         }
 
-                        televisionShowsView.setModel(televisionShowsModel);
                     }
                 });
         compositeSubscription.add(subscription);

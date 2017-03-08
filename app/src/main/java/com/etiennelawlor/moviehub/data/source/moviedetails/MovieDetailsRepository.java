@@ -1,16 +1,9 @@
 package com.etiennelawlor.moviehub.data.source.moviedetails;
 
-import com.etiennelawlor.moviehub.data.model.FullMovie;
 import com.etiennelawlor.moviehub.data.model.MovieDetailsWrapper;
-import com.etiennelawlor.moviehub.data.model.MoviesModel;
-import com.etiennelawlor.moviehub.data.remote.response.Movie;
-import com.etiennelawlor.moviehub.data.source.movies.MoviesDataSourceContract;
-
-import java.util.List;
 
 import rx.Observable;
 import rx.functions.Action1;
-import rx.functions.Func1;
 
 /**
  * Created by etiennelawlor on 2/13/17.

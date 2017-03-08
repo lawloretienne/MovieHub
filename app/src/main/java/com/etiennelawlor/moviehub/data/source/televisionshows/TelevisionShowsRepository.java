@@ -1,6 +1,7 @@
 package com.etiennelawlor.moviehub.data.source.televisionshows;
 
-import com.etiennelawlor.moviehub.data.model.TelevisionShowsModel;
+import com.etiennelawlor.moviehub.data.model.PagingInfo;
+import com.etiennelawlor.moviehub.data.model.TelevisionShowsWrapper;
 import com.etiennelawlor.moviehub.data.remote.response.TelevisionShow;
 
 import java.util.List;
@@ -42,22 +43,23 @@ public class TelevisionShowsRepository implements TelevisionShowsDataSourceContr
 
     // region TelevisionShowsDataSourceContract.Repository Methods
     @Override
-    public Observable<TelevisionShowsModel> getPopularTelevisionShows(final int currentPage) {
+    public Observable<TelevisionShowsWrapper> getPopularTelevisionShows(final int currentPage) {
         Observable<List<TelevisionShow>> local = televisionShowsLocalDataSource.getPopularTelevisionShows(currentPage);
         Observable<List<TelevisionShow>> remote = televisionShowsRemoteDataSource.getPopularTelevisionShows(currentPage);
 
         return Observable.concat(local, remote)
                 .first()
-                .map(new Func1<List<TelevisionShow>, TelevisionShowsModel>() {
+                .map(new Func1<List<TelevisionShow>, TelevisionShowsWrapper>() {
                     @Override
-                    public TelevisionShowsModel call(List<TelevisionShow> televisionShows) {
+                    public TelevisionShowsWrapper call(List<TelevisionShow> televisionShows) {
                         boolean isLastPage = televisionShows.size() < PAGE_SIZE ? true : false;
-                        return new TelevisionShowsModel(televisionShows, currentPage, isLastPage);
+                        PagingInfo pagingInfo = new PagingInfo(currentPage, isLastPage);
+                        return new TelevisionShowsWrapper(televisionShows, pagingInfo);
                     }
-                }).doOnNext(new Action1<TelevisionShowsModel>() {
+                }).doOnNext(new Action1<TelevisionShowsWrapper>() {
                     @Override
-                    public void call(TelevisionShowsModel televisionShowsModel) {
-                        List<TelevisionShow> televisionShows = televisionShowsModel.getTelevisionShows();
+                    public void call(TelevisionShowsWrapper televisionShowsWrapper) {
+                        List<TelevisionShow> televisionShows = televisionShowsWrapper.getTelevisionShows();
                         televisionShowsLocalDataSource.savePopularTelevisionShows(televisionShows);
                     }
                 });

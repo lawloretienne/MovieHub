@@ -9,20 +9,18 @@ import java.util.List;
  * Created by etiennelawlor on 2/20/17.
  */
 
-public class TelevisionShowsModel {
+public class TelevisionShowsWrapper {
 
     // region Member Variables
     private List<TelevisionShow> televisionShows;
-    private int currentPage;
-    private boolean isLastPage;
+    private PagingInfo pagingInfo;
     // endregion
 
     // region Constructors
 
-    public TelevisionShowsModel(List<TelevisionShow> televisionShows, int currentPage, boolean isLastPage) {
+    public TelevisionShowsWrapper(List<TelevisionShow> televisionShows, PagingInfo pagingInfo) {
         this.televisionShows = televisionShows;
-        this.currentPage = currentPage;
-        this.isLastPage = isLastPage;
+        this.pagingInfo = pagingInfo;
     }
 
     // endregion
@@ -34,12 +32,8 @@ public class TelevisionShowsModel {
         return televisionShows;
     }
 
-    public int getCurrentPage() {
-        return currentPage;
-    }
-
-    public boolean isLastPage() {
-        return isLastPage;
+    public PagingInfo getPagingInfo() {
+        return pagingInfo;
     }
 
     // endregion
@@ -50,19 +44,13 @@ public class TelevisionShowsModel {
         this.televisionShows = televisionShows;
     }
 
-    public void setCurrentPage(int currentPage) {
-        this.currentPage = currentPage;
-    }
-
-    public void setLastPage(boolean lastPage) {
-        isLastPage = lastPage;
+    public void setPagingInfo(PagingInfo pagingInfo) {
+        this.pagingInfo = pagingInfo;
     }
 
     // endregion
 
     // Helper Methods
-    public void incrementPage() { this.currentPage += 1; }
-
     public boolean hasTelevisionShows() { return televisionShows.size() > 0;}
     // endregion
 }
