@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.data.source.persons;
 
-import com.etiennelawlor.moviehub.data.model.PersonsModel;
+import com.etiennelawlor.moviehub.data.model.PersonsWrapper;
 import com.etiennelawlor.moviehub.data.remote.response.Person;
 
 import java.util.List;
@@ -15,7 +15,7 @@ public interface PersonsDataSourceContract {
 
     interface Repository {
 //        Restful VERB is the first part of method name GET , POST , DELETE, PUT
-        Observable<PersonsModel> getPopularPersons(int currentPage);
+        Observable<PersonsWrapper> getPopularPersons(int currentPage);
     }
 
     interface LocalDateSource {

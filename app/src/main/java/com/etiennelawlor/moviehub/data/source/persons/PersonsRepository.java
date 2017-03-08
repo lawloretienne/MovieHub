@@ -1,6 +1,7 @@
 package com.etiennelawlor.moviehub.data.source.persons;
 
-import com.etiennelawlor.moviehub.data.model.PersonsModel;
+import com.etiennelawlor.moviehub.data.model.PagingInfo;
+import com.etiennelawlor.moviehub.data.model.PersonsWrapper;
 import com.etiennelawlor.moviehub.data.remote.response.Person;
 
 import java.util.List;
@@ -42,22 +43,23 @@ public class PersonsRepository implements PersonsDataSourceContract.Repository {
 
     // region PersonsDataSourceContract.Repository Methods
     @Override
-    public Observable<PersonsModel> getPopularPersons(final int currentPage) {
+    public Observable<PersonsWrapper> getPopularPersons(final int currentPage) {
         Observable<List<Person>> local = personsLocalDataSource.getPopularPersons(currentPage);
         Observable<List<Person>> remote = personsRemoteDataSource.getPopularPersons(currentPage);
 
         return Observable.concat(local, remote)
                 .first()
-                .map(new Func1<List<Person>, PersonsModel>() {
+                .map(new Func1<List<Person>, PersonsWrapper>() {
                     @Override
-                    public PersonsModel call(List<Person> persons) {
+                    public PersonsWrapper call(List<Person> persons) {
                         boolean isLastPage = persons.size() < PAGE_SIZE ? true : false;
-                        return new PersonsModel(persons, currentPage, isLastPage);
+                        PagingInfo pagingInfo = new PagingInfo(currentPage, isLastPage);
+                        return new PersonsWrapper(persons, pagingInfo);
                     }
-                }).doOnNext(new Action1<PersonsModel>() {
+                }).doOnNext(new Action1<PersonsWrapper>() {
                     @Override
-                    public void call(PersonsModel personsModel) {
-                        List<Person> persons = personsModel.getPersons();
+                    public void call(PersonsWrapper personsWrapper) {
+                        List<Person> persons = personsWrapper.getPersons();
                         personsLocalDataSource.savePopularPersons(persons);
                     }
                 });

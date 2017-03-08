@@ -171,6 +171,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
         super.onDestroyView();
         removeListeners();
         unbinder.unbind();
+        televisionShowsPresenter.onDestroyView();
     }
 
     // endregion
@@ -377,6 +378,10 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
             pair = Pair.create(appBar, resources.getString(R.string.transition_app_bar));
         }
         return pair;
+    }
+
+    public void scrollToTop(){
+        recyclerView.smoothScrollToPosition(0);
     }
     // endregion
 }

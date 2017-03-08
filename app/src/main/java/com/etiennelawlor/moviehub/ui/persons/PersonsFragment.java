@@ -18,7 +18,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.model.PersonsModel;
+import com.etiennelawlor.moviehub.data.model.PagingInfo;
+import com.etiennelawlor.moviehub.data.model.PersonsWrapper;
 import com.etiennelawlor.moviehub.data.remote.response.Person;
 import com.etiennelawlor.moviehub.data.source.persons.PersonsLocalDataSource;
 import com.etiennelawlor.moviehub.data.source.persons.PersonsRemoteDataSource;
@@ -68,14 +69,14 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     private Unbinder unbinder;
     private StaggeredGridLayoutManager layoutManager;
     private PersonsUiContract.Presenter personsPresenter;
-    private PersonsModel personsModel;
+    private PagingInfo pagingInfo;
     private boolean isLoading = false;
     // endregion
 
     // region Listeners
     @OnClick(R.id.reload_btn)
     public void onReloadButtonClicked() {
-        personsPresenter.onLoadPopularPersons(personsModel == null ? 1 : personsModel.getCurrentPage());
+        personsPresenter.onLoadPopularPersons(pagingInfo == null ? 1 : pagingInfo.getCurrentPage());
     }
 
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
@@ -96,7 +97,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
             if ((visibleItemCount + firstVisibleItem) >= totalItemCount
                     && totalItemCount > 0
                     && !isLoading
-                    && !personsModel.isLastPage()) {
+                    && !pagingInfo.isLastPage()) {
                 personsPresenter.onScrollToEndOfList();
             }
         }
@@ -131,7 +132,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
                 new PersonsRepository(
                         new PersonsLocalDataSource(getContext()),
                         new PersonsRemoteDataSource(getContext())),
-                new ProductionSchedulerTransformer<PersonsModel>()
+                new ProductionSchedulerTransformer<PersonsWrapper>()
         );
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
@@ -162,7 +163,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
         // Pagination
         recyclerView.addOnScrollListener(recyclerViewOnScrollListener);
 
-        personsPresenter.onLoadPopularPersons(personsModel == null ? 1 : personsModel.getCurrentPage());
+        personsPresenter.onLoadPopularPersons(pagingInfo == null ? 1 : pagingInfo.getCurrentPage());
     }
 
     @Override
@@ -170,6 +171,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
         super.onDestroyView();
         removeListeners();
         unbinder.unbind();
+        personsPresenter.onDestroyView();
     }
 
     // endregion
@@ -188,7 +190,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     // region PersonsAdapter.OnReloadClickListener Methods
     @Override
     public void onReloadClick() {
-        personsPresenter.onLoadPopularPersons(personsModel.getCurrentPage());
+        personsPresenter.onLoadPopularPersons(pagingInfo.getCurrentPage());
     }
     // endregion
 
@@ -265,13 +267,13 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
 
     @Override
     public void loadMoreItems() {
-        personsModel.incrementPage();
-        personsPresenter.onLoadPopularPersons(personsModel.getCurrentPage());
+        pagingInfo.incrementPage();
+        personsPresenter.onLoadPopularPersons(pagingInfo.getCurrentPage());
     }
 
     @Override
-    public void setModel(PersonsModel personsModel) {
-        this.personsModel = personsModel;
+    public void setPagingInfo(PagingInfo pagingInfo) {
+        this.pagingInfo = pagingInfo;
     }
 
     @Override
@@ -376,6 +378,10 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
             pair = Pair.create(appBar, resources.getString(R.string.transition_app_bar));
         }
         return pair;
+    }
+
+    public void scrollToTop(){
+        recyclerView.smoothScrollToPosition(0);
     }
     // endregion
 }

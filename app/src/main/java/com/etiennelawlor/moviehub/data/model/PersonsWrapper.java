@@ -1,6 +1,5 @@
 package com.etiennelawlor.moviehub.data.model;
 
-import com.etiennelawlor.moviehub.data.remote.response.Movie;
 import com.etiennelawlor.moviehub.data.remote.response.Person;
 
 import java.util.List;
@@ -9,61 +8,47 @@ import java.util.List;
  * Created by etiennelawlor on 2/20/17.
  */
 
-public class PersonsModel {
+public class PersonsWrapper {
 
     // region Member Variables
     private List<Person> persons;
-    private int currentPage;
-    private boolean isLastPage;
+    private PagingInfo pagingInfo;
     // endregion
 
     // region Constructors
 
-    public PersonsModel(List<Person> persons, int currentPage, boolean isLastPage) {
+    public PersonsWrapper(List<Person> persons, PagingInfo pagingInfo) {
         this.persons = persons;
-        this.currentPage = currentPage;
-        this.isLastPage = isLastPage;
+        this.pagingInfo = pagingInfo;
     }
 
     // endregion
 
     // region Getters
 
-
     public List<Person> getPersons() {
         return persons;
     }
 
-    public int getCurrentPage() {
-        return currentPage;
-    }
-
-    public boolean isLastPage() {
-        return isLastPage;
+    public PagingInfo getPagingInfo() {
+        return pagingInfo;
     }
 
     // endregion
 
     // region Setters
 
-
     public void setPersons(List<Person> persons) {
         this.persons = persons;
     }
 
-    public void setCurrentPage(int currentPage) {
-        this.currentPage = currentPage;
-    }
-
-    public void setLastPage(boolean lastPage) {
-        isLastPage = lastPage;
+    public void setPagingInfo(PagingInfo pagingInfo) {
+        this.pagingInfo = pagingInfo;
     }
 
     // endregion
 
     // Helper Methods
-    public void incrementPage() { this.currentPage += 1; }
-
     public boolean hasPersons() { return persons.size() > 0;}
     // endregion
 }

@@ -1,6 +1,7 @@
 package com.etiennelawlor.moviehub.ui.persons;
 
-import com.etiennelawlor.moviehub.data.model.PersonsModel;
+import com.etiennelawlor.moviehub.data.model.PagingInfo;
+import com.etiennelawlor.moviehub.data.model.PersonsWrapper;
 import com.etiennelawlor.moviehub.data.remote.response.Person;
 import com.etiennelawlor.moviehub.data.source.persons.PersonsDataSourceContract;
 import com.etiennelawlor.moviehub.util.EspressoIdlingResource;
@@ -23,12 +24,12 @@ public class PersonsPresenter implements PersonsUiContract.Presenter {
     // region Member Variables
     private final PersonsUiContract.View personsView;
     private final PersonsDataSourceContract.Repository personsRepository;
-    private final SchedulerTransformer<PersonsModel> schedulerTransformer;
+    private final SchedulerTransformer<PersonsWrapper> schedulerTransformer;
     private CompositeSubscription compositeSubscription = new CompositeSubscription();
     // endregion
 
     // region Constructors
-    public PersonsPresenter(PersonsUiContract.View personsView, PersonsDataSourceContract.Repository personsRepository, SchedulerTransformer<PersonsModel> schedulerTransformer) {
+    public PersonsPresenter(PersonsUiContract.View personsView, PersonsDataSourceContract.Repository personsRepository, SchedulerTransformer<PersonsWrapper> schedulerTransformer) {
         this.personsView = personsView;
         this.personsRepository = personsRepository;
         this.schedulerTransformer = schedulerTransformer;
@@ -66,7 +67,7 @@ public class PersonsPresenter implements PersonsUiContract.Presenter {
                         }
                     }
                 })
-                .subscribe(new Subscriber<PersonsModel>() {
+                .subscribe(new Subscriber<PersonsWrapper>() {
                     @Override
                     public void onCompleted() {
 
@@ -91,12 +92,14 @@ public class PersonsPresenter implements PersonsUiContract.Presenter {
                     }
 
                     @Override
-                    public void onNext(PersonsModel personsModel) {
-                        if(personsModel != null){
-                            int currentPage = personsModel.getCurrentPage();
-                            List<Person> persons = personsModel.getPersons();
-                            boolean isLastPage = personsModel.isLastPage();
-                            boolean hasPersons = personsModel.hasPersons();
+                    public void onNext(PersonsWrapper personsWrapper) {
+                        if(personsWrapper != null){
+                            PagingInfo pagingInfo = personsWrapper.getPagingInfo();
+                            int currentPage = pagingInfo.getCurrentPage();
+                            boolean isLastPage = pagingInfo.isLastPage();
+
+                            List<Person> persons = personsWrapper.getPersons();
+                            boolean hasPersons = personsWrapper.hasPersons();
                             if(currentPage == 1){
                                 personsView.hideLoadingView();
 
@@ -120,9 +123,8 @@ public class PersonsPresenter implements PersonsUiContract.Presenter {
                                 }
                             }
 
+                            personsView.setPagingInfo(pagingInfo);
                         }
-
-                        personsView.setModel(personsModel);
                     }
                 });
         compositeSubscription.add(subscription);

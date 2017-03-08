@@ -84,29 +84,40 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        item.setChecked(true);
-                        switch (item.getItemId()) {
-                            case R.id.action_movies:
-                                getSupportFragmentManager()
-                                        .beginTransaction()
-                                        .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                                        .replace(R.id.content_fl, MoviesFragment.newInstance(), "")
-                                        .commit();
-                                break;
-                            case R.id.action_tv_shows:
-                                getSupportFragmentManager()
-                                        .beginTransaction()
-                                        .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                                        .replace(R.id.content_fl, TelevisionShowsFragment.newInstance(), "")
-                                        .commit();
-                                break;
-                            case R.id.action_people:
-                                getSupportFragmentManager()
-                                        .beginTransaction()
-                                        .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                                        .replace(R.id.content_fl, PersonsFragment.newInstance(), "")
-                                        .commit();
-                                break;
+                        if(!item.isChecked()){
+                            item.setChecked(true);
+                            switch (item.getItemId()) {
+                                case R.id.action_movies:
+                                    getSupportFragmentManager()
+                                            .beginTransaction()
+                                            .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                                            .replace(R.id.content_fl, MoviesFragment.newInstance(), "")
+                                            .commit();
+                                    break;
+                                case R.id.action_tv_shows:
+                                    getSupportFragmentManager()
+                                            .beginTransaction()
+                                            .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                                            .replace(R.id.content_fl, TelevisionShowsFragment.newInstance(), "")
+                                            .commit();
+                                    break;
+                                case R.id.action_people:
+                                    getSupportFragmentManager()
+                                            .beginTransaction()
+                                            .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                                            .replace(R.id.content_fl, PersonsFragment.newInstance(), "")
+                                            .commit();
+                                    break;
+                            }
+                        } else {
+                            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_fl);
+                            if(fragment instanceof MoviesFragment){
+                                ((MoviesFragment)fragment).scrollToTop();
+                            } else if(fragment instanceof TelevisionShowsFragment){
+                                ((TelevisionShowsFragment)fragment).scrollToTop();
+                            } else if(fragment instanceof PersonsFragment){
+                                ((PersonsFragment)fragment).scrollToTop();
+                            }
                         }
                         return false;
                     }

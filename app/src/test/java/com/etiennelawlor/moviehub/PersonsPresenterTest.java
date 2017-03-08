@@ -1,6 +1,7 @@
 package com.etiennelawlor.moviehub;
 
-import com.etiennelawlor.moviehub.data.model.PersonsModel;
+import com.etiennelawlor.moviehub.data.model.PagingInfo;
+import com.etiennelawlor.moviehub.data.model.PersonsWrapper;
 import com.etiennelawlor.moviehub.data.remote.response.Person;
 import com.etiennelawlor.moviehub.data.source.persons.PersonsDataSourceContract;
 import com.etiennelawlor.moviehub.ui.persons.PersonsPresenter;
@@ -44,7 +45,7 @@ public class PersonsPresenterTest {
     // endregion
 
     // region Member Variables
-    private PersonsModel personsModel;
+    private PersonsWrapper personsWrapper;
     private PersonsPresenter personsPresenter;
     // endregion
 
@@ -55,7 +56,7 @@ public class PersonsPresenterTest {
         MockitoAnnotations.initMocks(this);
 
         // Get a reference to the class under test
-        personsPresenter = new PersonsPresenter(mockPersonsView, mockPersonsRepository, new TestSchedulerTransformer<PersonsModel>());
+        personsPresenter = new PersonsPresenter(mockPersonsView, mockPersonsRepository, new TestSchedulerTransformer<PersonsWrapper>());
     }
 
     // region Test Methods
@@ -63,12 +64,13 @@ public class PersonsPresenterTest {
     @Test
     public void onLoadPopularPersons_shouldShowError_whenFirstPageRequestFailed() {
         // 1. (Given) Set up conditions required for the test
-        personsModel = new PersonsModel(getListOfPersons(0), 1, true);
-        stub = Observable.<PersonsModel>error(new IOException());
+        PagingInfo pagingInfo = new PagingInfo(1, true);
+        personsWrapper = new PersonsWrapper(getListOfPersons(0), pagingInfo);
+        stub = Observable.<PersonsWrapper>error(new IOException());
         when(mockPersonsRepository.getPopularPersons(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
-        personsPresenter.onLoadPopularPersons(personsModel.getCurrentPage());
+        personsPresenter.onLoadPopularPersons(pagingInfo.getCurrentPage());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockPersonsView).hideEmptyView();
@@ -85,12 +87,13 @@ public class PersonsPresenterTest {
     @Test
     public void onLoadPopularPersons_shouldShowError_whenNextPageRequestFailed() {
         // 1. (Given) Set up conditions required for the test
-        personsModel = new PersonsModel(getListOfPersons(0), 2, true);
-        stub = Observable.<PersonsModel>error(new IOException());
+        PagingInfo pagingInfo = new PagingInfo(2, true);
+        personsWrapper = new PersonsWrapper(getListOfPersons(0), pagingInfo);
+        stub = Observable.<PersonsWrapper>error(new IOException());
         when(mockPersonsRepository.getPopularPersons(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
-        personsPresenter.onLoadPopularPersons(personsModel.getCurrentPage());
+        personsPresenter.onLoadPopularPersons(pagingInfo.getCurrentPage());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockPersonsView).showLoadingFooter();
@@ -103,12 +106,13 @@ public class PersonsPresenterTest {
     @Test
     public void onLoadPopularPersons_shouldShowEmpty_whenFirstPageHasNoPersons() {
         // 1. (Given) Set up conditions required for the test
-        personsModel = new PersonsModel(getListOfPersons(0), 1, true);
-        stub = Observable.just(personsModel);
+        PagingInfo pagingInfo = new PagingInfo(1, true);
+        personsWrapper = new PersonsWrapper(getListOfPersons(0), pagingInfo);
+        stub = Observable.just(personsWrapper);
         when(mockPersonsRepository.getPopularPersons(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
-        personsPresenter.onLoadPopularPersons(personsModel.getCurrentPage());
+        personsPresenter.onLoadPopularPersons(pagingInfo.getCurrentPage());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockPersonsView).hideEmptyView();
@@ -119,18 +123,19 @@ public class PersonsPresenterTest {
 
         verify(mockPersonsView).hideLoadingView();
         verify(mockPersonsView).showEmptyView();
-        verify(mockPersonsView).setModel(personsModel);
+        verify(mockPersonsView).setPagingInfo(pagingInfo);
     }
 
     @Test
     public void onLoadPopularPersons_shouldNotAddPersons_whenNextPageHasNoPersons() {
         // 1. (Given) Set up conditions required for the test
-        personsModel = new PersonsModel(getListOfPersons(0), 2, true);
-        stub = Observable.just(personsModel);
+        PagingInfo pagingInfo = new PagingInfo(2, true);
+        personsWrapper = new PersonsWrapper(getListOfPersons(0), pagingInfo);
+        stub = Observable.just(personsWrapper);
         when(mockPersonsRepository.getPopularPersons(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
-        personsPresenter.onLoadPopularPersons(personsModel.getCurrentPage());
+        personsPresenter.onLoadPopularPersons(pagingInfo.getCurrentPage());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockPersonsView).showLoadingFooter();
@@ -138,18 +143,19 @@ public class PersonsPresenterTest {
         verify(mockPersonsRepository).getPopularPersons(anyInt());
 
         verify(mockPersonsView).removeFooter();
-        verify(mockPersonsView).setModel(personsModel);
+        verify(mockPersonsView).setPagingInfo(pagingInfo);
     }
 
     @Test
     public void onLoadPopularPersons_shouldAddPersons_whenFirstPageHasPersonsAndIsLastPage() {
         // 1. (Given) Set up conditions required for the test
-        personsModel = new PersonsModel(getListOfPersons(5), 1, true);
-        stub = Observable.just(personsModel);
+        PagingInfo pagingInfo = new PagingInfo(1, true);
+        personsWrapper = new PersonsWrapper(getListOfPersons(5), pagingInfo);
+        stub = Observable.just(personsWrapper);
         when(mockPersonsRepository.getPopularPersons(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
-        personsPresenter.onLoadPopularPersons(personsModel.getCurrentPage());
+        personsPresenter.onLoadPopularPersons(pagingInfo.getCurrentPage());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockPersonsView).hideEmptyView();
@@ -160,19 +166,20 @@ public class PersonsPresenterTest {
 
         verify(mockPersonsView).hideLoadingView();
         verify(mockPersonsView).addHeader();
-        verify(mockPersonsView).addPersonsToAdapter(personsModel.getPersons());
-        verify(mockPersonsView).setModel(personsModel);
+        verify(mockPersonsView).addPersonsToAdapter(personsWrapper.getPersons());
+        verify(mockPersonsView).setPagingInfo(pagingInfo);
     }
 
     @Test
     public void onLoadPopularPersons_shouldAddPersons_whenFirstPageHasPersonsAndIsNotLastPage() {
         // 1. (Given) Set up conditions required for the test
-        personsModel = new PersonsModel(getListOfPersons(5), 1, false);
-        stub = Observable.just(personsModel);
+        PagingInfo pagingInfo = new PagingInfo(1, false);
+        personsWrapper = new PersonsWrapper(getListOfPersons(5), pagingInfo);
+        stub = Observable.just(personsWrapper);
         when(mockPersonsRepository.getPopularPersons(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
-        personsPresenter.onLoadPopularPersons(personsModel.getCurrentPage());
+        personsPresenter.onLoadPopularPersons(pagingInfo.getCurrentPage());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockPersonsView).hideEmptyView();
@@ -183,20 +190,21 @@ public class PersonsPresenterTest {
 
         verify(mockPersonsView).hideLoadingView();
         verify(mockPersonsView).addHeader();
-        verify(mockPersonsView).addPersonsToAdapter(personsModel.getPersons());
+        verify(mockPersonsView).addPersonsToAdapter(personsWrapper.getPersons());
         verify(mockPersonsView).addFooter();
-        verify(mockPersonsView).setModel(personsModel);
+        verify(mockPersonsView).setPagingInfo(pagingInfo);
     }
 
     @Test
     public void onLoadPopularPersons_shouldAddPersons_whenNextPageHasPersonsAndIsLastPage() {
         // 1. (Given) Set up conditions required for the test
-        personsModel = new PersonsModel(getListOfPersons(5), 2, true);
-        stub = Observable.just(personsModel);
+        PagingInfo pagingInfo = new PagingInfo(2, true);
+        personsWrapper = new PersonsWrapper(getListOfPersons(5), pagingInfo);
+        stub = Observable.just(personsWrapper);
         when(mockPersonsRepository.getPopularPersons(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
-        personsPresenter.onLoadPopularPersons(personsModel.getCurrentPage());
+        personsPresenter.onLoadPopularPersons(pagingInfo.getCurrentPage());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockPersonsView).showLoadingFooter();
@@ -204,19 +212,20 @@ public class PersonsPresenterTest {
         verify(mockPersonsRepository).getPopularPersons(anyInt());
 
         verify(mockPersonsView).removeFooter();
-        verify(mockPersonsView).addPersonsToAdapter(personsModel.getPersons());
-        verify(mockPersonsView).setModel(personsModel);
+        verify(mockPersonsView).addPersonsToAdapter(personsWrapper.getPersons());
+        verify(mockPersonsView).setPagingInfo(pagingInfo);
     }
 
     @Test
     public void onLoadPopularPersons_shouldAddPersons_whenNextPageHasPersonsAndIsNotLastPage() {
         // 1. (Given) Set up conditions required for the test
-        personsModel = new PersonsModel(getListOfPersons(5), 2, false);
-        stub = Observable.just(personsModel);
+        PagingInfo pagingInfo = new PagingInfo(2, false);
+        personsWrapper = new PersonsWrapper(getListOfPersons(5), pagingInfo);
+        stub = Observable.just(personsWrapper);
         when(mockPersonsRepository.getPopularPersons(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
-        personsPresenter.onLoadPopularPersons(personsModel.getCurrentPage());
+        personsPresenter.onLoadPopularPersons(pagingInfo.getCurrentPage());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockPersonsView).showLoadingFooter();
@@ -224,10 +233,10 @@ public class PersonsPresenterTest {
         verify(mockPersonsRepository).getPopularPersons(anyInt());
 
         verify(mockPersonsView).removeFooter();
-        verify(mockPersonsView).addPersonsToAdapter(personsModel.getPersons());
+        verify(mockPersonsView).addPersonsToAdapter(personsWrapper.getPersons());
         verify(mockPersonsView).addFooter();
-        verify(mockPersonsView).setModel(personsModel);
-//        verify(mockPersonsView, times(1)).setModel(any(PersonsModel.class)); // Alternative verify check
+        verify(mockPersonsView).setPagingInfo(pagingInfo);
+//        verify(mockPersonsView, times(1)).setModel(any(PersonsWrapper.class)); // Alternative verify check
     }
 
     @Test
