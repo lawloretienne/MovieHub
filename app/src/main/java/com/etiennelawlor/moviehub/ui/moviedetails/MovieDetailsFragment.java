@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
@@ -61,6 +62,7 @@ import com.etiennelawlor.moviehub.util.ColorUtility;
 import com.etiennelawlor.moviehub.util.DateUtility;
 import com.etiennelawlor.moviehub.util.DisplayUtility;
 import com.etiennelawlor.moviehub.util.FontCache;
+import com.etiennelawlor.moviehub.util.TrestleUtility;
 import com.etiennelawlor.moviehub.util.ViewUtility;
 import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 import com.squareup.picasso.Callback;
@@ -476,6 +478,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
         super.onDestroyView();
         removeListeners();
         unbinder.unbind();
+        movieDetailsPresenter.onDestroyView();
     }
     // endregion
 
@@ -514,6 +517,27 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
     @Override
     public void hideToolbarTitle() {
         setCollapsingToolbarTitle("");
+    }
+
+    @Override
+    public void showErrorView() {
+        Snackbar snackbar = Snackbar.make(ButterKnife.findById(getActivity(), R.id.main_content),
+                TrestleUtility.getFormattedText("Network connection is unavailable.", font, 16),
+                Snackbar.LENGTH_INDEFINITE);
+        snackbar.setAction("RETRY", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(movie != null)
+                    movieDetailsPresenter.onLoadMovieDetails(movie.getId());
+            }
+        });
+        View snackBarView = snackbar.getView();
+//                            snackBarView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.grey_200));
+        TextView textView = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(ContextCompat.getColor(getContext(), R.color.secondary_text_light));
+        textView.setTypeface(font);
+
+        snackbar.show();
     }
 
     @Override

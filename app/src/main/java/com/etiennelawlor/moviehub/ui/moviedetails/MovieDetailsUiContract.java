@@ -15,6 +15,7 @@ public interface MovieDetailsUiContract {
         void showMovieDetails(MovieDetailsWrapper movieDetailsWrapper);
         void showToolbarTitle();
         void hideToolbarTitle();
+        void showErrorView();
 
         // Navigation methods
         void openPersonDetails(Person person);

@@ -70,7 +70,7 @@ public class MovieDetailsPresenter implements MovieDetailsUiContract.Presenter {
                         if(NetworkUtility.isKnownException(throwable)){
 //                            moviesView.showErrorFooter();
 //                            moviesView.setErrorText("Can't load data.\nCheck your network connection.");
-//                                moviesView.showErrorView();
+                            movieDetailsView.showErrorView();
                         }
                     }
 
