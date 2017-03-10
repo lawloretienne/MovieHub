@@ -1,6 +1,6 @@
-package com.etiennelawlor.moviehub.data.source.moviedetails;
+package com.etiennelawlor.moviehub.data.source.persondetails;
 
-import com.etiennelawlor.moviehub.data.model.MovieDetailsWrapper;
+import com.etiennelawlor.moviehub.data.model.PersonDetailsWrapper;
 
 import rx.Observable;
 import rx.functions.Action1;
@@ -9,7 +9,7 @@ import rx.functions.Action1;
  * Created by etiennelawlor on 2/13/17.
  */
 
-public class MovieDetailsRepository implements MovieDetailsDataSourceContract.Repository {
+public class PersonDetailsRepository implements PersonDetailsDataSourceContract.Repository {
 
     // Load data from local and remote
     // http://blog.danlew.net/2015/06/22/loading-data-from-multiple-sources-with-rxjava/
@@ -21,29 +21,29 @@ public class MovieDetailsRepository implements MovieDetailsDataSourceContract.Re
     // https://github.com/dcampogiani/Qwertee/blob/f71dbc318264bcc05a7f51c8cb8c40e54b53b57e/data/src/main/java/com/danielecampogiani/qwertee/data/local/model/MapperImpl.java
 
     // region Member Variables
-    private MovieDetailsDataSourceContract.LocalDateSource movieDetailsLocalDataSource;
-    private MovieDetailsDataSourceContract.RemoteDateSource movieDetailsRemoteDataSource;
+    private PersonDetailsDataSourceContract.LocalDateSource personDetailsLocalDataSource;
+    private PersonDetailsDataSourceContract.RemoteDateSource personDetailsRemoteDataSource;
     // endregion
 
     // region Constructors
-    public MovieDetailsRepository(MovieDetailsDataSourceContract.LocalDateSource movieDetailsLocalDataSource, MovieDetailsDataSourceContract.RemoteDateSource movieDetailsRemoteDataSource) {
-        this.movieDetailsLocalDataSource = movieDetailsLocalDataSource;
-        this.movieDetailsRemoteDataSource = movieDetailsRemoteDataSource;
+    public PersonDetailsRepository(PersonDetailsDataSourceContract.LocalDateSource personDetailsLocalDataSource, PersonDetailsDataSourceContract.RemoteDateSource personDetailsRemoteDataSource) {
+        this.personDetailsLocalDataSource = personDetailsLocalDataSource;
+        this.personDetailsRemoteDataSource = personDetailsRemoteDataSource;
     }
     // endregion
 
-    // region MovieDetailsDataSourceContract.Repository Methods
+    // region PersonDetailsDataSourceContract.Repository Methods
     @Override
-    public Observable<MovieDetailsWrapper> getMovieDetails(int movieId) {
-        Observable<MovieDetailsWrapper> local = movieDetailsLocalDataSource.getMovieDetails(movieId);
-        Observable<MovieDetailsWrapper> remote = movieDetailsRemoteDataSource.getMovieDetails(movieId);
+    public Observable<PersonDetailsWrapper> getPersonDetails(int personId) {
+        Observable<PersonDetailsWrapper> local = personDetailsLocalDataSource.getPersonDetails(personId);
+        Observable<PersonDetailsWrapper> remote = personDetailsRemoteDataSource.getPersonDetails(personId);
 
         return Observable.concat(local, remote)
                 .first()
-                .doOnNext(new Action1<MovieDetailsWrapper>() {
+                .doOnNext(new Action1<PersonDetailsWrapper>() {
                     @Override
-                    public void call(MovieDetailsWrapper movieDetailsWrapper) {
-                        movieDetailsLocalDataSource.saveMovieDetails(movieDetailsWrapper);
+                    public void call(PersonDetailsWrapper personDetailsWrapper) {
+                        personDetailsLocalDataSource.savePersonDetails(personDetailsWrapper);
                     }
                 });
     }

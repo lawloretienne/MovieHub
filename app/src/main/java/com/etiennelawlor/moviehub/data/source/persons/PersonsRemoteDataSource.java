@@ -33,7 +33,7 @@ public class PersonsRemoteDataSource implements PersonsDataSourceContract.Remote
     }
     // endregion
 
-    // region MoviesDataSourceContract.RemoteDateSource Methods
+    // region PersonsDataSourceContract.RemoteDateSource Methods
 
     @Override
     public Observable<List<Person>> getPopularPersons(int currentPage) {

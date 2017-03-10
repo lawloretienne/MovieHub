@@ -17,7 +17,7 @@ public class MovieDetailsLocalDataSource implements MovieDetailsDataSourceContra
     }
     // endregion
 
-    // region MoviesDataSourceContract.LocalDateSource Methods
+    // region MovieDetailsDataSourceContract.LocalDateSource Methods
 
     @Override
     public Observable<MovieDetailsWrapper> getMovieDetails(int movieId) {

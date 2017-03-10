@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
@@ -44,17 +45,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.model.FullPerson;
-import com.etiennelawlor.moviehub.data.remote.AuthorizedNetworkInterceptor;
-import com.etiennelawlor.moviehub.data.remote.MovieHubService;
-import com.etiennelawlor.moviehub.data.remote.ServiceGenerator;
+import com.etiennelawlor.moviehub.data.model.PersonDetailsWrapper;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
 import com.etiennelawlor.moviehub.data.remote.response.Person;
 import com.etiennelawlor.moviehub.data.remote.response.PersonCredit;
-import com.etiennelawlor.moviehub.data.remote.response.PersonCreditsEnvelope;
 import com.etiennelawlor.moviehub.data.remote.response.ProfileImage;
 import com.etiennelawlor.moviehub.data.remote.response.ProfileImages;
 import com.etiennelawlor.moviehub.data.remote.response.TelevisionShow;
+import com.etiennelawlor.moviehub.data.source.persondetails.PersonDetailsLocalDataSource;
+import com.etiennelawlor.moviehub.data.source.persondetails.PersonDetailsRemoteDataSource;
+import com.etiennelawlor.moviehub.data.source.persondetails.PersonDetailsRepository;
 import com.etiennelawlor.moviehub.ui.base.BaseAdapter;
 import com.etiennelawlor.moviehub.ui.base.BaseFragment;
 import com.etiennelawlor.moviehub.ui.common.GravitySnapHelper;
@@ -65,8 +65,9 @@ import com.etiennelawlor.moviehub.util.ColorUtility;
 import com.etiennelawlor.moviehub.util.DateUtility;
 import com.etiennelawlor.moviehub.util.DisplayUtility;
 import com.etiennelawlor.moviehub.util.FontCache;
-import com.etiennelawlor.moviehub.util.NetworkUtility;
+import com.etiennelawlor.moviehub.util.TrestleUtility;
 import com.etiennelawlor.moviehub.util.ViewUtility;
+import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -78,19 +79,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import rx.Observable;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func2;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by etiennelawlor on 12/18/16.
  */
 
-public class PersonDetailsFragment extends BaseFragment implements PersonDetailsContract.View {
+public class PersonDetailsFragment extends BaseFragment implements PersonDetailsUiContract.View {
 
     // region Constants
     public static final String PATTERN = "yyyy-MM-dd";
@@ -141,14 +135,14 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     ViewStub castViewStub;
     @BindView(R.id.crew_vs)
     ViewStub crewViewStub;
+
+    private View selectedView;
     // endregion
 
     // region Member Variables
     private Person person;
     private Unbinder unbinder;
     private Typeface font;
-    private MovieHubService movieHubService;
-    private CompositeSubscription compositeSubscription;
     private int personPosterHeight;
     private int padding;
     private int scrollThreshold;
@@ -156,7 +150,8 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     private PersonCreditsAdapter castAdapter;
     private PersonCreditsAdapter crewAdapter;
     private Transition sharedElementEnterTransition;
-    private PersonCreditsEnvelope personCreditsEnvelope;
+    private PersonDetailsPresenter personDetailsPresenter;
+    private PersonDetailsWrapper personDetailsWrapper;
     private final Handler handler = new Handler();
     // endregion
 
@@ -165,30 +160,19 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
         @Override
         public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
             scrollThreshold = personPosterHeight - personDetailsHeaderLinearLayout.getMeasuredHeight() + padding;
-            if (scrollY >= scrollThreshold) {
-                String name = "";
-                if (person != null) {
-                    name = person.getName();
-                }
-                setCollapsingToolbarTitle(name);
 
-            } else {
-                setCollapsingToolbarTitle("");
-            }
+            boolean isScrolledPastThreshold = (scrollY >= scrollThreshold);
+            personDetailsPresenter.onScrollChange(isScrolledPastThreshold);
         }
     };
 
     private BaseAdapter.OnItemClickListener castAdapterOnItemClickListener = new BaseAdapter.OnItemClickListener() {
         @Override
         public void onItemClick(int position, View view) {
+            selectedView = view;
+
             PersonCredit personCredit = castAdapter.getItem(position);
             if(personCredit != null){
-                Intent intent;
-                ActivityOptionsCompat options;
-                Bundle bundle = new Bundle();
-                Window window = getActivity().getWindow();
-                Resources resources = view.getResources();
-
                 String mediaType = personCredit.getMediaType();
                 switch (mediaType){
                     case "movie":
@@ -199,18 +183,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
                         movie.setPosterPath(personCredit.getPosterPath());
                         movie.setReleaseDate(personCredit.getReleaseDate());
 
-                        intent = new Intent(getActivity(), MovieDetailsActivity.class);
-                        bundle.putParcelable(KEY_MOVIE, movie);
-                        intent.putExtras(bundle);
-
-//            window.setStatusBarColor(primaryDark);
-
-                        Pair<View, String> moviePair = getPair(view, resources.getString(R.string.transition_movie_thumbnail));
-
-                        options = getActivityOptionsCompat(moviePair);
-
-                        window.setExitTransition(null);
-                        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+                        personDetailsPresenter.onMovieClick(movie);
                         break;
                     case "tv":
                         TelevisionShow televisionShow = new TelevisionShow();
@@ -220,18 +193,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
                         televisionShow.setPosterPath(personCredit.getPosterPath());
                         televisionShow.setFirstAirDate(personCredit.getFirstAirDate());
 
-                        intent = new Intent(getActivity(), TelevisionShowDetailsActivity.class);
-                        bundle.putParcelable(KEY_TELEVISION_SHOW, televisionShow);
-                        intent.putExtras(bundle);
-
-//            window.setStatusBarColor(primaryDark);
-
-                        Pair<View, String> televisionShowPair = getPair(view, resources.getString(R.string.transition_television_show_thumbnail));
-
-                        options = getActivityOptionsCompat(televisionShowPair);
-
-                        window.setExitTransition(null);
-                        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+                        personDetailsPresenter.onTelevisionShowClick(televisionShow);
                         break;
                     default:
                         break;
@@ -243,13 +205,10 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     private BaseAdapter.OnItemClickListener crewAdapterOnItemClickListener = new BaseAdapter.OnItemClickListener() {
         @Override
         public void onItemClick(int position, View view) {
+            selectedView = view;
+
             PersonCredit personCredit = crewAdapter.getItem(position);
             if(personCredit != null){
-                Intent intent;
-                ActivityOptionsCompat options;
-                Bundle bundle = new Bundle();
-                Window window = getActivity().getWindow();
-                Resources resources = view.getResources();
 
                 String mediaType = personCredit.getMediaType();
                 switch (mediaType){
@@ -261,19 +220,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
                         movie.setPosterPath(personCredit.getPosterPath());
                         movie.setReleaseDate(personCredit.getReleaseDate());
 
-                        intent = new Intent(getActivity(), MovieDetailsActivity.class);
-                        bundle.putParcelable(KEY_MOVIE, movie);
-                        intent.putExtras(bundle);
-
-//            window.setStatusBarColor(primaryDark);
-
-                        Pair<View, String> moviePair  = getPair(view, resources.getString(R.string.transition_movie_thumbnail));
-
-                        options = getActivityOptionsCompat(moviePair);
-
-                        window.setExitTransition(null);
-                        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
-
+                        personDetailsPresenter.onMovieClick(movie);
                         break;
                     case "tv":
                         TelevisionShow televisionShow = new TelevisionShow();
@@ -283,18 +230,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
                         televisionShow.setPosterPath(personCredit.getPosterPath());
                         televisionShow.setFirstAirDate(personCredit.getFirstAirDate());
 
-                        intent = new Intent(getActivity(), TelevisionShowDetailsActivity.class);
-                        bundle.putParcelable(KEY_TELEVISION_SHOW, televisionShow);
-                        intent.putExtras(bundle);
-
-//            window.setStatusBarColor(primaryDark);
-
-                        Pair<View, String> televisionShowPair  = getPair(view, resources.getString(R.string.transition_television_show_thumbnail));
-
-                        options = getActivityOptionsCompat(televisionShowPair);
-
-                        window.setExitTransition(null);
-                        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+                        personDetailsPresenter.onTelevisionShowClick(televisionShow);
                         break;
                     default:
                         break;
@@ -311,7 +247,8 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
 
         @Override
         public void onTransitionEnd(Transition transition) {
-            setUpFullPersonSubscription();
+            if(person != null)
+                personDetailsPresenter.onLoadPersonDetails(person.getId());
         }
 
         @Override
@@ -345,6 +282,117 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     };
     // endregion
 
+    // region Callbacks
+    private Callback backdropCallback = new Callback() {
+        @Override
+        public void onSuccess() {
+            if(isResumed()){
+                final Bitmap bitmap = ((BitmapDrawable) backdropImageView.getDrawable()).getBitmap();
+                Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                    public void onGenerated(Palette palette) {
+                        boolean isDark;
+                        @ColorUtility.Lightness int lightness = ColorUtility.isDark(palette);
+                        if (lightness == ColorUtility.LIGHTNESS_UNKNOWN) {
+                            isDark = ColorUtility.isDark(bitmap, bitmap.getWidth() / 2, 0);
+                        } else {
+                            isDark = lightness == ColorUtility.IS_DARK;
+                        }
+
+                        if (!isDark && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            // Make back icon dark on light images
+                            ImageButton backButton = (ImageButton) toolbar.getChildAt(0);
+                            backButton.setColorFilter(ContextCompat.getColor(getContext(), R.color.dark_icon));
+
+                            // Make toolbar title text color dark
+                            collapsingToolbarLayout.setCollapsedTitleTextColor(ContextCompat.getColor(getContext(), R.color.eighty_percent_transparency_black));
+                        }
+
+                        // color the status bar. Set a complementary dark color on L,
+                        // light or dark color on M (with matching status bar icons)
+                        statusBarColor = getActivity().getWindow().getStatusBarColor();
+                        final Palette.Swatch topColor =
+                                ColorUtility.getMostPopulousSwatch(palette);
+                        if (topColor != null
+                                && (isDark || Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
+                            statusBarColor = ColorUtility.scrimify(topColor.getRgb(),
+                                    isDark, SCRIM_ADJUSTMENT);
+                            // set a light status bar on M+
+                            if (!isDark && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                ViewUtility.setLightStatusBar(getActivity().getWindow().getDecorView());
+                            }
+                        }
+
+                        if (statusBarColor != getActivity().getWindow().getStatusBarColor()) {
+                            ValueAnimator statusBarColorAnim = ValueAnimator.ofArgb(
+                                    getActivity().getWindow().getStatusBarColor(), statusBarColor);
+                            statusBarColorAnim.addUpdateListener(new ValueAnimator
+                                    .AnimatorUpdateListener() {
+                                @Override
+                                public void onAnimationUpdate(ValueAnimator animation) {
+                                    if(getActivity() != null){
+                                        getActivity().getWindow().setStatusBarColor(
+                                                (int) animation.getAnimatedValue());
+                                    }
+                                }
+                            });
+                            statusBarColorAnim.setDuration(500L);
+                            statusBarColorAnim.setInterpolator(
+                                    AnimationUtility.getFastOutSlowInInterpolator(getContext()));
+                            statusBarColorAnim.start();
+                        }
+
+                        if (isDark || Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            GradientDrawable gradientDrawable = new GradientDrawable(
+                                    GradientDrawable.Orientation.BOTTOM_TOP,
+                                    new int[] {
+                                            ContextCompat.getColor(getContext(), android.R.color.transparent),
+                                            statusBarColor});
+
+                            backdropFrameLayout.setForeground(gradientDrawable);
+                            collapsingToolbarLayout.setContentScrim(new ColorDrawable(ColorUtility.modifyAlpha(statusBarColor, 0.9f)));
+                        } else {
+                            GradientDrawable gradientDrawable = new GradientDrawable(
+                                    GradientDrawable.Orientation.BOTTOM_TOP,
+                                    new int[] {
+                                            ContextCompat.getColor(getContext(), android.R.color.transparent),
+                                            ContextCompat.getColor(getContext(), R.color.status_bar_color)});
+
+                            backdropFrameLayout.setForeground(gradientDrawable);
+                            collapsingToolbarLayout.setContentScrim(new ColorDrawable(ColorUtility.modifyAlpha(ContextCompat.getColor(getContext(), R.color.status_bar_color), 0.9f)));
+                        }
+                    }
+                });
+            }
+
+        }
+
+        @Override
+        public void onError() {
+
+        }
+    };
+
+    private Callback profileCallback = new Callback() {
+        @Override
+        public void onSuccess() {
+            final Bitmap bitmap = ((BitmapDrawable) personProfileImageView.getDrawable()).getBitmap();
+            Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                public void onGenerated(Palette palette) {
+                    setUpPersonHeaderBackgroundColor(palette);
+                    setUpTitleTextColor(titleTextView, palette);
+
+                    getActivity().supportStartPostponedEnterTransition();
+                }
+            });
+        }
+
+        @Override
+        public void onError() {
+            getActivity().supportStartPostponedEnterTransition();
+        }
+    };
+    // endregion
+
     // region Constructors
     public PersonDetailsFragment() {
     }
@@ -369,12 +417,13 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
 
         getActivity().supportPostponeEnterTransition();
 
-        compositeSubscription = new CompositeSubscription();
-
-        movieHubService = ServiceGenerator.createService(
-                MovieHubService.class,
-                MovieHubService.BASE_URL,
-                new AuthorizedNetworkInterceptor(getContext()));
+        personDetailsPresenter = new PersonDetailsPresenter(
+                this,
+                new PersonDetailsRepository(
+                        new PersonDetailsLocalDataSource(getContext()),
+                        new PersonDetailsRemoteDataSource(getContext())),
+                new ProductionSchedulerTransformer<PersonDetailsWrapper>()
+        );
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
 
@@ -427,14 +476,100 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
         super.onDestroyView();
         removeListeners();
         unbinder.unbind();
+        personDetailsPresenter.onDestroyView();
+    }
+    // endregion
+
+    // region PersonDetailsUiContract.View Methods
+
+    @Override
+    public void showPersonDetails(PersonDetailsWrapper personDetailsWrapper) {
+        this.personDetailsWrapper = personDetailsWrapper;
+        final Palette profilePalette = person.getProfilePalette();
+
+        person = personDetailsWrapper.getPerson();
+        person.setProfilePalette(profilePalette);
+
+        setUpBackdrop();
+        setUpBio();
+        setUpBirthplace();
+        setUpDateOfBirth();
+        setUpDateOfDeath();
+
+        showPersonDetailsBody();
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        compositeSubscription.unsubscribe();
+    public void showToolbarTitle() {
+        String name = "";
+        if (person != null) {
+            name = person.getName();
+        }
+        setCollapsingToolbarTitle(name);
     }
+
+    @Override
+    public void hideToolbarTitle() {
+        setCollapsingToolbarTitle("");
+    }
+
+    @Override
+    public void showErrorView() {
+        Snackbar snackbar = Snackbar.make(ButterKnife.findById(getActivity(), R.id.main_content),
+                TrestleUtility.getFormattedText("Network connection is unavailable.", font, 16),
+                Snackbar.LENGTH_INDEFINITE);
+        snackbar.setAction("RETRY", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(person != null)
+                    personDetailsPresenter.onLoadPersonDetails(person.getId());
+            }
+        });
+        View snackBarView = snackbar.getView();
+//                            snackBarView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.grey_200));
+        TextView textView = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(ContextCompat.getColor(getContext(), R.color.secondary_text_light));
+        textView.setTypeface(font);
+
+        snackbar.show();
+    }
+
+    @Override
+    public void openMovieDetails(Movie movie) {
+        Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(KEY_MOVIE, movie);
+        intent.putExtras(bundle);
+
+        Resources resources = getResources();
+//            window.setStatusBarColor(primaryDark);
+
+        Pair<View, String> moviePair = getPair(selectedView, resources.getString(R.string.transition_movie_thumbnail));
+
+        ActivityOptionsCompat options = getActivityOptionsCompat(moviePair);
+        Window window = getActivity().getWindow();
+        window.setExitTransition(null);
+        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+    }
+
+    @Override
+    public void openTelevisionShowDetails(TelevisionShow televisionShow) {
+        Intent intent = new Intent(getActivity(), TelevisionShowDetailsActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(KEY_TELEVISION_SHOW, televisionShow);
+        intent.putExtras(bundle);
+
+        Resources resources = getResources();
+//            window.setStatusBarColor(primaryDark);
+
+        Pair<View, String> televisionShowPair  = getPair(selectedView, resources.getString(R.string.transition_television_show_thumbnail));
+
+        ActivityOptionsCompat options = getActivityOptionsCompat(televisionShowPair);
+        Window window = getActivity().getWindow();
+        window.setExitTransition(null);
+        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+    }
+
     // endregion
 
     // region Helper Methods
@@ -458,94 +593,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
                     .load(backdropUrl)
                     .resize(screenWidth, (int)(1.5D*screenWidth))
                     .centerCrop()
-                    .into(backdropImageView, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            if(isResumed()){
-                                final Bitmap bitmap = ((BitmapDrawable) backdropImageView.getDrawable()).getBitmap();
-                                Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-                                    public void onGenerated(Palette palette) {
-                                        boolean isDark;
-                                        @ColorUtility.Lightness int lightness = ColorUtility.isDark(palette);
-                                        if (lightness == ColorUtility.LIGHTNESS_UNKNOWN) {
-                                            isDark = ColorUtility.isDark(bitmap, bitmap.getWidth() / 2, 0);
-                                        } else {
-                                            isDark = lightness == ColorUtility.IS_DARK;
-                                        }
-
-                                        if (!isDark && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                            // Make back icon dark on light images
-                                            ImageButton backButton = (ImageButton) toolbar.getChildAt(0);
-                                            backButton.setColorFilter(ContextCompat.getColor(getContext(), R.color.dark_icon));
-
-                                            // Make toolbar title text color dark
-                                            collapsingToolbarLayout.setCollapsedTitleTextColor(ContextCompat.getColor(getContext(), R.color.eighty_percent_transparency_black));
-                                        }
-
-                                        // color the status bar. Set a complementary dark color on L,
-                                        // light or dark color on M (with matching status bar icons)
-                                        statusBarColor = getActivity().getWindow().getStatusBarColor();
-                                        final Palette.Swatch topColor =
-                                                ColorUtility.getMostPopulousSwatch(palette);
-                                        if (topColor != null
-                                                && (isDark || Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
-                                            statusBarColor = ColorUtility.scrimify(topColor.getRgb(),
-                                                    isDark, SCRIM_ADJUSTMENT);
-                                            // set a light status bar on M+
-                                            if (!isDark && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                                ViewUtility.setLightStatusBar(getActivity().getWindow().getDecorView());
-                                            }
-                                        }
-
-                                        if (statusBarColor != getActivity().getWindow().getStatusBarColor()) {
-                                            ValueAnimator statusBarColorAnim = ValueAnimator.ofArgb(
-                                                    getActivity().getWindow().getStatusBarColor(), statusBarColor);
-                                            statusBarColorAnim.addUpdateListener(new ValueAnimator
-                                                    .AnimatorUpdateListener() {
-                                                @Override
-                                                public void onAnimationUpdate(ValueAnimator animation) {
-                                                    if(getActivity() != null){
-                                                        getActivity().getWindow().setStatusBarColor(
-                                                                (int) animation.getAnimatedValue());
-                                                    }
-                                                }
-                                            });
-                                            statusBarColorAnim.setDuration(500L);
-                                            statusBarColorAnim.setInterpolator(
-                                                    AnimationUtility.getFastOutSlowInInterpolator(getContext()));
-                                            statusBarColorAnim.start();
-                                        }
-
-                                        if (isDark || Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                            GradientDrawable gradientDrawable = new GradientDrawable(
-                                                    GradientDrawable.Orientation.BOTTOM_TOP,
-                                                    new int[] {
-                                                            ContextCompat.getColor(getContext(), android.R.color.transparent),
-                                                            statusBarColor});
-
-                                            backdropFrameLayout.setForeground(gradientDrawable);
-                                            collapsingToolbarLayout.setContentScrim(new ColorDrawable(ColorUtility.modifyAlpha(statusBarColor, 0.9f)));
-                                        } else {
-                                            GradientDrawable gradientDrawable = new GradientDrawable(
-                                                    GradientDrawable.Orientation.BOTTOM_TOP,
-                                                    new int[] {
-                                                            ContextCompat.getColor(getContext(), android.R.color.transparent),
-                                                            ContextCompat.getColor(getContext(), R.color.status_bar_color)});
-
-                                            backdropFrameLayout.setForeground(gradientDrawable);
-                                            collapsingToolbarLayout.setContentScrim(new ColorDrawable(ColorUtility.modifyAlpha(ContextCompat.getColor(getContext(), R.color.status_bar_color), 0.9f)));
-                                        }
-                                    }
-                                });
-                            }
-
-                        }
-
-                        @Override
-                        public void onError() {
-
-                        }
-                    });
+                    .into(backdropImageView, backdropCallback);
         }
     }
 
@@ -556,25 +604,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
                     .load(posterUrl)
                     .resize(DisplayUtility.dp2px(personProfileImageView.getContext(), 104), DisplayUtility.dp2px(personProfileImageView.getContext(), 156))
                     .centerCrop()
-                    .into(personProfileImageView, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            final Bitmap bitmap = ((BitmapDrawable) personProfileImageView.getDrawable()).getBitmap();
-                            Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-                                public void onGenerated(Palette palette) {
-                                    setUpPersonHeaderBackgroundColor(palette);
-                                    setUpTitleTextColor(titleTextView, palette);
-
-                                    getActivity().supportStartPostponedEnterTransition();
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onError() {
-                            getActivity().supportStartPostponedEnterTransition();
-                        }
-                    });
+                    .into(personProfileImageView, profileCallback);
         }
     }
 
@@ -604,53 +634,6 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
         return backdropUrl;
     }
 
-    private void setUpFullPersonSubscription(){
-        int personId = person.getId();
-        final Palette profilePalette = person.getProfilePalette();
-
-        Subscription fullPersonSubscription = Observable.combineLatest(
-                movieHubService.getPersonDetails(personId),
-                movieHubService.getPersonCredits(personId),
-                new Func2<Person, PersonCreditsEnvelope, FullPerson>() {
-                    @Override
-                    public FullPerson call(Person person, PersonCreditsEnvelope personCreditsEnvelope) {
-                        return new FullPerson(person, personCreditsEnvelope);
-                    }
-                })
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<FullPerson>() {
-                    @Override
-                    public void call(FullPerson fullPerson) {
-                        if (fullPerson != null) {
-                            person = fullPerson.getPerson();
-                            person.setProfilePalette(profilePalette);
-                            personCreditsEnvelope = fullPerson.getPersonCreditsEnvelope();
-
-                            setUpBackdrop();
-                            setUpBio();
-                            setUpBirthplace();
-                            setUpDateOfBirth();
-                            setUpDateOfDeath();
-
-                            showPersonDetailsBody();
-                        }
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable t) {
-
-                        t.printStackTrace();
-                        if (NetworkUtility.isKnownException(t)) {
-//                            errorTextView.setText("Can't load data.\nCheck your network connection.");
-//                            errorLinearLayout.setVisibility(View.VISIBLE);
-                        }
-                    }
-                });
-
-        compositeSubscription.add(fullPersonSubscription);
-    }
-
     private void showPersonDetailsBody(){
         final int targetHeight = AnimationUtility.getTargetHeight(personDetailsBodyLinearLayout);
         Animation animation = AnimationUtility.getExpandHeightAnimation(personDetailsBodyLinearLayout, targetHeight);
@@ -667,8 +650,8 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        setUpCast(personCreditsEnvelope);
-                        setUpCrew(personCreditsEnvelope);
+                        setUpCast();
+                        setUpCrew();
                     }
                 }, DELAY);
             }
@@ -682,97 +665,93 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
         personDetailsBodyLinearLayout.startAnimation(animation);
     }
 
-    private void setUpCast(PersonCreditsEnvelope personCreditsEnvelope){
-        if(personCreditsEnvelope != null){
-            List<PersonCredit> cast = personCreditsEnvelope.getCast();
-            if(cast != null && cast.size()>0){
-                View castView = castViewStub.inflate();
+    private void setUpCast(){
+        List<PersonCredit> cast = personDetailsWrapper.getCast();
+        if(cast != null && cast.size()>0){
+            View castView = castViewStub.inflate();
 
-                RecyclerView castRecyclerView = ButterKnife.findById(castView, R.id.cast_rv);
+            RecyclerView castRecyclerView = ButterKnife.findById(castView, R.id.cast_rv);
 
-                LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-                castRecyclerView.setLayoutManager(layoutManager);
-                castAdapter = new PersonCreditsAdapter(getContext());
-                castAdapter.setOnItemClickListener(castAdapterOnItemClickListener);
-                castRecyclerView.setAdapter(castAdapter);
-                SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
-                snapHelper.attachToRecyclerView(castRecyclerView);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+            castRecyclerView.setLayoutManager(layoutManager);
+            castAdapter = new PersonCreditsAdapter(getContext());
+            castAdapter.setOnItemClickListener(castAdapterOnItemClickListener);
+            castRecyclerView.setAdapter(castAdapter);
+            SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
+            snapHelper.attachToRecyclerView(castRecyclerView);
 
-                Collections.sort(cast, new Comparator<PersonCredit>() {
-                    @Override
-                    public int compare(PersonCredit pc1, PersonCredit pc2) {
-                        int year1 = -1;
-                        if(pc1.getFirstAirYear() != -1){
-                            year1 = pc1.getFirstAirYear();
-                        } else if(pc1.getReleaseYear() != -1){
-                            year1 = pc1.getReleaseYear();
-                        }
-
-                        int year2 = -1;
-                        if(pc2.getFirstAirYear() != -1){
-                            year2 = pc2.getFirstAirYear();
-                        } else if(pc2.getReleaseYear() != -1){
-                            year2 = pc2.getReleaseYear();
-                        }
-
-                        if(year1 > year2)
-                            return -1;
-                        else if(year1 < year2)
-                            return 1;
-                        else
-                            return 0;
+            Collections.sort(cast, new Comparator<PersonCredit>() {
+                @Override
+                public int compare(PersonCredit pc1, PersonCredit pc2) {
+                    int year1 = -1;
+                    if(pc1.getFirstAirYear() != -1){
+                        year1 = pc1.getFirstAirYear();
+                    } else if(pc1.getReleaseYear() != -1){
+                        year1 = pc1.getReleaseYear();
                     }
-                });
 
-                castAdapter.addAll(cast);
-            }
+                    int year2 = -1;
+                    if(pc2.getFirstAirYear() != -1){
+                        year2 = pc2.getFirstAirYear();
+                    } else if(pc2.getReleaseYear() != -1){
+                        year2 = pc2.getReleaseYear();
+                    }
+
+                    if(year1 > year2)
+                        return -1;
+                    else if(year1 < year2)
+                        return 1;
+                    else
+                        return 0;
+                }
+            });
+
+            castAdapter.addAll(cast);
         }
     }
 
-    private void setUpCrew(PersonCreditsEnvelope personCreditsEnvelope){
-        if(personCreditsEnvelope != null){
-            List<PersonCredit> crew = personCreditsEnvelope.getCrew();
-            if(crew != null && crew.size()>0){
-                View crewView = crewViewStub.inflate();
+    private void setUpCrew(){
+        List<PersonCredit> crew = personDetailsWrapper.getCrew();
+        if(crew != null && crew.size()>0){
+            View crewView = crewViewStub.inflate();
 
-                RecyclerView crewRecyclerView = ButterKnife.findById(crewView, R.id.crew_rv);
+            RecyclerView crewRecyclerView = ButterKnife.findById(crewView, R.id.crew_rv);
 
-                LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-                crewRecyclerView.setLayoutManager(layoutManager);
-                crewAdapter = new PersonCreditsAdapter(getContext());
-                crewAdapter.setOnItemClickListener(crewAdapterOnItemClickListener);
-                crewRecyclerView.setAdapter(crewAdapter);
-                SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
-                snapHelper.attachToRecyclerView(crewRecyclerView);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+            crewRecyclerView.setLayoutManager(layoutManager);
+            crewAdapter = new PersonCreditsAdapter(getContext());
+            crewAdapter.setOnItemClickListener(crewAdapterOnItemClickListener);
+            crewRecyclerView.setAdapter(crewAdapter);
+            SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
+            snapHelper.attachToRecyclerView(crewRecyclerView);
 
-                Collections.sort(crew, new Comparator<PersonCredit>() {
-                    @Override
-                    public int compare(PersonCredit pc1, PersonCredit pc2) {
-                        int year1 = -1;
-                        if(pc1.getFirstAirYear() != -1){
-                            year1 = pc1.getFirstAirYear();
-                        } else if(pc1.getReleaseYear() != -1){
-                            year1 = pc1.getReleaseYear();
-                        }
-
-                        int year2 = -1;
-                        if(pc2.getFirstAirYear() != -1){
-                            year2 = pc2.getFirstAirYear();
-                        } else if(pc2.getReleaseYear() != -1){
-                            year2 = pc2.getReleaseYear();
-                        }
-
-                        if(year1 > year2)
-                            return -1;
-                        else if(year1 < year2)
-                            return 1;
-                        else
-                            return 0;
+            Collections.sort(crew, new Comparator<PersonCredit>() {
+                @Override
+                public int compare(PersonCredit pc1, PersonCredit pc2) {
+                    int year1 = -1;
+                    if(pc1.getFirstAirYear() != -1){
+                        year1 = pc1.getFirstAirYear();
+                    } else if(pc1.getReleaseYear() != -1){
+                        year1 = pc1.getReleaseYear();
                     }
-                });
 
-                crewAdapter.addAll(crew);
-            }
+                    int year2 = -1;
+                    if(pc2.getFirstAirYear() != -1){
+                        year2 = pc2.getFirstAirYear();
+                    } else if(pc2.getReleaseYear() != -1){
+                        year2 = pc2.getReleaseYear();
+                    }
+
+                    if(year1 > year2)
+                        return -1;
+                    else if(year1 < year2)
+                        return 1;
+                    else
+                        return 0;
+                }
+            });
+
+            crewAdapter.addAll(crew);
         }
     }
 

@@ -19,7 +19,7 @@ public class PersonsLocalDataSource implements PersonsDataSourceContract.LocalDa
     }
     // endregion
 
-    // region MoviesDataSourceContract.LocalDateSource Methods
+    // region PersonsDataSourceContract.LocalDateSource Methods
 
     @Override
     public Observable<List<Person>> getPopularPersons(int currentPage) {

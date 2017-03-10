@@ -32,7 +32,7 @@ public class TelevisionShowDetailsRepository implements TelevisionShowDetailsDat
     }
     // endregion
 
-    // region MoviesDataSourceContract.Repository Methods
+    // region TelevisionShowDetailsDataSourceContract.Repository Methods
     @Override
     public Observable<TelevisionShowDetailsWrapper> getTelevisionShowDetails(int tvId) {
         Observable<TelevisionShowDetailsWrapper> local = televisionShowDetailsLocalDataSource.getTelevisionShowDetails(tvId);

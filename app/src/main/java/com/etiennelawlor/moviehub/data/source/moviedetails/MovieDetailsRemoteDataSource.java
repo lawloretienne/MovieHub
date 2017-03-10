@@ -41,7 +41,7 @@ public class MovieDetailsRemoteDataSource implements MovieDetailsDataSourceContr
     }
     // endregion
 
-    // region MoviesDataSourceContract.RemoteDateSource Methods
+    // region MovieDetailsDataSourceContract.RemoteDateSource Methods
     @Override
     public Observable<MovieDetailsWrapper> getMovieDetails(int movieId) {
         return Observable.zip(

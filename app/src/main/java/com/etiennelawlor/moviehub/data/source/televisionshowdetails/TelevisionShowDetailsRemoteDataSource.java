@@ -39,7 +39,7 @@ public class TelevisionShowDetailsRemoteDataSource implements TelevisionShowDeta
     }
     // endregion
 
-    // region MoviesDataSourceContract.RemoteDateSource Methods
+    // region TelevisionShowDetailsDataSourceContract.RemoteDateSource Methods
     @Override
     public Observable<TelevisionShowDetailsWrapper> getTelevisionShowDetails(int tvId) {
         return Observable.zip(

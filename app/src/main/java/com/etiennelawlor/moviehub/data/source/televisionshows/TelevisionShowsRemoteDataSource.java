@@ -33,7 +33,7 @@ public class TelevisionShowsRemoteDataSource implements TelevisionShowsDataSourc
     }
     // endregion
 
-    // region MoviesDataSourceContract.RemoteDateSource Methods
+    // region TelevisionShowsDataSourceContract.RemoteDateSource Methods
     @Override
     public Observable<List<TelevisionShow>> getPopularTelevisionShows(int currentPage) {
         return movieHubService.getPopularTelevisionShows(currentPage)

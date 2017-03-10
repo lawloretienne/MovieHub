@@ -17,7 +17,7 @@ public class TelevisionShowDetailsLocalDataSource implements TelevisionShowDetai
     }
     // endregion
 
-    // region MoviesDataSourceContract.LocalDateSource Methods
+    // region TelevisionShowDetailsDataSourceContract.LocalDateSource Methods
 
     @Override
     public Observable<TelevisionShowDetailsWrapper> getTelevisionShowDetails(int televisionShowId) {
