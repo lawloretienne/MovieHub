@@ -382,7 +382,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     }
 
     public void scrollToTop(){
-        recyclerView.smoothScrollToPosition(0);
+        recyclerView.scrollToPosition(0);
     }
     // endregion
 }

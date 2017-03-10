@@ -381,7 +381,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     }
 
     public void scrollToTop(){
-        recyclerView.smoothScrollToPosition(0);
+        recyclerView.scrollToPosition(0);
     }
     // endregion
 }

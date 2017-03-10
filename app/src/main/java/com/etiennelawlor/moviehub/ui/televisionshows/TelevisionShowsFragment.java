@@ -381,7 +381,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
     }
 
     public void scrollToTop(){
-        recyclerView.smoothScrollToPosition(0);
+        recyclerView.scrollToPosition(0);
     }
     // endregion
 }
