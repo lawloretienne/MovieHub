@@ -2,12 +2,7 @@ package com.etiennelawlor.moviehub.data.source.moviedetails;
 
 import android.content.Context;
 
-import com.etiennelawlor.moviehub.data.model.FullMovie;
 import com.etiennelawlor.moviehub.data.model.MovieDetailsWrapper;
-import com.etiennelawlor.moviehub.data.remote.response.Movie;
-import com.etiennelawlor.moviehub.data.source.movies.MoviesDataSourceContract;
-
-import java.util.List;
 
 import rx.Observable;
 
@@ -25,7 +20,7 @@ public class MovieDetailsLocalDataSource implements MovieDetailsDataSourceContra
     // region MoviesDataSourceContract.LocalDateSource Methods
 
     @Override
-    public Observable<MovieDetailsWrapper> getMoviesDetails(int movieId) {
+    public Observable<MovieDetailsWrapper> getMovieDetails(int movieId) {
         //        Use mapper to convert from realm objects to POJOs
         return Observable.empty();
     }

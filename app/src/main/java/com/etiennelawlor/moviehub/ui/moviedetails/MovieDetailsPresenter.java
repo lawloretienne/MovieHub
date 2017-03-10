@@ -47,7 +47,7 @@ public class MovieDetailsPresenter implements MovieDetailsUiContract.Presenter {
         // that the app is busy until the response is handled.
         EspressoIdlingResource.increment(); // App is busy until further notice
 
-        Subscription subscription = movieDetailsRepository.getMoviesDetails(movieId)
+        Subscription subscription = movieDetailsRepository.getMovieDetails(movieId)
                 .compose(schedulerTransformer)
                 .doOnTerminate(new Action0() {
                     @Override

@@ -78,7 +78,7 @@ public class MovieDetailsPresenterTest {
         String rating = "";
         movieDetailsWrapper = new MovieDetailsWrapper(movie, cast, crew, similarMovies, rating);
         stub = Observable.<MovieDetailsWrapper>error(new IOException());
-        when(mockMovieDetailsRepository.getMoviesDetails(anyInt())).thenReturn(stub);
+        when(mockMovieDetailsRepository.getMovieDetails(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         movieDetailsPresenter.onLoadMovieDetails(movie.getId());
@@ -98,7 +98,7 @@ public class MovieDetailsPresenterTest {
         String rating = "";
         movieDetailsWrapper = new MovieDetailsWrapper(movie, cast, crew, similarMovies, rating);
         stub = Observable.just(movieDetailsWrapper);
-        when(mockMovieDetailsRepository.getMoviesDetails(anyInt())).thenReturn(stub);
+        when(mockMovieDetailsRepository.getMovieDetails(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         movieDetailsPresenter.onLoadMovieDetails(movie.getId());

@@ -3,7 +3,6 @@ package com.etiennelawlor.moviehub.data.source.moviedetails;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.etiennelawlor.moviehub.data.model.FullMovie;
 import com.etiennelawlor.moviehub.data.model.MovieDetailsWrapper;
 import com.etiennelawlor.moviehub.data.remote.AuthorizedNetworkInterceptor;
 import com.etiennelawlor.moviehub.data.remote.MovieHubService;
@@ -15,13 +14,11 @@ import com.etiennelawlor.moviehub.data.remote.response.MovieReleaseDate;
 import com.etiennelawlor.moviehub.data.remote.response.MovieReleaseDateEnvelope;
 import com.etiennelawlor.moviehub.data.remote.response.MovieReleaseDatesEnvelope;
 import com.etiennelawlor.moviehub.data.remote.response.MoviesEnvelope;
-import com.etiennelawlor.moviehub.data.source.movies.MoviesDataSourceContract;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
-import rx.functions.Func1;
 import rx.functions.Func4;
 
 /**
@@ -46,7 +43,7 @@ public class MovieDetailsRemoteDataSource implements MovieDetailsDataSourceContr
 
     // region MoviesDataSourceContract.RemoteDateSource Methods
     @Override
-    public Observable<MovieDetailsWrapper> getMoviesDetails(int movieId) {
+    public Observable<MovieDetailsWrapper> getMovieDetails(int movieId) {
         return Observable.zip(
                 movieHubService.getMovieDetails(movieId),
                 movieHubService.getMovieCredits(movieId),

@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
@@ -44,18 +45,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.model.FullTelevisionShow;
-import com.etiennelawlor.moviehub.data.remote.AuthorizedNetworkInterceptor;
-import com.etiennelawlor.moviehub.data.remote.MovieHubService;
-import com.etiennelawlor.moviehub.data.remote.ServiceGenerator;
-import com.etiennelawlor.moviehub.data.remote.response.ContentRating;
+import com.etiennelawlor.moviehub.data.model.TelevisionShowDetailsWrapper;
 import com.etiennelawlor.moviehub.data.remote.response.Genre;
 import com.etiennelawlor.moviehub.data.remote.response.Person;
 import com.etiennelawlor.moviehub.data.remote.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.remote.response.TelevisionShowContentRatingsEnvelope;
 import com.etiennelawlor.moviehub.data.remote.response.TelevisionShowCredit;
-import com.etiennelawlor.moviehub.data.remote.response.TelevisionShowCreditsEnvelope;
-import com.etiennelawlor.moviehub.data.remote.response.TelevisionShowsEnvelope;
+import com.etiennelawlor.moviehub.data.source.televisionshowdetails.TelevisionShowDetailsLocalDataSource;
+import com.etiennelawlor.moviehub.data.source.televisionshowdetails.TelevisionShowDetailsRemoteDataSource;
+import com.etiennelawlor.moviehub.data.source.televisionshowdetails.TelevisionShowDetailsRepository;
 import com.etiennelawlor.moviehub.ui.base.BaseAdapter;
 import com.etiennelawlor.moviehub.ui.base.BaseFragment;
 import com.etiennelawlor.moviehub.ui.common.GravitySnapHelper;
@@ -65,8 +62,9 @@ import com.etiennelawlor.moviehub.util.ColorUtility;
 import com.etiennelawlor.moviehub.util.DateUtility;
 import com.etiennelawlor.moviehub.util.DisplayUtility;
 import com.etiennelawlor.moviehub.util.FontCache;
-import com.etiennelawlor.moviehub.util.NetworkUtility;
+import com.etiennelawlor.moviehub.util.TrestleUtility;
 import com.etiennelawlor.moviehub.util.ViewUtility;
+import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -78,19 +76,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import rx.Observable;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func4;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by etiennelawlor on 12/18/16.
  */
 
-public class TelevisionShowDetailsFragment extends BaseFragment implements TelevisionShowDetailsContract.View {
+public class TelevisionShowDetailsFragment extends BaseFragment implements TelevisionShowDetailsUiContract.View {
 
     // region Constants
     public static final String PATTERN = "yyyy-MM-dd";
@@ -147,14 +138,15 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     ViewStub crewViewStub;
     @BindView(R.id.similar_television_shows_vs)
     ViewStub similarTelevisionShowsViewStub;
+
+    private View selectedPersonView;
+    private View selectedTelevisionView;
     // endregion
 
     // region Member Variables
     private TelevisionShow televisionShow;
     private Unbinder unbinder;
     private Typeface font;
-    private MovieHubService movieHubService;
-    private CompositeSubscription compositeSubscription;
     private int televisionShowPosterHeight;
     private int padding;
     private int scrollThreshold;
@@ -163,9 +155,8 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     private TelevisionShowCreditsAdapter castAdapter;
     private TelevisionShowCreditsAdapter crewAdapter;
     private Transition sharedElementEnterTransition;
-    private TelevisionShowCreditsEnvelope televisionShowCreditsEnvelope;
-    private TelevisionShowsEnvelope televisionShowsEnvelope;
-    private TelevisionShowContentRatingsEnvelope televisionShowContentRatingsEnvelope;
+    private TelevisionShowDetailsUiContract.Presenter televisionShowDetailsPresenter;
+    private TelevisionShowDetailsWrapper televisionShowDetailsWrapper;
     private final Handler handler = new Handler();
     // endregion
 
@@ -174,22 +165,17 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
         @Override
         public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
             scrollThreshold = televisionShowPosterHeight - televisionShowDetailsHeaderLinearLayout.getMeasuredHeight() + padding;
-            if (scrollY >= scrollThreshold) {
-                String name = "";
-                if (televisionShow != null) {
-                    name = televisionShow.getName();
-                }
-                setCollapsingToolbarTitle(name);
 
-            } else {
-                setCollapsingToolbarTitle("");
-            }
+            boolean isScrolledPastThreshold = (scrollY >= scrollThreshold);
+            televisionShowDetailsPresenter.onScrollChange(isScrolledPastThreshold);
         }
     };
 
     private BaseAdapter.OnItemClickListener castAdapterOnItemClickListener = new BaseAdapter.OnItemClickListener() {
         @Override
         public void onItemClick(int position, View view) {
+            selectedPersonView = view;
+
             TelevisionShowCredit televisionShowCredit = castAdapter.getItem(position);
             if(televisionShowCredit != null){
                 Person person = new Person();
@@ -198,21 +184,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
                 person.setId(televisionShowCredit.getId());
                 person.setProfilePath(televisionShowCredit.getProfilePath());
 
-                Intent intent = new Intent(getActivity(), PersonDetailsActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putParcelable(KEY_PERSON, person);
-                intent.putExtras(bundle);
-
-                Window window = getActivity().getWindow();
-//            window.setStatusBarColor(primaryDark);
-
-                Resources resources = view.getResources();
-                Pair<View, String> personPair  = getPair(view, resources.getString(R.string.transition_person_thumbnail));
-
-                ActivityOptionsCompat options = getActivityOptionsCompat(personPair);
-
-                window.setExitTransition(null);
-                ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+                televisionShowDetailsPresenter.onPersonClick(person);
             }
         }
     };
@@ -220,6 +192,8 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     private BaseAdapter.OnItemClickListener crewAdapterOnItemClickListener = new BaseAdapter.OnItemClickListener() {
         @Override
         public void onItemClick(int position, View view) {
+            selectedPersonView = view;
+
             TelevisionShowCredit televisionShowCredit = crewAdapter.getItem(position);
             if(televisionShowCredit != null){
                 Person person = new Person();
@@ -228,21 +202,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
                 person.setId(televisionShowCredit.getId());
                 person.setProfilePath(televisionShowCredit.getProfilePath());
 
-                Intent intent = new Intent(getActivity(), PersonDetailsActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putParcelable(KEY_PERSON, person);
-                intent.putExtras(bundle);
-
-                Window window = getActivity().getWindow();
-//            window.setStatusBarColor(primaryDark);
-
-                Resources resources = view.getResources();
-                Pair<View, String> personPair  = getPair(view, resources.getString(R.string.transition_person_thumbnail));
-
-                ActivityOptionsCompat options = getActivityOptionsCompat(personPair);
-
-                window.setExitTransition(null);
-                ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+                televisionShowDetailsPresenter.onPersonClick(person);
             }
         }
     };
@@ -250,23 +210,11 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     private BaseAdapter.OnItemClickListener similarTelevisionShowsAdapterOnItemClickListener = new BaseAdapter.OnItemClickListener() {
         @Override
         public void onItemClick(int position, View view) {
+            selectedTelevisionView = view;
+
             TelevisionShow televisionShow = similarTelevisionShowsAdapter.getItem(position);
             if(televisionShow != null){
-                Intent intent = new Intent(getActivity(), TelevisionShowDetailsActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putParcelable(KEY_TELEVISION_SHOW, televisionShow);
-                intent.putExtras(bundle);
-
-                Window window = getActivity().getWindow();
-                window.setStatusBarColor(statusBarColor);
-
-                Resources resources = view.getResources();
-                Pair<View, String> televisionShowPair  = getPair(view, resources.getString(R.string.transition_television_show_thumbnail));
-
-                ActivityOptionsCompat options = getActivityOptionsCompat(televisionShowPair);
-
-                window.setExitTransition(null);
-                ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+                televisionShowDetailsPresenter.onTelevisionShowClick(televisionShow);
             }
         }
     };
@@ -279,7 +227,8 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
 
         @Override
         public void onTransitionEnd(Transition transition) {
-            setUpFullTelevisionShowSubscription();
+            if(televisionShow != null)
+                televisionShowDetailsPresenter.onLoadTelevisionShowDetails(televisionShow.getId());
         }
 
         @Override
@@ -313,6 +262,115 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     };
     // endregion
 
+    // region Callbacks
+    private Callback backdropCallback = new Callback() {
+        @Override
+        public void onSuccess() {
+            final Bitmap bitmap = ((BitmapDrawable) backdropImageView.getDrawable()).getBitmap();
+            Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                public void onGenerated(Palette palette) {
+                    boolean isDark;
+                    @ColorUtility.Lightness int lightness = ColorUtility.isDark(palette);
+                    if (lightness == ColorUtility.LIGHTNESS_UNKNOWN) {
+                        isDark = ColorUtility.isDark(bitmap, bitmap.getWidth() / 2, 0);
+                    } else {
+                        isDark = lightness == ColorUtility.IS_DARK;
+                    }
+
+                    if (!isDark && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        // Make back icon dark on light images
+                        ImageButton backButton = (ImageButton) toolbar.getChildAt(0);
+                        backButton.setColorFilter(ContextCompat.getColor(getContext(), R.color.dark_icon));
+
+                        // Make toolbar title text color dark
+                        collapsingToolbarLayout.setCollapsedTitleTextColor(ContextCompat.getColor(getContext(), R.color.eighty_percent_transparency_black));
+                    }
+
+                    // color the status bar. Set a complementary dark color on L,
+                    // light or dark color on M (with matching status bar icons)
+                    statusBarColor = getActivity().getWindow().getStatusBarColor();
+                    final Palette.Swatch topColor =
+                            ColorUtility.getMostPopulousSwatch(palette);
+                    if (topColor != null &&
+                            (isDark || Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
+                        statusBarColor = ColorUtility.scrimify(topColor.getRgb(),
+                                isDark, SCRIM_ADJUSTMENT);
+                        // set a light status bar on M+
+                        if (!isDark && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            ViewUtility.setLightStatusBar(getActivity().getWindow().getDecorView());
+                        }
+                    }
+
+
+                    if (statusBarColor != getActivity().getWindow().getStatusBarColor()) {
+                        ValueAnimator statusBarColorAnim = ValueAnimator.ofArgb(
+                                getActivity().getWindow().getStatusBarColor(), statusBarColor);
+                        statusBarColorAnim.addUpdateListener(new ValueAnimator
+                                .AnimatorUpdateListener() {
+                            @Override
+                            public void onAnimationUpdate(ValueAnimator animation) {
+                                if(getActivity() != null){
+                                    getActivity().getWindow().setStatusBarColor(
+                                            (int) animation.getAnimatedValue());
+                                }
+                            }
+                        });
+                        statusBarColorAnim.setDuration(500L);
+                        statusBarColorAnim.setInterpolator(
+                                AnimationUtility.getFastOutSlowInInterpolator(getContext()));
+                        statusBarColorAnim.start();
+                    }
+
+                    if (isDark || Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        GradientDrawable gradientDrawable = new GradientDrawable(
+                                GradientDrawable.Orientation.BOTTOM_TOP,
+                                new int[] {
+                                        ContextCompat.getColor(getContext(), android.R.color.transparent),
+                                        statusBarColor});
+
+                        backdropFrameLayout.setForeground(gradientDrawable);
+                        collapsingToolbarLayout.setContentScrim(new ColorDrawable(ColorUtility.modifyAlpha(statusBarColor, 0.9f)));
+                    } else {
+                        GradientDrawable gradientDrawable = new GradientDrawable(
+                                GradientDrawable.Orientation.BOTTOM_TOP,
+                                new int[] {
+                                        ContextCompat.getColor(getContext(), android.R.color.transparent),
+                                        ContextCompat.getColor(getContext(), R.color.status_bar_color)});
+
+                        backdropFrameLayout.setForeground(gradientDrawable);
+                        collapsingToolbarLayout.setContentScrim(new ColorDrawable(ColorUtility.modifyAlpha(ContextCompat.getColor(getContext(), R.color.status_bar_color), 0.9f)));
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onError() {
+
+        }
+    };
+
+    private Callback posterCallback = new Callback() {
+        @Override
+        public void onSuccess() {
+            final Bitmap bitmap = ((BitmapDrawable) televisionShowPosterImageView.getDrawable()).getBitmap();
+            Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                public void onGenerated(Palette palette) {
+                    setUpTelevisionShowHeaderBackgroundColor(palette);
+                    setUpTitleTextColor(titleTextView, palette);
+
+                    getActivity().supportStartPostponedEnterTransition();
+                }
+            });
+        }
+
+        @Override
+        public void onError() {
+            getActivity().supportStartPostponedEnterTransition();
+        }
+    };
+    // endregion
+
     // region Constructors
     public TelevisionShowDetailsFragment() {
     }
@@ -337,12 +395,13 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
 
         getActivity().supportPostponeEnterTransition();
 
-        compositeSubscription = new CompositeSubscription();
-
-        movieHubService = ServiceGenerator.createService(
-                MovieHubService.class,
-                MovieHubService.BASE_URL,
-                new AuthorizedNetworkInterceptor(getContext()));
+        televisionShowDetailsPresenter = new TelevisionShowDetailsPresenter(
+                this,
+                new TelevisionShowDetailsRepository(
+                        new TelevisionShowDetailsLocalDataSource(getContext()),
+                        new TelevisionShowDetailsRemoteDataSource(getContext())),
+                new ProductionSchedulerTransformer<TelevisionShowDetailsWrapper>()
+        );
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
 
@@ -396,14 +455,105 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
         super.onDestroyView();
         removeListeners();
         unbinder.unbind();
+        televisionShowDetailsPresenter.onDestroyView();
+    }
+    // endregion
+
+    // region TelevisionShowDetailsUiContract.View Methods
+
+    @Override
+    public void showTelevisionShowDetails(TelevisionShowDetailsWrapper televisionShowDetailsWrapper) {
+        this.televisionShowDetailsWrapper = televisionShowDetailsWrapper;
+        final Palette posterPalette = televisionShow.getPosterPalette();
+
+        televisionShow = televisionShowDetailsWrapper.getTelevisionShow();
+        televisionShow.setPosterPalette(posterPalette);
+
+        setUpBackdrop();
+        setUpOverview();
+        setUpGenres();
+        setUpSeasons();
+        setUpStatus();
+        setUpFirstAirDate();
+        setUpNetwork();
+        setUpRating();
+
+        showTelevisionShowDetailsBody();
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        compositeSubscription.unsubscribe();
+    public void showToolbarTitle() {
+        String name = "";
+        if (televisionShow != null) {
+            name = televisionShow.getName();
+        }
+        setCollapsingToolbarTitle(name);
     }
+
+    @Override
+    public void hideToolbarTitle() {
+        setCollapsingToolbarTitle("");
+    }
+
+    @Override
+    public void showErrorView() {
+        Snackbar snackbar = Snackbar.make(ButterKnife.findById(getActivity(), R.id.main_content),
+                TrestleUtility.getFormattedText("Network connection is unavailable.", font, 16),
+                Snackbar.LENGTH_INDEFINITE);
+        snackbar.setAction("RETRY", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(televisionShow != null)
+                    televisionShowDetailsPresenter.onLoadTelevisionShowDetails(televisionShow.getId());
+            }
+        });
+        View snackBarView = snackbar.getView();
+//                            snackBarView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.grey_200));
+        TextView textView = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(ContextCompat.getColor(getContext(), R.color.secondary_text_light));
+        textView.setTypeface(font);
+
+        snackbar.show();
+    }
+
+    @Override
+    public void openPersonDetails(Person person) {
+        Intent intent = new Intent(getActivity(), PersonDetailsActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(KEY_PERSON, person);
+        intent.putExtras(bundle);
+
+        Window window = getActivity().getWindow();
+//            window.setStatusBarColor(primaryDark);
+
+        Resources resources = selectedPersonView.getResources();
+        Pair<View, String> personPair  = getPair(selectedPersonView, resources.getString(R.string.transition_person_thumbnail));
+
+        ActivityOptionsCompat options = getActivityOptionsCompat(personPair);
+
+        window.setExitTransition(null);
+        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+    }
+
+    @Override
+    public void openTelevisionShowDetails(TelevisionShow televisionShow) {
+        Intent intent = new Intent(getActivity(), TelevisionShowDetailsActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(KEY_TELEVISION_SHOW, televisionShow);
+        intent.putExtras(bundle);
+
+        Window window = getActivity().getWindow();
+        window.setStatusBarColor(statusBarColor);
+
+        Resources resources = selectedTelevisionView.getResources();
+        Pair<View, String> televisionShowPair  = getPair(selectedTelevisionView, resources.getString(R.string.transition_television_show_thumbnail));
+
+        ActivityOptionsCompat options = getActivityOptionsCompat(televisionShowPair);
+
+        window.setExitTransition(null);
+        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+    }
+
     // endregion
 
     // region Helper Methods
@@ -430,92 +580,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
                     .load(backdropUrl)
                     .resize((int)(1.5D*height), height)
                     .centerCrop()
-                    .into(backdropImageView, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            final Bitmap bitmap = ((BitmapDrawable) backdropImageView.getDrawable()).getBitmap();
-                            Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-                                public void onGenerated(Palette palette) {
-                                    boolean isDark;
-                                    @ColorUtility.Lightness int lightness = ColorUtility.isDark(palette);
-                                    if (lightness == ColorUtility.LIGHTNESS_UNKNOWN) {
-                                        isDark = ColorUtility.isDark(bitmap, bitmap.getWidth() / 2, 0);
-                                    } else {
-                                        isDark = lightness == ColorUtility.IS_DARK;
-                                    }
-
-                                    if (!isDark && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                        // Make back icon dark on light images
-                                        ImageButton backButton = (ImageButton) toolbar.getChildAt(0);
-                                        backButton.setColorFilter(ContextCompat.getColor(getContext(), R.color.dark_icon));
-
-                                        // Make toolbar title text color dark
-                                        collapsingToolbarLayout.setCollapsedTitleTextColor(ContextCompat.getColor(getContext(), R.color.eighty_percent_transparency_black));
-                                    }
-
-                                    // color the status bar. Set a complementary dark color on L,
-                                    // light or dark color on M (with matching status bar icons)
-                                    statusBarColor = getActivity().getWindow().getStatusBarColor();
-                                    final Palette.Swatch topColor =
-                                            ColorUtility.getMostPopulousSwatch(palette);
-                                    if (topColor != null &&
-                                            (isDark || Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
-                                        statusBarColor = ColorUtility.scrimify(topColor.getRgb(),
-                                                isDark, SCRIM_ADJUSTMENT);
-                                        // set a light status bar on M+
-                                        if (!isDark && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                            ViewUtility.setLightStatusBar(getActivity().getWindow().getDecorView());
-                                        }
-                                    }
-
-
-                                    if (statusBarColor != getActivity().getWindow().getStatusBarColor()) {
-                                        ValueAnimator statusBarColorAnim = ValueAnimator.ofArgb(
-                                                getActivity().getWindow().getStatusBarColor(), statusBarColor);
-                                        statusBarColorAnim.addUpdateListener(new ValueAnimator
-                                                .AnimatorUpdateListener() {
-                                            @Override
-                                            public void onAnimationUpdate(ValueAnimator animation) {
-                                                if(getActivity() != null){
-                                                    getActivity().getWindow().setStatusBarColor(
-                                                            (int) animation.getAnimatedValue());
-                                                }
-                                            }
-                                        });
-                                        statusBarColorAnim.setDuration(500L);
-                                        statusBarColorAnim.setInterpolator(
-                                                AnimationUtility.getFastOutSlowInInterpolator(getContext()));
-                                        statusBarColorAnim.start();
-                                    }
-
-                                    if (isDark || Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                        GradientDrawable gradientDrawable = new GradientDrawable(
-                                                GradientDrawable.Orientation.BOTTOM_TOP,
-                                                new int[] {
-                                                        ContextCompat.getColor(getContext(), android.R.color.transparent),
-                                                        statusBarColor});
-
-                                        backdropFrameLayout.setForeground(gradientDrawable);
-                                        collapsingToolbarLayout.setContentScrim(new ColorDrawable(ColorUtility.modifyAlpha(statusBarColor, 0.9f)));
-                                    } else {
-                                        GradientDrawable gradientDrawable = new GradientDrawable(
-                                                GradientDrawable.Orientation.BOTTOM_TOP,
-                                                new int[] {
-                                                        ContextCompat.getColor(getContext(), android.R.color.transparent),
-                                                        ContextCompat.getColor(getContext(), R.color.status_bar_color)});
-
-                                        backdropFrameLayout.setForeground(gradientDrawable);
-                                        collapsingToolbarLayout.setContentScrim(new ColorDrawable(ColorUtility.modifyAlpha(ContextCompat.getColor(getContext(), R.color.status_bar_color), 0.9f)));
-                                    }
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onError() {
-
-                        }
-                    });
+                    .into(backdropImageView, backdropCallback);
         }
     }
 
@@ -526,25 +591,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
                     .load(posterUrl)
                     .resize(DisplayUtility.dp2px(televisionShowPosterImageView.getContext(), 104), DisplayUtility.dp2px(televisionShowPosterImageView.getContext(), 156))
                     .centerCrop()
-                    .into(televisionShowPosterImageView, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            final Bitmap bitmap = ((BitmapDrawable) televisionShowPosterImageView.getDrawable()).getBitmap();
-                            Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-                                public void onGenerated(Palette palette) {
-                                    setUpTelevisionShowHeaderBackgroundColor(palette);
-                                    setUpTitleTextColor(titleTextView, palette);
-
-                                    getActivity().supportStartPostponedEnterTransition();
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onError() {
-                            getActivity().supportStartPostponedEnterTransition();
-                        }
-                    });
+                    .into(televisionShowPosterImageView, posterCallback);
         }
     }
 
@@ -558,59 +605,6 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
         String backdropPath = televisionShow.getBackdropPath();
         String backdropUrl = String.format("%s%s%s", SECURE_BASE_URL, BACKDROP_SIZE, backdropPath);
         return backdropUrl;
-    }
-
-    private void setUpFullTelevisionShowSubscription(){
-        int tvId = televisionShow.getId();
-        final Palette posterPalette = televisionShow.getPosterPalette();
-
-        Subscription fullTelevisionShowSubscription = Observable.combineLatest(
-                movieHubService.getTelevisionShowDetails(tvId),
-                movieHubService.getTelevisionShowCredits(tvId),
-                movieHubService.getSimilarTelevisionShows(tvId),
-                movieHubService.getTelevisionShowContentRatings(tvId),
-                new Func4<TelevisionShow, TelevisionShowCreditsEnvelope, TelevisionShowsEnvelope, TelevisionShowContentRatingsEnvelope, FullTelevisionShow>() {
-                    @Override
-                    public FullTelevisionShow call(TelevisionShow televisionShow, TelevisionShowCreditsEnvelope televisionShowCreditsEnvelope, TelevisionShowsEnvelope televisionShowsEnvelope, TelevisionShowContentRatingsEnvelope televisionShowContentRatingsEnvelope) {
-                        return new FullTelevisionShow(televisionShow, televisionShowCreditsEnvelope, televisionShowsEnvelope, televisionShowContentRatingsEnvelope);
-                    }
-                })
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<FullTelevisionShow>() {
-                    @Override
-                    public void call(FullTelevisionShow fullTelevisionShow) {
-                        if (fullTelevisionShow != null) {
-                            televisionShow = fullTelevisionShow.getTelevisionShow();
-                            televisionShow.setPosterPalette(posterPalette);
-                            televisionShowCreditsEnvelope = fullTelevisionShow.getTelevisionShowCreditsEnvelope();
-                            televisionShowsEnvelope = fullTelevisionShow.getTelevisionShowsEnvelope();
-                            televisionShowContentRatingsEnvelope = fullTelevisionShow.getTelevisionShowContentRatingsEnvelope();
-
-                            setUpBackdrop();
-                            setUpOverview();
-                            setUpGenres();
-                            setUpSeasons();
-                            setUpStatus();
-                            setUpFirstAirDate();
-                            setUpNetwork();
-                            setUpRating();
-
-                            showTelevisionShowDetailsBody();
-                        }
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable t) {
-                        t.printStackTrace();
-                        if (NetworkUtility.isKnownException(t)) {
-//                            errorTextView.setText("Can't load data.\nCheck your network connection.");
-//                            errorLinearLayout.setVisibility(View.VISIBLE);
-                        }
-                    }
-                });
-
-        compositeSubscription.add(fullTelevisionShowSubscription);
     }
 
     private void showTelevisionShowDetailsBody(){
@@ -629,9 +623,9 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        setUpCast(televisionShowCreditsEnvelope);
-                        setUpCrew(televisionShowCreditsEnvelope);
-                        setUpSimilarTelevisionShows(televisionShowsEnvelope);
+                        setUpCast();
+                        setUpCrew();
+                        setUpSimilarTelevisionShows();
                     }
                 }, DELAY);
             }
@@ -645,88 +639,82 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
         televisionShowDetailsBodyLinearLayout.startAnimation(animation);
     }
 
-    private void setUpCast(TelevisionShowCreditsEnvelope televisionShowCreditsEnvelope){
-        if(televisionShowCreditsEnvelope != null){
-            List<TelevisionShowCredit> cast = televisionShowCreditsEnvelope.getCast();
-            if(cast != null && cast.size()>0){
-                View castView = castViewStub.inflate();
+    private void setUpCast(){
+        List<TelevisionShowCredit> cast = televisionShowDetailsWrapper.getCast();
+        if(cast != null && cast.size()>0){
+            View castView = castViewStub.inflate();
 
-                RecyclerView castRecyclerView = ButterKnife.findById(castView, R.id.cast_rv);
+            RecyclerView castRecyclerView = ButterKnife.findById(castView, R.id.cast_rv);
 
-                LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-                castRecyclerView.setLayoutManager(layoutManager);
-                castAdapter = new TelevisionShowCreditsAdapter(getContext());
-                castAdapter.setOnItemClickListener(castAdapterOnItemClickListener);
-                castRecyclerView.setAdapter(castAdapter);
-                SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
-                snapHelper.attachToRecyclerView(castRecyclerView);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+            castRecyclerView.setLayoutManager(layoutManager);
+            castAdapter = new TelevisionShowCreditsAdapter(getContext());
+            castAdapter.setOnItemClickListener(castAdapterOnItemClickListener);
+            castRecyclerView.setAdapter(castAdapter);
+            SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
+            snapHelper.attachToRecyclerView(castRecyclerView);
 
-                castAdapter.addAll(cast);
-            }
+            castAdapter.addAll(cast);
         }
     }
 
-    private void setUpCrew(TelevisionShowCreditsEnvelope televisionShowCreditsEnvelope){
-        if(televisionShowCreditsEnvelope != null){
-            List<TelevisionShowCredit> crew = televisionShowCreditsEnvelope.getCrew();
-            if(crew != null && crew.size()>0){
-                View crewView = crewViewStub.inflate();
+    private void setUpCrew(){
+        List<TelevisionShowCredit> crew = televisionShowDetailsWrapper.getCrew();
+        if(crew != null && crew.size()>0){
+            View crewView = crewViewStub.inflate();
 
-                RecyclerView crewRecyclerView = ButterKnife.findById(crewView, R.id.crew_rv);
+            RecyclerView crewRecyclerView = ButterKnife.findById(crewView, R.id.crew_rv);
 
-                LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-                crewRecyclerView.setLayoutManager(layoutManager);
-                crewAdapter = new TelevisionShowCreditsAdapter(getContext());
-                crewAdapter.setOnItemClickListener(crewAdapterOnItemClickListener);
-                crewRecyclerView.setAdapter(crewAdapter);
-                SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
-                snapHelper.attachToRecyclerView(crewRecyclerView);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+            crewRecyclerView.setLayoutManager(layoutManager);
+            crewAdapter = new TelevisionShowCreditsAdapter(getContext());
+            crewAdapter.setOnItemClickListener(crewAdapterOnItemClickListener);
+            crewRecyclerView.setAdapter(crewAdapter);
+            SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
+            snapHelper.attachToRecyclerView(crewRecyclerView);
 
-                crewAdapter.addAll(crew);
-            }
+            crewAdapter.addAll(crew);
         }
     }
 
-    private void setUpSimilarTelevisionShows(TelevisionShowsEnvelope televisionShowsEnvelope){
-        if(televisionShowsEnvelope != null){
-            List<TelevisionShow> similarTelevisionShows = televisionShowsEnvelope.getTelevisionShows();
-            if(similarTelevisionShows != null && similarTelevisionShows.size()>0){
-                View similarTelevisionShowsView = similarTelevisionShowsViewStub.inflate();
+    private void setUpSimilarTelevisionShows(){
+        List<TelevisionShow> similarTelevisionShows = televisionShowDetailsWrapper.getSimilarTelevisionShows();
+        if(similarTelevisionShows != null && similarTelevisionShows.size()>0){
+            View similarTelevisionShowsView = similarTelevisionShowsViewStub.inflate();
 
-                RecyclerView similarTelevisionShowsRecyclerView = ButterKnife.findById(similarTelevisionShowsView, R.id.similar_television_shows_rv);
+            RecyclerView similarTelevisionShowsRecyclerView = ButterKnife.findById(similarTelevisionShowsView, R.id.similar_television_shows_rv);
 
-                LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-                similarTelevisionShowsRecyclerView.setLayoutManager(layoutManager);
-                similarTelevisionShowsAdapter = new SimilarTelevisionShowsAdapter(getContext());
-                similarTelevisionShowsAdapter.setOnItemClickListener(similarTelevisionShowsAdapterOnItemClickListener);
-                similarTelevisionShowsRecyclerView.setAdapter(similarTelevisionShowsAdapter);
-                SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
-                snapHelper.attachToRecyclerView(similarTelevisionShowsRecyclerView);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+            similarTelevisionShowsRecyclerView.setLayoutManager(layoutManager);
+            similarTelevisionShowsAdapter = new SimilarTelevisionShowsAdapter(getContext());
+            similarTelevisionShowsAdapter.setOnItemClickListener(similarTelevisionShowsAdapterOnItemClickListener);
+            similarTelevisionShowsRecyclerView.setAdapter(similarTelevisionShowsAdapter);
+            SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
+            snapHelper.attachToRecyclerView(similarTelevisionShowsRecyclerView);
 
-                Collections.sort(similarTelevisionShows, new Comparator<TelevisionShow>() {
-                    @Override
-                    public int compare(TelevisionShow t1, TelevisionShow t2) {
-                        int year1 = -1;
-                        if(t1.getFirstAirDateYear() != -1){
-                            year1 = t1.getFirstAirDateYear();
-                        }
-
-                        int year2 = -1;
-                        if(t2.getFirstAirDateYear() != -1){
-                            year2 = t2.getFirstAirDateYear();
-                        }
-
-                        if(year1 > year2)
-                            return -1;
-                        else if(year1 < year2)
-                            return 1;
-                        else
-                            return 0;
+            Collections.sort(similarTelevisionShows, new Comparator<TelevisionShow>() {
+                @Override
+                public int compare(TelevisionShow t1, TelevisionShow t2) {
+                    int year1 = -1;
+                    if(t1.getFirstAirDateYear() != -1){
+                        year1 = t1.getFirstAirDateYear();
                     }
-                });
 
-                similarTelevisionShowsAdapter.addAll(similarTelevisionShows);
-            }
+                    int year2 = -1;
+                    if(t2.getFirstAirDateYear() != -1){
+                        year2 = t2.getFirstAirDateYear();
+                    }
+
+                    if(year1 > year2)
+                        return -1;
+                    else if(year1 < year2)
+                        return 1;
+                    else
+                        return 0;
+                }
+            });
+
+            similarTelevisionShowsAdapter.addAll(similarTelevisionShows);
         }
     }
 
@@ -821,17 +809,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     }
 
     private void setUpRating(){
-        String rating = "";
-        List<ContentRating> contentRatings = televisionShowContentRatingsEnvelope.getContentRatings();
-        if(contentRatings != null && contentRatings.size() > 0){
-            for(ContentRating contentRating : contentRatings){
-                String iso31661 = contentRating.getIso31661();
-                if(iso31661.equals("US")){
-                    rating = contentRating.getRating();
-                    break;
-                }
-            }
-        }
+        String rating = televisionShowDetailsWrapper.getRating();
 
         if(!TextUtils.isEmpty(rating)){
             ratingTextView.setText(rating);

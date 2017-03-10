@@ -12,15 +12,15 @@ public interface MovieDetailsDataSourceContract {
 
     interface Repository {
 //        Restful VERB is the first part of method name GET , POST , DELETE, PUT
-        Observable<MovieDetailsWrapper> getMoviesDetails(int movieId);
+        Observable<MovieDetailsWrapper> getMovieDetails(int movieId);
     }
 
     interface LocalDateSource {
-        Observable<MovieDetailsWrapper> getMoviesDetails(int movieId);
+        Observable<MovieDetailsWrapper> getMovieDetails(int movieId);
         void saveMovieDetails(MovieDetailsWrapper movieDetailsWrapper);
     }
 
     interface RemoteDateSource {
-         Observable<MovieDetailsWrapper> getMoviesDetails(int movieId);
+         Observable<MovieDetailsWrapper> getMovieDetails(int movieId);
     }
 }
