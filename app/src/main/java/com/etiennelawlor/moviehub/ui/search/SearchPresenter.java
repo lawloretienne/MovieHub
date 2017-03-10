@@ -1,7 +1,5 @@
 package com.etiennelawlor.moviehub.ui.search;
 
-import android.text.TextUtils;
-
 import com.etiennelawlor.moviehub.data.model.SearchWrapper;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
 import com.etiennelawlor.moviehub.data.remote.response.Person;
@@ -71,7 +69,7 @@ public class SearchPresenter implements SearchUiContract.Presenter {
                 .filter(new Func1<CharSequence, Boolean>() {
                     @Override
                     public Boolean call(CharSequence charSequence) {
-                        if(TextUtils.isEmpty(charSequence)){
+                        if(isEmpty(charSequence)){
                             searchView.hideLoadingView();
 
                             searchView.clearMoviesAdapter();
@@ -88,7 +86,7 @@ public class SearchPresenter implements SearchUiContract.Presenter {
                             searchView.showLoadingView();
                         }
 
-                        return !TextUtils.isEmpty(charSequence);
+                        return !isEmpty(charSequence);
                     }
                 })
                 .map(new Func1<CharSequence, String>() {
@@ -101,7 +99,9 @@ public class SearchPresenter implements SearchUiContract.Presenter {
                 .switchMap(new Func1<String, Observable<SearchWrapper>>() {
                     @Override
                     public Observable<SearchWrapper> call(String q) {
-                        return searchRepository.getSearch(q).compose(schedulerTransformer);
+//                        return searchRepository.getSearch(q)
+//                                .compose(schedulerTransformer);
+                        return searchRepository.getSearch(q);
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread()) // UI Thread
@@ -186,5 +186,14 @@ public class SearchPresenter implements SearchUiContract.Presenter {
         searchView.openPersonDetails(person);
     }
 
+    // endregion
+
+    // region Helper Methods
+    public static boolean isEmpty(CharSequence str) {
+        if (str == null || str.length() == 0)
+            return true;
+        else
+            return false;
+    }
     // endregion
 }
