@@ -6,6 +6,7 @@ import com.etiennelawlor.moviehub.data.remote.response.Movie;
 
 import java.util.List;
 
+import io.realm.Realm;
 import rx.Observable;
 
 /**
@@ -29,7 +30,15 @@ public class MoviesLocalDataSource implements MoviesDataSourceContract.LocalDate
 
     @Override
     public void savePopularMovies(List<Movie> movies) {
-//        Use mapper to convert from POJOs to realm objects
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                //        Use mapper to convert from POJOs to realm objects
+
+            }
+        });
+
     }
 
     // endregion

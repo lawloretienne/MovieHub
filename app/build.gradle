@@ -29,7 +29,7 @@ android {
         }
         prod {
             // The actual minSdkVersion for the application.
-            minSdkVersion 19
+            minSdkVersion 21
         }
     }
     buildTypes {
@@ -53,6 +53,10 @@ android {
     lintOptions {
         checkReleaseBuilds true
         abortOnError false
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
     // Encapsulates options for running tests.
     testOptions {
