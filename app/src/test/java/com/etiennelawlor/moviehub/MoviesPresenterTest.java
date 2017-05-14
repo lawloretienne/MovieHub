@@ -1,7 +1,6 @@
 package com.etiennelawlor.moviehub;
 
-import com.etiennelawlor.moviehub.data.model.MoviesWrapper;
-import com.etiennelawlor.moviehub.data.model.PagingInfo;
+import com.etiennelawlor.moviehub.data.model.MoviesPage;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
 import com.etiennelawlor.moviehub.data.source.movies.MoviesDataSourceContract;
 import com.etiennelawlor.moviehub.ui.movies.MoviesPresenter;
@@ -15,6 +14,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import rx.Observable;
@@ -45,7 +45,7 @@ public class MoviesPresenterTest {
     // endregion
 
     // region Member Variables
-    private MoviesWrapper moviesWrapper;
+    private MoviesPage moviesPage;
     private MoviesPresenter moviesPresenter;
     // endregion
 
@@ -56,7 +56,7 @@ public class MoviesPresenterTest {
         MockitoAnnotations.initMocks(this);
 
         // Get a reference to the class under test
-        moviesPresenter = new MoviesPresenter(mockMoviesView, mockMoviesRepository, new TestSchedulerTransformer<MoviesWrapper>());
+        moviesPresenter = new MoviesPresenter(mockMoviesView, mockMoviesRepository, new TestSchedulerTransformer<MoviesPage>());
     }
 
     // region Test Methods
@@ -64,13 +64,12 @@ public class MoviesPresenterTest {
     @Test
     public void onLoadPopularMovies_shouldShowError_whenFirstPageRequestFailed() {
         // 1. (Given) Set up conditions required for the test
-        PagingInfo pagingInfo = new PagingInfo(1, true);
-        moviesWrapper = new MoviesWrapper(getListOfMovies(0), pagingInfo);
-        stub = Observable.<MoviesWrapper>error(new IOException());
+        moviesPage = new MoviesPage(getListOfMovies(0), 1, true, Calendar.getInstance().getTime());
+        stub = Observable.<MoviesPage>error(new IOException());
         when(mockMoviesRepository.getPopularMovies(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
-        moviesPresenter.onLoadPopularMovies(pagingInfo.getCurrentPage());
+        moviesPresenter.onLoadPopularMovies(moviesPage.getPageNumber());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMoviesView).hideEmptyView();
@@ -87,13 +86,12 @@ public class MoviesPresenterTest {
     @Test
     public void onLoadPopularMovies_shouldShowError_whenNextPageRequestFailed() {
         // 1. (Given) Set up conditions required for the test
-        PagingInfo pagingInfo = new PagingInfo(2, true);
-        moviesWrapper = new MoviesWrapper(getListOfMovies(0), pagingInfo);
-        stub = Observable.<MoviesWrapper>error(new IOException());
+        moviesPage = new MoviesPage(getListOfMovies(0), 2, true, Calendar.getInstance().getTime());
+        stub = Observable.<MoviesPage>error(new IOException());
         when(mockMoviesRepository.getPopularMovies(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
-        moviesPresenter.onLoadPopularMovies(pagingInfo.getCurrentPage());
+        moviesPresenter.onLoadPopularMovies(moviesPage.getPageNumber());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMoviesView).showLoadingFooter();
@@ -106,13 +104,12 @@ public class MoviesPresenterTest {
     @Test
     public void onLoadPopularMovies_shouldShowEmpty_whenFirstPageHasNoMovies() {
         // 1. (Given) Set up conditions required for the test
-        PagingInfo pagingInfo = new PagingInfo(1, true);
-        moviesWrapper = new MoviesWrapper(getListOfMovies(0), pagingInfo);
-        stub = Observable.just(moviesWrapper);
+        moviesPage = new MoviesPage(getListOfMovies(0), 1, true, Calendar.getInstance().getTime());
+        stub = Observable.just(moviesPage);
         when(mockMoviesRepository.getPopularMovies(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
-        moviesPresenter.onLoadPopularMovies(pagingInfo.getCurrentPage());
+        moviesPresenter.onLoadPopularMovies(moviesPage.getPageNumber());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMoviesView).hideEmptyView();
@@ -123,19 +120,18 @@ public class MoviesPresenterTest {
 
         verify(mockMoviesView).hideLoadingView();
         verify(mockMoviesView).showEmptyView();
-        verify(mockMoviesView).setPagingInfo(pagingInfo);
+        verify(mockMoviesView).setMoviesPage(moviesPage);
     }
 
     @Test
     public void onLoadPopularMovies_shouldNotAddMovies_whenNextPageHasNoMovies() {
         // 1. (Given) Set up conditions required for the test
-        PagingInfo pagingInfo = new PagingInfo(2, true);
-        moviesWrapper = new MoviesWrapper(getListOfMovies(0), pagingInfo);
-        stub = Observable.just(moviesWrapper);
+        moviesPage = new MoviesPage(getListOfMovies(0), 2, true, Calendar.getInstance().getTime());
+        stub = Observable.just(moviesPage);
         when(mockMoviesRepository.getPopularMovies(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
-        moviesPresenter.onLoadPopularMovies(pagingInfo.getCurrentPage());
+        moviesPresenter.onLoadPopularMovies(moviesPage.getPageNumber());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMoviesView).showLoadingFooter();
@@ -143,19 +139,18 @@ public class MoviesPresenterTest {
         verify(mockMoviesRepository).getPopularMovies(anyInt());
 
         verify(mockMoviesView).removeFooter();
-        verify(mockMoviesView).setPagingInfo(pagingInfo);
+        verify(mockMoviesView).setMoviesPage(moviesPage);
     }
 
     @Test
     public void onLoadPopularMovies_shouldAddMovies_whenFirstPageHasMoviesAndIsLastPage() {
         // 1. (Given) Set up conditions required for the test
-        PagingInfo pagingInfo = new PagingInfo(1, true);
-        moviesWrapper = new MoviesWrapper(getListOfMovies(5), pagingInfo);
-        stub = Observable.just(moviesWrapper);
+        moviesPage = new MoviesPage(getListOfMovies(5), 1, true, Calendar.getInstance().getTime());
+        stub = Observable.just(moviesPage);
         when(mockMoviesRepository.getPopularMovies(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
-        moviesPresenter.onLoadPopularMovies(pagingInfo.getCurrentPage());
+        moviesPresenter.onLoadPopularMovies(moviesPage.getPageNumber());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMoviesView).hideEmptyView();
@@ -166,20 +161,19 @@ public class MoviesPresenterTest {
 
         verify(mockMoviesView).hideLoadingView();
         verify(mockMoviesView).addHeader();
-        verify(mockMoviesView).addMoviesToAdapter(moviesWrapper.getMovies());
-        verify(mockMoviesView).setPagingInfo(pagingInfo);
+        verify(mockMoviesView).addMoviesToAdapter(moviesPage.getMovies());
+        verify(mockMoviesView).setMoviesPage(moviesPage);
     }
 
     @Test
     public void onLoadPopularMovies_shouldAddMovies_whenFirstPageHasMoviesAndIsNotLastPage() {
         // 1. (Given) Set up conditions required for the test
-        PagingInfo pagingInfo = new PagingInfo(1, false);
-        moviesWrapper = new MoviesWrapper(getListOfMovies(5), pagingInfo);
-        stub = Observable.just(moviesWrapper);
+        moviesPage = new MoviesPage(getListOfMovies(5), 1, false, Calendar.getInstance().getTime());
+        stub = Observable.just(moviesPage);
         when(mockMoviesRepository.getPopularMovies(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
-        moviesPresenter.onLoadPopularMovies(pagingInfo.getCurrentPage());
+        moviesPresenter.onLoadPopularMovies(moviesPage.getPageNumber());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMoviesView).hideEmptyView();
@@ -190,21 +184,20 @@ public class MoviesPresenterTest {
 
         verify(mockMoviesView).hideLoadingView();
         verify(mockMoviesView).addHeader();
-        verify(mockMoviesView).addMoviesToAdapter(moviesWrapper.getMovies());
+        verify(mockMoviesView).addMoviesToAdapter(moviesPage.getMovies());
         verify(mockMoviesView).addFooter();
-        verify(mockMoviesView).setPagingInfo(pagingInfo);
+        verify(mockMoviesView).setMoviesPage(moviesPage);
     }
 
     @Test
     public void onLoadPopularMovies_shouldAddMovies_whenNextPageHasMoviesAndIsLastPage() {
         // 1. (Given) Set up conditions required for the test
-        PagingInfo pagingInfo = new PagingInfo(2, true);
-        moviesWrapper = new MoviesWrapper(getListOfMovies(5), pagingInfo);
-        stub = Observable.just(moviesWrapper);
+        moviesPage = new MoviesPage(getListOfMovies(5), 2, true, Calendar.getInstance().getTime());
+        stub = Observable.just(moviesPage);
         when(mockMoviesRepository.getPopularMovies(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
-        moviesPresenter.onLoadPopularMovies(pagingInfo.getCurrentPage());
+        moviesPresenter.onLoadPopularMovies(moviesPage.getPageNumber());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMoviesView).showLoadingFooter();
@@ -212,20 +205,19 @@ public class MoviesPresenterTest {
         verify(mockMoviesRepository).getPopularMovies(anyInt());
 
         verify(mockMoviesView).removeFooter();
-        verify(mockMoviesView).addMoviesToAdapter(moviesWrapper.getMovies());
-        verify(mockMoviesView).setPagingInfo(pagingInfo);
+        verify(mockMoviesView).addMoviesToAdapter(moviesPage.getMovies());
+        verify(mockMoviesView).setMoviesPage(moviesPage);
     }
 
     @Test
     public void onLoadPopularMovies_shouldAddMovies_whenNextPageHasMoviesAndIsNotLastPage() {
         // 1. (Given) Set up conditions required for the test
-        PagingInfo pagingInfo = new PagingInfo(2, false);
-        moviesWrapper = new MoviesWrapper(getListOfMovies(5), pagingInfo);
-        stub = Observable.just(moviesWrapper);
+        moviesPage = new MoviesPage(getListOfMovies(5), 2, false, Calendar.getInstance().getTime());
+        stub = Observable.just(moviesPage);
         when(mockMoviesRepository.getPopularMovies(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
-        moviesPresenter.onLoadPopularMovies(pagingInfo.getCurrentPage());
+        moviesPresenter.onLoadPopularMovies(moviesPage.getPageNumber());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMoviesView).showLoadingFooter();
@@ -233,10 +225,10 @@ public class MoviesPresenterTest {
         verify(mockMoviesRepository).getPopularMovies(anyInt());
 
         verify(mockMoviesView).removeFooter();
-        verify(mockMoviesView).addMoviesToAdapter(moviesWrapper.getMovies());
+        verify(mockMoviesView).addMoviesToAdapter(moviesPage.getMovies());
         verify(mockMoviesView).addFooter();
-        verify(mockMoviesView).setPagingInfo(pagingInfo);
-//        verify(mockMoviesView, times(1)).setModel(any(MoviesWrapper.class)); // Alternative verify check
+        verify(mockMoviesView).setMoviesPage(moviesPage);
+//        verify(mockMoviesView, times(1)).setModel(any(MoviesPage.class)); // Alternative verify check
     }
 
     @Test

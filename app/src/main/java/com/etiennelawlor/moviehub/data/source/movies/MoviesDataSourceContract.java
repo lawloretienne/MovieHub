@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.data.source.movies;
 
-import com.etiennelawlor.moviehub.data.model.MoviesWrapper;
+import com.etiennelawlor.moviehub.data.model.MoviesPage;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
 
 import java.util.List;
@@ -15,15 +15,15 @@ public interface MoviesDataSourceContract {
 
     interface Repository {
 //        Restful VERB is the first part of method name GET , POST , DELETE, PUT
-        Observable<MoviesWrapper> getPopularMovies(int currentPage);
+        Observable<MoviesPage> getPopularMovies(int currentPage);
     }
 
     interface LocalDateSource {
-        Observable<List<Movie>> getPopularMovies(int currentPage);
-        void savePopularMovies(List<Movie> movies);
+        Observable<MoviesPage> getPopularMovies(int currentPage);
+        void savePopularMovies(MoviesPage moviesWrapper);
     }
 
     interface RemoteDateSource {
-         Observable<List<Movie>> getPopularMovies(int currentPage);
+         Observable<MoviesPage> getPopularMovies(int currentPage);
     }
 }

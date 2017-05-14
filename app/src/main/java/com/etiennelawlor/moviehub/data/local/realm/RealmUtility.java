@@ -1,12 +1,12 @@
 package com.etiennelawlor.moviehub.data.local.realm;
 
-import com.etiennelawlor.moviehub.data.local.realm.models.RealmConfiguration;
-import com.etiennelawlor.moviehub.data.local.realm.models.RealmImages;
-import com.etiennelawlor.moviehub.data.local.realm.models.RealmString;
-import com.etiennelawlor.moviehub.data.remote.response.Configuration;
-import com.etiennelawlor.moviehub.data.remote.response.Images;
+import com.etiennelawlor.moviehub.data.local.realm.models.RealmMovie;
+import com.etiennelawlor.moviehub.data.local.realm.models.RealmMoviesPage;
+import com.etiennelawlor.moviehub.data.model.MoviesPage;
+import com.etiennelawlor.moviehub.data.remote.response.Movie;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import io.realm.Realm;
@@ -20,35 +20,35 @@ public class RealmUtility {
 
 //    https://github.com/Innovatube/android-tdd-approach/blob/04c09ca0048c507e9492ff646b23b58e801dc9c0/app/src/main/java/com/example/androidtdd/data/model/Address.java
 
-    public static Configuration getCachedConfiguration() {
-        Configuration configuration = new Configuration();
+    private static final RealmMovieMapper realmMovieMapper = new RealmMovieMapper();
+    private static final MovieMapper movieMapper = new MovieMapper();
+
+    public static MoviesPage getMoviesPage(int pageNumber){
+        MoviesPage moviesPage = new MoviesPage();
 
         Realm realm = Realm.getDefaultInstance();
         try {
-            RealmResults<RealmConfiguration> realmResults
-                    = realm.where(RealmConfiguration.class).findAll();
+            RealmResults<RealmMoviesPage> realmResults
+                    = realm.where(RealmMoviesPage.class).findAll();
             if(realmResults != null && realmResults.isValid() && realmResults.size() > 0){
-                RealmConfiguration realmConfiguration = realmResults.get(0);
+                if(realmResults.size() == pageNumber-1)
+                    return null;
 
-                Images images = new Images();
-                RealmImages realmImages = realmConfiguration.getImages();
-                images.setBaseUrl(realmImages.getBaseUrl());
-                images.setSecureBaseUrl(realmImages.getSecureBaseUrl());
-                images.setBackdropSizes(getList(realmImages.getBackdropSizes()));
-                images.setLogoSizes(getList(realmImages.getLogoSizes()));
-                images.setPosterSizes(getList(realmImages.getPosterSizes()));
-                images.setProfileSizes(getList(realmImages.getProfileSizes()));
-                images.setStillSizes(getList(realmImages.getStillSizes()));
+                RealmMoviesPage realmMoviesPage = realmResults.get(pageNumber-1);
 
-                configuration.setImages(images);
+                RealmList<RealmMovie> realmMovies = realmMoviesPage.getMovies();
 
-                List<String> changeKeys = new ArrayList<>();
-                for(RealmString realmChangeKey : realmConfiguration.getChangeKeys()){
-                    changeKeys.add(realmChangeKey.getValue());
+                List<Movie> movies = new ArrayList<>();
+                for(RealmMovie realmMovie : realmMovies){
+                    movies.add(realmMovieMapper.map(realmMovie));
                 }
 
-                configuration.setChangeKeys(changeKeys);
-                return configuration;
+                moviesPage.setMovies(movies);
+                moviesPage.setPageNumber(realmMoviesPage.getPageNumber());
+                moviesPage.setLastPage(realmMoviesPage.isLastPage());
+                moviesPage.setExpiredAt(realmMoviesPage.getExpiredAt());
+
+                return moviesPage;
             } else {
                 return null;
             }
@@ -57,66 +57,35 @@ public class RealmUtility {
         }
     }
 
-    public static void persistConfiguration(Configuration configuration){
+    public static void saveMoviesPage(MoviesPage moviesPage){
         Realm realm = Realm.getDefaultInstance();
         try {
-            Images images = configuration.getImages();
-            List<String> changeKeys = configuration.getChangeKeys();
+            List<Movie> movies = moviesPage.getMovies();
+            int pageNumber = moviesPage.getPageNumber();
+            boolean isLastPage = moviesPage.isLastPage();
+            Date expiredAt = moviesPage.getExpiredAt();
 
             realm.beginTransaction();
 
-            realm.delete(RealmConfiguration.class);
+            RealmMoviesPage realmMoviesPage =
+                    realm.createObject(RealmMoviesPage.class);
 
-            RealmConfiguration realmConfiguration =
-                    realm.createObject(RealmConfiguration.class);
-
-            RealmImages realmImages =
-                    realm.createObject(RealmImages.class);
-
-            realmImages.setBaseUrl(images.getBaseUrl());
-            realmImages.setSecureBaseUrl(images.getSecureBaseUrl());
-            realmImages.setBackdropSizes(getRealmList(realm, images.getBackdropSizes()));
-            realmImages.setLogoSizes(getRealmList(realm, images.getLogoSizes()));
-            realmImages.setPosterSizes(getRealmList(realm, images.getPosterSizes()));
-            realmImages.setProfileSizes(getRealmList(realm, images.getProfileSizes()));
-            realmImages.setStillSizes(getRealmList(realm, images.getStillSizes()));
-
-            realmConfiguration.setImages(realmImages);
-
-            RealmList<RealmString> realmChangeKeys = new RealmList<>();
-            for (String changeKey : changeKeys) {
-                RealmString realmChangeKey
-                        = realm.createObject(RealmString.class);
-                realmChangeKey.setValue(changeKey);
-                realmChangeKeys.add(realmChangeKey);
+            RealmList<RealmMovie> realmMovies = new RealmList<>();
+            for(Movie movie : movies){
+                realmMovies.add(movieMapper.map(movie));
             }
 
-            realmConfiguration.setChangeKeys(realmChangeKeys);
+            realmMoviesPage.setMovies(realmMovies);
+            realmMoviesPage.setPageNumber(pageNumber);
+            realmMoviesPage.setLastPage(isLastPage);
+            realmMoviesPage.setExpiredAt(expiredAt);
 
-            realm.copyToRealm(realmConfiguration);
+            realm.copyToRealm(realmMoviesPage);
             realm.commitTransaction();
+        } catch (Exception e){
+            e.printStackTrace();
         } finally {
             realm.close();
         }
-    }
-
-    private static RealmList<RealmString> getRealmList(Realm realm, List<String> stringList){
-        RealmList<RealmString> realmStrings = new RealmList<>();
-        for(String s : stringList){
-            RealmString realmString
-                    = realm.createObject(RealmString.class);
-            realmString.setValue(s);
-            realmStrings.add(realmString);
-        }
-
-        return realmStrings;
-    }
-
-    private static List<String> getList(RealmList<RealmString> realmStrings){
-        List<String> strings = new ArrayList<>();
-        for(RealmString realmString : realmStrings){
-            strings.add(realmString.getValue());
-        }
-        return strings;
     }
 }

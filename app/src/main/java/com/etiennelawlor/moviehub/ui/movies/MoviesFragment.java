@@ -18,8 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.model.MoviesWrapper;
-import com.etiennelawlor.moviehub.data.model.PagingInfo;
+import com.etiennelawlor.moviehub.data.model.MoviesPage;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
 import com.etiennelawlor.moviehub.data.source.movies.MoviesLocalDataSource;
 import com.etiennelawlor.moviehub.data.source.movies.MoviesRemoteDataSource;
@@ -69,14 +68,14 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     private Unbinder unbinder;
     private StaggeredGridLayoutManager layoutManager;
     private MoviesUiContract.Presenter moviesPresenter;
-    private PagingInfo pagingInfo;
+    private MoviesPage moviesPage;
     private boolean isLoading = false;
     // endregion
 
     // region Listeners
     @OnClick(R.id.reload_btn)
     public void onReloadButtonClicked() {
-        moviesPresenter.onLoadPopularMovies(pagingInfo == null ? 1 : pagingInfo.getCurrentPage());
+        moviesPresenter.onLoadPopularMovies(moviesPage == null ? 1 : moviesPage.getPageNumber());
     }
 
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
@@ -97,7 +96,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
             if ((visibleItemCount + firstVisibleItem) >= totalItemCount
                     && totalItemCount > 0
                     && !isLoading
-                    && !pagingInfo.isLastPage()) {
+                    && !moviesPage.isLastPage()) {
                 moviesPresenter.onScrollToEndOfList();
             }
         }
@@ -131,7 +130,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
                 new MoviesRepository(
                         new MoviesLocalDataSource(getContext()),
                         new MoviesRemoteDataSource(getContext())),
-                new ProductionSchedulerTransformer<MoviesWrapper>()
+                new ProductionSchedulerTransformer<MoviesPage>()
                 );
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
@@ -162,7 +161,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
         // Pagination
         recyclerView.addOnScrollListener(recyclerViewOnScrollListener);
 
-        moviesPresenter.onLoadPopularMovies(pagingInfo == null ? 1 : pagingInfo.getCurrentPage());
+        moviesPresenter.onLoadPopularMovies(moviesPage == null ? 1 : moviesPage.getPageNumber());
     }
 
     @Override
@@ -189,7 +188,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     // region MoviesAdapter.OnReloadClickListener Methods
     @Override
     public void onReloadClick() {
-        moviesPresenter.onLoadPopularMovies(pagingInfo.getCurrentPage());
+        moviesPresenter.onLoadPopularMovies(moviesPage.getPageNumber());
     }
     // endregion
 
@@ -266,13 +265,13 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
 
     @Override
     public void loadMoreItems() {
-        pagingInfo.incrementPage();
-        moviesPresenter.onLoadPopularMovies(pagingInfo.getCurrentPage());
+        moviesPage.incrementPageNumber();
+        moviesPresenter.onLoadPopularMovies(moviesPage.getPageNumber());
     }
 
     @Override
-    public void setPagingInfo(PagingInfo pagingInfo) {
-        this.pagingInfo = pagingInfo;
+    public void setMoviesPage(MoviesPage moviesPage) {
+        this.moviesPage = moviesPage;
     }
 
     @Override

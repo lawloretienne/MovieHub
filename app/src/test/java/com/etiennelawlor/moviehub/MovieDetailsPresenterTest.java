@@ -1,17 +1,12 @@
 package com.etiennelawlor.moviehub;
 
 import com.etiennelawlor.moviehub.data.model.MovieDetailsWrapper;
-import com.etiennelawlor.moviehub.data.model.MoviesWrapper;
-import com.etiennelawlor.moviehub.data.model.PagingInfo;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
 import com.etiennelawlor.moviehub.data.remote.response.MovieCredit;
 import com.etiennelawlor.moviehub.data.remote.response.Person;
 import com.etiennelawlor.moviehub.data.source.moviedetails.MovieDetailsDataSourceContract;
-import com.etiennelawlor.moviehub.data.source.movies.MoviesDataSourceContract;
 import com.etiennelawlor.moviehub.ui.moviedetails.MovieDetailsPresenter;
 import com.etiennelawlor.moviehub.ui.moviedetails.MovieDetailsUiContract;
-import com.etiennelawlor.moviehub.ui.movies.MoviesPresenter;
-import com.etiennelawlor.moviehub.ui.movies.MoviesUiContract;
 import com.etiennelawlor.moviehub.util.rxjava.TestSchedulerTransformer;
 
 import org.junit.Before;
@@ -26,7 +21,6 @@ import java.util.List;
 import rx.Observable;
 
 import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;

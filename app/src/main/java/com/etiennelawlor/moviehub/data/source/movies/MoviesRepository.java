@@ -1,9 +1,11 @@
 package com.etiennelawlor.moviehub.data.source.movies;
 
-import com.etiennelawlor.moviehub.data.model.MoviesWrapper;
-import com.etiennelawlor.moviehub.data.model.PagingInfo;
+import android.util.Log;
+
+import com.etiennelawlor.moviehub.data.model.MoviesPage;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
 
+import java.util.Calendar;
 import java.util.List;
 
 import rx.Observable;
@@ -16,6 +18,8 @@ import rx.functions.Func1;
 
 public class MoviesRepository implements MoviesDataSourceContract.Repository {
 
+    private static final String TAG  = "MoviesRepository";
+
     // Load data from local and remote
     // http://blog.danlew.net/2015/06/22/loading-data-from-multiple-sources-with-rxjava/
 //    https://github.com/millionsun93/HackerNews/blob/bd94c62ac658eb3281879c8018540f6dc2c2ec3d/app/src/main/java/com/innovatube/boilerplate/data/HackerNewsRepositoryImpl.java
@@ -24,10 +28,6 @@ public class MoviesRepository implements MoviesDataSourceContract.Repository {
     // Uses mapper to go from POJO to RealmObject
     // https://github.com/ihorvitruk/buddysearch/blob/master/library/src/main/java/com/buddysearch/android/library/data/mapper/BaseMapper.java
     // https://github.com/dcampogiani/Qwertee/blob/f71dbc318264bcc05a7f51c8cb8c40e54b53b57e/data/src/main/java/com/danielecampogiani/qwertee/data/local/model/MapperImpl.java
-
-    // region Constants
-    private static final int PAGE_SIZE = 20;
-    // endregion
 
     // region Member Variables
     private MoviesDataSourceContract.LocalDateSource moviesLocalDataSource;
@@ -43,26 +43,25 @@ public class MoviesRepository implements MoviesDataSourceContract.Repository {
 
     // region MoviesDataSourceContract.Repository Methods
     @Override
-    public Observable<MoviesWrapper> getPopularMovies(final int currentPage) {
-        Observable<List<Movie>> local = moviesLocalDataSource.getPopularMovies(currentPage);
-        Observable<List<Movie>> remote = moviesRemoteDataSource.getPopularMovies(currentPage);
-
-        return Observable.concat(local, remote)
-                .first()
-                .map(new Func1<List<Movie>, MoviesWrapper>() {
+    public Observable<MoviesPage> getPopularMovies(final int currentPage) {
+        Observable<MoviesPage> local = moviesLocalDataSource.getPopularMovies(currentPage)
+                .filter(new Func1<MoviesPage, Boolean>() {
                     @Override
-                    public MoviesWrapper call(List<Movie> movies) {
-                        boolean isLastPage = movies.size() < PAGE_SIZE ? true : false;
-                        PagingInfo pagingInfo = new PagingInfo(currentPage, isLastPage);
-                        return new MoviesWrapper(movies, pagingInfo);
-                    }
-                }).doOnNext(new Action1<MoviesWrapper>() {
-                    @Override
-                    public void call(MoviesWrapper moviesWrapper) {
-                        List<Movie> movies = moviesWrapper.getMovies();
-                        moviesLocalDataSource.savePopularMovies(movies);
+                    public Boolean call(MoviesPage moviesPage) {
+                        Log.d(TAG, "call: moviesPage.isExpired() - "+moviesPage.isExpired());
+                        return !moviesPage.isExpired();
                     }
                 });
+        Observable<MoviesPage> remote =
+                moviesRemoteDataSource.getPopularMovies(currentPage)
+                        .doOnNext(new Action1<MoviesPage>() {
+                            @Override
+                            public void call(MoviesPage moviesPage) {
+                                moviesLocalDataSource.savePopularMovies(moviesPage);
+                            }
+                        });
+
+        return Observable.concat(local, remote).first();
     }
 
 //  Create an Observable that emits a particular item

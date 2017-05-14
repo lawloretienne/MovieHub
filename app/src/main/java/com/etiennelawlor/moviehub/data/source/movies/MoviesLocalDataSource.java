@@ -2,9 +2,8 @@ package com.etiennelawlor.moviehub.data.source.movies;
 
 import android.content.Context;
 
-import com.etiennelawlor.moviehub.data.remote.response.Movie;
-
-import java.util.List;
+import com.etiennelawlor.moviehub.data.local.realm.RealmUtility;
+import com.etiennelawlor.moviehub.data.model.MoviesPage;
 
 import rx.Observable;
 
@@ -22,14 +21,17 @@ public class MoviesLocalDataSource implements MoviesDataSourceContract.LocalDate
     // region MoviesDataSourceContract.LocalDateSource Methods
 
     @Override
-    public Observable<List<Movie>> getPopularMovies(int currentPage) {
-        //        Use mapper to convert from realm objects to POJOs
-        return Observable.empty();
+    public Observable<MoviesPage> getPopularMovies(int currentPage) {
+        MoviesPage moviesPage = RealmUtility.getMoviesPage(currentPage);
+        if(moviesPage == null)
+            return Observable.empty();
+        else
+            return Observable.just(moviesPage);
     }
 
     @Override
-    public void savePopularMovies(List<Movie> movies) {
-//        Use mapper to convert from POJOs to realm objects
+    public void savePopularMovies(MoviesPage moviesPage) {
+        RealmUtility.saveMoviesPage(moviesPage);
     }
 
     // endregion

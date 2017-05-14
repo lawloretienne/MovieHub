@@ -1,7 +1,6 @@
 package com.etiennelawlor.moviehub.ui.movies;
 
-import com.etiennelawlor.moviehub.data.model.MoviesWrapper;
-import com.etiennelawlor.moviehub.data.model.PagingInfo;
+import com.etiennelawlor.moviehub.data.model.MoviesPage;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
 import com.etiennelawlor.moviehub.data.source.movies.MoviesDataSourceContract;
 import com.etiennelawlor.moviehub.util.EspressoIdlingResource;
@@ -24,12 +23,12 @@ public class MoviesPresenter implements MoviesUiContract.Presenter {
     // region Member Variables
     private final MoviesUiContract.View moviesView;
     private final MoviesDataSourceContract.Repository moviesRepository;
-    private final SchedulerTransformer<MoviesWrapper> schedulerTransformer;
+    private final SchedulerTransformer<MoviesPage> schedulerTransformer;
     private CompositeSubscription compositeSubscription = new CompositeSubscription();
     // endregion
 
     // region Constructors
-    public MoviesPresenter(MoviesUiContract.View moviesView, MoviesDataSourceContract.Repository moviesRepository, SchedulerTransformer<MoviesWrapper> schedulerTransformer) {
+    public MoviesPresenter(MoviesUiContract.View moviesView, MoviesDataSourceContract.Repository moviesRepository, SchedulerTransformer<MoviesPage> schedulerTransformer) {
         this.moviesView = moviesView;
         this.moviesRepository = moviesRepository;
         this.schedulerTransformer = schedulerTransformer;
@@ -67,7 +66,7 @@ public class MoviesPresenter implements MoviesUiContract.Presenter {
                         }
                     }
                 })
-                .subscribe(new Subscriber<MoviesWrapper>() {
+                .subscribe(new Subscriber<MoviesPage>() {
                     @Override
                     public void onCompleted() {
 
@@ -92,14 +91,12 @@ public class MoviesPresenter implements MoviesUiContract.Presenter {
                     }
 
                     @Override
-                    public void onNext(MoviesWrapper moviesWrapper) {
-                        if(moviesWrapper != null){
-                            PagingInfo pagingInfo = moviesWrapper.getPagingInfo();
-                            int currentPage = pagingInfo.getCurrentPage();
-                            boolean isLastPage = pagingInfo.isLastPage();
-
-                            List<Movie> movies = moviesWrapper.getMovies();
-                            boolean hasMovies = moviesWrapper.hasMovies();
+                    public void onNext(MoviesPage moviesPage) {
+                        if(moviesPage != null){
+                            List<Movie> movies = moviesPage.getMovies();
+                            int currentPage = moviesPage.getPageNumber();
+                            boolean isLastPage = moviesPage.isLastPage();
+                            boolean hasMovies = moviesPage.hasMovies();
                             if(currentPage == 1){
                                 moviesView.hideLoadingView();
 
@@ -123,7 +120,7 @@ public class MoviesPresenter implements MoviesUiContract.Presenter {
                                 }
                             }
 
-                            moviesView.setPagingInfo(pagingInfo);
+                            moviesView.setMoviesPage(moviesPage);
                         }
                     }
                 });

@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.ui.movies;
 
-import com.etiennelawlor.moviehub.data.model.PagingInfo;
+import com.etiennelawlor.moviehub.data.model.MoviesPage;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
 import com.etiennelawlor.moviehub.ui.base.BasePresenter;
 
@@ -27,7 +27,7 @@ public interface MoviesUiContract {
         void showLoadingFooter();
         void addMoviesToAdapter(List<Movie> movies);
         void loadMoreItems();
-        void setPagingInfo(PagingInfo pagingInfo);
+        void setMoviesPage(MoviesPage moviesPage);
 
         // Navigation methods
         void openMovieDetails(Movie movie);
