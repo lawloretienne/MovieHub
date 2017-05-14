@@ -65,23 +65,26 @@ public class RealmUtility {
             boolean isLastPage = moviesPage.isLastPage();
             Date expiredAt = moviesPage.getExpiredAt();
 
-            realm.beginTransaction();
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    RealmMoviesPage realmMoviesPage =
+                            realm.createObject(RealmMoviesPage.class);
 
-            RealmMoviesPage realmMoviesPage =
-                    realm.createObject(RealmMoviesPage.class);
+                    RealmList<RealmMovie> realmMovies = new RealmList<>();
+                    for(Movie movie : movies){
+                        realmMovies.add(movieMapper.map(movie));
+                    }
 
-            RealmList<RealmMovie> realmMovies = new RealmList<>();
-            for(Movie movie : movies){
-                realmMovies.add(movieMapper.map(movie));
-            }
+                    realmMoviesPage.setMovies(realmMovies);
+                    realmMoviesPage.setPageNumber(pageNumber);
+                    realmMoviesPage.setLastPage(isLastPage);
+                    realmMoviesPage.setExpiredAt(expiredAt);
 
-            realmMoviesPage.setMovies(realmMovies);
-            realmMoviesPage.setPageNumber(pageNumber);
-            realmMoviesPage.setLastPage(isLastPage);
-            realmMoviesPage.setExpiredAt(expiredAt);
+                    realm.copyToRealm(realmMoviesPage);
+                }
+            });
 
-            realm.copyToRealm(realmMoviesPage);
-            realm.commitTransaction();
         } catch (Exception e){
             e.printStackTrace();
         } finally {
