@@ -23,6 +23,7 @@ public class MoviesRemoteDataSource implements MoviesDataSourceContract.RemoteDa
 
     // region Constants
     private static final int PAGE_SIZE = 20;
+    private static final int SEVEN_DAYS = 7;
     // endregion
 
     // region Member Variables
@@ -54,7 +55,7 @@ public class MoviesRemoteDataSource implements MoviesDataSourceContract.RemoteDa
                     public MoviesPage call(List<Movie> movies) {
                         boolean isLastPage = movies.size() < PAGE_SIZE ? true : false;
                         Calendar calendar = Calendar.getInstance();
-                        calendar.add(Calendar.DATE, 1);
+                        calendar.add(Calendar.DATE, SEVEN_DAYS);
                         return new MoviesPage(movies, currentPage, isLastPage, calendar.getTime() );
                     }
                 });

@@ -1,12 +1,6 @@
 package com.etiennelawlor.moviehub.data.source.movies;
 
-import android.util.Log;
-
 import com.etiennelawlor.moviehub.data.model.MoviesPage;
-import com.etiennelawlor.moviehub.data.remote.response.Movie;
-
-import java.util.Calendar;
-import java.util.List;
 
 import rx.Observable;
 import rx.functions.Action1;
@@ -17,8 +11,6 @@ import rx.functions.Func1;
  */
 
 public class MoviesRepository implements MoviesDataSourceContract.Repository {
-
-    private static final String TAG  = "MoviesRepository";
 
     // Load data from local and remote
     // http://blog.danlew.net/2015/06/22/loading-data-from-multiple-sources-with-rxjava/
@@ -48,7 +40,6 @@ public class MoviesRepository implements MoviesDataSourceContract.Repository {
                 .filter(new Func1<MoviesPage, Boolean>() {
                     @Override
                     public Boolean call(MoviesPage moviesPage) {
-                        Log.d(TAG, "call: moviesPage.isExpired() - "+moviesPage.isExpired());
                         return !moviesPage.isExpired();
                     }
                 });
