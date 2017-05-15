@@ -1,5 +1,6 @@
 package com.etiennelawlor.moviehub.data.local.realm;
 
+import com.etiennelawlor.moviehub.data.local.realm.mappers.MovieRealmMapper;
 import com.etiennelawlor.moviehub.data.local.realm.models.RealmMovie;
 import com.etiennelawlor.moviehub.data.local.realm.models.RealmMoviesPage;
 import com.etiennelawlor.moviehub.data.model.MoviesPage;
@@ -20,8 +21,7 @@ public class RealmUtility {
 
 //    https://github.com/Innovatube/android-tdd-approach/blob/04c09ca0048c507e9492ff646b23b58e801dc9c0/app/src/main/java/com/example/androidtdd/data/model/Address.java
 
-    private static final RealmMovieMapper realmMovieMapper = new RealmMovieMapper();
-    private static final MovieMapper movieMapper = new MovieMapper();
+    private static final MovieRealmMapper movieRealmMapper = new MovieRealmMapper();
 
     public static MoviesPage getMoviesPage(int pageNumber){
         MoviesPage moviesPage = new MoviesPage();
@@ -40,7 +40,7 @@ public class RealmUtility {
 
                 List<Movie> movies = new ArrayList<>();
                 for(RealmMovie realmMovie : realmMovies){
-                    movies.add(realmMovieMapper.map(realmMovie));
+                    movies.add(movieRealmMapper.mapFromRealmObject(realmMovie));
                 }
 
                 moviesPage.setMovies(movies);
@@ -73,7 +73,7 @@ public class RealmUtility {
 
                     RealmList<RealmMovie> realmMovies = new RealmList<>();
                     for(Movie movie : movies){
-                        realmMovies.add(movieMapper.map(movie));
+                        realmMovies.add(movieRealmMapper.mapToRealmObject(movie));
                     }
 
                     realmMoviesPage.setMovies(realmMovies);

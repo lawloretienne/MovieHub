@@ -1,29 +1,32 @@
-package com.etiennelawlor.moviehub.data.local.realm;
+package com.etiennelawlor.moviehub.data.local.realm.mappers;
 
 import com.etiennelawlor.moviehub.data.local.realm.models.RealmGenre;
-import com.etiennelawlor.moviehub.data.local.realm.models.RealmMovie;
 import com.etiennelawlor.moviehub.data.remote.response.Genre;
-import com.etiennelawlor.moviehub.data.remote.response.Movie;
-
-import java.util.List;
 
 import io.realm.Realm;
-import io.realm.RealmList;
 
 /**
  * Created by etiennelawlor on 5/14/17.
  */
 
-public class GenreMapper implements Mapper<Genre, RealmGenre> {
+public class GenreRealmMapper implements RealmMapper<Genre, RealmGenre> {
 
     @Override
-    public RealmGenre map(Genre genre) {
-
+    public RealmGenre mapToRealmObject(Genre genre) {
         RealmGenre realmGenre = Realm.getDefaultInstance().createObject(RealmGenre.class);
 
         realmGenre.setId(genre.getId());
         realmGenre.setName(genre.getName());
 
         return realmGenre;
+    }
+
+    @Override
+    public Genre mapFromRealmObject(RealmGenre realmGenre) {
+        Genre genre = new Genre();
+        genre.setId(realmGenre.getId());
+        genre.setName(realmGenre.getName());
+
+        return genre;
     }
 }
