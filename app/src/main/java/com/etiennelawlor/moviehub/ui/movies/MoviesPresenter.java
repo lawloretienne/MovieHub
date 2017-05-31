@@ -3,7 +3,6 @@ package com.etiennelawlor.moviehub.ui.movies;
 import com.etiennelawlor.moviehub.data.model.MoviesPage;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
 import com.etiennelawlor.moviehub.data.source.movie.MovieDataSourceContract;
-import com.etiennelawlor.moviehub.data.source.movies.MoviesDataSourceContract;
 import com.etiennelawlor.moviehub.util.EspressoIdlingResource;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 import com.etiennelawlor.moviehub.util.rxjava.SchedulerTransformer;

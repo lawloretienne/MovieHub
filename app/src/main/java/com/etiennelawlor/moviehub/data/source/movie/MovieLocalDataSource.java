@@ -5,7 +5,6 @@ import android.content.Context;
 import com.etiennelawlor.moviehub.data.local.realm.RealmUtility;
 import com.etiennelawlor.moviehub.data.model.MovieDetailsWrapper;
 import com.etiennelawlor.moviehub.data.model.MoviesPage;
-import com.etiennelawlor.moviehub.data.source.movies.MoviesDataSourceContract;
 
 import rx.Observable;
 

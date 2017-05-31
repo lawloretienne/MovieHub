@@ -3,7 +3,6 @@ package com.etiennelawlor.moviehub;
 import com.etiennelawlor.moviehub.data.model.MoviesPage;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
 import com.etiennelawlor.moviehub.data.source.movie.MovieDataSourceContract;
-import com.etiennelawlor.moviehub.data.source.movies.MoviesDataSourceContract;
 import com.etiennelawlor.moviehub.ui.movies.MoviesPresenter;
 import com.etiennelawlor.moviehub.ui.movies.MoviesUiContract;
 import com.etiennelawlor.moviehub.util.rxjava.TestSchedulerTransformer;
