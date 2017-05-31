@@ -2,6 +2,7 @@ package com.etiennelawlor.moviehub;
 
 import com.etiennelawlor.moviehub.data.model.MoviesPage;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
+import com.etiennelawlor.moviehub.data.source.movie.MovieDataSourceContract;
 import com.etiennelawlor.moviehub.data.source.movies.MoviesDataSourceContract;
 import com.etiennelawlor.moviehub.ui.movies.MoviesPresenter;
 import com.etiennelawlor.moviehub.ui.movies.MoviesUiContract;
@@ -37,7 +38,7 @@ public class MoviesPresenterTest {
     @Mock
     private MoviesUiContract.View mockMoviesView;
     @Mock
-    private MoviesDataSourceContract.Repository mockMoviesRepository;
+    private MovieDataSourceContract.Repository mockMovieRepository;
 
     // Stubs
     private Observable stub;
@@ -56,7 +57,7 @@ public class MoviesPresenterTest {
         MockitoAnnotations.initMocks(this);
 
         // Get a reference to the class under test
-        moviesPresenter = new MoviesPresenter(mockMoviesView, mockMoviesRepository, new TestSchedulerTransformer<MoviesPage>());
+        moviesPresenter = new MoviesPresenter(mockMoviesView, mockMovieRepository, new TestSchedulerTransformer<MoviesPage>());
     }
 
     // region Test Methods
@@ -66,7 +67,7 @@ public class MoviesPresenterTest {
         // 1. (Given) Set up conditions required for the test
         moviesPage = new MoviesPage(getListOfMovies(0), 1, true, Calendar.getInstance().getTime());
         stub = Observable.<MoviesPage>error(new IOException());
-        when(mockMoviesRepository.getPopularMovies(anyInt())).thenReturn(stub);
+        when(mockMovieRepository.getPopularMovies(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         moviesPresenter.onLoadPopularMovies(moviesPage.getPageNumber());
@@ -76,7 +77,7 @@ public class MoviesPresenterTest {
         verify(mockMoviesView).hideErrorView();
         verify(mockMoviesView).showLoadingView();
 
-        verify(mockMoviesRepository).getPopularMovies(anyInt());
+        verify(mockMovieRepository).getPopularMovies(anyInt());
 
         verify(mockMoviesView).hideLoadingView();
         verify(mockMoviesView).setErrorText(anyString());
@@ -88,7 +89,7 @@ public class MoviesPresenterTest {
         // 1. (Given) Set up conditions required for the test
         moviesPage = new MoviesPage(getListOfMovies(0), 2, true, Calendar.getInstance().getTime());
         stub = Observable.<MoviesPage>error(new IOException());
-        when(mockMoviesRepository.getPopularMovies(anyInt())).thenReturn(stub);
+        when(mockMovieRepository.getPopularMovies(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         moviesPresenter.onLoadPopularMovies(moviesPage.getPageNumber());
@@ -96,7 +97,7 @@ public class MoviesPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMoviesView).showLoadingFooter();
 
-        verify(mockMoviesRepository).getPopularMovies(anyInt());
+        verify(mockMovieRepository).getPopularMovies(anyInt());
 
         verify(mockMoviesView).showErrorFooter();
     }
@@ -106,7 +107,7 @@ public class MoviesPresenterTest {
         // 1. (Given) Set up conditions required for the test
         moviesPage = new MoviesPage(getListOfMovies(0), 1, true, Calendar.getInstance().getTime());
         stub = Observable.just(moviesPage);
-        when(mockMoviesRepository.getPopularMovies(anyInt())).thenReturn(stub);
+        when(mockMovieRepository.getPopularMovies(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         moviesPresenter.onLoadPopularMovies(moviesPage.getPageNumber());
@@ -116,7 +117,7 @@ public class MoviesPresenterTest {
         verify(mockMoviesView).hideErrorView();
         verify(mockMoviesView).showLoadingView();
 
-        verify(mockMoviesRepository).getPopularMovies(anyInt());
+        verify(mockMovieRepository).getPopularMovies(anyInt());
 
         verify(mockMoviesView).hideLoadingView();
         verify(mockMoviesView).showEmptyView();
@@ -128,7 +129,7 @@ public class MoviesPresenterTest {
         // 1. (Given) Set up conditions required for the test
         moviesPage = new MoviesPage(getListOfMovies(0), 2, true, Calendar.getInstance().getTime());
         stub = Observable.just(moviesPage);
-        when(mockMoviesRepository.getPopularMovies(anyInt())).thenReturn(stub);
+        when(mockMovieRepository.getPopularMovies(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         moviesPresenter.onLoadPopularMovies(moviesPage.getPageNumber());
@@ -136,7 +137,7 @@ public class MoviesPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMoviesView).showLoadingFooter();
 
-        verify(mockMoviesRepository).getPopularMovies(anyInt());
+        verify(mockMovieRepository).getPopularMovies(anyInt());
 
         verify(mockMoviesView).removeFooter();
         verify(mockMoviesView).setMoviesPage(moviesPage);
@@ -147,7 +148,7 @@ public class MoviesPresenterTest {
         // 1. (Given) Set up conditions required for the test
         moviesPage = new MoviesPage(getListOfMovies(5), 1, true, Calendar.getInstance().getTime());
         stub = Observable.just(moviesPage);
-        when(mockMoviesRepository.getPopularMovies(anyInt())).thenReturn(stub);
+        when(mockMovieRepository.getPopularMovies(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         moviesPresenter.onLoadPopularMovies(moviesPage.getPageNumber());
@@ -157,7 +158,7 @@ public class MoviesPresenterTest {
         verify(mockMoviesView).hideErrorView();
         verify(mockMoviesView).showLoadingView();
 
-        verify(mockMoviesRepository).getPopularMovies(anyInt());
+        verify(mockMovieRepository).getPopularMovies(anyInt());
 
         verify(mockMoviesView).hideLoadingView();
         verify(mockMoviesView).addHeader();
@@ -170,7 +171,7 @@ public class MoviesPresenterTest {
         // 1. (Given) Set up conditions required for the test
         moviesPage = new MoviesPage(getListOfMovies(5), 1, false, Calendar.getInstance().getTime());
         stub = Observable.just(moviesPage);
-        when(mockMoviesRepository.getPopularMovies(anyInt())).thenReturn(stub);
+        when(mockMovieRepository.getPopularMovies(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         moviesPresenter.onLoadPopularMovies(moviesPage.getPageNumber());
@@ -180,7 +181,7 @@ public class MoviesPresenterTest {
         verify(mockMoviesView).hideErrorView();
         verify(mockMoviesView).showLoadingView();
 
-        verify(mockMoviesRepository).getPopularMovies(anyInt());
+        verify(mockMovieRepository).getPopularMovies(anyInt());
 
         verify(mockMoviesView).hideLoadingView();
         verify(mockMoviesView).addHeader();
@@ -194,7 +195,7 @@ public class MoviesPresenterTest {
         // 1. (Given) Set up conditions required for the test
         moviesPage = new MoviesPage(getListOfMovies(5), 2, true, Calendar.getInstance().getTime());
         stub = Observable.just(moviesPage);
-        when(mockMoviesRepository.getPopularMovies(anyInt())).thenReturn(stub);
+        when(mockMovieRepository.getPopularMovies(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         moviesPresenter.onLoadPopularMovies(moviesPage.getPageNumber());
@@ -202,7 +203,7 @@ public class MoviesPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMoviesView).showLoadingFooter();
 
-        verify(mockMoviesRepository).getPopularMovies(anyInt());
+        verify(mockMovieRepository).getPopularMovies(anyInt());
 
         verify(mockMoviesView).removeFooter();
         verify(mockMoviesView).addMoviesToAdapter(moviesPage.getMovies());
@@ -214,7 +215,7 @@ public class MoviesPresenterTest {
         // 1. (Given) Set up conditions required for the test
         moviesPage = new MoviesPage(getListOfMovies(5), 2, false, Calendar.getInstance().getTime());
         stub = Observable.just(moviesPage);
-        when(mockMoviesRepository.getPopularMovies(anyInt())).thenReturn(stub);
+        when(mockMovieRepository.getPopularMovies(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         moviesPresenter.onLoadPopularMovies(moviesPage.getPageNumber());
@@ -222,7 +223,7 @@ public class MoviesPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMoviesView).showLoadingFooter();
 
-        verify(mockMoviesRepository).getPopularMovies(anyInt());
+        verify(mockMovieRepository).getPopularMovies(anyInt());
 
         verify(mockMoviesView).removeFooter();
         verify(mockMoviesView).addMoviesToAdapter(moviesPage.getMovies());
@@ -242,7 +243,7 @@ public class MoviesPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMoviesView).openMovieDetails(movie);
 
-        verifyZeroInteractions(mockMoviesRepository);
+        verifyZeroInteractions(mockMovieRepository);
     }
 
     @Test
@@ -255,7 +256,7 @@ public class MoviesPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMoviesView).loadMoreItems();
 
-        verifyZeroInteractions(mockMoviesRepository);
+        verifyZeroInteractions(mockMovieRepository);
     }
 
     @Test
@@ -266,7 +267,7 @@ public class MoviesPresenterTest {
         moviesPresenter.onDestroyView();
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verifyZeroInteractions(mockMoviesView);
-        verifyZeroInteractions(mockMoviesRepository);
+        verifyZeroInteractions(mockMovieRepository);
     }
 
     // endregion

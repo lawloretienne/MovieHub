@@ -1,5 +1,6 @@
-package com.etiennelawlor.moviehub.data.source.movies;
+package com.etiennelawlor.moviehub.data.source.movie;
 
+import com.etiennelawlor.moviehub.data.model.MovieDetailsWrapper;
 import com.etiennelawlor.moviehub.data.model.MoviesPage;
 
 import rx.Observable;
@@ -10,7 +11,7 @@ import rx.functions.Func1;
  * Created by etiennelawlor on 2/13/17.
  */
 
-public class MoviesRepository implements MoviesDataSourceContract.Repository {
+public class MovieRepository implements MovieDataSourceContract.Repository {
 
     // Load data from local and remote
     // http://blog.danlew.net/2015/06/22/loading-data-from-multiple-sources-with-rxjava/
@@ -22,21 +23,21 @@ public class MoviesRepository implements MoviesDataSourceContract.Repository {
     // https://github.com/dcampogiani/Qwertee/blob/f71dbc318264bcc05a7f51c8cb8c40e54b53b57e/data/src/main/java/com/danielecampogiani/qwertee/data/local/model/MapperImpl.java
 
     // region Member Variables
-    private MoviesDataSourceContract.LocalDateSource moviesLocalDataSource;
-    private MoviesDataSourceContract.RemoteDateSource moviesRemoteDataSource;
+    private MovieDataSourceContract.LocalDateSource movieLocalDataSource;
+    private MovieDataSourceContract.RemoteDateSource movieRemoteDataSource;
     // endregion
 
     // region Constructors
-    public MoviesRepository(MoviesDataSourceContract.LocalDateSource moviesLocalDataSource, MoviesDataSourceContract.RemoteDateSource moviesRemoteDataSource) {
-        this.moviesLocalDataSource = moviesLocalDataSource;
-        this.moviesRemoteDataSource = moviesRemoteDataSource;
+    public MovieRepository(MovieDataSourceContract.LocalDateSource movieLocalDataSource, MovieDataSourceContract.RemoteDateSource movieRemoteDataSource) {
+        this.movieLocalDataSource = movieLocalDataSource;
+        this.movieRemoteDataSource = movieRemoteDataSource;
     }
     // endregion
 
-    // region MoviesDataSourceContract.Repository Methods
+    // region MovieDataSourceContract.Repository Methods
     @Override
     public Observable<MoviesPage> getPopularMovies(final int currentPage) {
-        Observable<MoviesPage> local = moviesLocalDataSource.getPopularMovies(currentPage)
+        Observable<MoviesPage> local = movieLocalDataSource.getPopularMovies(currentPage)
                 .filter(new Func1<MoviesPage, Boolean>() {
                     @Override
                     public Boolean call(MoviesPage moviesPage) {
@@ -44,11 +45,27 @@ public class MoviesRepository implements MoviesDataSourceContract.Repository {
                     }
                 });
         Observable<MoviesPage> remote =
-                moviesRemoteDataSource.getPopularMovies(currentPage)
+                movieRemoteDataSource.getPopularMovies(currentPage)
                         .doOnNext(new Action1<MoviesPage>() {
                             @Override
                             public void call(MoviesPage moviesPage) {
-                                moviesLocalDataSource.savePopularMovies(moviesPage);
+                                movieLocalDataSource.savePopularMovies(moviesPage);
+                            }
+                        });
+
+        return Observable.concat(local, remote).first();
+    }
+
+    @Override
+    public Observable<MovieDetailsWrapper> getMovieDetails(int movieId) {
+        Observable<MovieDetailsWrapper> local = movieLocalDataSource.getMovieDetails(movieId);
+
+        Observable<MovieDetailsWrapper> remote =
+                movieRemoteDataSource.getMovieDetails(movieId)
+                        .doOnNext(new Action1<MovieDetailsWrapper>() {
+                            @Override
+                            public void call(MovieDetailsWrapper movieDetailsWrapper) {
+                                movieLocalDataSource.saveMovieDetails(movieDetailsWrapper);
                             }
                         });
 

@@ -3,7 +3,7 @@ package com.etiennelawlor.moviehub.ui.moviedetails;
 import com.etiennelawlor.moviehub.data.model.MovieDetailsWrapper;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
 import com.etiennelawlor.moviehub.data.remote.response.Person;
-import com.etiennelawlor.moviehub.data.source.moviedetails.MovieDetailsDataSourceContract;
+import com.etiennelawlor.moviehub.data.source.movie.MovieDataSourceContract;
 import com.etiennelawlor.moviehub.util.EspressoIdlingResource;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 import com.etiennelawlor.moviehub.util.rxjava.SchedulerTransformer;
@@ -21,15 +21,15 @@ public class MovieDetailsPresenter implements MovieDetailsUiContract.Presenter {
 
     // region Member Variables
     private final MovieDetailsUiContract.View movieDetailsView;
-    private final MovieDetailsDataSourceContract.Repository movieDetailsRepository;
+    private final MovieDataSourceContract.Repository movieRepository;
     private final SchedulerTransformer<MovieDetailsWrapper> schedulerTransformer;
     private CompositeSubscription compositeSubscription = new CompositeSubscription();
     // endregion
 
     // region Constructors
-    public MovieDetailsPresenter(MovieDetailsUiContract.View movieDetailsView, MovieDetailsDataSourceContract.Repository movieDetailsRepository, SchedulerTransformer<MovieDetailsWrapper> schedulerTransformer) {
+    public MovieDetailsPresenter(MovieDetailsUiContract.View movieDetailsView, MovieDataSourceContract.Repository movieRepository, SchedulerTransformer<MovieDetailsWrapper> schedulerTransformer) {
         this.movieDetailsView = movieDetailsView;
-        this.movieDetailsRepository = movieDetailsRepository;
+        this.movieRepository = movieRepository;
         this.schedulerTransformer = schedulerTransformer;
     }
     // endregion
@@ -47,7 +47,7 @@ public class MovieDetailsPresenter implements MovieDetailsUiContract.Presenter {
         // that the app is busy until the response is handled.
         EspressoIdlingResource.increment(); // App is busy until further notice
 
-        Subscription subscription = movieDetailsRepository.getMovieDetails(movieId)
+        Subscription subscription = movieRepository.getMovieDetails(movieId)
                 .compose(schedulerTransformer)
                 .doOnTerminate(new Action0() {
                     @Override

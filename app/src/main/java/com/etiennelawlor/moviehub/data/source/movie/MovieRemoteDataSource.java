@@ -1,9 +1,10 @@
-package com.etiennelawlor.moviehub.data.source.moviedetails;
+package com.etiennelawlor.moviehub.data.source.movie;
 
 import android.content.Context;
 import android.text.TextUtils;
 
 import com.etiennelawlor.moviehub.data.model.MovieDetailsWrapper;
+import com.etiennelawlor.moviehub.data.model.MoviesPage;
 import com.etiennelawlor.moviehub.data.remote.AuthorizedNetworkInterceptor;
 import com.etiennelawlor.moviehub.data.remote.MovieHubService;
 import com.etiennelawlor.moviehub.data.remote.ServiceGenerator;
@@ -14,25 +15,33 @@ import com.etiennelawlor.moviehub.data.remote.response.MovieReleaseDate;
 import com.etiennelawlor.moviehub.data.remote.response.MovieReleaseDateEnvelope;
 import com.etiennelawlor.moviehub.data.remote.response.MovieReleaseDatesEnvelope;
 import com.etiennelawlor.moviehub.data.remote.response.MoviesEnvelope;
+import com.etiennelawlor.moviehub.data.source.movies.MoviesDataSourceContract;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import rx.Observable;
+import rx.functions.Func1;
 import rx.functions.Func4;
 
 /**
  * Created by etiennelawlor on 2/13/17.
  */
 
-public class MovieDetailsRemoteDataSource implements MovieDetailsDataSourceContract.RemoteDateSource {
+public class MovieRemoteDataSource implements MovieDataSourceContract.RemoteDateSource {
+
+    // region Constants
+    private static final int PAGE_SIZE = 20;
+    private static final int SEVEN_DAYS = 7;
+    // endregion
 
     // region Member Variables
     private MovieHubService movieHubService;
     // endregion
 
     // region Constructors
-    public MovieDetailsRemoteDataSource(Context context) {
+    public MovieRemoteDataSource(Context context) {
         movieHubService = ServiceGenerator.createService(
                 MovieHubService.class,
                 MovieHubService.BASE_URL,
@@ -41,7 +50,27 @@ public class MovieDetailsRemoteDataSource implements MovieDetailsDataSourceContr
     }
     // endregion
 
-    // region MovieDetailsDataSourceContract.RemoteDateSource Methods
+    // region MovieDataSourceContract.RemoteDateSource Methods
+    @Override
+    public Observable<MoviesPage> getPopularMovies(final int currentPage) {
+        return movieHubService.getPopularMovies(currentPage)
+                .flatMap(new Func1<MoviesEnvelope, Observable<List<Movie>>>() {
+                    @Override
+                    public Observable<List<Movie>> call(MoviesEnvelope moviesEnvelope) {
+                        return Observable.just(moviesEnvelope.getMovies());
+                    }
+                })
+                .map(new Func1<List<Movie>, MoviesPage>() {
+                    @Override
+                    public MoviesPage call(List<Movie> movies) {
+                        boolean isLastPage = movies.size() < PAGE_SIZE ? true : false;
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.add(Calendar.DATE, SEVEN_DAYS);
+                        return new MoviesPage(movies, currentPage, isLastPage, calendar.getTime() );
+                    }
+                });
+    }
+
     @Override
     public Observable<MovieDetailsWrapper> getMovieDetails(int movieId) {
         return Observable.zip(
@@ -95,6 +124,5 @@ public class MovieDetailsRemoteDataSource implements MovieDetailsDataSourceContr
                     }
                 });
     }
-
     // endregion
 }

@@ -20,9 +20,9 @@ import android.widget.TextView;
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.data.model.MoviesPage;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
-import com.etiennelawlor.moviehub.data.source.movies.MoviesLocalDataSource;
-import com.etiennelawlor.moviehub.data.source.movies.MoviesRemoteDataSource;
-import com.etiennelawlor.moviehub.data.source.movies.MoviesRepository;
+import com.etiennelawlor.moviehub.data.source.movie.MovieLocalDataSource;
+import com.etiennelawlor.moviehub.data.source.movie.MovieRemoteDataSource;
+import com.etiennelawlor.moviehub.data.source.movie.MovieRepository;
 import com.etiennelawlor.moviehub.ui.base.BaseAdapter;
 import com.etiennelawlor.moviehub.ui.base.BaseFragment;
 import com.etiennelawlor.moviehub.ui.moviedetails.MovieDetailsActivity;
@@ -127,9 +127,9 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
 
         moviesPresenter = new MoviesPresenter(
                 this,
-                new MoviesRepository(
-                        new MoviesLocalDataSource(getContext()),
-                        new MoviesRemoteDataSource(getContext())),
+                new MovieRepository(
+                        new MovieLocalDataSource(getContext()),
+                        new MovieRemoteDataSource(getContext())),
                 new ProductionSchedulerTransformer<MoviesPage>()
                 );
 

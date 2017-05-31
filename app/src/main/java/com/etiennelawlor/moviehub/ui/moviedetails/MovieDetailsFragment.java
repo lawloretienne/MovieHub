@@ -50,9 +50,9 @@ import com.etiennelawlor.moviehub.data.remote.response.Genre;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
 import com.etiennelawlor.moviehub.data.remote.response.MovieCredit;
 import com.etiennelawlor.moviehub.data.remote.response.Person;
-import com.etiennelawlor.moviehub.data.source.moviedetails.MovieDetailsLocalDataSource;
-import com.etiennelawlor.moviehub.data.source.moviedetails.MovieDetailsRemoteDataSource;
-import com.etiennelawlor.moviehub.data.source.moviedetails.MovieDetailsRepository;
+import com.etiennelawlor.moviehub.data.source.movie.MovieLocalDataSource;
+import com.etiennelawlor.moviehub.data.source.movie.MovieRemoteDataSource;
+import com.etiennelawlor.moviehub.data.source.movie.MovieRepository;
 import com.etiennelawlor.moviehub.ui.base.BaseAdapter;
 import com.etiennelawlor.moviehub.ui.base.BaseFragment;
 import com.etiennelawlor.moviehub.ui.common.GravitySnapHelper;
@@ -420,9 +420,9 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
 
         movieDetailsPresenter = new MovieDetailsPresenter(
                 this,
-                new MovieDetailsRepository(
-                        new MovieDetailsLocalDataSource(getContext()),
-                        new MovieDetailsRemoteDataSource(getContext())),
+                new MovieRepository(
+                        new MovieLocalDataSource(getContext()),
+                        new MovieRemoteDataSource(getContext())),
                 new ProductionSchedulerTransformer<MovieDetailsWrapper>()
         );
 

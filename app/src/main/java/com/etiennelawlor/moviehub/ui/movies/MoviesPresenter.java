@@ -2,6 +2,7 @@ package com.etiennelawlor.moviehub.ui.movies;
 
 import com.etiennelawlor.moviehub.data.model.MoviesPage;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
+import com.etiennelawlor.moviehub.data.source.movie.MovieDataSourceContract;
 import com.etiennelawlor.moviehub.data.source.movies.MoviesDataSourceContract;
 import com.etiennelawlor.moviehub.util.EspressoIdlingResource;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
@@ -22,15 +23,15 @@ public class MoviesPresenter implements MoviesUiContract.Presenter {
 
     // region Member Variables
     private final MoviesUiContract.View moviesView;
-    private final MoviesDataSourceContract.Repository moviesRepository;
+    private final MovieDataSourceContract.Repository movieRepository;
     private final SchedulerTransformer<MoviesPage> schedulerTransformer;
     private CompositeSubscription compositeSubscription = new CompositeSubscription();
     // endregion
 
     // region Constructors
-    public MoviesPresenter(MoviesUiContract.View moviesView, MoviesDataSourceContract.Repository moviesRepository, SchedulerTransformer<MoviesPage> schedulerTransformer) {
+    public MoviesPresenter(MoviesUiContract.View moviesView, MovieDataSourceContract.Repository movieRepository, SchedulerTransformer<MoviesPage> schedulerTransformer) {
         this.moviesView = moviesView;
-        this.moviesRepository = moviesRepository;
+        this.movieRepository = movieRepository;
         this.schedulerTransformer = schedulerTransformer;
     }
     // endregion
@@ -56,7 +57,7 @@ public class MoviesPresenter implements MoviesUiContract.Presenter {
         // that the app is busy until the response is handled.
         EspressoIdlingResource.increment(); // App is busy until further notice
 
-        Subscription subscription = moviesRepository.getPopularMovies(currentPage)
+        Subscription subscription = movieRepository.getPopularMovies(currentPage)
                 .compose(schedulerTransformer)
                 .doOnTerminate(new Action0() {
                     @Override

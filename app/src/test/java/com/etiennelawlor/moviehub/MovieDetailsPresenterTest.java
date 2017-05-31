@@ -4,7 +4,7 @@ import com.etiennelawlor.moviehub.data.model.MovieDetailsWrapper;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
 import com.etiennelawlor.moviehub.data.remote.response.MovieCredit;
 import com.etiennelawlor.moviehub.data.remote.response.Person;
-import com.etiennelawlor.moviehub.data.source.moviedetails.MovieDetailsDataSourceContract;
+import com.etiennelawlor.moviehub.data.source.movie.MovieDataSourceContract;
 import com.etiennelawlor.moviehub.ui.moviedetails.MovieDetailsPresenter;
 import com.etiennelawlor.moviehub.ui.moviedetails.MovieDetailsUiContract;
 import com.etiennelawlor.moviehub.util.rxjava.TestSchedulerTransformer;
@@ -37,7 +37,7 @@ public class MovieDetailsPresenterTest {
     @Mock
     private MovieDetailsUiContract.View mockMovieDetailsView;
     @Mock
-    private MovieDetailsDataSourceContract.Repository mockMovieDetailsRepository;
+    private MovieDataSourceContract.Repository mockMovieRepository;
 
     // Stubs
     private Observable stub;
@@ -56,7 +56,7 @@ public class MovieDetailsPresenterTest {
         MockitoAnnotations.initMocks(this);
 
         // Get a reference to the class under test
-        movieDetailsPresenter = new MovieDetailsPresenter(mockMovieDetailsView, mockMovieDetailsRepository, new TestSchedulerTransformer<MovieDetailsWrapper>());
+        movieDetailsPresenter = new MovieDetailsPresenter(mockMovieDetailsView, mockMovieRepository, new TestSchedulerTransformer<MovieDetailsWrapper>());
     }
 
     // region Test Methods
@@ -72,7 +72,7 @@ public class MovieDetailsPresenterTest {
         String rating = "";
         movieDetailsWrapper = new MovieDetailsWrapper(movie, cast, crew, similarMovies, rating);
         stub = Observable.<MovieDetailsWrapper>error(new IOException());
-        when(mockMovieDetailsRepository.getMovieDetails(anyInt())).thenReturn(stub);
+        when(mockMovieRepository.getMovieDetails(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         movieDetailsPresenter.onLoadMovieDetails(movie.getId());
@@ -92,7 +92,7 @@ public class MovieDetailsPresenterTest {
         String rating = "";
         movieDetailsWrapper = new MovieDetailsWrapper(movie, cast, crew, similarMovies, rating);
         stub = Observable.just(movieDetailsWrapper);
-        when(mockMovieDetailsRepository.getMovieDetails(anyInt())).thenReturn(stub);
+        when(mockMovieRepository.getMovieDetails(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         movieDetailsPresenter.onLoadMovieDetails(movie.getId());
@@ -112,7 +112,7 @@ public class MovieDetailsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMovieDetailsView).openPersonDetails(person);
 
-        verifyZeroInteractions(mockMovieDetailsRepository);
+        verifyZeroInteractions(mockMovieRepository);
     }
 
     @Test
@@ -126,7 +126,7 @@ public class MovieDetailsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMovieDetailsView).openMovieDetails(movie);
 
-        verifyZeroInteractions(mockMovieDetailsRepository);
+        verifyZeroInteractions(mockMovieRepository);
     }
 
     @Test
@@ -140,7 +140,7 @@ public class MovieDetailsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMovieDetailsView).showToolbarTitle();
 
-        verifyZeroInteractions(mockMovieDetailsRepository);
+        verifyZeroInteractions(mockMovieRepository);
     }
 
     @Test
@@ -154,7 +154,7 @@ public class MovieDetailsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMovieDetailsView).hideToolbarTitle();
 
-        verifyZeroInteractions(mockMovieDetailsRepository);
+        verifyZeroInteractions(mockMovieRepository);
     }
 
     @Test
@@ -165,7 +165,7 @@ public class MovieDetailsPresenterTest {
         movieDetailsPresenter.onDestroyView();
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verifyZeroInteractions(mockMovieDetailsView);
-        verifyZeroInteractions(mockMovieDetailsRepository);
+        verifyZeroInteractions(mockMovieRepository);
     }
 
     // endregion
