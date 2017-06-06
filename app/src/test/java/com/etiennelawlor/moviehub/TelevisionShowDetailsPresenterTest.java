@@ -4,7 +4,7 @@ import com.etiennelawlor.moviehub.data.model.TelevisionShowDetailsWrapper;
 import com.etiennelawlor.moviehub.data.remote.response.Person;
 import com.etiennelawlor.moviehub.data.remote.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.remote.response.TelevisionShowCredit;
-import com.etiennelawlor.moviehub.data.source.televisionshowdetails.TelevisionShowDetailsDataSourceContract;
+import com.etiennelawlor.moviehub.data.source.tv.TelevisionShowDataSourceContract;
 import com.etiennelawlor.moviehub.ui.televisionshowdetails.TelevisionShowDetailsPresenter;
 import com.etiennelawlor.moviehub.ui.televisionshowdetails.TelevisionShowDetailsUiContract;
 import com.etiennelawlor.moviehub.util.rxjava.TestSchedulerTransformer;
@@ -37,7 +37,7 @@ public class TelevisionShowDetailsPresenterTest {
     @Mock
     private TelevisionShowDetailsUiContract.View mockTelevisionShowDetailsView;
     @Mock
-    private TelevisionShowDetailsDataSourceContract.Repository mockTelevisionShowDetailsRepository;
+    private TelevisionShowDataSourceContract.Repository mockTelevisionShowRepository;
 
     // Stubs
     private Observable stub;
@@ -56,7 +56,7 @@ public class TelevisionShowDetailsPresenterTest {
         MockitoAnnotations.initMocks(this);
 
         // Get a reference to the class under test
-        televisionShowDetailsPresenter = new TelevisionShowDetailsPresenter(mockTelevisionShowDetailsView, mockTelevisionShowDetailsRepository, new TestSchedulerTransformer<TelevisionShowDetailsWrapper>());
+        televisionShowDetailsPresenter = new TelevisionShowDetailsPresenter(mockTelevisionShowDetailsView, mockTelevisionShowRepository, new TestSchedulerTransformer<TelevisionShowDetailsWrapper>());
     }
 
     // region Test Methods
@@ -72,7 +72,7 @@ public class TelevisionShowDetailsPresenterTest {
         String rating = "";
         televisionShowDetailsWrapper = new TelevisionShowDetailsWrapper(televisionShow, cast, crew, similarTelevisionShows, rating);
         stub = Observable.<TelevisionShowDetailsWrapper>error(new IOException());
-        when(mockTelevisionShowDetailsRepository.getTelevisionShowDetails(anyInt())).thenReturn(stub);
+        when(mockTelevisionShowRepository.getTelevisionShowDetails(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         televisionShowDetailsPresenter.onLoadTelevisionShowDetails(televisionShow.getId());
@@ -92,7 +92,7 @@ public class TelevisionShowDetailsPresenterTest {
         String rating = "";
         televisionShowDetailsWrapper = new TelevisionShowDetailsWrapper(televisionShow, cast, crew, similarTelevisionShows, rating);
         stub = Observable.just(televisionShowDetailsWrapper);
-        when(mockTelevisionShowDetailsRepository.getTelevisionShowDetails(anyInt())).thenReturn(stub);
+        when(mockTelevisionShowRepository.getTelevisionShowDetails(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         televisionShowDetailsPresenter.onLoadTelevisionShowDetails(televisionShow.getId());
@@ -112,7 +112,7 @@ public class TelevisionShowDetailsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockTelevisionShowDetailsView).openPersonDetails(person);
 
-        verifyZeroInteractions(mockTelevisionShowDetailsRepository);
+        verifyZeroInteractions(mockTelevisionShowRepository);
     }
 
     @Test
@@ -126,7 +126,7 @@ public class TelevisionShowDetailsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockTelevisionShowDetailsView).openTelevisionShowDetails(televisionShow);
 
-        verifyZeroInteractions(mockTelevisionShowDetailsRepository);
+        verifyZeroInteractions(mockTelevisionShowRepository);
     }
 
     @Test
@@ -140,7 +140,7 @@ public class TelevisionShowDetailsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockTelevisionShowDetailsView).showToolbarTitle();
 
-        verifyZeroInteractions(mockTelevisionShowDetailsRepository);
+        verifyZeroInteractions(mockTelevisionShowRepository);
     }
 
     @Test
@@ -154,7 +154,7 @@ public class TelevisionShowDetailsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockTelevisionShowDetailsView).hideToolbarTitle();
 
-        verifyZeroInteractions(mockTelevisionShowDetailsRepository);
+        verifyZeroInteractions(mockTelevisionShowRepository);
     }
 
     @Test
@@ -165,7 +165,7 @@ public class TelevisionShowDetailsPresenterTest {
         televisionShowDetailsPresenter.onDestroyView();
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verifyZeroInteractions(mockTelevisionShowDetailsView);
-        verifyZeroInteractions(mockTelevisionShowDetailsRepository);
+        verifyZeroInteractions(mockTelevisionShowRepository);
     }
 
     // endregion

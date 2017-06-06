@@ -3,7 +3,7 @@ package com.etiennelawlor.moviehub.ui.persondetails;
 import com.etiennelawlor.moviehub.data.model.PersonDetailsWrapper;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
 import com.etiennelawlor.moviehub.data.remote.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.source.persondetails.PersonDetailsDataSourceContract;
+import com.etiennelawlor.moviehub.data.source.person.PersonDataSourceContract;
 import com.etiennelawlor.moviehub.util.EspressoIdlingResource;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 import com.etiennelawlor.moviehub.util.rxjava.SchedulerTransformer;
@@ -21,16 +21,16 @@ public class PersonDetailsPresenter implements PersonDetailsUiContract.Presenter
 
     // region Member Variables
     private final PersonDetailsUiContract.View personDetailsView;
-    private final PersonDetailsDataSourceContract.Repository personDetailsRepository;
+    private final PersonDataSourceContract.Repository personRepository;
     private final SchedulerTransformer<PersonDetailsWrapper> schedulerTransformer;
     private CompositeSubscription compositeSubscription = new CompositeSubscription();
     // endregion
 
     // region Constructors
 
-    public PersonDetailsPresenter(PersonDetailsUiContract.View personDetailsView, PersonDetailsDataSourceContract.Repository personDetailsRepository, SchedulerTransformer<PersonDetailsWrapper> schedulerTransformer) {
+    public PersonDetailsPresenter(PersonDetailsUiContract.View personDetailsView, PersonDataSourceContract.Repository personRepository, SchedulerTransformer<PersonDetailsWrapper> schedulerTransformer) {
         this.personDetailsView = personDetailsView;
-        this.personDetailsRepository = personDetailsRepository;
+        this.personRepository = personRepository;
         this.schedulerTransformer = schedulerTransformer;
     }
 
@@ -50,7 +50,7 @@ public class PersonDetailsPresenter implements PersonDetailsUiContract.Presenter
         // that the app is busy until the response is handled.
         EspressoIdlingResource.increment(); // App is busy until further notice
 
-        Subscription subscription = personDetailsRepository.getPersonDetails(personId)
+        Subscription subscription = personRepository.getPersonDetails(personId)
                 .compose(schedulerTransformer)
                 .doOnTerminate(new Action0() {
                     @Override

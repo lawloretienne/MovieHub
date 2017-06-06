@@ -50,9 +50,9 @@ import com.etiennelawlor.moviehub.data.remote.response.Genre;
 import com.etiennelawlor.moviehub.data.remote.response.Person;
 import com.etiennelawlor.moviehub.data.remote.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.remote.response.TelevisionShowCredit;
-import com.etiennelawlor.moviehub.data.source.televisionshowdetails.TelevisionShowDetailsLocalDataSource;
-import com.etiennelawlor.moviehub.data.source.televisionshowdetails.TelevisionShowDetailsRemoteDataSource;
-import com.etiennelawlor.moviehub.data.source.televisionshowdetails.TelevisionShowDetailsRepository;
+import com.etiennelawlor.moviehub.data.source.tv.TelevisionShowLocalDataSource;
+import com.etiennelawlor.moviehub.data.source.tv.TelevisionShowRemoteDataSource;
+import com.etiennelawlor.moviehub.data.source.tv.TelevisionShowRepository;
 import com.etiennelawlor.moviehub.ui.base.BaseAdapter;
 import com.etiennelawlor.moviehub.ui.base.BaseFragment;
 import com.etiennelawlor.moviehub.ui.common.GravitySnapHelper;
@@ -397,9 +397,9 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
 
         televisionShowDetailsPresenter = new TelevisionShowDetailsPresenter(
                 this,
-                new TelevisionShowDetailsRepository(
-                        new TelevisionShowDetailsLocalDataSource(getContext()),
-                        new TelevisionShowDetailsRemoteDataSource(getContext())),
+                new TelevisionShowRepository(
+                        new TelevisionShowLocalDataSource(getContext()),
+                        new TelevisionShowRemoteDataSource(getContext())),
                 new ProductionSchedulerTransformer<TelevisionShowDetailsWrapper>()
         );
 

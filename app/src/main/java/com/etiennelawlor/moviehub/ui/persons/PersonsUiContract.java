@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.ui.persons;
 
-import com.etiennelawlor.moviehub.data.model.PagingInfo;
+import com.etiennelawlor.moviehub.data.model.PersonsPage;
 import com.etiennelawlor.moviehub.data.remote.response.Person;
 import com.etiennelawlor.moviehub.ui.base.BasePresenter;
 
@@ -27,7 +27,7 @@ public interface PersonsUiContract {
         void showLoadingFooter();
         void addPersonsToAdapter(List<Person> persons);
         void loadMoreItems();
-        void setPagingInfo(PagingInfo pagingInfo);
+        void setPersonsPage(PersonsPage personsPage);
 
         // Navigation methods
         void openPersonDetails(Person person);

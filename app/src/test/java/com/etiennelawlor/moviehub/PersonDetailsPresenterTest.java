@@ -5,7 +5,7 @@ import com.etiennelawlor.moviehub.data.remote.response.Movie;
 import com.etiennelawlor.moviehub.data.remote.response.Person;
 import com.etiennelawlor.moviehub.data.remote.response.PersonCredit;
 import com.etiennelawlor.moviehub.data.remote.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.source.persondetails.PersonDetailsDataSourceContract;
+import com.etiennelawlor.moviehub.data.source.person.PersonDataSourceContract;
 import com.etiennelawlor.moviehub.ui.persondetails.PersonDetailsPresenter;
 import com.etiennelawlor.moviehub.ui.persondetails.PersonDetailsUiContract;
 import com.etiennelawlor.moviehub.util.rxjava.TestSchedulerTransformer;
@@ -38,7 +38,7 @@ public class PersonDetailsPresenterTest {
     @Mock
     private PersonDetailsUiContract.View mockPersonDetailsView;
     @Mock
-    private PersonDetailsDataSourceContract.Repository mockPersonDetailsRepository;
+    private PersonDataSourceContract.Repository mockPersonRepository;
 
     // Stubs
     private Observable stub;
@@ -57,7 +57,7 @@ public class PersonDetailsPresenterTest {
         MockitoAnnotations.initMocks(this);
 
         // Get a reference to the class under test
-        personDetailsPresenter = new PersonDetailsPresenter(mockPersonDetailsView, mockPersonDetailsRepository, new TestSchedulerTransformer<PersonDetailsWrapper>());
+        personDetailsPresenter = new PersonDetailsPresenter(mockPersonDetailsView, mockPersonRepository, new TestSchedulerTransformer<PersonDetailsWrapper>());
     }
 
     // region Test Methods
@@ -71,7 +71,7 @@ public class PersonDetailsPresenterTest {
         List<PersonCredit> crew = new ArrayList<>();
         personDetailsWrapper = new PersonDetailsWrapper(person, cast, crew);
         stub = Observable.<PersonDetailsWrapper>error(new IOException());
-        when(mockPersonDetailsRepository.getPersonDetails(anyInt())).thenReturn(stub);
+        when(mockPersonRepository.getPersonDetails(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         personDetailsPresenter.onLoadPersonDetails(person.getId());
@@ -89,7 +89,7 @@ public class PersonDetailsPresenterTest {
         List<PersonCredit> crew = new ArrayList<>();
         personDetailsWrapper = new PersonDetailsWrapper(person, cast, crew);
         stub = Observable.just(personDetailsWrapper);
-        when(mockPersonDetailsRepository.getPersonDetails(anyInt())).thenReturn(stub);
+        when(mockPersonRepository.getPersonDetails(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         personDetailsPresenter.onLoadPersonDetails(person.getId());
@@ -109,7 +109,7 @@ public class PersonDetailsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockPersonDetailsView).openMovieDetails(movie);
 
-        verifyZeroInteractions(mockPersonDetailsRepository);
+        verifyZeroInteractions(mockPersonRepository);
     }
 
     @Test
@@ -123,7 +123,7 @@ public class PersonDetailsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockPersonDetailsView).openTelevisionShowDetails(televisionShow);
 
-        verifyZeroInteractions(mockPersonDetailsRepository);
+        verifyZeroInteractions(mockPersonRepository);
     }
 
     @Test
@@ -137,7 +137,7 @@ public class PersonDetailsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockPersonDetailsView).showToolbarTitle();
 
-        verifyZeroInteractions(mockPersonDetailsRepository);
+        verifyZeroInteractions(mockPersonRepository);
     }
 
     @Test
@@ -151,7 +151,7 @@ public class PersonDetailsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockPersonDetailsView).hideToolbarTitle();
 
-        verifyZeroInteractions(mockPersonDetailsRepository);
+        verifyZeroInteractions(mockPersonRepository);
     }
 
     @Test
@@ -162,7 +162,7 @@ public class PersonDetailsPresenterTest {
         personDetailsPresenter.onDestroyView();
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verifyZeroInteractions(mockPersonDetailsView);
-        verifyZeroInteractions(mockPersonDetailsRepository);
+        verifyZeroInteractions(mockPersonRepository);
     }
 
     // endregion

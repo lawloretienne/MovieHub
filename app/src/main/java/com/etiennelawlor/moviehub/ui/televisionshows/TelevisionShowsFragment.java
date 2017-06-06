@@ -18,12 +18,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.model.PagingInfo;
-import com.etiennelawlor.moviehub.data.model.TelevisionShowsWrapper;
+import com.etiennelawlor.moviehub.data.model.TelevisionShowsPage;
 import com.etiennelawlor.moviehub.data.remote.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.source.televisionshows.TelevisionShowsLocalDataSource;
-import com.etiennelawlor.moviehub.data.source.televisionshows.TelevisionShowsRemoteDataSource;
-import com.etiennelawlor.moviehub.data.source.televisionshows.TelevisionShowsRepository;
+import com.etiennelawlor.moviehub.data.source.tv.TelevisionShowLocalDataSource;
+import com.etiennelawlor.moviehub.data.source.tv.TelevisionShowRemoteDataSource;
+import com.etiennelawlor.moviehub.data.source.tv.TelevisionShowRepository;
 import com.etiennelawlor.moviehub.ui.base.BaseAdapter;
 import com.etiennelawlor.moviehub.ui.base.BaseFragment;
 import com.etiennelawlor.moviehub.ui.televisionshowdetails.TelevisionShowDetailsActivity;
@@ -69,14 +68,14 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
     private Unbinder unbinder;
     private StaggeredGridLayoutManager layoutManager;
     private boolean isLoading = false;
-    private PagingInfo pagingInfo;
+    private TelevisionShowsPage televisionShowsPage;
     private TelevisionShowsUiContract.Presenter televisionShowsPresenter;
     // endregion
 
     // region Listeners
     @OnClick(R.id.reload_btn)
     public void onReloadButtonClicked() {
-        televisionShowsPresenter.onLoadPopularTelevisionShows(pagingInfo == null ? 1 : pagingInfo.getCurrentPage());
+        televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsPage == null ? 1 : televisionShowsPage.getPageNumber());
     }
 
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
@@ -97,7 +96,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
             if ((visibleItemCount + firstVisibleItem) >= totalItemCount
                     && totalItemCount > 0
                     && !isLoading
-                    && !pagingInfo.isLastPage()) {
+                    && !televisionShowsPage.isLastPage()) {
                 televisionShowsPresenter.onScrollToEndOfList();
             }
         }
@@ -129,10 +128,10 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
 
         televisionShowsPresenter = new TelevisionShowsPresenter(
                 this,
-                new TelevisionShowsRepository(
-                        new TelevisionShowsLocalDataSource(getContext()),
-                        new TelevisionShowsRemoteDataSource(getContext())),
-                new ProductionSchedulerTransformer<TelevisionShowsWrapper>()
+                new TelevisionShowRepository(
+                        new TelevisionShowLocalDataSource(getContext()),
+                        new TelevisionShowRemoteDataSource(getContext())),
+                new ProductionSchedulerTransformer<TelevisionShowsPage>()
         );
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
@@ -163,7 +162,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
         // Pagination
         recyclerView.addOnScrollListener(recyclerViewOnScrollListener);
 
-        televisionShowsPresenter.onLoadPopularTelevisionShows(pagingInfo == null ? 1 : pagingInfo.getCurrentPage());
+        televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsPage == null ? 1 : televisionShowsPage.getPageNumber());
     }
 
     @Override
@@ -191,7 +190,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
     // region TelevisionShowsAdapter.OnReloadClickListener Methods
     @Override
     public void onReloadClick() {
-        televisionShowsPresenter.onLoadPopularTelevisionShows(pagingInfo.getCurrentPage());
+        televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsPage.getPageNumber());
     }
     // endregion
 
@@ -268,13 +267,13 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
 
     @Override
     public void loadMoreItems() {
-        pagingInfo.incrementPage();
-        televisionShowsPresenter.onLoadPopularTelevisionShows(pagingInfo.getCurrentPage());
+        televisionShowsPage.incrementPageNumber();
+        televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsPage.getPageNumber());
     }
 
     @Override
-    public void setPagingInfo(PagingInfo pagingInfo) {
-        this.pagingInfo = pagingInfo;
+    public void setTelevisionShowsPage(TelevisionShowsPage televisionShowsPage) {
+        this.televisionShowsPage = televisionShowsPage;
     }
 
     @Override

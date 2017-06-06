@@ -1,17 +1,12 @@
 package com.etiennelawlor.moviehub;
 
 import com.etiennelawlor.moviehub.data.model.SearchWrapper;
-import com.etiennelawlor.moviehub.data.model.TelevisionShowDetailsWrapper;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
 import com.etiennelawlor.moviehub.data.remote.response.Person;
 import com.etiennelawlor.moviehub.data.remote.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.remote.response.TelevisionShowCredit;
 import com.etiennelawlor.moviehub.data.source.search.SearchDataSourceContract;
-import com.etiennelawlor.moviehub.data.source.televisionshowdetails.TelevisionShowDetailsDataSourceContract;
 import com.etiennelawlor.moviehub.ui.search.SearchPresenter;
 import com.etiennelawlor.moviehub.ui.search.SearchUiContract;
-import com.etiennelawlor.moviehub.ui.televisionshowdetails.TelevisionShowDetailsPresenter;
-import com.etiennelawlor.moviehub.ui.televisionshowdetails.TelevisionShowDetailsUiContract;
 import com.etiennelawlor.moviehub.util.rxjava.TestSchedulerTransformer;
 
 import org.junit.Before;
@@ -25,7 +20,6 @@ import java.util.List;
 
 import rx.Observable;
 
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;

@@ -18,12 +18,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.model.PagingInfo;
-import com.etiennelawlor.moviehub.data.model.PersonsWrapper;
+import com.etiennelawlor.moviehub.data.model.PersonsPage;
 import com.etiennelawlor.moviehub.data.remote.response.Person;
-import com.etiennelawlor.moviehub.data.source.persons.PersonsLocalDataSource;
-import com.etiennelawlor.moviehub.data.source.persons.PersonsRemoteDataSource;
-import com.etiennelawlor.moviehub.data.source.persons.PersonsRepository;
+import com.etiennelawlor.moviehub.data.source.person.PersonLocalDataSource;
+import com.etiennelawlor.moviehub.data.source.person.PersonRemoteDataSource;
+import com.etiennelawlor.moviehub.data.source.person.PersonRepository;
 import com.etiennelawlor.moviehub.ui.base.BaseAdapter;
 import com.etiennelawlor.moviehub.ui.base.BaseFragment;
 import com.etiennelawlor.moviehub.ui.persondetails.PersonDetailsActivity;
@@ -69,14 +68,14 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     private Unbinder unbinder;
     private StaggeredGridLayoutManager layoutManager;
     private PersonsUiContract.Presenter personsPresenter;
-    private PagingInfo pagingInfo;
+    private PersonsPage personsPage;
     private boolean isLoading = false;
     // endregion
 
     // region Listeners
     @OnClick(R.id.reload_btn)
     public void onReloadButtonClicked() {
-        personsPresenter.onLoadPopularPersons(pagingInfo == null ? 1 : pagingInfo.getCurrentPage());
+        personsPresenter.onLoadPopularPersons(personsPage == null ? 1 : personsPage.getPageNumber());
     }
 
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
@@ -97,7 +96,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
             if ((visibleItemCount + firstVisibleItem) >= totalItemCount
                     && totalItemCount > 0
                     && !isLoading
-                    && !pagingInfo.isLastPage()) {
+                    && !personsPage.isLastPage()) {
                 personsPresenter.onScrollToEndOfList();
             }
         }
@@ -129,10 +128,10 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
 
         personsPresenter = new PersonsPresenter(
                 this,
-                new PersonsRepository(
-                        new PersonsLocalDataSource(getContext()),
-                        new PersonsRemoteDataSource(getContext())),
-                new ProductionSchedulerTransformer<PersonsWrapper>()
+                new PersonRepository(
+                        new PersonLocalDataSource(getContext()),
+                        new PersonRemoteDataSource(getContext())),
+                new ProductionSchedulerTransformer<PersonsPage>()
         );
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
@@ -163,7 +162,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
         // Pagination
         recyclerView.addOnScrollListener(recyclerViewOnScrollListener);
 
-        personsPresenter.onLoadPopularPersons(pagingInfo == null ? 1 : pagingInfo.getCurrentPage());
+        personsPresenter.onLoadPopularPersons(personsPage == null ? 1 : personsPage.getPageNumber());
     }
 
     @Override
@@ -190,7 +189,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     // region PersonsAdapter.OnReloadClickListener Methods
     @Override
     public void onReloadClick() {
-        personsPresenter.onLoadPopularPersons(pagingInfo.getCurrentPage());
+        personsPresenter.onLoadPopularPersons(personsPage.getPageNumber());
     }
     // endregion
 
@@ -267,13 +266,13 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
 
     @Override
     public void loadMoreItems() {
-        pagingInfo.incrementPage();
-        personsPresenter.onLoadPopularPersons(pagingInfo.getCurrentPage());
+        personsPage.incrementPageNumber();
+        personsPresenter.onLoadPopularPersons(personsPage.getPageNumber());
     }
 
     @Override
-    public void setPagingInfo(PagingInfo pagingInfo) {
-        this.pagingInfo = pagingInfo;
+    public void setPersonsPage(PersonsPage personsPage) {
+        this.personsPage = personsPage;
     }
 
     @Override

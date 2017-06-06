@@ -52,9 +52,9 @@ import com.etiennelawlor.moviehub.data.remote.response.PersonCredit;
 import com.etiennelawlor.moviehub.data.remote.response.ProfileImage;
 import com.etiennelawlor.moviehub.data.remote.response.ProfileImages;
 import com.etiennelawlor.moviehub.data.remote.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.source.persondetails.PersonDetailsLocalDataSource;
-import com.etiennelawlor.moviehub.data.source.persondetails.PersonDetailsRemoteDataSource;
-import com.etiennelawlor.moviehub.data.source.persondetails.PersonDetailsRepository;
+import com.etiennelawlor.moviehub.data.source.person.PersonLocalDataSource;
+import com.etiennelawlor.moviehub.data.source.person.PersonRemoteDataSource;
+import com.etiennelawlor.moviehub.data.source.person.PersonRepository;
 import com.etiennelawlor.moviehub.ui.base.BaseAdapter;
 import com.etiennelawlor.moviehub.ui.base.BaseFragment;
 import com.etiennelawlor.moviehub.ui.common.GravitySnapHelper;
@@ -419,9 +419,9 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
 
         personDetailsPresenter = new PersonDetailsPresenter(
                 this,
-                new PersonDetailsRepository(
-                        new PersonDetailsLocalDataSource(getContext()),
-                        new PersonDetailsRemoteDataSource(getContext())),
+                new PersonRepository(
+                        new PersonLocalDataSource(getContext()),
+                        new PersonRemoteDataSource(getContext())),
                 new ProductionSchedulerTransformer<PersonDetailsWrapper>()
         );
 

@@ -19,7 +19,7 @@ public interface MovieDataSourceContract {
 
     interface LocalDateSource {
         Observable<MoviesPage> getPopularMovies(int currentPage);
-        void savePopularMovies(MoviesPage moviesWrapper);
+        void savePopularMovies(MoviesPage moviesPage);
 
         Observable<MovieDetailsWrapper> getMovieDetails(int movieId);
         void saveMovieDetails(MovieDetailsWrapper movieDetailsWrapper);

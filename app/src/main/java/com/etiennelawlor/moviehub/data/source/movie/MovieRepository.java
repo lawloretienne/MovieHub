@@ -4,8 +4,6 @@ import com.etiennelawlor.moviehub.data.model.MovieDetailsWrapper;
 import com.etiennelawlor.moviehub.data.model.MoviesPage;
 
 import rx.Observable;
-import rx.functions.Action1;
-import rx.functions.Func1;
 
 /**
  * Created by etiennelawlor on 2/13/17.
@@ -38,20 +36,10 @@ public class MovieRepository implements MovieDataSourceContract.Repository {
     @Override
     public Observable<MoviesPage> getPopularMovies(final int currentPage) {
         Observable<MoviesPage> local = movieLocalDataSource.getPopularMovies(currentPage)
-                .filter(new Func1<MoviesPage, Boolean>() {
-                    @Override
-                    public Boolean call(MoviesPage moviesPage) {
-                        return !moviesPage.isExpired();
-                    }
-                });
+                .filter(moviesPage -> !moviesPage.isExpired());
         Observable<MoviesPage> remote =
                 movieRemoteDataSource.getPopularMovies(currentPage)
-                        .doOnNext(new Action1<MoviesPage>() {
-                            @Override
-                            public void call(MoviesPage moviesPage) {
-                                movieLocalDataSource.savePopularMovies(moviesPage);
-                            }
-                        });
+                        .doOnNext(moviesPage -> movieLocalDataSource.savePopularMovies(moviesPage));
 
         return Observable.concat(local, remote).first();
     }
@@ -62,12 +50,7 @@ public class MovieRepository implements MovieDataSourceContract.Repository {
 
         Observable<MovieDetailsWrapper> remote =
                 movieRemoteDataSource.getMovieDetails(movieId)
-                        .doOnNext(new Action1<MovieDetailsWrapper>() {
-                            @Override
-                            public void call(MovieDetailsWrapper movieDetailsWrapper) {
-                                movieLocalDataSource.saveMovieDetails(movieDetailsWrapper);
-                            }
-                        });
+                        .doOnNext(movieDetailsWrapper -> movieLocalDataSource.saveMovieDetails(movieDetailsWrapper));
 
         return Observable.concat(local, remote).first();
     }

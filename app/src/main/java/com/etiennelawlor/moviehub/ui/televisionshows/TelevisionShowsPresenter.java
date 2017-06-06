@@ -1,9 +1,8 @@
 package com.etiennelawlor.moviehub.ui.televisionshows;
 
-import com.etiennelawlor.moviehub.data.model.PagingInfo;
-import com.etiennelawlor.moviehub.data.model.TelevisionShowsWrapper;
+import com.etiennelawlor.moviehub.data.model.TelevisionShowsPage;
 import com.etiennelawlor.moviehub.data.remote.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.source.televisionshows.TelevisionShowsDataSourceContract;
+import com.etiennelawlor.moviehub.data.source.tv.TelevisionShowDataSourceContract;
 import com.etiennelawlor.moviehub.util.EspressoIdlingResource;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 import com.etiennelawlor.moviehub.util.rxjava.SchedulerTransformer;
@@ -23,15 +22,15 @@ public class TelevisionShowsPresenter implements TelevisionShowsUiContract.Prese
 
     // region Member Variables
     private final TelevisionShowsUiContract.View televisionShowsView;
-    private final TelevisionShowsDataSourceContract.Repository televisionShowsRepository;
-    private final SchedulerTransformer<TelevisionShowsWrapper> schedulerTransformer;
+    private final TelevisionShowDataSourceContract.Repository televisionShowRepository;
+    private final SchedulerTransformer<TelevisionShowsPage> schedulerTransformer;
     private CompositeSubscription compositeSubscription = new CompositeSubscription();
     // endregion
 
     // region Constructors
-    public TelevisionShowsPresenter(TelevisionShowsUiContract.View televisionShowsView, TelevisionShowsDataSourceContract.Repository televisionShowsRepository, SchedulerTransformer<TelevisionShowsWrapper> schedulerTransformer) {
+    public TelevisionShowsPresenter(TelevisionShowsUiContract.View televisionShowsView, TelevisionShowDataSourceContract.Repository televisionShowRepository, SchedulerTransformer<TelevisionShowsPage> schedulerTransformer) {
         this.televisionShowsView = televisionShowsView;
-        this.televisionShowsRepository = televisionShowsRepository;
+        this.televisionShowRepository = televisionShowRepository;
         this.schedulerTransformer = schedulerTransformer;
     }
     // endregion
@@ -58,7 +57,7 @@ public class TelevisionShowsPresenter implements TelevisionShowsUiContract.Prese
         // that the app is busy until the response is handled.
         EspressoIdlingResource.increment(); // App is busy until further notice
 
-        Subscription subscription = televisionShowsRepository.getPopularTelevisionShows(currentPage)
+        Subscription subscription = televisionShowRepository.getPopularTelevisionShows(currentPage)
                 .compose(schedulerTransformer)
                 .doOnTerminate(new Action0() {
                     @Override
@@ -68,7 +67,7 @@ public class TelevisionShowsPresenter implements TelevisionShowsUiContract.Prese
                         }
                     }
                 })
-                .subscribe(new Subscriber<TelevisionShowsWrapper>() {
+                .subscribe(new Subscriber<TelevisionShowsPage>() {
                     @Override
                     public void onCompleted() {
 
@@ -93,14 +92,12 @@ public class TelevisionShowsPresenter implements TelevisionShowsUiContract.Prese
                     }
 
                     @Override
-                    public void onNext(TelevisionShowsWrapper televisionShowsWrapper) {
-                        if(televisionShowsWrapper != null){
-                            PagingInfo pagingInfo = televisionShowsWrapper.getPagingInfo();
-                            int currentPage = pagingInfo.getCurrentPage();
-                            boolean isLastPage = pagingInfo.isLastPage();
-
-                            List<TelevisionShow> televisionShows = televisionShowsWrapper.getTelevisionShows();
-                            boolean hasTelevisionShows = televisionShowsWrapper.hasTelevisionShows();
+                    public void onNext(TelevisionShowsPage televisionShowsPage) {
+                        if(televisionShowsPage != null){
+                            List<TelevisionShow> televisionShows = televisionShowsPage.getTelevisionShows();
+                            int currentPage = televisionShowsPage.getPageNumber();
+                            boolean isLastPage = televisionShowsPage.isLastPage();
+                            boolean hasTelevisionShows = televisionShowsPage.hasTelevisionShows();
                             if(currentPage == 1){
                                 televisionShowsView.hideLoadingView();
 
@@ -124,7 +121,7 @@ public class TelevisionShowsPresenter implements TelevisionShowsUiContract.Prese
                                 }
                             }
 
-                            televisionShowsView.setPagingInfo(pagingInfo);
+                            televisionShowsView.setTelevisionShowsPage(televisionShowsPage);
                         }
 
                     }

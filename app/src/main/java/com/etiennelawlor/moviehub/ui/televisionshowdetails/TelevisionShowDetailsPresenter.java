@@ -3,7 +3,7 @@ package com.etiennelawlor.moviehub.ui.televisionshowdetails;
 import com.etiennelawlor.moviehub.data.model.TelevisionShowDetailsWrapper;
 import com.etiennelawlor.moviehub.data.remote.response.Person;
 import com.etiennelawlor.moviehub.data.remote.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.source.televisionshowdetails.TelevisionShowDetailsDataSourceContract;
+import com.etiennelawlor.moviehub.data.source.tv.TelevisionShowDataSourceContract;
 import com.etiennelawlor.moviehub.util.EspressoIdlingResource;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 import com.etiennelawlor.moviehub.util.rxjava.SchedulerTransformer;
@@ -21,16 +21,16 @@ public class TelevisionShowDetailsPresenter implements TelevisionShowDetailsUiCo
 
     // region Member Variables
     private final TelevisionShowDetailsUiContract.View televisionShowDetailsView;
-    private final TelevisionShowDetailsDataSourceContract.Repository televisionShowDetailsRepository;
+    private final TelevisionShowDataSourceContract.Repository televisionShowRepository;
     private final SchedulerTransformer<TelevisionShowDetailsWrapper> schedulerTransformer;
     private CompositeSubscription compositeSubscription = new CompositeSubscription();
     // endregion
 
     // region Constructors
 
-    public TelevisionShowDetailsPresenter(TelevisionShowDetailsUiContract.View televisionShowDetailsView, TelevisionShowDetailsDataSourceContract.Repository televisionShowDetailsRepository, SchedulerTransformer<TelevisionShowDetailsWrapper> schedulerTransformer) {
+    public TelevisionShowDetailsPresenter(TelevisionShowDetailsUiContract.View televisionShowDetailsView, TelevisionShowDataSourceContract.Repository televisionShowRepository, SchedulerTransformer<TelevisionShowDetailsWrapper> schedulerTransformer) {
         this.televisionShowDetailsView = televisionShowDetailsView;
-        this.televisionShowDetailsRepository = televisionShowDetailsRepository;
+        this.televisionShowRepository = televisionShowRepository;
         this.schedulerTransformer = schedulerTransformer;
     }
 
@@ -50,7 +50,7 @@ public class TelevisionShowDetailsPresenter implements TelevisionShowDetailsUiCo
         // that the app is busy until the response is handled.
         EspressoIdlingResource.increment(); // App is busy until further notice
 
-        Subscription subscription = televisionShowDetailsRepository.getTelevisionShowDetails(televisionShowId)
+        Subscription subscription = televisionShowRepository.getTelevisionShowDetails(televisionShowId)
                 .compose(schedulerTransformer)
                 .doOnTerminate(new Action0() {
                     @Override

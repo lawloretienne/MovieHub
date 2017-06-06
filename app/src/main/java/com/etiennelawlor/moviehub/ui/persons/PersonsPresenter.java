@@ -1,9 +1,8 @@
 package com.etiennelawlor.moviehub.ui.persons;
 
-import com.etiennelawlor.moviehub.data.model.PagingInfo;
-import com.etiennelawlor.moviehub.data.model.PersonsWrapper;
+import com.etiennelawlor.moviehub.data.model.PersonsPage;
 import com.etiennelawlor.moviehub.data.remote.response.Person;
-import com.etiennelawlor.moviehub.data.source.persons.PersonsDataSourceContract;
+import com.etiennelawlor.moviehub.data.source.person.PersonDataSourceContract;
 import com.etiennelawlor.moviehub.util.EspressoIdlingResource;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 import com.etiennelawlor.moviehub.util.rxjava.SchedulerTransformer;
@@ -23,15 +22,15 @@ public class PersonsPresenter implements PersonsUiContract.Presenter {
 
     // region Member Variables
     private final PersonsUiContract.View personsView;
-    private final PersonsDataSourceContract.Repository personsRepository;
-    private final SchedulerTransformer<PersonsWrapper> schedulerTransformer;
+    private final PersonDataSourceContract.Repository personRepository;
+    private final SchedulerTransformer<PersonsPage> schedulerTransformer;
     private CompositeSubscription compositeSubscription = new CompositeSubscription();
     // endregion
 
     // region Constructors
-    public PersonsPresenter(PersonsUiContract.View personsView, PersonsDataSourceContract.Repository personsRepository, SchedulerTransformer<PersonsWrapper> schedulerTransformer) {
+    public PersonsPresenter(PersonsUiContract.View personsView, PersonDataSourceContract.Repository personRepository, SchedulerTransformer<PersonsPage> schedulerTransformer) {
         this.personsView = personsView;
-        this.personsRepository = personsRepository;
+        this.personRepository = personRepository;
         this.schedulerTransformer = schedulerTransformer;
     }
     // endregion
@@ -57,7 +56,7 @@ public class PersonsPresenter implements PersonsUiContract.Presenter {
         // that the app is busy until the response is handled.
         EspressoIdlingResource.increment(); // App is busy until further notice
 
-        Subscription subscription = personsRepository.getPopularPersons(currentPage)
+        Subscription subscription = personRepository.getPopularPersons(currentPage)
                 .compose(schedulerTransformer)
                 .doOnTerminate(new Action0() {
                     @Override
@@ -67,7 +66,7 @@ public class PersonsPresenter implements PersonsUiContract.Presenter {
                         }
                     }
                 })
-                .subscribe(new Subscriber<PersonsWrapper>() {
+                .subscribe(new Subscriber<PersonsPage>() {
                     @Override
                     public void onCompleted() {
 
@@ -92,18 +91,17 @@ public class PersonsPresenter implements PersonsUiContract.Presenter {
                     }
 
                     @Override
-                    public void onNext(PersonsWrapper personsWrapper) {
-                        if(personsWrapper != null){
-                            PagingInfo pagingInfo = personsWrapper.getPagingInfo();
-                            int currentPage = pagingInfo.getCurrentPage();
-                            boolean isLastPage = pagingInfo.isLastPage();
+                    public void onNext(PersonsPage personsPage) {
+                        if(personsPage != null){
+                            List<Person> persons = personsPage.getPersons();
+                            int currentPage = personsPage.getPageNumber();
+                            boolean isLastPage = personsPage.isLastPage();
+                            boolean hasMovies = personsPage.hasPersons();
 
-                            List<Person> persons = personsWrapper.getPersons();
-                            boolean hasPersons = personsWrapper.hasPersons();
                             if(currentPage == 1){
                                 personsView.hideLoadingView();
 
-                                if(hasPersons){
+                                if(hasMovies){
                                     personsView.addHeader();
                                     personsView.addPersonsToAdapter(persons);
 
@@ -115,7 +113,7 @@ public class PersonsPresenter implements PersonsUiContract.Presenter {
                             } else {
                                 personsView.removeFooter();
 
-                                if(hasPersons){
+                                if(hasMovies){
                                     personsView.addPersonsToAdapter(persons);
 
                                     if(!isLastPage)
@@ -123,7 +121,7 @@ public class PersonsPresenter implements PersonsUiContract.Presenter {
                                 }
                             }
 
-                            personsView.setPagingInfo(pagingInfo);
+                            personsView.setPersonsPage(personsPage);
                         }
                     }
                 });

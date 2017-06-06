@@ -1,9 +1,8 @@
 package com.etiennelawlor.moviehub;
 
-import com.etiennelawlor.moviehub.data.model.PagingInfo;
-import com.etiennelawlor.moviehub.data.model.TelevisionShowsWrapper;
+import com.etiennelawlor.moviehub.data.model.TelevisionShowsPage;
 import com.etiennelawlor.moviehub.data.remote.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.source.televisionshows.TelevisionShowsDataSourceContract;
+import com.etiennelawlor.moviehub.data.source.tv.TelevisionShowDataSourceContract;
 import com.etiennelawlor.moviehub.ui.televisionshows.TelevisionShowsPresenter;
 import com.etiennelawlor.moviehub.ui.televisionshows.TelevisionShowsUiContract;
 import com.etiennelawlor.moviehub.util.rxjava.TestSchedulerTransformer;
@@ -15,6 +14,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import rx.Observable;
@@ -37,7 +37,7 @@ public class TelevisionShowsPresenterTest {
     @Mock
     private TelevisionShowsUiContract.View mockTelevisionShowsView;
     @Mock
-    private TelevisionShowsDataSourceContract.Repository mockTelevisionShowsRepository;
+    private TelevisionShowDataSourceContract.Repository mockTelevisionShowRepository;
 
     // Stubs
     private Observable stub;
@@ -45,7 +45,7 @@ public class TelevisionShowsPresenterTest {
     // endregion
 
     // region Member Variables
-    private TelevisionShowsWrapper televisionShowsWrapper;
+    private TelevisionShowsPage televisionShowsPage;
     private TelevisionShowsPresenter televisionShowsPresenter;
     // endregion
 
@@ -56,7 +56,7 @@ public class TelevisionShowsPresenterTest {
         MockitoAnnotations.initMocks(this);
 
         // Get a reference to the class under test
-        televisionShowsPresenter = new TelevisionShowsPresenter(mockTelevisionShowsView, mockTelevisionShowsRepository, new TestSchedulerTransformer<TelevisionShowsWrapper>());
+        televisionShowsPresenter = new TelevisionShowsPresenter(mockTelevisionShowsView, mockTelevisionShowRepository, new TestSchedulerTransformer<TelevisionShowsPage>());
     }
 
     // region Test Methods
@@ -64,20 +64,19 @@ public class TelevisionShowsPresenterTest {
     @Test
     public void onLoadPopularTelevisionShows_shouldShowError_whenFirstPageRequestFailed() {
         // 1. (Given) Set up conditions required for the test
-        PagingInfo pagingInfo = new PagingInfo(1, true);
-        televisionShowsWrapper = new TelevisionShowsWrapper(getListOfTelevisionShows(0), pagingInfo);
-        stub = Observable.<TelevisionShowsWrapper>error(new IOException());
-        when(mockTelevisionShowsRepository.getPopularTelevisionShows(anyInt())).thenReturn(stub);
+        televisionShowsPage = new TelevisionShowsPage(getListOfTelevisionShows(0), 1, true, Calendar.getInstance().getTime());
+        stub = Observable.<TelevisionShowsPage>error(new IOException());
+        when(mockTelevisionShowRepository.getPopularTelevisionShows(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
-        televisionShowsPresenter.onLoadPopularTelevisionShows(pagingInfo.getCurrentPage());
+        televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsPage.getPageNumber());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockTelevisionShowsView).hideEmptyView();
         verify(mockTelevisionShowsView).hideErrorView();
         verify(mockTelevisionShowsView).showLoadingView();
 
-        verify(mockTelevisionShowsRepository).getPopularTelevisionShows(anyInt());
+        verify(mockTelevisionShowRepository).getPopularTelevisionShows(anyInt());
 
         verify(mockTelevisionShowsView).hideLoadingView();
         verify(mockTelevisionShowsView).setErrorText(anyString());
@@ -87,18 +86,17 @@ public class TelevisionShowsPresenterTest {
     @Test
     public void onLoadPopularTelevisionShows_shouldShowError_whenNextPageRequestFailed() {
         // 1. (Given) Set up conditions required for the test
-        PagingInfo pagingInfo = new PagingInfo(2, true);
-        televisionShowsWrapper = new TelevisionShowsWrapper(getListOfTelevisionShows(0), pagingInfo);
-        stub = Observable.<TelevisionShowsWrapper>error(new IOException());
-        when(mockTelevisionShowsRepository.getPopularTelevisionShows(anyInt())).thenReturn(stub);
+        televisionShowsPage = new TelevisionShowsPage(getListOfTelevisionShows(0), 2, true, Calendar.getInstance().getTime());
+        stub = Observable.<TelevisionShowsPage>error(new IOException());
+        when(mockTelevisionShowRepository.getPopularTelevisionShows(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
-        televisionShowsPresenter.onLoadPopularTelevisionShows(pagingInfo.getCurrentPage());
+        televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsPage.getPageNumber());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockTelevisionShowsView).showLoadingFooter();
 
-        verify(mockTelevisionShowsRepository).getPopularTelevisionShows(anyInt());
+        verify(mockTelevisionShowRepository).getPopularTelevisionShows(anyInt());
 
         verify(mockTelevisionShowsView).showErrorFooter();
     }
@@ -106,136 +104,130 @@ public class TelevisionShowsPresenterTest {
     @Test
     public void onLoadPopularTelevisionShowss_shouldShowEmpty_whenFirstPageHasNoTelevisionShows() {
         // 1. (Given) Set up conditions required for the test
-        PagingInfo pagingInfo = new PagingInfo(1, true);
-        televisionShowsWrapper = new TelevisionShowsWrapper(getListOfTelevisionShows(0), pagingInfo);
-        stub = Observable.just(televisionShowsWrapper);
-        when(mockTelevisionShowsRepository.getPopularTelevisionShows(anyInt())).thenReturn(stub);
+        televisionShowsPage = new TelevisionShowsPage(getListOfTelevisionShows(0), 1, true, Calendar.getInstance().getTime());
+        stub = Observable.just(televisionShowsPage);
+        when(mockTelevisionShowRepository.getPopularTelevisionShows(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
-        televisionShowsPresenter.onLoadPopularTelevisionShows(pagingInfo.getCurrentPage());
+        televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsPage.getPageNumber());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockTelevisionShowsView).hideEmptyView();
         verify(mockTelevisionShowsView).hideErrorView();
         verify(mockTelevisionShowsView).showLoadingView();
 
-        verify(mockTelevisionShowsRepository).getPopularTelevisionShows(anyInt());
+        verify(mockTelevisionShowRepository).getPopularTelevisionShows(anyInt());
 
         verify(mockTelevisionShowsView).hideLoadingView();
         verify(mockTelevisionShowsView).showEmptyView();
-        verify(mockTelevisionShowsView).setPagingInfo(pagingInfo);
+        verify(mockTelevisionShowsView).setTelevisionShowsPage(televisionShowsPage);
     }
 
     @Test
     public void onLoadPopularTelevisionShows_shouldNotAddTelevisionShows_whenNextPageHasNoTelevisionShows() {
         // 1. (Given) Set up conditions required for the test
-        PagingInfo pagingInfo = new PagingInfo(2, true);
-        televisionShowsWrapper = new TelevisionShowsWrapper(getListOfTelevisionShows(0), pagingInfo);
-        stub = Observable.just(televisionShowsWrapper);
-        when(mockTelevisionShowsRepository.getPopularTelevisionShows(anyInt())).thenReturn(stub);
+        televisionShowsPage = new TelevisionShowsPage(getListOfTelevisionShows(0), 2, true, Calendar.getInstance().getTime());
+        stub = Observable.just(televisionShowsPage);
+        when(mockTelevisionShowRepository.getPopularTelevisionShows(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
-        televisionShowsPresenter.onLoadPopularTelevisionShows(pagingInfo.getCurrentPage());
+        televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsPage.getPageNumber());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockTelevisionShowsView).showLoadingFooter();
 
-        verify(mockTelevisionShowsRepository).getPopularTelevisionShows(anyInt());
+        verify(mockTelevisionShowRepository).getPopularTelevisionShows(anyInt());
 
         verify(mockTelevisionShowsView).removeFooter();
-        verify(mockTelevisionShowsView).setPagingInfo(pagingInfo);
+        verify(mockTelevisionShowsView).setTelevisionShowsPage(televisionShowsPage);
     }
 
     @Test
     public void onLoadPopularTelevisionShows_shouldAddTelevisionShows_whenFirstPageHasTelevisionShowsAndIsLastPage() {
         // 1. (Given) Set up conditions required for the test
-        PagingInfo pagingInfo = new PagingInfo(1, true);
-        televisionShowsWrapper = new TelevisionShowsWrapper(getListOfTelevisionShows(5), pagingInfo);
-        stub = Observable.just(televisionShowsWrapper);
-        when(mockTelevisionShowsRepository.getPopularTelevisionShows(anyInt())).thenReturn(stub);
+        televisionShowsPage = new TelevisionShowsPage(getListOfTelevisionShows(5), 1, true, Calendar.getInstance().getTime());
+        stub = Observable.just(televisionShowsPage);
+        when(mockTelevisionShowRepository.getPopularTelevisionShows(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
-        televisionShowsPresenter.onLoadPopularTelevisionShows(pagingInfo.getCurrentPage());
+        televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsPage.getPageNumber());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockTelevisionShowsView).hideEmptyView();
         verify(mockTelevisionShowsView).hideErrorView();
         verify(mockTelevisionShowsView).showLoadingView();
 
-        verify(mockTelevisionShowsRepository).getPopularTelevisionShows(anyInt());
+        verify(mockTelevisionShowRepository).getPopularTelevisionShows(anyInt());
 
         verify(mockTelevisionShowsView).hideLoadingView();
         verify(mockTelevisionShowsView).addHeader();
-        verify(mockTelevisionShowsView).addTelevisionShowsToAdapter(televisionShowsWrapper.getTelevisionShows());
-        verify(mockTelevisionShowsView).setPagingInfo(pagingInfo);
+        verify(mockTelevisionShowsView).addTelevisionShowsToAdapter(televisionShowsPage.getTelevisionShows());
+        verify(mockTelevisionShowsView).setTelevisionShowsPage(televisionShowsPage);
     }
 
     @Test
     public void onLoadPopularTelevisionShows_shouldAddTelevisionShows_whenFirstPageHasTelevisionShowsAndIsNotLastPage() {
         // 1. (Given) Set up conditions required for the test
-        PagingInfo pagingInfo = new PagingInfo(1, false);
-        televisionShowsWrapper = new TelevisionShowsWrapper(getListOfTelevisionShows(5), pagingInfo);
-        stub = Observable.just(televisionShowsWrapper);
-        when(mockTelevisionShowsRepository.getPopularTelevisionShows(anyInt())).thenReturn(stub);
+        televisionShowsPage = new TelevisionShowsPage(getListOfTelevisionShows(5), 1, false, Calendar.getInstance().getTime());
+        stub = Observable.just(televisionShowsPage);
+        when(mockTelevisionShowRepository.getPopularTelevisionShows(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
-        televisionShowsPresenter.onLoadPopularTelevisionShows(pagingInfo.getCurrentPage());
+        televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsPage.getPageNumber());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockTelevisionShowsView).hideEmptyView();
         verify(mockTelevisionShowsView).hideErrorView();
         verify(mockTelevisionShowsView).showLoadingView();
 
-        verify(mockTelevisionShowsRepository).getPopularTelevisionShows(anyInt());
+        verify(mockTelevisionShowRepository).getPopularTelevisionShows(anyInt());
 
         verify(mockTelevisionShowsView).hideLoadingView();
         verify(mockTelevisionShowsView).addHeader();
-        verify(mockTelevisionShowsView).addTelevisionShowsToAdapter(televisionShowsWrapper.getTelevisionShows());
+        verify(mockTelevisionShowsView).addTelevisionShowsToAdapter(televisionShowsPage.getTelevisionShows());
         verify(mockTelevisionShowsView).addFooter();
-        verify(mockTelevisionShowsView).setPagingInfo(pagingInfo);
+        verify(mockTelevisionShowsView).setTelevisionShowsPage(televisionShowsPage);
     }
 
     @Test
     public void onLoadPopularTelevisionShows_shouldAddTelevisionShows_whenNextPageHasTelevisionShowsAndIsLastPage() {
         // 1. (Given) Set up conditions required for the test
-        PagingInfo pagingInfo = new PagingInfo(2, true);
-        televisionShowsWrapper = new TelevisionShowsWrapper(getListOfTelevisionShows(5), pagingInfo);
-        stub = Observable.just(televisionShowsWrapper);
-        when(mockTelevisionShowsRepository.getPopularTelevisionShows(anyInt())).thenReturn(stub);
+        televisionShowsPage = new TelevisionShowsPage(getListOfTelevisionShows(5), 2, true, Calendar.getInstance().getTime());
+        stub = Observable.just(televisionShowsPage);
+        when(mockTelevisionShowRepository.getPopularTelevisionShows(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
-        televisionShowsPresenter.onLoadPopularTelevisionShows(pagingInfo.getCurrentPage());
+        televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsPage.getPageNumber());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockTelevisionShowsView).showLoadingFooter();
 
-        verify(mockTelevisionShowsRepository).getPopularTelevisionShows(anyInt());
+        verify(mockTelevisionShowRepository).getPopularTelevisionShows(anyInt());
 
         verify(mockTelevisionShowsView).removeFooter();
-        verify(mockTelevisionShowsView).addTelevisionShowsToAdapter(televisionShowsWrapper.getTelevisionShows());
-        verify(mockTelevisionShowsView).setPagingInfo(pagingInfo);
+        verify(mockTelevisionShowsView).addTelevisionShowsToAdapter(televisionShowsPage.getTelevisionShows());
+        verify(mockTelevisionShowsView).setTelevisionShowsPage(televisionShowsPage);
     }
 
     @Test
     public void onLoadPopularTelevisionShows_shouldAddTelevisionShows_whenNextPageHasTelevisionShowsAndIsNotLastPage() {
         // 1. (Given) Set up conditions required for the test
-        PagingInfo pagingInfo = new PagingInfo(2, false);
-        televisionShowsWrapper = new TelevisionShowsWrapper(getListOfTelevisionShows(5), pagingInfo);
-        stub = Observable.just(televisionShowsWrapper);
-        when(mockTelevisionShowsRepository.getPopularTelevisionShows(anyInt())).thenReturn(stub);
+        televisionShowsPage = new TelevisionShowsPage(getListOfTelevisionShows(5), 2, false, Calendar.getInstance().getTime());
+        stub = Observable.just(televisionShowsPage);
+        when(mockTelevisionShowRepository.getPopularTelevisionShows(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
-        televisionShowsPresenter.onLoadPopularTelevisionShows(pagingInfo.getCurrentPage());
+        televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsPage.getPageNumber());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockTelevisionShowsView).showLoadingFooter();
 
-        verify(mockTelevisionShowsRepository).getPopularTelevisionShows(anyInt());
+        verify(mockTelevisionShowRepository).getPopularTelevisionShows(anyInt());
 
         verify(mockTelevisionShowsView).removeFooter();
-        verify(mockTelevisionShowsView).addTelevisionShowsToAdapter(televisionShowsWrapper.getTelevisionShows());
+        verify(mockTelevisionShowsView).addTelevisionShowsToAdapter(televisionShowsPage.getTelevisionShows());
         verify(mockTelevisionShowsView).addFooter();
-        verify(mockTelevisionShowsView).setPagingInfo(pagingInfo);
+        verify(mockTelevisionShowsView).setTelevisionShowsPage(televisionShowsPage);
 //        verify(mockTelevisionShowsView, times(1)).setModel(any(TelevisionShowsWrapper.class)); // Alternative verify check
     }
 
@@ -250,7 +242,7 @@ public class TelevisionShowsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockTelevisionShowsView).openTelevisionShowDetails(televisionShow);
 
-        verifyZeroInteractions(mockTelevisionShowsRepository);
+        verifyZeroInteractions(mockTelevisionShowRepository);
     }
 
     @Test
@@ -263,7 +255,7 @@ public class TelevisionShowsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockTelevisionShowsView).loadMoreItems();
 
-        verifyZeroInteractions(mockTelevisionShowsRepository);
+        verifyZeroInteractions(mockTelevisionShowRepository);
     }
 
     @Test
@@ -274,7 +266,7 @@ public class TelevisionShowsPresenterTest {
         televisionShowsPresenter.onDestroyView();
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verifyZeroInteractions(mockTelevisionShowsView);
-        verifyZeroInteractions(mockTelevisionShowsRepository);
+        verifyZeroInteractions(mockTelevisionShowRepository);
     }
 
     // endregion
