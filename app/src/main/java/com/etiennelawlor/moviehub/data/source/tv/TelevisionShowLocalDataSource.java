@@ -2,6 +2,7 @@ package com.etiennelawlor.moviehub.data.source.tv;
 
 import android.content.Context;
 
+import com.etiennelawlor.moviehub.data.local.realm.RealmUtility;
 import com.etiennelawlor.moviehub.data.model.TelevisionShowDetailsWrapper;
 import com.etiennelawlor.moviehub.data.model.TelevisionShowsPage;
 
@@ -22,13 +23,16 @@ public class TelevisionShowLocalDataSource implements TelevisionShowDataSourceCo
 
     @Override
     public Observable<TelevisionShowsPage> getPopularTelevisionShows(int currentPage) {
-        //        Use mapper to convert from realm objects to POJOs
-        return Observable.empty();
+        TelevisionShowsPage televisionShowsPage = RealmUtility.getTelevisionShowsPage(currentPage);
+        if(televisionShowsPage == null)
+            return Observable.empty();
+        else
+            return Observable.just(televisionShowsPage);
     }
 
     @Override
     public void savePopularTelevisionShows(TelevisionShowsPage televisionShowsPage) {
-//        Use mapper to convert from POJOs to realm objects
+        RealmUtility.saveTelevisionShowsPage(televisionShowsPage);
     }
 
     @Override

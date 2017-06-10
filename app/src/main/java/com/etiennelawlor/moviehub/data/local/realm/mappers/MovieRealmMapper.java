@@ -26,8 +26,8 @@ public class MovieRealmMapper implements RealmMapper<Movie, RealmMovie> {
         realmMovie.setAdult(movie.isAdult());
         realmMovie.setBackdropPath(movie.getBackdropPath());
         realmMovie.setBudget(movie.getBudget());
-        List<Genre> genres = movie.getGenres();
 
+        List<Genre> genres = movie.getGenres();
         RealmList<RealmGenre> realmGenres = new RealmList<>();
         if(genres != null && genres.size()>0) {
             for (Genre genre : genres) {

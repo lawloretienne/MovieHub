@@ -1,13 +1,5 @@
 package com.etiennelawlor.moviehub.data.local.realm.models;
 
-import android.support.v7.graphics.Palette;
-import android.text.TextUtils;
-
-import com.etiennelawlor.moviehub.util.DateUtility;
-import com.google.gson.annotations.SerializedName;
-
-import java.util.Calendar;
-
 import io.realm.RealmList;
 import io.realm.RealmObject;
 
@@ -17,57 +9,28 @@ import io.realm.RealmObject;
 
 public class RealmMovie extends RealmObject {
 
-    // region Constants
-    public static final String PATTERN = "yyyy-MM-dd";
-    public static final String SECURE_BASE_URL = "https://image.tmdb.org/t/p/";
-    public static final String POSTER_SIZE = "w780";
-    // endregion
-
     // region Fields
-    @SerializedName("adult")
     public boolean adult;
-    @SerializedName("backdrop_path")
     public String backdropPath;
-    @SerializedName("budget")
     public int budget;
-    @SerializedName("genres")
     public RealmList<RealmGenre> genres = null;
-    @SerializedName("homepage")
     public String homepage;
-    @SerializedName("id")
     public int id;
-    @SerializedName("imdb_id")
     public String imdbId;
-    @SerializedName("original_language")
     public String originalLanguage;
-    @SerializedName("original_title")
     public String originalTitle;
-    @SerializedName("overview")
     public String overview;
-    @SerializedName("popularity")
     public float popularity;
-    @SerializedName("poster_path")
     public String posterPath;
-    @SerializedName("release_date")
     public String releaseDate;
-    @SerializedName("revenue")
     public long revenue;
-    @SerializedName("runtime")
     public int runtime;
-    @SerializedName("status")
     public String status;
-    @SerializedName("tagline")
     public String tagline;
-    @SerializedName("title")
     public String title;
-    @SerializedName("video")
     public boolean video;
-    @SerializedName("vote_average")
     public float voteAverage;
-    @SerializedName("vote_count")
     public int voteCount;
-
-//    private Palette posterPalette;
     // endregion
 
     // region Constructors
@@ -161,33 +124,6 @@ public class RealmMovie extends RealmObject {
         return voteCount;
     }
 
-//    public Palette getPosterPalette() {
-//        return posterPalette;
-//    }
-
-    public String getReleaseYear(){
-        String releaseYear = "";
-        if (!TextUtils.isEmpty(releaseDate)) {
-            Calendar calendar = DateUtility.getCalendar(releaseDate, PATTERN);
-            releaseYear = String.format("%d", calendar.get(Calendar.YEAR));
-        }
-        return releaseYear;
-    }
-
-    public int getReleaseDateYear(){
-        int releaseDateYear = -1;
-        if (!TextUtils.isEmpty(releaseDate)) {
-            Calendar calendar = DateUtility.getCalendar(releaseDate, PATTERN);
-            releaseDateYear = calendar.get(Calendar.YEAR);
-        }
-        return releaseDateYear;
-    }
-
-    public String getPosterUrl(){
-        String profileUrl = String.format("%s%s%s", SECURE_BASE_URL, POSTER_SIZE, posterPath);
-        return profileUrl;
-    }
-
     // endregion
 
     // region Setters
@@ -275,10 +211,6 @@ public class RealmMovie extends RealmObject {
     public void setVoteCount(int voteCount) {
         this.voteCount = voteCount;
     }
-
-//    public void setPosterPalette(Palette posterPalette) {
-//        this.posterPalette = posterPalette;
-//    }
 
     // endregion
 }

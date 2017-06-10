@@ -3,9 +3,12 @@
 buildscript {
     repositories {
         jcenter()
+        maven {
+            url 'https://maven.google.com'
+        }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0-alpha2'
+        classpath 'com.android.tools.build:gradle:3.0.0-alpha3'
         classpath 'io.realm:realm-gradle-plugin:3.1.4'
 
         // NOTE: Do not place your application dependencies here; they belong

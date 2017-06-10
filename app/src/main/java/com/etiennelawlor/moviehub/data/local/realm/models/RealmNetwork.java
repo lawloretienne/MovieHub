@@ -3,10 +3,10 @@ package com.etiennelawlor.moviehub.data.local.realm.models;
 import io.realm.RealmObject;
 
 /**
- * Created by etiennelawlor on 5/14/17.
+ * Created by etiennelawlor on 12/16/16.
  */
 
-public class RealmGenre extends RealmObject {
+public class RealmNetwork extends RealmObject {
 
     // region Fields
     public int id;

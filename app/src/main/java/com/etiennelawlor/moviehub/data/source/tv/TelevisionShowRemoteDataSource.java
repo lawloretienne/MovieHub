@@ -9,18 +9,13 @@ import com.etiennelawlor.moviehub.data.remote.MovieHubService;
 import com.etiennelawlor.moviehub.data.remote.ServiceGenerator;
 import com.etiennelawlor.moviehub.data.remote.response.ContentRating;
 import com.etiennelawlor.moviehub.data.remote.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.remote.response.TelevisionShowContentRatingsEnvelope;
 import com.etiennelawlor.moviehub.data.remote.response.TelevisionShowCredit;
-import com.etiennelawlor.moviehub.data.remote.response.TelevisionShowCreditsEnvelope;
-import com.etiennelawlor.moviehub.data.remote.response.TelevisionShowsEnvelope;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import rx.Observable;
-import rx.functions.Func1;
-import rx.functions.Func4;
 
 /**
  * Created by etiennelawlor on 2/13/17.

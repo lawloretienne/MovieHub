@@ -1,10 +1,5 @@
 package com.etiennelawlor.moviehub.data.local.realm.models;
 
-import com.etiennelawlor.moviehub.data.remote.response.Images;
-import com.google.gson.annotations.SerializedName;
-
-import java.util.List;
-
 import io.realm.RealmList;
 import io.realm.RealmObject;
 
@@ -15,9 +10,7 @@ import io.realm.RealmObject;
 public class RealmConfiguration extends RealmObject {
 
     // region Fields
-    @SerializedName("images")
     public RealmImages images;
-    @SerializedName("change_keys")
     public RealmList<RealmString> changeKeys = null;
     // endregion
 

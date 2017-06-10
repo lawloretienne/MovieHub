@@ -4,9 +4,6 @@ import android.content.Context;
 
 import com.etiennelawlor.moviehub.data.model.PersonDetailsWrapper;
 import com.etiennelawlor.moviehub.data.model.PersonsPage;
-import com.etiennelawlor.moviehub.data.remote.response.Person;
-
-import java.util.List;
 
 import rx.Observable;
 
