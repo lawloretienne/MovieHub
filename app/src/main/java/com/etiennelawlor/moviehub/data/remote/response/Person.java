@@ -180,4 +180,20 @@ public class Person implements Parcelable {
             return new Person[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "biography='" + biography + '\'' +
+                ", birthday='" + birthday + '\'' +
+                ", deathday='" + deathday + '\'' +
+                ", id=" + id +
+                ", imdbId='" + imdbId + '\'' +
+                ", name='" + name + '\'' +
+                ", placeOfBirth='" + placeOfBirth + '\'' +
+                ", profilePath='" + profilePath + '\'' +
+                ", images=" + images +
+                ", profilePalette=" + profilePalette +
+                '}';
+    }
 }

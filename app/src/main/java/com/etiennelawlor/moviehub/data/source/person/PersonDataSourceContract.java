@@ -12,7 +12,6 @@ import rx.Observable;
 public interface PersonDataSourceContract {
 
     interface Repository {
-//        Restful VERB is the first part of method name GET , POST , DELETE, PUT
         Observable<PersonsPage> getPopularPersons(int currentPage);
 
         Observable<PersonDetailsWrapper> getPersonDetails(int personId);

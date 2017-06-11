@@ -60,4 +60,14 @@ public class TelevisionShowsEnvelope {
     }
 
     // endregion
+
+    @Override
+    public String toString() {
+        return "TelevisionShowsEnvelope{" +
+                "page=" + page +
+                ", televisionShows=" + televisionShows +
+                ", totalResults=" + totalResults +
+                ", totalPages=" + totalPages +
+                '}';
+    }
 }

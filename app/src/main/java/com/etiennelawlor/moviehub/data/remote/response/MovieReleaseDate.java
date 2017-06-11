@@ -68,4 +68,15 @@ public class MovieReleaseDate {
     }
 
     // endregion
+
+    @Override
+    public String toString() {
+        return "MovieReleaseDate{" +
+                "certification='" + certification + '\'' +
+                ", iso6391='" + iso6391 + '\'' +
+                ", note='" + note + '\'' +
+                ", releaseDate='" + releaseDate + '\'' +
+                ", type=" + type +
+                '}';
+    }
 }

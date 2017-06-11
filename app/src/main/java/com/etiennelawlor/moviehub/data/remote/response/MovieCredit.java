@@ -90,4 +90,16 @@ public class MovieCredit extends Credit {
     }
 
     // endregion
+
+    @Override
+    public String toString() {
+        return "MovieCredit{" +
+                "job='" + job + '\'' +
+                ", character='" + character + '\'' +
+                ", name='" + name + '\'' +
+                ", department='" + department + '\'' +
+                ", profilePath='" + profilePath + '\'' +
+                ", profilePalette=" + profilePalette +
+                '}';
+    }
 }

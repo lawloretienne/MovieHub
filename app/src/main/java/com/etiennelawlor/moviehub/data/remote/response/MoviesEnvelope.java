@@ -60,4 +60,14 @@ public class MoviesEnvelope {
     }
 
     // endregion
+
+    @Override
+    public String toString() {
+        return "MoviesEnvelope{" +
+                "page=" + page +
+                ", movies=" + movies +
+                ", totalResults=" + totalResults +
+                ", totalPages=" + totalPages +
+                '}';
+    }
 }

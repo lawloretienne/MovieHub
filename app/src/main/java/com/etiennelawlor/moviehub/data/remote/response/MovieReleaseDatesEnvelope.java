@@ -40,4 +40,12 @@ public class MovieReleaseDatesEnvelope {
     }
 
     // endregion
+
+    @Override
+    public String toString() {
+        return "MovieReleaseDatesEnvelope{" +
+                "id=" + id +
+                ", movieReleaseDateEnvelopes=" + movieReleaseDateEnvelopes +
+                '}';
+    }
 }

@@ -124,4 +124,16 @@ public class ProfileImage implements Parcelable {
             return new ProfileImage[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "ProfileImage{" +
+                "aspectRatio=" + aspectRatio +
+                ", filePath='" + filePath + '\'' +
+                ", height=" + height +
+                ", voteAverage=" + voteAverage +
+                ", voteCount=" + voteCount +
+                ", width=" + width +
+                '}';
+    }
 }

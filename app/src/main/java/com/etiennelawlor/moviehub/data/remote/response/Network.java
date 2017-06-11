@@ -76,4 +76,12 @@ public class Network implements Parcelable {
             return new Network[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "Network{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

@@ -50,4 +50,13 @@ public class PersonCreditsEnvelope {
     }
 
     // endregion
+
+    @Override
+    public String toString() {
+        return "PersonCreditsEnvelope{" +
+                "id=" + id +
+                ", cast=" + cast +
+                ", crew=" + crew +
+                '}';
+    }
 }

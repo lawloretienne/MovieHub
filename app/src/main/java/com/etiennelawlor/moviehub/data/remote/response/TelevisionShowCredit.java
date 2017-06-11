@@ -90,4 +90,16 @@ public class TelevisionShowCredit extends Credit {
     }
 
     // endregion
+
+    @Override
+    public String toString() {
+        return "TelevisionShowCredit{" +
+                "job='" + job + '\'' +
+                ", character='" + character + '\'' +
+                ", name='" + name + '\'' +
+                ", department='" + department + '\'' +
+                ", profilePath='" + profilePath + '\'' +
+                ", profilePalette=" + profilePalette +
+                '}';
+    }
 }

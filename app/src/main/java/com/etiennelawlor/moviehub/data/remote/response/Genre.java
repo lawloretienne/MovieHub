@@ -76,4 +76,12 @@ public class Genre implements Parcelable {
             return new Genre[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "Genre{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

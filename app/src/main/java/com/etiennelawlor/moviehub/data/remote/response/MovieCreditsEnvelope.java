@@ -50,4 +50,13 @@ public class MovieCreditsEnvelope {
     }
 
     // endregion
+
+    @Override
+    public String toString() {
+        return "MovieCreditsEnvelope{" +
+                "id=" + id +
+                ", cast=" + cast +
+                ", crew=" + crew +
+                '}';
+    }
 }

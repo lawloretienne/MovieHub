@@ -60,4 +60,14 @@ public class PeopleEnvelope {
     }
 
     // endregion
+
+    @Override
+    public String toString() {
+        return "PeopleEnvelope{" +
+                "page=" + page +
+                ", persons=" + persons +
+                ", totalResults=" + totalResults +
+                ", totalPages=" + totalPages +
+                '}';
+    }
 }

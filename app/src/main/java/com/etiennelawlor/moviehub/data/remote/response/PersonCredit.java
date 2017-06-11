@@ -152,4 +152,20 @@ public class PersonCredit extends Credit {
     }
 
     // endregion
+
+    @Override
+    public String toString() {
+        return "PersonCredit{" +
+                "job='" + job + '\'' +
+                ", character='" + character + '\'' +
+                ", title='" + title + '\'' +
+                ", name='" + name + '\'' +
+                ", department='" + department + '\'' +
+                ", posterPath='" + posterPath + '\'' +
+                ", firstAirDate='" + firstAirDate + '\'' +
+                ", releaseDate='" + releaseDate + '\'' +
+                ", mediaType='" + mediaType + '\'' +
+                ", posterPalette=" + posterPalette +
+                '}';
+    }
 }

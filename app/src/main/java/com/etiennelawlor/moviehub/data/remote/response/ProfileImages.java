@@ -68,4 +68,11 @@ public class ProfileImages implements Parcelable {
             return new ProfileImages[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "ProfileImages{" +
+                "profiles=" + profiles +
+                '}';
+    }
 }

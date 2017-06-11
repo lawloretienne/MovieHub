@@ -38,4 +38,12 @@ public class Credit {
     }
 
     // endregion
+
+    @Override
+    public String toString() {
+        return "Credit{" +
+                "id=" + id +
+                ", creditId='" + creditId + '\'' +
+                '}';
+    }
 }

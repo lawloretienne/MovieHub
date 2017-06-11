@@ -38,4 +38,12 @@ public class ContentRating {
     }
 
     // endregion
+
+    @Override
+    public String toString() {
+        return "ContentRating{" +
+                "iso31661='" + iso31661 + '\'' +
+                ", rating='" + rating + '\'' +
+                '}';
+    }
 }

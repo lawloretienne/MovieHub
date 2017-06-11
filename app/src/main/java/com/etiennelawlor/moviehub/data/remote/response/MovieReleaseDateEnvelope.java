@@ -40,4 +40,12 @@ public class MovieReleaseDateEnvelope {
     }
 
     // endregion
+
+    @Override
+    public String toString() {
+        return "MovieReleaseDateEnvelope{" +
+                "iso31661='" + iso31661 + '\'' +
+                ", movieReleaseDates=" + movieReleaseDates +
+                '}';
+    }
 }

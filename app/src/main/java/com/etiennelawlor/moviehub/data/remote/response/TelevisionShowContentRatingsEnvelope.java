@@ -40,4 +40,12 @@ public class TelevisionShowContentRatingsEnvelope {
     }
 
     // endregion
+
+    @Override
+    public String toString() {
+        return "TelevisionShowContentRatingsEnvelope{" +
+                "id=" + id +
+                ", contentRatings=" + contentRatings +
+                '}';
+    }
 }

@@ -40,4 +40,12 @@ public class Configuration {
     }
 
     // endregion
+
+    @Override
+    public String toString() {
+        return "Configuration{" +
+                "images=" + images +
+                ", changeKeys=" + changeKeys +
+                '}';
+    }
 }
