@@ -1,14 +1,19 @@
 package com.etiennelawlor.moviehub.data.local.realm;
 
 import com.etiennelawlor.moviehub.data.local.realm.mappers.MovieRealmMapper;
+import com.etiennelawlor.moviehub.data.local.realm.mappers.PersonRealmMapper;
 import com.etiennelawlor.moviehub.data.local.realm.mappers.TelevisionShowRealmMapper;
 import com.etiennelawlor.moviehub.data.local.realm.models.RealmMovie;
 import com.etiennelawlor.moviehub.data.local.realm.models.RealmMoviesPage;
+import com.etiennelawlor.moviehub.data.local.realm.models.RealmPerson;
+import com.etiennelawlor.moviehub.data.local.realm.models.RealmPersonsPage;
 import com.etiennelawlor.moviehub.data.local.realm.models.RealmTelevisionShow;
 import com.etiennelawlor.moviehub.data.local.realm.models.RealmTelevisionShowsPage;
 import com.etiennelawlor.moviehub.data.model.MoviesPage;
+import com.etiennelawlor.moviehub.data.model.PersonsPage;
 import com.etiennelawlor.moviehub.data.model.TelevisionShowsPage;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
+import com.etiennelawlor.moviehub.data.remote.response.Person;
 import com.etiennelawlor.moviehub.data.remote.response.TelevisionShow;
 
 import java.util.ArrayList;
@@ -28,7 +33,7 @@ public class RealmUtility {
 
     private static final MovieRealmMapper movieRealmMapper = new MovieRealmMapper();
     private static final TelevisionShowRealmMapper televisionShowRealmMapper = new TelevisionShowRealmMapper();
-
+    private static final PersonRealmMapper personRealmMapper = new PersonRealmMapper();
 
     public static MoviesPage getMoviesPage(int pageNumber){
         MoviesPage moviesPage = new MoviesPage();
@@ -167,4 +172,74 @@ public class RealmUtility {
             realm.close();
         }
     }
+
+    public static PersonsPage getPersonsPage(int pageNumber){
+        PersonsPage personsPage = new PersonsPage();
+
+        Realm realm = Realm.getDefaultInstance();
+        try {
+            RealmResults<RealmPersonsPage> realmResults
+                    = realm.where(RealmPersonsPage.class).findAll();
+            if(realmResults != null && realmResults.isValid() && realmResults.size() > 0){
+                if(realmResults.size() == pageNumber-1)
+                    return null;
+
+                RealmPersonsPage realmPersonsPage = realmResults.get(pageNumber-1);
+
+                RealmList<RealmPerson> realmPersons = realmPersonsPage.getPersons();
+
+                List<Person> persons = new ArrayList<>();
+                for(RealmPerson realmPerson : realmPersons){
+                    persons.add(personRealmMapper.mapFromRealmObject(realmPerson));
+                }
+
+                personsPage.setPersons(persons);
+                personsPage.setPageNumber(realmPersonsPage.getPageNumber());
+                personsPage.setLastPage(realmPersonsPage.isLastPage());
+                personsPage.setExpiredAt(realmPersonsPage.getExpiredAt());
+
+                return personsPage;
+            } else {
+                return null;
+            }
+        } finally {
+            realm.close();
+        }
+    }
+
+    public static void savePersonsPage(PersonsPage personsPage){
+        Realm realm = Realm.getDefaultInstance();
+        try {
+            List<Person> persons = personsPage.getPersons();
+            int pageNumber = personsPage.getPageNumber();
+            boolean isLastPage = personsPage.isLastPage();
+            Date expiredAt = personsPage.getExpiredAt();
+
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    RealmPersonsPage realmPersonsPage =
+                            realm.createObject(RealmPersonsPage.class);
+
+                    RealmList<RealmPerson> realmPersons = new RealmList<>();
+                    for(Person person : persons){
+                        realmPersons.add(personRealmMapper.mapToRealmObject(person));
+                    }
+
+                    realmPersonsPage.setPersons(realmPersons);
+                    realmPersonsPage.setPageNumber(pageNumber);
+                    realmPersonsPage.setLastPage(isLastPage);
+                    realmPersonsPage.setExpiredAt(expiredAt);
+
+                    realm.copyToRealm(realmPersonsPage);
+                }
+            });
+
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            realm.close();
+        }
+    }
+
 }

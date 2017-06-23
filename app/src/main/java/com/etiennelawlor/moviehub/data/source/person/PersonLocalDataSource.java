@@ -2,6 +2,7 @@ package com.etiennelawlor.moviehub.data.source.person;
 
 import android.content.Context;
 
+import com.etiennelawlor.moviehub.data.local.realm.RealmUtility;
 import com.etiennelawlor.moviehub.data.model.PersonDetailsWrapper;
 import com.etiennelawlor.moviehub.data.model.PersonsPage;
 
@@ -22,13 +23,16 @@ public class PersonLocalDataSource implements PersonDataSourceContract.LocalDate
 
     @Override
     public Observable<PersonsPage> getPopularPersons(int currentPage) {
-        //        Use mapper to convert from realm objects to POJOs
-        return Observable.empty();
+        PersonsPage personsPage = RealmUtility.getPersonsPage(currentPage);
+        if(personsPage == null)
+            return Observable.empty();
+        else
+            return Observable.just(personsPage);
     }
 
     @Override
     public void savePopularPersons(PersonsPage personsPage) {
-//        Use mapper to convert from POJOs to realm objects
+        RealmUtility.savePersonsPage(personsPage);
     }
 
     @Override
