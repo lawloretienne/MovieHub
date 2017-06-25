@@ -93,7 +93,7 @@ public class RealmUtility {
                     realmMoviesPage.setLastPage(isLastPage);
                     realmMoviesPage.setExpiredAt(expiredAt);
 
-                    realm.copyToRealm(realmMoviesPage);
+                    realm.copyToRealmOrUpdate(realmMoviesPage);
                 }
             });
 
@@ -162,7 +162,7 @@ public class RealmUtility {
                     realmTelevisionShowsPage.setLastPage(isLastPage);
                     realmTelevisionShowsPage.setExpiredAt(expiredAt);
 
-                    realm.copyToRealm(realmTelevisionShowsPage);
+                    realm.copyToRealmOrUpdate(realmTelevisionShowsPage);
                 }
             });
 
@@ -231,7 +231,7 @@ public class RealmUtility {
                     realmPersonsPage.setLastPage(isLastPage);
                     realmPersonsPage.setExpiredAt(expiredAt);
 
-                    realm.copyToRealm(realmPersonsPage);
+                    realm.copyToRealmOrUpdate(realmPersonsPage);
                 }
             });
 
