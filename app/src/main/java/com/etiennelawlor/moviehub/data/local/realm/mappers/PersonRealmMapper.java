@@ -22,6 +22,7 @@ public class PersonRealmMapper implements RealmMapper<Person, RealmPerson> {
         realmPerson.setDeathday(person.getDeathday());
         realmPerson.setId(person.getId());
         realmPerson.setImdbId(person.getImdbId());
+        realmPerson.setName(person.getName());
         realmPerson.setPlaceOfBirth(person.getPlaceOfBirth());
         realmPerson.setProfilePath(person.getProfilePath());
         realmPerson.setImages(profileImagesRealmMapper.mapToRealmObject(person.getImages()));
@@ -38,6 +39,7 @@ public class PersonRealmMapper implements RealmMapper<Person, RealmPerson> {
         person.setDeathday(realmPerson.getDeathday());
         person.setId(realmPerson.getId());
         person.setImdbId(realmPerson.getImdbId());
+        person.setName(realmPerson.getName());
         person.setPlaceOfBirth(realmPerson.getPlaceOfBirth());
         person.setProfilePath(realmPerson.getProfilePath());
         person.setImages(profileImagesRealmMapper.mapFromRealmObject(realmPerson.getImages()));

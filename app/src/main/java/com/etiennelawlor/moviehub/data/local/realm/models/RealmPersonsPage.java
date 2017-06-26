@@ -4,6 +4,7 @@ import java.util.Date;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by etiennelawlor on 2/20/17.
@@ -13,6 +14,7 @@ public class RealmPersonsPage extends RealmObject {
 
     // region Member Variables
     private RealmList<RealmPerson> persons;
+    @PrimaryKey
     private int pageNumber;
     private boolean isLastPage;
     private Date expiredAt;

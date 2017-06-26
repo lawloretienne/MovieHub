@@ -23,14 +23,16 @@ public class ProfileImagesRealmMapper implements RealmMapper<ProfileImages, Real
     public RealmProfileImages mapToRealmObject(ProfileImages profileImages) {
         RealmProfileImages realmProfileImages = Realm.getDefaultInstance().createObject(RealmProfileImages.class);
 
-        List<ProfileImage> profileImages1 = profileImages.getProfiles();
-        RealmList<RealmProfileImage> realmProfileImages1 = new RealmList<>();
-        if(profileImages1 != null && profileImages1.size()>0) {
-            for (ProfileImage profileImage : profileImages1) {
-                realmProfileImages1.add(profileImageRealmMapper.mapToRealmObject(profileImage));
+        if(profileImages != null){
+            List<ProfileImage> profileImages1 = profileImages.getProfiles();
+            RealmList<RealmProfileImage> realmProfileImages1 = new RealmList<>();
+            if(profileImages1 != null && profileImages1.size()>0) {
+                for (ProfileImage profileImage : profileImages1) {
+                    realmProfileImages1.add(profileImageRealmMapper.mapToRealmObject(profileImage));
+                }
             }
+            realmProfileImages.setProfiles(realmProfileImages1);
         }
-        realmProfileImages.setProfiles(realmProfileImages1);
 
         return realmProfileImages;
     }

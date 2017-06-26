@@ -4,6 +4,7 @@ import java.util.Date;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by etiennelawlor on 5/14/17.
@@ -13,6 +14,7 @@ public class RealmTelevisionShowsPage extends RealmObject {
 
     // region Fields
     private RealmList<RealmTelevisionShow> televisionShows;
+    @PrimaryKey
     private int pageNumber;
     private boolean isLastPage;
     private Date expiredAt;
