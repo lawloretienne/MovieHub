@@ -38,11 +38,11 @@ public class TelevisionShowRepository implements TelevisionShowDataSourceContrac
     @Override
     public Observable<TelevisionShowDetailsWrapper> getTelevisionShowDetails(int tvId) {
         Observable<TelevisionShowDetailsWrapper> local = televisionShowLocalDataSource.getTelevisionShowDetails(tvId);
-        Observable<TelevisionShowDetailsWrapper> remote = televisionShowRemoteDataSource.getTelevisionShowDetails(tvId);
+        Observable<TelevisionShowDetailsWrapper> remote =
+                televisionShowRemoteDataSource.getTelevisionShowDetails(tvId)
+                        .doOnNext(televisionShowDetailsWrapper -> televisionShowLocalDataSource.saveTelevisionShowDetails(televisionShowDetailsWrapper));
 
-        return Observable.concat(local, remote)
-                .first()
-                .doOnNext(televisionShowDetailsWrapper -> televisionShowLocalDataSource.saveTelevisionShowDetails(televisionShowDetailsWrapper));
+        return Observable.concat(local, remote).first();
     }
     // endregion
 }

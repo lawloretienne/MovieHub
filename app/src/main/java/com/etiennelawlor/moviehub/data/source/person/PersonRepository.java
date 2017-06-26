@@ -38,11 +38,11 @@ public class PersonRepository implements PersonDataSourceContract.Repository {
     @Override
     public Observable<PersonDetailsWrapper> getPersonDetails(int personId) {
         Observable<PersonDetailsWrapper> local = personLocalDataSource.getPersonDetails(personId);
-        Observable<PersonDetailsWrapper> remote = personRemoteDataSource.getPersonDetails(personId);
+        Observable<PersonDetailsWrapper> remote =
+                personRemoteDataSource.getPersonDetails(personId)
+                        .doOnNext(personDetailsWrapper -> personLocalDataSource.savePersonDetails(personDetailsWrapper));
 
-        return Observable.concat(local, remote)
-                .first()
-                .doOnNext(personDetailsWrapper -> personLocalDataSource.savePersonDetails(personDetailsWrapper));
+        return Observable.concat(local, remote).first();
     }
     // endregion
 }
