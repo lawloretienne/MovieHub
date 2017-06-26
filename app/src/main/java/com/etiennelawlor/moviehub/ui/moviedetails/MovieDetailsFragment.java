@@ -42,6 +42,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
@@ -91,6 +92,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
     public static final String KEY_PERSON = "KEY_PERSON";
     private static final float SCRIM_ADJUSTMENT = 0.075f;
     private static final int DELAY = 0;
+    private static final int START_OFFSET = 500;
     public static final String BACKDROP_SIZE = "w1280";
     public static final String POSTER_SIZE = "w780";
     public static final String SECURE_BASE_URL = "https://image.tmdb.org/t/p/";
@@ -141,6 +143,8 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
     ViewStub crewViewStub;
     @BindView(R.id.similar_movies_vs)
     ViewStub similarMoviesViewStub;
+    @BindView(R.id.pb)
+    ProgressBar progressBar;
 
     private View selectedPersonView;
     private View selectedMovieView;
@@ -633,12 +637,15 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
     }
 
     private void showMovieDetailsBody(){
+        progressBar.setVisibility(View.GONE);
+
         final int targetHeight = AnimationUtility.getTargetHeight(movieDetailsBodyLinearLayout);
         Animation animation = AnimationUtility.getExpandHeightAnimation(movieDetailsBodyLinearLayout, targetHeight);
         // 1dp/ms
         animation.setDuration((int)(targetHeight / movieDetailsBodyLinearLayout.getContext().getResources().getDisplayMetrics().density));
         animation.setAnimationListener(movieDetailsBodyAnimationListener);
         animation.setInterpolator(new AccelerateDecelerateInterpolator());
+        animation.setStartOffset(START_OFFSET);
         movieDetailsBodyLinearLayout.startAnimation(animation);
     }
 

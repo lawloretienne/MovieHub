@@ -42,6 +42,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
@@ -93,6 +94,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     public static final String KEY_TELEVISION_SHOW = "KEY_TELEVISION_SHOW";
     private static final float SCRIM_ADJUSTMENT = 0.075f;
     private static final int DELAY = 0;
+    private static final int START_OFFSET = 500;
     public static final String SECURE_BASE_URL = "https://image.tmdb.org/t/p/";
     public static final String POSTER_SIZE = "w780";
     public static final String PROFILE_SIZE = "h632";
@@ -135,6 +137,8 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     ViewStub castViewStub;
     @BindView(R.id.crew_vs)
     ViewStub crewViewStub;
+    @BindView(R.id.pb)
+    ProgressBar progressBar;
 
     private View selectedView;
     // endregion
@@ -278,6 +282,29 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
             behavior.setOverlayTop(DisplayUtility.dp2px(getContext(), 156) - personDetailsHeaderLinearLayout.getMeasuredHeight());
 
             personDetailsHeaderLinearLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+        }
+    };
+
+    private Animation.AnimationListener personDetailsBodyAnimationListener = new Animation.AnimationListener() {
+        @Override
+        public void onAnimationStart(Animation animation) {
+
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    setUpCast();
+                    setUpCrew();
+                }
+            }, DELAY);
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
         }
     };
     // endregion
@@ -635,33 +662,15 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     }
 
     private void showPersonDetailsBody(){
+        progressBar.setVisibility(View.GONE);
+
         final int targetHeight = AnimationUtility.getTargetHeight(personDetailsBodyLinearLayout);
         Animation animation = AnimationUtility.getExpandHeightAnimation(personDetailsBodyLinearLayout, targetHeight);
         // 1dp/ms
         animation.setDuration((int)(targetHeight / personDetailsBodyLinearLayout.getContext().getResources().getDisplayMetrics().density));
-        animation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        setUpCast();
-                        setUpCrew();
-                    }
-                }, DELAY);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
+        animation.setAnimationListener(personDetailsBodyAnimationListener);
         animation.setInterpolator(new AccelerateDecelerateInterpolator());
+        animation.setStartOffset(START_OFFSET);
         personDetailsBodyLinearLayout.startAnimation(animation);
     }
 

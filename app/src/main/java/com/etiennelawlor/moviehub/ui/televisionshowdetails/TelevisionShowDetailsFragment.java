@@ -42,6 +42,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
@@ -89,6 +90,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     public static final String KEY_PERSON = "KEY_PERSON";
     private static final float SCRIM_ADJUSTMENT = 0.075f;
     private static final int DELAY = 0;
+    private static final int START_OFFSET = 500;
     public static final String SECURE_BASE_URL = "https://image.tmdb.org/t/p/";
     public static final String BACKDROP_SIZE = "w1280";
     public static final String POSTER_SIZE = "w780";
@@ -138,6 +140,8 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     ViewStub crewViewStub;
     @BindView(R.id.similar_television_shows_vs)
     ViewStub similarTelevisionShowsViewStub;
+    @BindView(R.id.pb)
+    ProgressBar progressBar;
 
     private View selectedPersonView;
     private View selectedTelevisionView;
@@ -258,6 +262,30 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
             behavior.setOverlayTop(DisplayUtility.dp2px(getContext(), 156) - televisionShowDetailsHeaderLinearLayout.getMeasuredHeight());
 
             televisionShowDetailsHeaderLinearLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+        }
+    };
+
+    private Animation.AnimationListener televisionShowDetailsBodyAnimationListener = new Animation.AnimationListener() {
+        @Override
+        public void onAnimationStart(Animation animation) {
+
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    setUpCast();
+                    setUpCrew();
+                    setUpSimilarTelevisionShows();
+                }
+            }, DELAY);
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
         }
     };
     // endregion
@@ -608,34 +636,15 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     }
 
     private void showTelevisionShowDetailsBody(){
+        progressBar.setVisibility(View.GONE);
+
         final int targetHeight = AnimationUtility.getTargetHeight(televisionShowDetailsBodyLinearLayout);
         Animation animation = AnimationUtility.getExpandHeightAnimation(televisionShowDetailsBodyLinearLayout, targetHeight);
         // 1dp/ms
         animation.setDuration((int)(targetHeight / televisionShowDetailsBodyLinearLayout.getContext().getResources().getDisplayMetrics().density));
-        animation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        setUpCast();
-                        setUpCrew();
-                        setUpSimilarTelevisionShows();
-                    }
-                }, DELAY);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
+        animation.setAnimationListener(televisionShowDetailsBodyAnimationListener);
         animation.setInterpolator(new AccelerateDecelerateInterpolator());
+        animation.setStartOffset(START_OFFSET);
         televisionShowDetailsBodyLinearLayout.startAnimation(animation);
     }
 

@@ -57,7 +57,7 @@ public class PersonRemoteDataSource implements PersonDataSourceContract.RemoteDa
     @Override
     public Observable<PersonDetailsWrapper> getPersonDetails(int personId) {
         return Observable.zip(
-                movieHubService.getPersonDetails(personId),
+                movieHubService.getPerson(personId),
                 movieHubService.getPersonCredits(personId),
                 (person, personCreditsEnvelope) -> {
                     List<PersonCredit> cast = new ArrayList<>();

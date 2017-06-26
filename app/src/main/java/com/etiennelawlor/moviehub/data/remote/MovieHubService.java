@@ -29,7 +29,7 @@ public interface MovieHubService {
     Observable<MoviesEnvelope> getPopularMovies(@Query("page") int page);
 
     @GET("movie/{movieId}")
-    Observable<Movie> getMovieDetails(@Path("movieId") long movieId);
+    Observable<Movie> getMovie(@Path("movieId") long movieId);
 
     @GET("movie/{movieId}/credits")
     Observable<MovieCreditsEnvelope> getMovieCredits(@Path("movieId") long movieId);
@@ -44,7 +44,7 @@ public interface MovieHubService {
     Observable<TelevisionShowsEnvelope> getPopularTelevisionShows(@Query("page") int page);
 
     @GET("tv/{tvId}")
-    Observable<TelevisionShow> getTelevisionShowDetails(@Path("tvId") long tvId);
+    Observable<TelevisionShow> getTelevisionShow(@Path("tvId") long tvId);
 
     @GET("tv/{tvId}/credits")
     Observable<TelevisionShowCreditsEnvelope> getTelevisionShowCredits(@Path("tvId") long tvId);
@@ -59,7 +59,7 @@ public interface MovieHubService {
     Observable<PeopleEnvelope> getPopularPeople(@Query("page") int page);
 
     @GET("person/{personId}?append_to_response=images")
-    Observable<Person> getPersonDetails(@Path("personId") long personId);
+    Observable<Person> getPerson(@Path("personId") long personId);
 
     @GET("person/{personId}/combined_credits")
     Observable<PersonCreditsEnvelope> getPersonCredits(@Path("personId") long personId);

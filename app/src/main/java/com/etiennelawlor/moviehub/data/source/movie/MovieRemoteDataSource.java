@@ -60,7 +60,7 @@ public class MovieRemoteDataSource implements MovieDataSourceContract.RemoteDate
     @Override
     public Observable<MovieDetailsWrapper> getMovieDetails(int movieId) {
         return Observable.zip(
-                movieHubService.getMovieDetails(movieId),
+                movieHubService.getMovie(movieId),
                 movieHubService.getMovieCredits(movieId),
                 movieHubService.getSimilarMovies(movieId),
                 movieHubService.getMovieReleaseDates(movieId),

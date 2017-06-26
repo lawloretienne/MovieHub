@@ -108,6 +108,15 @@
 
             </LinearLayout>
 
+            <ProgressBar
+                android:id="@+id/pb"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:indeterminate="true"/>
+
             <LinearLayout
                 android:id="@+id/person_details_body_ll"
                 android:layout_width="match_parent"

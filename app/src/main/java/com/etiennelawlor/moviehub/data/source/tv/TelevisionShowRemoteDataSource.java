@@ -58,7 +58,7 @@ public class TelevisionShowRemoteDataSource implements TelevisionShowDataSourceC
     @Override
     public Observable<TelevisionShowDetailsWrapper> getTelevisionShowDetails(int tvId) {
         return Observable.zip(
-                movieHubService.getTelevisionShowDetails(tvId),
+                movieHubService.getTelevisionShow(tvId),
                 movieHubService.getTelevisionShowCredits(tvId),
                 movieHubService.getSimilarTelevisionShows(tvId),
                 movieHubService.getTelevisionShowContentRatings(tvId),
