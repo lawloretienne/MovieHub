@@ -82,6 +82,8 @@ public class MovieDetailsPresenter implements MovieDetailsUiContract.Presenter {
                     }
                 });
         compositeSubscription.add(subscription);
+
+//        usecase.getMovieDetails(movieId, subscriber);
     }
 
     @Override
