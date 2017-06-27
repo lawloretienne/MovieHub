@@ -2,28 +2,27 @@ package com.etiennelawlor.moviehub;
 
 import com.etiennelawlor.moviehub.data.model.MoviesPage;
 import com.etiennelawlor.moviehub.data.remote.response.Movie;
-import com.etiennelawlor.moviehub.data.source.movie.MovieDataSourceContract;
 import com.etiennelawlor.moviehub.ui.movies.MoviesPresenter;
 import com.etiennelawlor.moviehub.ui.movies.MoviesUiContract;
-import com.etiennelawlor.moviehub.util.rxjava.TestSchedulerTransformer;
+import com.etiennelawlor.moviehub.ui.movies.domain.MoviesDomainContract;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import rx.Observable;
+import rx.Subscriber;
 
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by etiennelawlor on 2/9/17.
@@ -37,11 +36,10 @@ public class MoviesPresenterTest {
     @Mock
     private MoviesUiContract.View mockMoviesView;
     @Mock
-    private MovieDataSourceContract.Repository mockMovieRepository;
+    private MoviesDomainContract.UseCase mockMoviesUseCase;
 
     // Stubs
-    private Observable stub;
-
+    private ArgumentCaptor<Subscriber> subscriberArgumentCaptor;
     // endregion
 
     // region Member Variables
@@ -56,7 +54,7 @@ public class MoviesPresenterTest {
         MockitoAnnotations.initMocks(this);
 
         // Get a reference to the class under test
-        moviesPresenter = new MoviesPresenter(mockMoviesView, mockMovieRepository, new TestSchedulerTransformer<MoviesPage>());
+        moviesPresenter = new MoviesPresenter(mockMoviesView, mockMoviesUseCase);
     }
 
     // region Test Methods
@@ -65,8 +63,6 @@ public class MoviesPresenterTest {
     public void onLoadPopularMovies_shouldShowError_whenFirstPageRequestFailed() {
         // 1. (Given) Set up conditions required for the test
         moviesPage = new MoviesPage(getListOfMovies(0), 1, true, Calendar.getInstance().getTime());
-        stub = Observable.<MoviesPage>error(new IOException());
-        when(mockMovieRepository.getPopularMovies(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         moviesPresenter.onLoadPopularMovies(moviesPage.getPageNumber());
@@ -76,7 +72,9 @@ public class MoviesPresenterTest {
         verify(mockMoviesView).hideErrorView();
         verify(mockMoviesView).showLoadingView();
 
-        verify(mockMovieRepository).getPopularMovies(anyInt());
+        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
+        verify(mockMoviesUseCase).getPopularMovies(anyInt(), subscriberArgumentCaptor.capture());
+        subscriberArgumentCaptor.getValue().onError(new UnknownHostException());
 
         verify(mockMoviesView).hideLoadingView();
         verify(mockMoviesView).setErrorText(anyString());
@@ -87,8 +85,6 @@ public class MoviesPresenterTest {
     public void onLoadPopularMovies_shouldShowError_whenNextPageRequestFailed() {
         // 1. (Given) Set up conditions required for the test
         moviesPage = new MoviesPage(getListOfMovies(0), 2, true, Calendar.getInstance().getTime());
-        stub = Observable.<MoviesPage>error(new IOException());
-        when(mockMovieRepository.getPopularMovies(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         moviesPresenter.onLoadPopularMovies(moviesPage.getPageNumber());
@@ -96,7 +92,9 @@ public class MoviesPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMoviesView).showLoadingFooter();
 
-        verify(mockMovieRepository).getPopularMovies(anyInt());
+        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
+        verify(mockMoviesUseCase).getPopularMovies(anyInt(), subscriberArgumentCaptor.capture());
+        subscriberArgumentCaptor.getValue().onError(new UnknownHostException());
 
         verify(mockMoviesView).showErrorFooter();
     }
@@ -105,8 +103,6 @@ public class MoviesPresenterTest {
     public void onLoadPopularMovies_shouldShowEmpty_whenFirstPageHasNoMovies() {
         // 1. (Given) Set up conditions required for the test
         moviesPage = new MoviesPage(getListOfMovies(0), 1, true, Calendar.getInstance().getTime());
-        stub = Observable.just(moviesPage);
-        when(mockMovieRepository.getPopularMovies(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         moviesPresenter.onLoadPopularMovies(moviesPage.getPageNumber());
@@ -116,7 +112,9 @@ public class MoviesPresenterTest {
         verify(mockMoviesView).hideErrorView();
         verify(mockMoviesView).showLoadingView();
 
-        verify(mockMovieRepository).getPopularMovies(anyInt());
+        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
+        verify(mockMoviesUseCase).getPopularMovies(anyInt(), subscriberArgumentCaptor.capture());
+        subscriberArgumentCaptor.getValue().onNext(moviesPage);
 
         verify(mockMoviesView).hideLoadingView();
         verify(mockMoviesView).showEmptyView();
@@ -127,8 +125,6 @@ public class MoviesPresenterTest {
     public void onLoadPopularMovies_shouldNotAddMovies_whenNextPageHasNoMovies() {
         // 1. (Given) Set up conditions required for the test
         moviesPage = new MoviesPage(getListOfMovies(0), 2, true, Calendar.getInstance().getTime());
-        stub = Observable.just(moviesPage);
-        when(mockMovieRepository.getPopularMovies(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         moviesPresenter.onLoadPopularMovies(moviesPage.getPageNumber());
@@ -136,7 +132,9 @@ public class MoviesPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMoviesView).showLoadingFooter();
 
-        verify(mockMovieRepository).getPopularMovies(anyInt());
+        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
+        verify(mockMoviesUseCase).getPopularMovies(anyInt(), subscriberArgumentCaptor.capture());
+        subscriberArgumentCaptor.getValue().onNext(moviesPage);
 
         verify(mockMoviesView).removeFooter();
         verify(mockMoviesView).setMoviesPage(moviesPage);
@@ -146,8 +144,6 @@ public class MoviesPresenterTest {
     public void onLoadPopularMovies_shouldAddMovies_whenFirstPageHasMoviesAndIsLastPage() {
         // 1. (Given) Set up conditions required for the test
         moviesPage = new MoviesPage(getListOfMovies(5), 1, true, Calendar.getInstance().getTime());
-        stub = Observable.just(moviesPage);
-        when(mockMovieRepository.getPopularMovies(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         moviesPresenter.onLoadPopularMovies(moviesPage.getPageNumber());
@@ -157,7 +153,9 @@ public class MoviesPresenterTest {
         verify(mockMoviesView).hideErrorView();
         verify(mockMoviesView).showLoadingView();
 
-        verify(mockMovieRepository).getPopularMovies(anyInt());
+        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
+        verify(mockMoviesUseCase).getPopularMovies(anyInt(), subscriberArgumentCaptor.capture());
+        subscriberArgumentCaptor.getValue().onNext(moviesPage);
 
         verify(mockMoviesView).hideLoadingView();
         verify(mockMoviesView).addHeader();
@@ -169,8 +167,6 @@ public class MoviesPresenterTest {
     public void onLoadPopularMovies_shouldAddMovies_whenFirstPageHasMoviesAndIsNotLastPage() {
         // 1. (Given) Set up conditions required for the test
         moviesPage = new MoviesPage(getListOfMovies(5), 1, false, Calendar.getInstance().getTime());
-        stub = Observable.just(moviesPage);
-        when(mockMovieRepository.getPopularMovies(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         moviesPresenter.onLoadPopularMovies(moviesPage.getPageNumber());
@@ -180,7 +176,9 @@ public class MoviesPresenterTest {
         verify(mockMoviesView).hideErrorView();
         verify(mockMoviesView).showLoadingView();
 
-        verify(mockMovieRepository).getPopularMovies(anyInt());
+        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
+        verify(mockMoviesUseCase).getPopularMovies(anyInt(), subscriberArgumentCaptor.capture());
+        subscriberArgumentCaptor.getValue().onNext(moviesPage);
 
         verify(mockMoviesView).hideLoadingView();
         verify(mockMoviesView).addHeader();
@@ -193,8 +191,6 @@ public class MoviesPresenterTest {
     public void onLoadPopularMovies_shouldAddMovies_whenNextPageHasMoviesAndIsLastPage() {
         // 1. (Given) Set up conditions required for the test
         moviesPage = new MoviesPage(getListOfMovies(5), 2, true, Calendar.getInstance().getTime());
-        stub = Observable.just(moviesPage);
-        when(mockMovieRepository.getPopularMovies(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         moviesPresenter.onLoadPopularMovies(moviesPage.getPageNumber());
@@ -202,7 +198,9 @@ public class MoviesPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMoviesView).showLoadingFooter();
 
-        verify(mockMovieRepository).getPopularMovies(anyInt());
+        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
+        verify(mockMoviesUseCase).getPopularMovies(anyInt(), subscriberArgumentCaptor.capture());
+        subscriberArgumentCaptor.getValue().onNext(moviesPage);
 
         verify(mockMoviesView).removeFooter();
         verify(mockMoviesView).addMoviesToAdapter(moviesPage.getMovies());
@@ -213,8 +211,6 @@ public class MoviesPresenterTest {
     public void onLoadPopularMovies_shouldAddMovies_whenNextPageHasMoviesAndIsNotLastPage() {
         // 1. (Given) Set up conditions required for the test
         moviesPage = new MoviesPage(getListOfMovies(5), 2, false, Calendar.getInstance().getTime());
-        stub = Observable.just(moviesPage);
-        when(mockMovieRepository.getPopularMovies(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         moviesPresenter.onLoadPopularMovies(moviesPage.getPageNumber());
@@ -222,7 +218,9 @@ public class MoviesPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMoviesView).showLoadingFooter();
 
-        verify(mockMovieRepository).getPopularMovies(anyInt());
+        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
+        verify(mockMoviesUseCase).getPopularMovies(anyInt(), subscriberArgumentCaptor.capture());
+        subscriberArgumentCaptor.getValue().onNext(moviesPage);
 
         verify(mockMoviesView).removeFooter();
         verify(mockMoviesView).addMoviesToAdapter(moviesPage.getMovies());
@@ -242,7 +240,7 @@ public class MoviesPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMoviesView).openMovieDetails(movie);
 
-        verifyZeroInteractions(mockMovieRepository);
+        verifyZeroInteractions(mockMoviesUseCase);
     }
 
     @Test
@@ -255,18 +253,18 @@ public class MoviesPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMoviesView).loadMoreItems();
 
-        verifyZeroInteractions(mockMovieRepository);
+        verifyZeroInteractions(mockMoviesUseCase);
     }
 
     @Test
-    public void onDestroyView_shouldNotHaveInteractions() {
+    public void onDestroyView_shouldClearSubscriptions() {
         // 1. (Given) Set up conditions required for the test
 
         // 2. (When) Then perform one or more actions
         moviesPresenter.onDestroyView();
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verifyZeroInteractions(mockMoviesView);
-        verifyZeroInteractions(mockMovieRepository);
+        verify(mockMoviesUseCase).clearSubscriptions();
     }
 
     // endregion
