@@ -1,12 +1,12 @@
 package com.etiennelawlor.moviehub;
 
 import com.etiennelawlor.moviehub.data.model.MovieDetailsWrapper;
-import com.etiennelawlor.moviehub.data.remote.response.Movie;
-import com.etiennelawlor.moviehub.data.remote.response.MovieCredit;
-import com.etiennelawlor.moviehub.data.remote.response.Person;
+import com.etiennelawlor.moviehub.data.network.response.Movie;
+import com.etiennelawlor.moviehub.data.network.response.MovieCredit;
+import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.data.source.movie.MovieDataSourceContract;
-import com.etiennelawlor.moviehub.ui.moviedetails.MovieDetailsPresenter;
-import com.etiennelawlor.moviehub.ui.moviedetails.MovieDetailsUiContract;
+import com.etiennelawlor.moviehub.presentation.moviedetails.MovieDetailsPresenter;
+import com.etiennelawlor.moviehub.presentation.moviedetails.MovieDetailsUiContract;
 import com.etiennelawlor.moviehub.util.rxjava.TestSchedulerTransformer;
 
 import org.junit.Before;

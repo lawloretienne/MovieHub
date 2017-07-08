@@ -2,7 +2,7 @@ package com.etiennelawlor.moviehub.data.source.tv;
 
 import android.content.Context;
 
-import com.etiennelawlor.moviehub.data.local.realm.RealmUtility;
+import com.etiennelawlor.moviehub.data.database.RealmUtility;
 import com.etiennelawlor.moviehub.data.model.TelevisionShowDetailsWrapper;
 import com.etiennelawlor.moviehub.data.model.TelevisionShowsPage;
 

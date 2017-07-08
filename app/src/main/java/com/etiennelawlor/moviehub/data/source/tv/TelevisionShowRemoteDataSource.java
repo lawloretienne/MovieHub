@@ -4,12 +4,12 @@ import android.content.Context;
 
 import com.etiennelawlor.moviehub.data.model.TelevisionShowDetailsWrapper;
 import com.etiennelawlor.moviehub.data.model.TelevisionShowsPage;
-import com.etiennelawlor.moviehub.data.remote.AuthorizedNetworkInterceptor;
-import com.etiennelawlor.moviehub.data.remote.MovieHubService;
-import com.etiennelawlor.moviehub.data.remote.ServiceGenerator;
-import com.etiennelawlor.moviehub.data.remote.response.ContentRating;
-import com.etiennelawlor.moviehub.data.remote.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.remote.response.TelevisionShowCredit;
+import com.etiennelawlor.moviehub.data.network.AuthorizedNetworkInterceptor;
+import com.etiennelawlor.moviehub.data.network.MovieHubService;
+import com.etiennelawlor.moviehub.data.network.ServiceGenerator;
+import com.etiennelawlor.moviehub.data.network.response.ContentRating;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCredit;
 
 import java.util.ArrayList;
 import java.util.Calendar;

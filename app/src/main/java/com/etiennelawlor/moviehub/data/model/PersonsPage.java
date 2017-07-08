@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.data.model;
 
-import com.etiennelawlor.moviehub.data.remote.response.Person;
+import com.etiennelawlor.moviehub.data.network.response.Person;
 
 import java.util.Calendar;
 import java.util.Date;

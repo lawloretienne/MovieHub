@@ -2,7 +2,7 @@ package com.etiennelawlor.moviehub.data.source.person;
 
 import android.content.Context;
 
-import com.etiennelawlor.moviehub.data.local.realm.RealmUtility;
+import com.etiennelawlor.moviehub.data.database.RealmUtility;
 import com.etiennelawlor.moviehub.data.model.PersonDetailsWrapper;
 import com.etiennelawlor.moviehub.data.model.PersonsPage;
 

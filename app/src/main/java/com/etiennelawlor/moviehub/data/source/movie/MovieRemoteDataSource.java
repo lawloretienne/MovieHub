@@ -5,13 +5,13 @@ import android.text.TextUtils;
 
 import com.etiennelawlor.moviehub.data.model.MovieDetailsWrapper;
 import com.etiennelawlor.moviehub.data.model.MoviesPage;
-import com.etiennelawlor.moviehub.data.remote.AuthorizedNetworkInterceptor;
-import com.etiennelawlor.moviehub.data.remote.MovieHubService;
-import com.etiennelawlor.moviehub.data.remote.ServiceGenerator;
-import com.etiennelawlor.moviehub.data.remote.response.Movie;
-import com.etiennelawlor.moviehub.data.remote.response.MovieCredit;
-import com.etiennelawlor.moviehub.data.remote.response.MovieReleaseDate;
-import com.etiennelawlor.moviehub.data.remote.response.MovieReleaseDateEnvelope;
+import com.etiennelawlor.moviehub.data.network.AuthorizedNetworkInterceptor;
+import com.etiennelawlor.moviehub.data.network.MovieHubService;
+import com.etiennelawlor.moviehub.data.network.ServiceGenerator;
+import com.etiennelawlor.moviehub.data.network.response.Movie;
+import com.etiennelawlor.moviehub.data.network.response.MovieCredit;
+import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDate;
+import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDateEnvelope;
 
 import java.util.ArrayList;
 import java.util.Calendar;

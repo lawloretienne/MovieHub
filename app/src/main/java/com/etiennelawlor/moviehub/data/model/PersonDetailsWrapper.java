@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.data.model;
 
-import com.etiennelawlor.moviehub.data.remote.response.Person;
-import com.etiennelawlor.moviehub.data.remote.response.PersonCredit;
+import com.etiennelawlor.moviehub.data.network.response.Person;
+import com.etiennelawlor.moviehub.data.network.response.PersonCredit;
 
 import java.util.List;
 

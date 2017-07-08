@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.data.model;
 
-import com.etiennelawlor.moviehub.data.remote.response.TelevisionShow;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 
 import java.util.Calendar;
 import java.util.Date;

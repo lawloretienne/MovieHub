@@ -16,7 +16,7 @@
 
     <!--android:tint="@color/primary"-->
 
-    <com.etiennelawlor.moviehub.ui.common.widget.CustomFontTextView
+    <com.etiennelawlor.moviehub.presentation.common.widget.CustomFontTextView
         android:id="@+id/empty_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

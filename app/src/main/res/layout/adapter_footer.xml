@@ -29,7 +29,7 @@
         android:paddingRight="16dp"
         android:visibility="gone">
 
-        <com.etiennelawlor.moviehub.ui.common.widget.CustomFontButton
+        <com.etiennelawlor.moviehub.presentation.common.widget.CustomFontButton
             android:id="@+id/reload_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
             app:backgroundTint="@color/accent"
             app:textFont="lato_medium" />
 
-        <com.etiennelawlor.moviehub.ui.common.widget.CustomFontTextView
+        <com.etiennelawlor.moviehub.presentation.common.widget.CustomFontTextView
             android:id="@+id/error_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

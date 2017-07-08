@@ -3,15 +3,15 @@ package com.etiennelawlor.moviehub.data.source.search;
 import android.content.Context;
 
 import com.etiennelawlor.moviehub.data.model.SearchWrapper;
-import com.etiennelawlor.moviehub.data.remote.AuthorizedNetworkInterceptor;
-import com.etiennelawlor.moviehub.data.remote.MovieHubService;
-import com.etiennelawlor.moviehub.data.remote.ServiceGenerator;
-import com.etiennelawlor.moviehub.data.remote.response.Movie;
-import com.etiennelawlor.moviehub.data.remote.response.MoviesEnvelope;
-import com.etiennelawlor.moviehub.data.remote.response.PeopleEnvelope;
-import com.etiennelawlor.moviehub.data.remote.response.Person;
-import com.etiennelawlor.moviehub.data.remote.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.remote.response.TelevisionShowsEnvelope;
+import com.etiennelawlor.moviehub.data.network.AuthorizedNetworkInterceptor;
+import com.etiennelawlor.moviehub.data.network.MovieHubService;
+import com.etiennelawlor.moviehub.data.network.ServiceGenerator;
+import com.etiennelawlor.moviehub.data.network.response.Movie;
+import com.etiennelawlor.moviehub.data.network.response.MoviesEnvelope;
+import com.etiennelawlor.moviehub.data.network.response.PeopleEnvelope;
+import com.etiennelawlor.moviehub.data.network.response.Person;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowsEnvelope;
 
 import java.util.ArrayList;
 import java.util.List;

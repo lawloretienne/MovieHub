@@ -4,10 +4,10 @@ import android.content.Context;
 
 import com.etiennelawlor.moviehub.data.model.PersonDetailsWrapper;
 import com.etiennelawlor.moviehub.data.model.PersonsPage;
-import com.etiennelawlor.moviehub.data.remote.AuthorizedNetworkInterceptor;
-import com.etiennelawlor.moviehub.data.remote.MovieHubService;
-import com.etiennelawlor.moviehub.data.remote.ServiceGenerator;
-import com.etiennelawlor.moviehub.data.remote.response.PersonCredit;
+import com.etiennelawlor.moviehub.data.network.AuthorizedNetworkInterceptor;
+import com.etiennelawlor.moviehub.data.network.MovieHubService;
+import com.etiennelawlor.moviehub.data.network.ServiceGenerator;
+import com.etiennelawlor.moviehub.data.network.response.PersonCredit;
 
 import java.util.ArrayList;
 import java.util.Calendar;

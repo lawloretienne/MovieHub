@@ -1,10 +1,10 @@
 package com.etiennelawlor.moviehub;
 
 import com.etiennelawlor.moviehub.data.model.TelevisionShowsPage;
-import com.etiennelawlor.moviehub.data.remote.response.TelevisionShow;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.source.tv.TelevisionShowDataSourceContract;
-import com.etiennelawlor.moviehub.ui.televisionshows.TelevisionShowsPresenter;
-import com.etiennelawlor.moviehub.ui.televisionshows.TelevisionShowsUiContract;
+import com.etiennelawlor.moviehub.presentation.televisionshows.TelevisionShowsPresenter;
+import com.etiennelawlor.moviehub.presentation.televisionshows.TelevisionShowsUiContract;
 import com.etiennelawlor.moviehub.util.rxjava.TestSchedulerTransformer;
 
 import org.junit.Before;

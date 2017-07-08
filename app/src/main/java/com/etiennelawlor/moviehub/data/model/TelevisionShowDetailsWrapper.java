@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.data.model;
 
-import com.etiennelawlor.moviehub.data.remote.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.remote.response.TelevisionShowCredit;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCredit;
 
 import java.util.List;
 
