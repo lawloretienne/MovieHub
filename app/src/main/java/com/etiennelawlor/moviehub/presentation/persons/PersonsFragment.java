@@ -18,11 +18,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.source.person.models.PersonsPage;
+import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsPage;
 import com.etiennelawlor.moviehub.data.network.response.Person;
-import com.etiennelawlor.moviehub.data.source.person.PersonLocalDataSource;
-import com.etiennelawlor.moviehub.data.source.person.PersonRemoteDataSource;
-import com.etiennelawlor.moviehub.data.source.person.PersonRepository;
+import com.etiennelawlor.moviehub.data.repositories.person.PersonLocalDataSource;
+import com.etiennelawlor.moviehub.data.repositories.person.PersonRemoteDataSource;
+import com.etiennelawlor.moviehub.data.repositories.person.PersonRepository;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.persondetails.PersonDetailsActivity;
