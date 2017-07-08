@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.data.source.person;
 
-import com.etiennelawlor.moviehub.data.model.PersonDetailsWrapper;
-import com.etiennelawlor.moviehub.data.model.PersonsPage;
+import com.etiennelawlor.moviehub.data.source.person.models.PersonDetailsWrapper;
+import com.etiennelawlor.moviehub.data.source.person.models.PersonsPage;
 
 import rx.Observable;
 

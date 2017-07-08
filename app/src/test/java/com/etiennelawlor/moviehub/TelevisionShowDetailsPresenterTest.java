@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub;
 
-import com.etiennelawlor.moviehub.data.model.TelevisionShowDetailsWrapper;
+import com.etiennelawlor.moviehub.data.source.tv.models.TelevisionShowDetailsWrapper;
 import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCredit;

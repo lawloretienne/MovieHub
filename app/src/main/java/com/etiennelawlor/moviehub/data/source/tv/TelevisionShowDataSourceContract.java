@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.data.source.tv;
 
-import com.etiennelawlor.moviehub.data.model.TelevisionShowDetailsWrapper;
-import com.etiennelawlor.moviehub.data.model.TelevisionShowsPage;
+import com.etiennelawlor.moviehub.data.source.tv.models.TelevisionShowDetailsWrapper;
+import com.etiennelawlor.moviehub.data.source.tv.models.TelevisionShowsPage;
 
 import rx.Observable;
 

@@ -1,4 +1,4 @@
-package com.etiennelawlor.moviehub.data.model;
+package com.etiennelawlor.moviehub.data.source.tv.models;
 
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCredit;

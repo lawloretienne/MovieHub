@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.data.source.search;
 
-import com.etiennelawlor.moviehub.data.model.SearchWrapper;
+import com.etiennelawlor.moviehub.data.source.search.models.SearchWrapper;
 
 import rx.Observable;
 

@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.domain;
 
-import com.etiennelawlor.moviehub.data.model.MoviesPage;
+import com.etiennelawlor.moviehub.data.source.movie.models.MoviesPage;
 import com.etiennelawlor.moviehub.data.source.movie.MovieDataSourceContract;
 import com.etiennelawlor.moviehub.util.EspressoIdlingResource;
 import com.etiennelawlor.moviehub.util.rxjava.SchedulerTransformer;

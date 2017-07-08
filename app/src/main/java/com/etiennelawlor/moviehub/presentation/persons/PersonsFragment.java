@@ -18,7 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.model.PersonsPage;
+import com.etiennelawlor.moviehub.data.source.person.models.PersonsPage;
 import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.data.source.person.PersonLocalDataSource;
 import com.etiennelawlor.moviehub.data.source.person.PersonRemoteDataSource;

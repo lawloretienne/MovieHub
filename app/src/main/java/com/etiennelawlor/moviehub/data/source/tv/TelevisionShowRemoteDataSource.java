@@ -2,8 +2,8 @@ package com.etiennelawlor.moviehub.data.source.tv;
 
 import android.content.Context;
 
-import com.etiennelawlor.moviehub.data.model.TelevisionShowDetailsWrapper;
-import com.etiennelawlor.moviehub.data.model.TelevisionShowsPage;
+import com.etiennelawlor.moviehub.data.source.tv.models.TelevisionShowDetailsWrapper;
+import com.etiennelawlor.moviehub.data.source.tv.models.TelevisionShowsPage;
 import com.etiennelawlor.moviehub.data.network.AuthorizedNetworkInterceptor;
 import com.etiennelawlor.moviehub.data.network.MovieHubService;
 import com.etiennelawlor.moviehub.data.network.ServiceGenerator;

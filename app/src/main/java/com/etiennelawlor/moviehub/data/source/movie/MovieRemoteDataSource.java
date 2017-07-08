@@ -3,8 +3,8 @@ package com.etiennelawlor.moviehub.data.source.movie;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.etiennelawlor.moviehub.data.model.MovieDetailsWrapper;
-import com.etiennelawlor.moviehub.data.model.MoviesPage;
+import com.etiennelawlor.moviehub.data.source.movie.models.MovieDetailsWrapper;
+import com.etiennelawlor.moviehub.data.source.movie.models.MoviesPage;
 import com.etiennelawlor.moviehub.data.network.AuthorizedNetworkInterceptor;
 import com.etiennelawlor.moviehub.data.network.MovieHubService;
 import com.etiennelawlor.moviehub.data.network.ServiceGenerator;

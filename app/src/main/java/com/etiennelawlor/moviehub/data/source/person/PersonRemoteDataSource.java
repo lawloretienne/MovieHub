@@ -2,8 +2,8 @@ package com.etiennelawlor.moviehub.data.source.person;
 
 import android.content.Context;
 
-import com.etiennelawlor.moviehub.data.model.PersonDetailsWrapper;
-import com.etiennelawlor.moviehub.data.model.PersonsPage;
+import com.etiennelawlor.moviehub.data.source.person.models.PersonDetailsWrapper;
+import com.etiennelawlor.moviehub.data.source.person.models.PersonsPage;
 import com.etiennelawlor.moviehub.data.network.AuthorizedNetworkInterceptor;
 import com.etiennelawlor.moviehub.data.network.MovieHubService;
 import com.etiennelawlor.moviehub.data.network.ServiceGenerator;

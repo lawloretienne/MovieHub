@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.presentation.persons;
 
-import com.etiennelawlor.moviehub.data.model.PersonsPage;
+import com.etiennelawlor.moviehub.data.source.person.models.PersonsPage;
 import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.presentation.base.BasePresenter;
 

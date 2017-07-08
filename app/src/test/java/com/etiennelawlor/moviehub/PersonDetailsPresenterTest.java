@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub;
 
-import com.etiennelawlor.moviehub.data.model.PersonDetailsWrapper;
+import com.etiennelawlor.moviehub.data.source.person.models.PersonDetailsWrapper;
 import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.data.network.response.PersonCredit;

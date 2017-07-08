@@ -3,8 +3,8 @@ package com.etiennelawlor.moviehub.data.source.movie;
 import android.content.Context;
 
 import com.etiennelawlor.moviehub.data.database.RealmUtility;
-import com.etiennelawlor.moviehub.data.model.MovieDetailsWrapper;
-import com.etiennelawlor.moviehub.data.model.MoviesPage;
+import com.etiennelawlor.moviehub.data.source.movie.models.MovieDetailsWrapper;
+import com.etiennelawlor.moviehub.data.source.movie.models.MoviesPage;
 
 import rx.Observable;
 

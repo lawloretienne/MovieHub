@@ -1,4 +1,4 @@
-package com.etiennelawlor.moviehub.data.model;
+package com.etiennelawlor.moviehub.data.source.search.models;
 
 import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.Person;

@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.presentation.search;
 
-import com.etiennelawlor.moviehub.data.model.SearchWrapper;
+import com.etiennelawlor.moviehub.data.source.search.models.SearchWrapper;
 import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
