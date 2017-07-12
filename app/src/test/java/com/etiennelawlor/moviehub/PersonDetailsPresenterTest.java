@@ -1,13 +1,13 @@
 package com.etiennelawlor.moviehub;
 
-import com.etiennelawlor.moviehub.data.model.PersonDetailsWrapper;
-import com.etiennelawlor.moviehub.data.remote.response.Movie;
-import com.etiennelawlor.moviehub.data.remote.response.Person;
-import com.etiennelawlor.moviehub.data.remote.response.PersonCredit;
-import com.etiennelawlor.moviehub.data.remote.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.source.person.PersonDataSourceContract;
-import com.etiennelawlor.moviehub.ui.persondetails.PersonDetailsPresenter;
-import com.etiennelawlor.moviehub.ui.persondetails.PersonDetailsUiContract;
+import com.etiennelawlor.moviehub.data.repositories.person.models.PersonDetailsWrapper;
+import com.etiennelawlor.moviehub.data.network.response.Movie;
+import com.etiennelawlor.moviehub.data.network.response.Person;
+import com.etiennelawlor.moviehub.data.network.response.PersonCredit;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
+import com.etiennelawlor.moviehub.data.repositories.person.PersonDataSourceContract;
+import com.etiennelawlor.moviehub.presentation.persondetails.PersonDetailsPresenter;
+import com.etiennelawlor.moviehub.presentation.persondetails.PersonDetailsUiContract;
 import com.etiennelawlor.moviehub.util.rxjava.TestSchedulerTransformer;
 
 import org.junit.Before;

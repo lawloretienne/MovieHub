@@ -5,7 +5,7 @@ import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.etiennelawlor.moviehub.ui.main.MainActivity;
+import com.etiennelawlor.moviehub.presentation.main.MainActivity;
 import com.etiennelawlor.moviehub.util.EspressoIdlingResource;
 
 import org.junit.After;

@@ -1,10 +1,10 @@
 package com.etiennelawlor.moviehub;
 
-import com.etiennelawlor.moviehub.data.model.MoviesPage;
-import com.etiennelawlor.moviehub.data.remote.response.Movie;
-import com.etiennelawlor.moviehub.ui.movies.MoviesPresenter;
-import com.etiennelawlor.moviehub.ui.movies.MoviesUiContract;
-import com.etiennelawlor.moviehub.ui.movies.domain.MoviesDomainContract;
+import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesPage;
+import com.etiennelawlor.moviehub.data.network.response.Movie;
+import com.etiennelawlor.moviehub.presentation.movies.MoviesPresenter;
+import com.etiennelawlor.moviehub.presentation.movies.MoviesUiContract;
+import com.etiennelawlor.moviehub.domain.MoviesDomainContract;
 
 import org.junit.Before;
 import org.junit.Test;

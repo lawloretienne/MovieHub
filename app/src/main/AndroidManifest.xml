@@ -14,7 +14,7 @@
 
         <!-- Activities -->
         <activity
-            android:name=".ui.main.MainActivity"
+            android:name=".presentation.main.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MovieHub.MainActivity.Launcher" />
@@ -24,7 +24,7 @@
         <activity-alias
             android:name=".Launcher"
             android:label="@string/app_name"
-            android:targetActivity=".ui.main.MainActivity">
+            android:targetActivity=".presentation.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -32,25 +32,25 @@
         </activity-alias>
 
         <activity
-            android:name=".ui.moviedetails.MovieDetailsActivity"
+            android:name=".presentation.moviedetails.MovieDetailsActivity"
             android:screenOrientation="portrait"
             android:label=""
             android:theme="@style/Theme.MovieHub.MovieDetailsActivity"/>
 
         <activity
-            android:name=".ui.televisionshowdetails.TelevisionShowDetailsActivity"
+            android:name=".presentation.televisionshowdetails.TelevisionShowDetailsActivity"
             android:screenOrientation="portrait"
             android:label=""
             android:theme="@style/Theme.MovieHub.TelevisionShowDetailsActivity"/>
 
         <activity
-            android:name=".ui.persondetails.PersonDetailsActivity"
+            android:name=".presentation.persondetails.PersonDetailsActivity"
             android:screenOrientation="portrait"
             android:label=""
             android:theme="@style/Theme.MovieHub.PersonDetailsActivity"/>
 
         <activity
-            android:name=".ui.search.SearchActivity"
+            android:name=".presentation.search.SearchActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
             android:label=""
