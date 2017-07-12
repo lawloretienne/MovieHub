@@ -96,7 +96,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     private static final int DELAY = 0;
     private static final int START_OFFSET = 500;
     public static final String SECURE_BASE_URL = "https://image.tmdb.org/t/p/";
-    public static final String POSTER_SIZE = "w780";
+    public static final String POSTER_SIZE = "w342";
     public static final String PROFILE_SIZE = "h632";
     // endregion
 

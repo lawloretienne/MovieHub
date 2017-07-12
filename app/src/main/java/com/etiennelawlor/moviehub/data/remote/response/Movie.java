@@ -20,7 +20,7 @@ public class Movie implements Parcelable {
     // region Constants
     public static final String PATTERN = "yyyy-MM-dd";
     public static final String SECURE_BASE_URL = "https://image.tmdb.org/t/p/";
-    public static final String POSTER_SIZE = "w780";
+    public static final String POSTER_SIZE = "w500";
     // endregion
 
     // region Fields
