@@ -62,6 +62,7 @@ android {
         exclude 'META-INF/services/javax.annotation.processing.Processor'
         exclude 'META-INF/rxjava.properties'
     }
+    buildToolsVersion '26.0.2'
 }
 
 /*
