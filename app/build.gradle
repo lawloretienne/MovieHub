@@ -89,8 +89,6 @@ dependencies {
     compile "com.android.support:support-v4:$rootProject.supportLibraryVersion"
     compile "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
 
-    compile "de.hdodenhof:circleimageview:$rootProject.circleimageviewVersion"
-
     compile "com.jakewharton:butterknife:$rootProject.butterknifeVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterknifeVersion"
 //    apt 'com.jakewharton:butterknife-compiler:$rootProject.butterknifeVersion'
@@ -107,8 +105,6 @@ dependencies {
     compile "io.reactivex:rxandroid:$rootProject.rxandroidVersion" // RxAndroid providing Android Scheduler // Should update at some point
     compile "io.reactivex.rxjava2:rxandroid:$rootProject.rxjava2RxandroidVersion" // RxAndroid providing Android Scheduler // Should update at some point
     compile "com.jakewharton.rxbinding:rxbinding:$rootProject.rxbindingVersion" // RxBinding
-
-    compile "com.makeramen:roundedimageview:$rootProject.roundedimageviewVersion"
 
     // Dependencies for local unit tests
     testCompile "junit:junit:$rootProject.junitVersion"
