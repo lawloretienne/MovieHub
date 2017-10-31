@@ -54,6 +54,7 @@ ext {
     rxandroidVersion = '1.2.1' //
     rxjava2RxandroidVersion = '2.0.1' //
     rxbindingVersion = '1.0.1'
+    rxbinding2Version = '2.0.0'
 
     // Test dependencies
     junitVersion = '4.12'
