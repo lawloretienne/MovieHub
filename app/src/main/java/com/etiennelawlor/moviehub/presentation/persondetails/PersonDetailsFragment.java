@@ -56,6 +56,7 @@ import com.etiennelawlor.moviehub.data.repositories.person.PersonLocalDataSource
 import com.etiennelawlor.moviehub.data.repositories.person.PersonRemoteDataSource;
 import com.etiennelawlor.moviehub.data.repositories.person.PersonRepository;
 import com.etiennelawlor.moviehub.data.repositories.person.models.PersonDetailsWrapper;
+import com.etiennelawlor.moviehub.domain.PersonDetailsUseCase;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.common.GravitySnapHelper;
@@ -446,11 +447,11 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
 
         personDetailsPresenter = new PersonDetailsPresenter(
                 this,
-                new PersonRepository(
+                new PersonDetailsUseCase(new PersonRepository(
                         new PersonLocalDataSource(getContext()),
                         new PersonRemoteDataSource(getContext())),
-                new ProductionSchedulerTransformer<PersonDetailsWrapper>()
-        );
+                        new ProductionSchedulerTransformer<PersonDetailsWrapper>())
+                );
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
 

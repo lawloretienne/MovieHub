@@ -54,6 +54,7 @@ import com.etiennelawlor.moviehub.data.repositories.movie.MovieLocalDataSource;
 import com.etiennelawlor.moviehub.data.repositories.movie.MovieRemoteDataSource;
 import com.etiennelawlor.moviehub.data.repositories.movie.MovieRepository;
 import com.etiennelawlor.moviehub.data.repositories.movie.models.MovieDetailsWrapper;
+import com.etiennelawlor.moviehub.domain.MovieDetailsUseCase;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.common.GravitySnapHelper;
@@ -424,11 +425,11 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
 
         movieDetailsPresenter = new MovieDetailsPresenter(
                 this,
-                new MovieRepository(
+                new MovieDetailsUseCase(new MovieRepository(
                         new MovieLocalDataSource(getContext()),
                         new MovieRemoteDataSource(getContext())),
-                new ProductionSchedulerTransformer<MovieDetailsWrapper>()
-        );
+                        new ProductionSchedulerTransformer<MovieDetailsWrapper>())
+                );
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
 

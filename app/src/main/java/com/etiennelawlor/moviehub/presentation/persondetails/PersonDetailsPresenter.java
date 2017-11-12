@@ -2,16 +2,11 @@ package com.etiennelawlor.moviehub.presentation.persondetails;
 
 import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.repositories.person.PersonDataSourceContract;
 import com.etiennelawlor.moviehub.data.repositories.person.models.PersonDetailsWrapper;
-import com.etiennelawlor.moviehub.util.EspressoIdlingResource;
+import com.etiennelawlor.moviehub.domain.PersonDetailsDomainContract;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
-import com.etiennelawlor.moviehub.util.rxjava.SchedulerTransformer;
 
 import rx.Subscriber;
-import rx.Subscription;
-import rx.functions.Action0;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by etiennelawlor on 2/9/17.
@@ -21,17 +16,14 @@ public class PersonDetailsPresenter implements PersonDetailsUiContract.Presenter
 
     // region Member Variables
     private final PersonDetailsUiContract.View personDetailsView;
-    private final PersonDataSourceContract.Repository personRepository;
-    private final SchedulerTransformer<PersonDetailsWrapper> schedulerTransformer;
-    private CompositeSubscription compositeSubscription = new CompositeSubscription();
+    private final PersonDetailsDomainContract.UseCase personDetailsUseCase;
     // endregion
 
     // region Constructors
 
-    public PersonDetailsPresenter(PersonDetailsUiContract.View personDetailsView, PersonDataSourceContract.Repository personRepository, SchedulerTransformer<PersonDetailsWrapper> schedulerTransformer) {
+    public PersonDetailsPresenter(PersonDetailsUiContract.View personDetailsView, PersonDetailsDomainContract.UseCase personDetailsUseCase) {
         this.personDetailsView = personDetailsView;
-        this.personRepository = personRepository;
-        this.schedulerTransformer = schedulerTransformer;
+        this.personDetailsUseCase = personDetailsUseCase;
     }
 
     // endregion
@@ -40,51 +32,35 @@ public class PersonDetailsPresenter implements PersonDetailsUiContract.Presenter
 
     @Override
     public void onDestroyView() {
-        if(compositeSubscription != null && compositeSubscription.hasSubscriptions())
-            compositeSubscription.clear();
+        personDetailsUseCase.clearSubscriptions();
     }
 
     @Override
     public void onLoadPersonDetails(int personId) {
-        // The network request might be handled in a different thread so make sure Espresso knows
-        // that the app is busy until the response is handled.
-        EspressoIdlingResource.increment(); // App is busy until further notice
+        personDetailsUseCase.getPersonDetails(personId, new Subscriber<PersonDetailsWrapper>() {
+            @Override
+            public void onCompleted() {
 
-        Subscription subscription = personRepository.getPersonDetails(personId)
-                .compose(schedulerTransformer)
-                .doOnTerminate(new Action0() {
-                    @Override
-                    public void call() {
-                        if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
-                            EspressoIdlingResource.decrement(); // Set app as idle.
-                        }
-                    }
-                })
-                .subscribe(new Subscriber<PersonDetailsWrapper>() {
-                    @Override
-                    public void onCompleted() {
+            }
 
-                    }
+            @Override
+            public void onError(Throwable throwable) {
+                throwable.printStackTrace();
 
-                    @Override
-                    public void onError(Throwable throwable) {
-                        throwable.printStackTrace();
-
-                        if(NetworkUtility.isKnownException(throwable)){
+                if(NetworkUtility.isKnownException(throwable)){
 //                            moviesView.showErrorFooter();
 //                            moviesView.setErrorText("Can't load data.\nCheck your network connection.");
-                            personDetailsView.showErrorView();
-                        }
-                    }
+                    personDetailsView.showErrorView();
+                }
+            }
 
-                    @Override
-                    public void onNext(PersonDetailsWrapper personDetailsWrapper) {
-                        if(personDetailsWrapper != null){
-                            personDetailsView.showPersonDetails(personDetailsWrapper);
-                        }
-                    }
-                });
-        compositeSubscription.add(subscription);
+            @Override
+            public void onNext(PersonDetailsWrapper personDetailsWrapper) {
+                if(personDetailsWrapper != null){
+                    personDetailsView.showPersonDetails(personDetailsWrapper);
+                }
+            }
+        });
     }
 
     @Override
