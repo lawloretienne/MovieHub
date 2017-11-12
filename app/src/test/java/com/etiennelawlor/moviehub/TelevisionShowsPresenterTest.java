@@ -1,8 +1,8 @@
 package com.etiennelawlor.moviehub;
 
-import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsPage;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowDataSourceContract;
+import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsPage;
 import com.etiennelawlor.moviehub.presentation.televisionshows.TelevisionShowsPresenter;
 import com.etiennelawlor.moviehub.presentation.televisionshows.TelevisionShowsUiContract;
 import com.etiennelawlor.moviehub.util.rxjava.TestSchedulerTransformer;

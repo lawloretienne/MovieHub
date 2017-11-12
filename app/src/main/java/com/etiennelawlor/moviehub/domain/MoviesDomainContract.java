@@ -1,7 +1,5 @@
 package com.etiennelawlor.moviehub.domain;
 
-import com.etiennelawlor.moviehub.domain.BaseUseCase;
-
 import rx.Subscriber;
 
 /**

@@ -2,7 +2,6 @@ package com.etiennelawlor.moviehub.data.repositories.search;
 
 import android.content.Context;
 
-import com.etiennelawlor.moviehub.data.repositories.search.models.SearchWrapper;
 import com.etiennelawlor.moviehub.data.network.AuthorizedNetworkInterceptor;
 import com.etiennelawlor.moviehub.data.network.MovieHubService;
 import com.etiennelawlor.moviehub.data.network.ServiceGenerator;
@@ -12,6 +11,7 @@ import com.etiennelawlor.moviehub.data.network.response.PeopleEnvelope;
 import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowsEnvelope;
+import com.etiennelawlor.moviehub.data.repositories.search.models.SearchWrapper;
 
 import java.util.ArrayList;
 import java.util.List;

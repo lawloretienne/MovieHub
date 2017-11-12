@@ -3,8 +3,6 @@ package com.etiennelawlor.moviehub.data.repositories.movie;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.etiennelawlor.moviehub.data.repositories.movie.models.MovieDetailsWrapper;
-import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesPage;
 import com.etiennelawlor.moviehub.data.network.AuthorizedNetworkInterceptor;
 import com.etiennelawlor.moviehub.data.network.MovieHubService;
 import com.etiennelawlor.moviehub.data.network.ServiceGenerator;
@@ -12,6 +10,8 @@ import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.MovieCredit;
 import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDate;
 import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDateEnvelope;
+import com.etiennelawlor.moviehub.data.repositories.movie.models.MovieDetailsWrapper;
+import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesPage;
 
 import java.util.ArrayList;
 import java.util.Calendar;

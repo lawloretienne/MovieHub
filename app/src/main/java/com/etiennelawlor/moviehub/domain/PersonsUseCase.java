@@ -1,7 +1,5 @@
 package com.etiennelawlor.moviehub.domain;
 
-import com.etiennelawlor.moviehub.data.repositories.movie.MovieDataSourceContract;
-import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesPage;
 import com.etiennelawlor.moviehub.data.repositories.person.PersonDataSourceContract;
 import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsPage;
 import com.etiennelawlor.moviehub.util.EspressoIdlingResource;

@@ -9,12 +9,12 @@ import com.etiennelawlor.moviehub.data.database.models.RealmPerson;
 import com.etiennelawlor.moviehub.data.database.models.RealmPersonsPage;
 import com.etiennelawlor.moviehub.data.database.models.RealmTelevisionShow;
 import com.etiennelawlor.moviehub.data.database.models.RealmTelevisionShowsPage;
-import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesPage;
-import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsPage;
-import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsPage;
 import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
+import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesPage;
+import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsPage;
+import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsPage;
 
 import java.util.ArrayList;
 import java.util.Date;

@@ -2,12 +2,12 @@ package com.etiennelawlor.moviehub.data.repositories.person;
 
 import android.content.Context;
 
-import com.etiennelawlor.moviehub.data.repositories.person.models.PersonDetailsWrapper;
-import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsPage;
 import com.etiennelawlor.moviehub.data.network.AuthorizedNetworkInterceptor;
 import com.etiennelawlor.moviehub.data.network.MovieHubService;
 import com.etiennelawlor.moviehub.data.network.ServiceGenerator;
 import com.etiennelawlor.moviehub.data.network.response.PersonCredit;
+import com.etiennelawlor.moviehub.data.repositories.person.models.PersonDetailsWrapper;
+import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsPage;
 
 import java.util.ArrayList;
 import java.util.Calendar;
