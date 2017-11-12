@@ -23,6 +23,7 @@ import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.data.repositories.person.PersonLocalDataSource;
 import com.etiennelawlor.moviehub.data.repositories.person.PersonRemoteDataSource;
 import com.etiennelawlor.moviehub.data.repositories.person.PersonRepository;
+import com.etiennelawlor.moviehub.domain.PersonsUseCase;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.persondetails.PersonDetailsActivity;
@@ -128,11 +129,11 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
 
         personsPresenter = new PersonsPresenter(
                 this,
-                new PersonRepository(
+                new PersonsUseCase( new PersonRepository(
                         new PersonLocalDataSource(getContext()),
                         new PersonRemoteDataSource(getContext())),
-                new ProductionSchedulerTransformer<PersonsPage>()
-        );
+                        new ProductionSchedulerTransformer<PersonsPage>())
+                );
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
     }

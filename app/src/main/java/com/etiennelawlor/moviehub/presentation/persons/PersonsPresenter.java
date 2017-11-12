@@ -3,6 +3,8 @@ package com.etiennelawlor.moviehub.presentation.persons;
 import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsPage;
 import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.data.repositories.person.PersonDataSourceContract;
+import com.etiennelawlor.moviehub.domain.MoviesDomainContract;
+import com.etiennelawlor.moviehub.domain.PersonsDomainContract;
 import com.etiennelawlor.moviehub.util.EspressoIdlingResource;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 import com.etiennelawlor.moviehub.util.rxjava.SchedulerTransformer;
@@ -22,24 +24,20 @@ public class PersonsPresenter implements PersonsUiContract.Presenter {
 
     // region Member Variables
     private final PersonsUiContract.View personsView;
-    private final PersonDataSourceContract.Repository personRepository;
-    private final SchedulerTransformer<PersonsPage> schedulerTransformer;
-    private CompositeSubscription compositeSubscription = new CompositeSubscription();
+    private final PersonsDomainContract.UseCase personsUseCase;
     // endregion
 
     // region Constructors
-    public PersonsPresenter(PersonsUiContract.View personsView, PersonDataSourceContract.Repository personRepository, SchedulerTransformer<PersonsPage> schedulerTransformer) {
+    public PersonsPresenter(PersonsUiContract.View personsView, PersonsDomainContract.UseCase personsUseCase) {
         this.personsView = personsView;
-        this.personRepository = personRepository;
-        this.schedulerTransformer = schedulerTransformer;
+        this.personsUseCase = personsUseCase;
     }
     // endregion
 
     // region PersonsUiContract.Presenter Methods
     @Override
     public void onDestroyView() {
-        if(compositeSubscription != null && compositeSubscription.hasSubscriptions())
-            compositeSubscription.clear();
+        personsUseCase.clearSubscriptions();
     }
 
     @Override
@@ -52,80 +50,65 @@ public class PersonsPresenter implements PersonsUiContract.Presenter {
             personsView.showLoadingFooter();
         }
 
-        // The network request might be handled in a different thread so make sure Espresso knows
-        // that the app is busy until the response is handled.
-        EspressoIdlingResource.increment(); // App is busy until further notice
+        personsUseCase.getPopularPersons(currentPage, new Subscriber<PersonsPage>() {
+            @Override
+            public void onCompleted() {
 
-        Subscription subscription = personRepository.getPopularPersons(currentPage)
-                .compose(schedulerTransformer)
-                .doOnTerminate(new Action0() {
-                    @Override
-                    public void call() {
-                        if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
-                            EspressoIdlingResource.decrement(); // Set app as idle.
-                        }
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                throwable.printStackTrace();
+
+                if(currentPage == 1){
+                    personsView.hideLoadingView();
+
+                    if (NetworkUtility.isKnownException(throwable)) {
+                        personsView.setErrorText("Can't load data.\nCheck your network connection.");
+                        personsView.showErrorView();
                     }
-                })
-                .subscribe(new Subscriber<PersonsPage>() {
-                    @Override
-                    public void onCompleted() {
-
+                } else {
+                    if(NetworkUtility.isKnownException(throwable)){
+                        personsView.showErrorFooter();
                     }
+                }
+            }
 
-                    @Override
-                    public void onError(Throwable throwable) {
-                        throwable.printStackTrace();
+            @Override
+            public void onNext(PersonsPage personsPage) {
+                if(personsPage != null){
+                    List<Person> persons = personsPage.getPersons();
+                    int currentPage = personsPage.getPageNumber();
+                    boolean isLastPage = personsPage.isLastPage();
+                    boolean hasMovies = personsPage.hasPersons();
 
-                        if(currentPage == 1){
-                            personsView.hideLoadingView();
+                    if(currentPage == 1){
+                        personsView.hideLoadingView();
 
-                            if (NetworkUtility.isKnownException(throwable)) {
-                                personsView.setErrorText("Can't load data.\nCheck your network connection.");
-                                personsView.showErrorView();
-                            }
+                        if(hasMovies){
+                            personsView.addHeader();
+                            personsView.addPersonsToAdapter(persons);
+
+                            if(!isLastPage)
+                                personsView.addFooter();
                         } else {
-                            if(NetworkUtility.isKnownException(throwable)){
-                                personsView.showErrorFooter();
-                            }
+                            personsView.showEmptyView();
+                        }
+                    } else {
+                        personsView.removeFooter();
+
+                        if(hasMovies){
+                            personsView.addPersonsToAdapter(persons);
+
+                            if(!isLastPage)
+                                personsView.addFooter();
                         }
                     }
 
-                    @Override
-                    public void onNext(PersonsPage personsPage) {
-                        if(personsPage != null){
-                            List<Person> persons = personsPage.getPersons();
-                            int currentPage = personsPage.getPageNumber();
-                            boolean isLastPage = personsPage.isLastPage();
-                            boolean hasMovies = personsPage.hasPersons();
-
-                            if(currentPage == 1){
-                                personsView.hideLoadingView();
-
-                                if(hasMovies){
-                                    personsView.addHeader();
-                                    personsView.addPersonsToAdapter(persons);
-
-                                    if(!isLastPage)
-                                        personsView.addFooter();
-                                } else {
-                                    personsView.showEmptyView();
-                                }
-                            } else {
-                                personsView.removeFooter();
-
-                                if(hasMovies){
-                                    personsView.addPersonsToAdapter(persons);
-
-                                    if(!isLastPage)
-                                        personsView.addFooter();
-                                }
-                            }
-
-                            personsView.setPersonsPage(personsPage);
-                        }
-                    }
-                });
-        compositeSubscription.add(subscription);
+                    personsView.setPersonsPage(personsPage);
+                }
+            }
+        });
     }
 
     @Override

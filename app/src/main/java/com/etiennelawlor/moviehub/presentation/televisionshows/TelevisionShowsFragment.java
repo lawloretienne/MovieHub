@@ -23,6 +23,7 @@ import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowLocalDataSource;
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowRemoteDataSource;
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowRepository;
+import com.etiennelawlor.moviehub.domain.TelevisionShowsUseCase;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.televisionshowdetails.TelevisionShowDetailsActivity;
@@ -128,11 +129,11 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
 
         televisionShowsPresenter = new TelevisionShowsPresenter(
                 this,
-                new TelevisionShowRepository(
+                new TelevisionShowsUseCase( new TelevisionShowRepository(
                         new TelevisionShowLocalDataSource(getContext()),
                         new TelevisionShowRemoteDataSource(getContext())),
-                new ProductionSchedulerTransformer<TelevisionShowsPage>()
-        );
+                        new ProductionSchedulerTransformer<TelevisionShowsPage>())
+                );
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
     }

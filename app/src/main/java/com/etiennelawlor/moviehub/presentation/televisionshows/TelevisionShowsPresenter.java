@@ -1,18 +1,13 @@
 package com.etiennelawlor.moviehub.presentation.televisionshows;
 
-import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsPage;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowDataSourceContract;
-import com.etiennelawlor.moviehub.util.EspressoIdlingResource;
+import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsPage;
+import com.etiennelawlor.moviehub.domain.TelevisionShowsDomainContract;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
-import com.etiennelawlor.moviehub.util.rxjava.SchedulerTransformer;
 
 import java.util.List;
 
 import rx.Subscriber;
-import rx.Subscription;
-import rx.functions.Action0;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by etiennelawlor on 2/9/17.
@@ -22,16 +17,13 @@ public class TelevisionShowsPresenter implements TelevisionShowsUiContract.Prese
 
     // region Member Variables
     private final TelevisionShowsUiContract.View televisionShowsView;
-    private final TelevisionShowDataSourceContract.Repository televisionShowRepository;
-    private final SchedulerTransformer<TelevisionShowsPage> schedulerTransformer;
-    private CompositeSubscription compositeSubscription = new CompositeSubscription();
+    private final TelevisionShowsDomainContract.UseCase televisionShowsUseCase;
     // endregion
 
     // region Constructors
-    public TelevisionShowsPresenter(TelevisionShowsUiContract.View televisionShowsView, TelevisionShowDataSourceContract.Repository televisionShowRepository, SchedulerTransformer<TelevisionShowsPage> schedulerTransformer) {
+    public TelevisionShowsPresenter(TelevisionShowsUiContract.View televisionShowsView, TelevisionShowsDomainContract.UseCase televisionShowsUseCase) {
         this.televisionShowsView = televisionShowsView;
-        this.televisionShowRepository = televisionShowRepository;
-        this.schedulerTransformer = schedulerTransformer;
+        this.televisionShowsUseCase = televisionShowsUseCase;
     }
     // endregion
 
@@ -39,8 +31,7 @@ public class TelevisionShowsPresenter implements TelevisionShowsUiContract.Prese
 
     @Override
     public void onDestroyView() {
-        if(compositeSubscription != null && compositeSubscription.hasSubscriptions())
-            compositeSubscription.clear();
+        televisionShowsUseCase.clearSubscriptions();
     }
 
     @Override
@@ -53,80 +44,64 @@ public class TelevisionShowsPresenter implements TelevisionShowsUiContract.Prese
             televisionShowsView.showLoadingFooter();
         }
 
-        // The network request might be handled in a different thread so make sure Espresso knows
-        // that the app is busy until the response is handled.
-        EspressoIdlingResource.increment(); // App is busy until further notice
+        televisionShowsUseCase.getPopularTelevisionShows(currentPage, new Subscriber<TelevisionShowsPage>() {
+            @Override
+            public void onCompleted() {
 
-        Subscription subscription = televisionShowRepository.getPopularTelevisionShows(currentPage)
-                .compose(schedulerTransformer)
-                .doOnTerminate(new Action0() {
-                    @Override
-                    public void call() {
-                        if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
-                            EspressoIdlingResource.decrement(); // Set app as idle.
-                        }
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                throwable.printStackTrace();
+
+                if(currentPage == 1){
+                    televisionShowsView.hideLoadingView();
+
+                    if (NetworkUtility.isKnownException(throwable)) {
+                        televisionShowsView.setErrorText("Can't load data.\nCheck your network connection.");
+                        televisionShowsView.showErrorView();
                     }
-                })
-                .subscribe(new Subscriber<TelevisionShowsPage>() {
-                    @Override
-                    public void onCompleted() {
-
+                } else {
+                    if(NetworkUtility.isKnownException(throwable)){
+                        televisionShowsView.showErrorFooter();
                     }
+                }
+            }
 
-                    @Override
-                    public void onError(Throwable throwable) {
-                        throwable.printStackTrace();
+            @Override
+            public void onNext(TelevisionShowsPage televisionShowsPage) {
+                if(televisionShowsPage != null){
+                    List<TelevisionShow> televisionShows = televisionShowsPage.getTelevisionShows();
+                    int currentPage = televisionShowsPage.getPageNumber();
+                    boolean isLastPage = televisionShowsPage.isLastPage();
+                    boolean hasTelevisionShows = televisionShowsPage.hasTelevisionShows();
+                    if(currentPage == 1){
+                        televisionShowsView.hideLoadingView();
 
-                        if(currentPage == 1){
-                            televisionShowsView.hideLoadingView();
+                        if(hasTelevisionShows){
+                            televisionShowsView.addHeader();
+                            televisionShowsView.addTelevisionShowsToAdapter(televisionShows);
 
-                            if (NetworkUtility.isKnownException(throwable)) {
-                                televisionShowsView.setErrorText("Can't load data.\nCheck your network connection.");
-                                televisionShowsView.showErrorView();
-                            }
+                            if(!isLastPage)
+                                televisionShowsView.addFooter();
                         } else {
-                            if(NetworkUtility.isKnownException(throwable)){
-                                televisionShowsView.showErrorFooter();
-                            }
+                            televisionShowsView.showEmptyView();
+                        }
+                    } else {
+                        televisionShowsView.removeFooter();
+
+                        if(hasTelevisionShows){
+                            televisionShowsView.addTelevisionShowsToAdapter(televisionShows);
+
+                            if(!isLastPage)
+                                televisionShowsView.addFooter();
                         }
                     }
 
-                    @Override
-                    public void onNext(TelevisionShowsPage televisionShowsPage) {
-                        if(televisionShowsPage != null){
-                            List<TelevisionShow> televisionShows = televisionShowsPage.getTelevisionShows();
-                            int currentPage = televisionShowsPage.getPageNumber();
-                            boolean isLastPage = televisionShowsPage.isLastPage();
-                            boolean hasTelevisionShows = televisionShowsPage.hasTelevisionShows();
-                            if(currentPage == 1){
-                                televisionShowsView.hideLoadingView();
-
-                                if(hasTelevisionShows){
-                                    televisionShowsView.addHeader();
-                                    televisionShowsView.addTelevisionShowsToAdapter(televisionShows);
-
-                                    if(!isLastPage)
-                                        televisionShowsView.addFooter();
-                                } else {
-                                    televisionShowsView.showEmptyView();
-                                }
-                            } else {
-                                televisionShowsView.removeFooter();
-
-                                if(hasTelevisionShows){
-                                    televisionShowsView.addTelevisionShowsToAdapter(televisionShows);
-
-                                    if(!isLastPage)
-                                        televisionShowsView.addFooter();
-                                }
-                            }
-
-                            televisionShowsView.setTelevisionShowsPage(televisionShowsPage);
-                        }
-
-                    }
-                });
-        compositeSubscription.add(subscription);
+                    televisionShowsView.setTelevisionShowsPage(televisionShowsPage);
+                }
+            }
+        });
     }
 
     @Override
