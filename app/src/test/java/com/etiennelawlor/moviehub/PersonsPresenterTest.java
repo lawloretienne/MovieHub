@@ -3,21 +3,26 @@ package com.etiennelawlor.moviehub;
 import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.data.repositories.person.PersonDataSourceContract;
 import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsPage;
+import com.etiennelawlor.moviehub.domain.PersonsDomainContract;
+import com.etiennelawlor.moviehub.domain.TelevisionShowsDomainContract;
 import com.etiennelawlor.moviehub.presentation.persons.PersonsPresenter;
 import com.etiennelawlor.moviehub.presentation.persons.PersonsUiContract;
 import com.etiennelawlor.moviehub.util.rxjava.TestSchedulerTransformer;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import rx.Observable;
+import rx.Subscriber;
 
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
@@ -37,10 +42,10 @@ public class PersonsPresenterTest {
     @Mock
     private PersonsUiContract.View mockPersonsView;
     @Mock
-    private PersonDataSourceContract.Repository mockPersonRepository;
+    private PersonsDomainContract.UseCase mockPersonsUseCase;
 
     // Stubs
-    private Observable stub;
+    private ArgumentCaptor<Subscriber> subscriberArgumentCaptor;
 
     // endregion
 
@@ -56,7 +61,7 @@ public class PersonsPresenterTest {
         MockitoAnnotations.initMocks(this);
 
         // Get a reference to the class under test
-        personsPresenter = new PersonsPresenter(mockPersonsView, mockPersonRepository, new TestSchedulerTransformer<PersonsPage>());
+        personsPresenter = new PersonsPresenter(mockPersonsView, mockPersonsUseCase);
     }
 
     // region Test Methods
@@ -65,8 +70,6 @@ public class PersonsPresenterTest {
     public void onLoadPopularPersons_shouldShowError_whenFirstPageRequestFailed() {
         // 1. (Given) Set up conditions required for the test
         personsPage = new PersonsPage(getListOfPersons(0), 1, true, Calendar.getInstance().getTime());
-        stub = Observable.<PersonsPage>error(new IOException());
-        when(mockPersonRepository.getPopularPersons(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         personsPresenter.onLoadPopularPersons(personsPage.getPageNumber());
@@ -76,7 +79,9 @@ public class PersonsPresenterTest {
         verify(mockPersonsView).hideErrorView();
         verify(mockPersonsView).showLoadingView();
 
-        verify(mockPersonRepository).getPopularPersons(anyInt());
+        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
+        verify(mockPersonsUseCase).getPopularPersons(anyInt(), subscriberArgumentCaptor.capture());
+        subscriberArgumentCaptor.getValue().onError(new UnknownHostException());
 
         verify(mockPersonsView).hideLoadingView();
         verify(mockPersonsView).setErrorText(anyString());
@@ -87,8 +92,6 @@ public class PersonsPresenterTest {
     public void onLoadPopularPersons_shouldShowError_whenNextPageRequestFailed() {
         // 1. (Given) Set up conditions required for the test
         personsPage = new PersonsPage(getListOfPersons(0), 2, true, Calendar.getInstance().getTime());
-        stub = Observable.<PersonsPage>error(new IOException());
-        when(mockPersonRepository.getPopularPersons(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         personsPresenter.onLoadPopularPersons(personsPage.getPageNumber());
@@ -96,7 +99,9 @@ public class PersonsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockPersonsView).showLoadingFooter();
 
-        verify(mockPersonRepository).getPopularPersons(anyInt());
+        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
+        verify(mockPersonsUseCase).getPopularPersons(anyInt(), subscriberArgumentCaptor.capture());
+        subscriberArgumentCaptor.getValue().onError(new UnknownHostException());
 
         verify(mockPersonsView).showErrorFooter();
     }
@@ -105,8 +110,6 @@ public class PersonsPresenterTest {
     public void onLoadPopularPersons_shouldShowEmpty_whenFirstPageHasNoPersons() {
         // 1. (Given) Set up conditions required for the test
         personsPage = new PersonsPage(getListOfPersons(0), 1, true, Calendar.getInstance().getTime());
-        stub = Observable.just(personsPage);
-        when(mockPersonRepository.getPopularPersons(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         personsPresenter.onLoadPopularPersons(personsPage.getPageNumber());
@@ -116,7 +119,9 @@ public class PersonsPresenterTest {
         verify(mockPersonsView).hideErrorView();
         verify(mockPersonsView).showLoadingView();
 
-        verify(mockPersonRepository).getPopularPersons(anyInt());
+        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
+        verify(mockPersonsUseCase).getPopularPersons(anyInt(), subscriberArgumentCaptor.capture());
+        subscriberArgumentCaptor.getValue().onNext(personsPage);
 
         verify(mockPersonsView).hideLoadingView();
         verify(mockPersonsView).showEmptyView();
@@ -127,8 +132,6 @@ public class PersonsPresenterTest {
     public void onLoadPopularPersons_shouldNotAddPersons_whenNextPageHasNoPersons() {
         // 1. (Given) Set up conditions required for the test
         personsPage = new PersonsPage(getListOfPersons(0), 2, true, Calendar.getInstance().getTime());
-        stub = Observable.just(personsPage);
-        when(mockPersonRepository.getPopularPersons(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         personsPresenter.onLoadPopularPersons(personsPage.getPageNumber());
@@ -136,7 +139,9 @@ public class PersonsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockPersonsView).showLoadingFooter();
 
-        verify(mockPersonRepository).getPopularPersons(anyInt());
+        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
+        verify(mockPersonsUseCase).getPopularPersons(anyInt(), subscriberArgumentCaptor.capture());
+        subscriberArgumentCaptor.getValue().onNext(personsPage);
 
         verify(mockPersonsView).removeFooter();
         verify(mockPersonsView).setPersonsPage(personsPage);
@@ -146,8 +151,6 @@ public class PersonsPresenterTest {
     public void onLoadPopularPersons_shouldAddPersons_whenFirstPageHasPersonsAndIsLastPage() {
         // 1. (Given) Set up conditions required for the test
         personsPage = new PersonsPage(getListOfPersons(5), 1, true, Calendar.getInstance().getTime());
-        stub = Observable.just(personsPage);
-        when(mockPersonRepository.getPopularPersons(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         personsPresenter.onLoadPopularPersons(personsPage.getPageNumber());
@@ -157,7 +160,9 @@ public class PersonsPresenterTest {
         verify(mockPersonsView).hideErrorView();
         verify(mockPersonsView).showLoadingView();
 
-        verify(mockPersonRepository).getPopularPersons(anyInt());
+        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
+        verify(mockPersonsUseCase).getPopularPersons(anyInt(), subscriberArgumentCaptor.capture());
+        subscriberArgumentCaptor.getValue().onNext(personsPage);
 
         verify(mockPersonsView).hideLoadingView();
         verify(mockPersonsView).addHeader();
@@ -169,8 +174,6 @@ public class PersonsPresenterTest {
     public void onLoadPopularPersons_shouldAddPersons_whenFirstPageHasPersonsAndIsNotLastPage() {
         // 1. (Given) Set up conditions required for the test
         personsPage = new PersonsPage(getListOfPersons(5), 1, false, Calendar.getInstance().getTime());
-        stub = Observable.just(personsPage);
-        when(mockPersonRepository.getPopularPersons(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         personsPresenter.onLoadPopularPersons(personsPage.getPageNumber());
@@ -180,7 +183,9 @@ public class PersonsPresenterTest {
         verify(mockPersonsView).hideErrorView();
         verify(mockPersonsView).showLoadingView();
 
-        verify(mockPersonRepository).getPopularPersons(anyInt());
+        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
+        verify(mockPersonsUseCase).getPopularPersons(anyInt(), subscriberArgumentCaptor.capture());
+        subscriberArgumentCaptor.getValue().onNext(personsPage);
 
         verify(mockPersonsView).hideLoadingView();
         verify(mockPersonsView).addHeader();
@@ -193,8 +198,6 @@ public class PersonsPresenterTest {
     public void onLoadPopularPersons_shouldAddPersons_whenNextPageHasPersonsAndIsLastPage() {
         // 1. (Given) Set up conditions required for the test
         personsPage = new PersonsPage(getListOfPersons(5), 2, true, Calendar.getInstance().getTime());
-        stub = Observable.just(personsPage);
-        when(mockPersonRepository.getPopularPersons(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         personsPresenter.onLoadPopularPersons(personsPage.getPageNumber());
@@ -202,7 +205,9 @@ public class PersonsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockPersonsView).showLoadingFooter();
 
-        verify(mockPersonRepository).getPopularPersons(anyInt());
+        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
+        verify(mockPersonsUseCase).getPopularPersons(anyInt(), subscriberArgumentCaptor.capture());
+        subscriberArgumentCaptor.getValue().onNext(personsPage);
 
         verify(mockPersonsView).removeFooter();
         verify(mockPersonsView).addPersonsToAdapter(personsPage.getPersons());
@@ -213,8 +218,6 @@ public class PersonsPresenterTest {
     public void onLoadPopularPersons_shouldAddPersons_whenNextPageHasPersonsAndIsNotLastPage() {
         // 1. (Given) Set up conditions required for the test
         personsPage = new PersonsPage(getListOfPersons(5), 2, false, Calendar.getInstance().getTime());
-        stub = Observable.just(personsPage);
-        when(mockPersonRepository.getPopularPersons(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         personsPresenter.onLoadPopularPersons(personsPage.getPageNumber());
@@ -222,7 +225,9 @@ public class PersonsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockPersonsView).showLoadingFooter();
 
-        verify(mockPersonRepository).getPopularPersons(anyInt());
+        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
+        verify(mockPersonsUseCase).getPopularPersons(anyInt(), subscriberArgumentCaptor.capture());
+        subscriberArgumentCaptor.getValue().onNext(personsPage);
 
         verify(mockPersonsView).removeFooter();
         verify(mockPersonsView).addPersonsToAdapter(personsPage.getPersons());
@@ -242,7 +247,7 @@ public class PersonsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockPersonsView).openPersonDetails(person);
 
-        verifyZeroInteractions(mockPersonRepository);
+        verifyZeroInteractions(mockPersonsUseCase);
     }
 
     @Test
@@ -255,18 +260,18 @@ public class PersonsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockPersonsView).loadMoreItems();
 
-        verifyZeroInteractions(mockPersonRepository);
+        verifyZeroInteractions(mockPersonsUseCase);
     }
 
     @Test
-    public void onDestroyView_shouldNotHaveInteractions() {
+    public void onDestroyView_shouldClearSubscriptions() {
         // 1. (Given) Set up conditions required for the test
 
         // 2. (When) Then perform one or more actions
         personsPresenter.onDestroyView();
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verifyZeroInteractions(mockPersonsView);
-        verifyZeroInteractions(mockPersonRepository);
+        verify(mockPersonsUseCase).clearSubscriptions();
     }
 
     // endregion

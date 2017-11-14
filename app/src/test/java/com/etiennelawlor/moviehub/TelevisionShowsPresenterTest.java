@@ -3,21 +3,26 @@ package com.etiennelawlor.moviehub;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowDataSourceContract;
 import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsPage;
+import com.etiennelawlor.moviehub.domain.MoviesDomainContract;
+import com.etiennelawlor.moviehub.domain.TelevisionShowsDomainContract;
 import com.etiennelawlor.moviehub.presentation.televisionshows.TelevisionShowsPresenter;
 import com.etiennelawlor.moviehub.presentation.televisionshows.TelevisionShowsUiContract;
 import com.etiennelawlor.moviehub.util.rxjava.TestSchedulerTransformer;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import rx.Observable;
+import rx.Subscriber;
 
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
@@ -37,11 +42,10 @@ public class TelevisionShowsPresenterTest {
     @Mock
     private TelevisionShowsUiContract.View mockTelevisionShowsView;
     @Mock
-    private TelevisionShowDataSourceContract.Repository mockTelevisionShowRepository;
+    private TelevisionShowsDomainContract.UseCase mockTelevisionShowsUseCase;
 
     // Stubs
-    private Observable stub;
-
+    private ArgumentCaptor<Subscriber> subscriberArgumentCaptor;
     // endregion
 
     // region Member Variables
@@ -56,7 +60,7 @@ public class TelevisionShowsPresenterTest {
         MockitoAnnotations.initMocks(this);
 
         // Get a reference to the class under test
-        televisionShowsPresenter = new TelevisionShowsPresenter(mockTelevisionShowsView, mockTelevisionShowRepository, new TestSchedulerTransformer<TelevisionShowsPage>());
+        televisionShowsPresenter = new TelevisionShowsPresenter(mockTelevisionShowsView, mockTelevisionShowsUseCase);
     }
 
     // region Test Methods
@@ -65,8 +69,6 @@ public class TelevisionShowsPresenterTest {
     public void onLoadPopularTelevisionShows_shouldShowError_whenFirstPageRequestFailed() {
         // 1. (Given) Set up conditions required for the test
         televisionShowsPage = new TelevisionShowsPage(getListOfTelevisionShows(0), 1, true, Calendar.getInstance().getTime());
-        stub = Observable.<TelevisionShowsPage>error(new IOException());
-        when(mockTelevisionShowRepository.getPopularTelevisionShows(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsPage.getPageNumber());
@@ -76,7 +78,9 @@ public class TelevisionShowsPresenterTest {
         verify(mockTelevisionShowsView).hideErrorView();
         verify(mockTelevisionShowsView).showLoadingView();
 
-        verify(mockTelevisionShowRepository).getPopularTelevisionShows(anyInt());
+        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
+        verify(mockTelevisionShowsUseCase).getPopularTelevisionShows(anyInt(), subscriberArgumentCaptor.capture());
+        subscriberArgumentCaptor.getValue().onError(new UnknownHostException());
 
         verify(mockTelevisionShowsView).hideLoadingView();
         verify(mockTelevisionShowsView).setErrorText(anyString());
@@ -87,8 +91,6 @@ public class TelevisionShowsPresenterTest {
     public void onLoadPopularTelevisionShows_shouldShowError_whenNextPageRequestFailed() {
         // 1. (Given) Set up conditions required for the test
         televisionShowsPage = new TelevisionShowsPage(getListOfTelevisionShows(0), 2, true, Calendar.getInstance().getTime());
-        stub = Observable.<TelevisionShowsPage>error(new IOException());
-        when(mockTelevisionShowRepository.getPopularTelevisionShows(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsPage.getPageNumber());
@@ -96,7 +98,9 @@ public class TelevisionShowsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockTelevisionShowsView).showLoadingFooter();
 
-        verify(mockTelevisionShowRepository).getPopularTelevisionShows(anyInt());
+        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
+        verify(mockTelevisionShowsUseCase).getPopularTelevisionShows(anyInt(), subscriberArgumentCaptor.capture());
+        subscriberArgumentCaptor.getValue().onError(new UnknownHostException());
 
         verify(mockTelevisionShowsView).showErrorFooter();
     }
@@ -105,8 +109,6 @@ public class TelevisionShowsPresenterTest {
     public void onLoadPopularTelevisionShowss_shouldShowEmpty_whenFirstPageHasNoTelevisionShows() {
         // 1. (Given) Set up conditions required for the test
         televisionShowsPage = new TelevisionShowsPage(getListOfTelevisionShows(0), 1, true, Calendar.getInstance().getTime());
-        stub = Observable.just(televisionShowsPage);
-        when(mockTelevisionShowRepository.getPopularTelevisionShows(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsPage.getPageNumber());
@@ -116,7 +118,9 @@ public class TelevisionShowsPresenterTest {
         verify(mockTelevisionShowsView).hideErrorView();
         verify(mockTelevisionShowsView).showLoadingView();
 
-        verify(mockTelevisionShowRepository).getPopularTelevisionShows(anyInt());
+        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
+        verify(mockTelevisionShowsUseCase).getPopularTelevisionShows(anyInt(), subscriberArgumentCaptor.capture());
+        subscriberArgumentCaptor.getValue().onNext(televisionShowsPage);
 
         verify(mockTelevisionShowsView).hideLoadingView();
         verify(mockTelevisionShowsView).showEmptyView();
@@ -127,8 +131,6 @@ public class TelevisionShowsPresenterTest {
     public void onLoadPopularTelevisionShows_shouldNotAddTelevisionShows_whenNextPageHasNoTelevisionShows() {
         // 1. (Given) Set up conditions required for the test
         televisionShowsPage = new TelevisionShowsPage(getListOfTelevisionShows(0), 2, true, Calendar.getInstance().getTime());
-        stub = Observable.just(televisionShowsPage);
-        when(mockTelevisionShowRepository.getPopularTelevisionShows(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsPage.getPageNumber());
@@ -136,7 +138,9 @@ public class TelevisionShowsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockTelevisionShowsView).showLoadingFooter();
 
-        verify(mockTelevisionShowRepository).getPopularTelevisionShows(anyInt());
+        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
+        verify(mockTelevisionShowsUseCase).getPopularTelevisionShows(anyInt(), subscriberArgumentCaptor.capture());
+        subscriberArgumentCaptor.getValue().onNext(televisionShowsPage);
 
         verify(mockTelevisionShowsView).removeFooter();
         verify(mockTelevisionShowsView).setTelevisionShowsPage(televisionShowsPage);
@@ -146,8 +150,6 @@ public class TelevisionShowsPresenterTest {
     public void onLoadPopularTelevisionShows_shouldAddTelevisionShows_whenFirstPageHasTelevisionShowsAndIsLastPage() {
         // 1. (Given) Set up conditions required for the test
         televisionShowsPage = new TelevisionShowsPage(getListOfTelevisionShows(5), 1, true, Calendar.getInstance().getTime());
-        stub = Observable.just(televisionShowsPage);
-        when(mockTelevisionShowRepository.getPopularTelevisionShows(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsPage.getPageNumber());
@@ -157,7 +159,9 @@ public class TelevisionShowsPresenterTest {
         verify(mockTelevisionShowsView).hideErrorView();
         verify(mockTelevisionShowsView).showLoadingView();
 
-        verify(mockTelevisionShowRepository).getPopularTelevisionShows(anyInt());
+        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
+        verify(mockTelevisionShowsUseCase).getPopularTelevisionShows(anyInt(), subscriberArgumentCaptor.capture());
+        subscriberArgumentCaptor.getValue().onNext(televisionShowsPage);
 
         verify(mockTelevisionShowsView).hideLoadingView();
         verify(mockTelevisionShowsView).addHeader();
@@ -169,8 +173,6 @@ public class TelevisionShowsPresenterTest {
     public void onLoadPopularTelevisionShows_shouldAddTelevisionShows_whenFirstPageHasTelevisionShowsAndIsNotLastPage() {
         // 1. (Given) Set up conditions required for the test
         televisionShowsPage = new TelevisionShowsPage(getListOfTelevisionShows(5), 1, false, Calendar.getInstance().getTime());
-        stub = Observable.just(televisionShowsPage);
-        when(mockTelevisionShowRepository.getPopularTelevisionShows(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsPage.getPageNumber());
@@ -180,7 +182,9 @@ public class TelevisionShowsPresenterTest {
         verify(mockTelevisionShowsView).hideErrorView();
         verify(mockTelevisionShowsView).showLoadingView();
 
-        verify(mockTelevisionShowRepository).getPopularTelevisionShows(anyInt());
+        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
+        verify(mockTelevisionShowsUseCase).getPopularTelevisionShows(anyInt(), subscriberArgumentCaptor.capture());
+        subscriberArgumentCaptor.getValue().onNext(televisionShowsPage);
 
         verify(mockTelevisionShowsView).hideLoadingView();
         verify(mockTelevisionShowsView).addHeader();
@@ -193,8 +197,6 @@ public class TelevisionShowsPresenterTest {
     public void onLoadPopularTelevisionShows_shouldAddTelevisionShows_whenNextPageHasTelevisionShowsAndIsLastPage() {
         // 1. (Given) Set up conditions required for the test
         televisionShowsPage = new TelevisionShowsPage(getListOfTelevisionShows(5), 2, true, Calendar.getInstance().getTime());
-        stub = Observable.just(televisionShowsPage);
-        when(mockTelevisionShowRepository.getPopularTelevisionShows(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsPage.getPageNumber());
@@ -202,7 +204,9 @@ public class TelevisionShowsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockTelevisionShowsView).showLoadingFooter();
 
-        verify(mockTelevisionShowRepository).getPopularTelevisionShows(anyInt());
+        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
+        verify(mockTelevisionShowsUseCase).getPopularTelevisionShows(anyInt(), subscriberArgumentCaptor.capture());
+        subscriberArgumentCaptor.getValue().onNext(televisionShowsPage);
 
         verify(mockTelevisionShowsView).removeFooter();
         verify(mockTelevisionShowsView).addTelevisionShowsToAdapter(televisionShowsPage.getTelevisionShows());
@@ -213,8 +217,6 @@ public class TelevisionShowsPresenterTest {
     public void onLoadPopularTelevisionShows_shouldAddTelevisionShows_whenNextPageHasTelevisionShowsAndIsNotLastPage() {
         // 1. (Given) Set up conditions required for the test
         televisionShowsPage = new TelevisionShowsPage(getListOfTelevisionShows(5), 2, false, Calendar.getInstance().getTime());
-        stub = Observable.just(televisionShowsPage);
-        when(mockTelevisionShowRepository.getPopularTelevisionShows(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsPage.getPageNumber());
@@ -222,7 +224,9 @@ public class TelevisionShowsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockTelevisionShowsView).showLoadingFooter();
 
-        verify(mockTelevisionShowRepository).getPopularTelevisionShows(anyInt());
+        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
+        verify(mockTelevisionShowsUseCase).getPopularTelevisionShows(anyInt(), subscriberArgumentCaptor.capture());
+        subscriberArgumentCaptor.getValue().onNext(televisionShowsPage);
 
         verify(mockTelevisionShowsView).removeFooter();
         verify(mockTelevisionShowsView).addTelevisionShowsToAdapter(televisionShowsPage.getTelevisionShows());
@@ -242,7 +246,7 @@ public class TelevisionShowsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockTelevisionShowsView).openTelevisionShowDetails(televisionShow);
 
-        verifyZeroInteractions(mockTelevisionShowRepository);
+        verifyZeroInteractions(mockTelevisionShowsUseCase);
     }
 
     @Test
@@ -255,18 +259,18 @@ public class TelevisionShowsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockTelevisionShowsView).loadMoreItems();
 
-        verifyZeroInteractions(mockTelevisionShowRepository);
+        verifyZeroInteractions(mockTelevisionShowsUseCase);
     }
 
     @Test
-    public void onDestroyView_shouldNotHaveInteractions() {
+    public void onDestroyView_shouldClearSubscriptions() {
         // 1. (Given) Set up conditions required for the test
 
         // 2. (When) Then perform one or more actions
         televisionShowsPresenter.onDestroyView();
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verifyZeroInteractions(mockTelevisionShowsView);
-        verifyZeroInteractions(mockTelevisionShowRepository);
+        verify(mockTelevisionShowsUseCase).clearSubscriptions();
     }
 
     // endregion

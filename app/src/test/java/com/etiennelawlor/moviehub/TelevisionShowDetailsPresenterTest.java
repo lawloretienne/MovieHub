@@ -5,20 +5,25 @@ import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCredit;
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowDataSourceContract;
 import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowDetailsWrapper;
+import com.etiennelawlor.moviehub.domain.MovieDetailsDomainContract;
+import com.etiennelawlor.moviehub.domain.TelevisionShowDetailsDomainContract;
 import com.etiennelawlor.moviehub.presentation.televisionshowdetails.TelevisionShowDetailsPresenter;
 import com.etiennelawlor.moviehub.presentation.televisionshowdetails.TelevisionShowDetailsUiContract;
 import com.etiennelawlor.moviehub.util.rxjava.TestSchedulerTransformer;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
+import rx.Subscriber;
 
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.verify;
@@ -37,10 +42,10 @@ public class TelevisionShowDetailsPresenterTest {
     @Mock
     private TelevisionShowDetailsUiContract.View mockTelevisionShowDetailsView;
     @Mock
-    private TelevisionShowDataSourceContract.Repository mockTelevisionShowRepository;
+    private TelevisionShowDetailsDomainContract.UseCase mockTelevisionShowDetailsUseCase;
 
     // Stubs
-    private Observable stub;
+    private ArgumentCaptor<Subscriber> subscriberArgumentCaptor;
 
     // endregion
 
@@ -56,7 +61,7 @@ public class TelevisionShowDetailsPresenterTest {
         MockitoAnnotations.initMocks(this);
 
         // Get a reference to the class under test
-        televisionShowDetailsPresenter = new TelevisionShowDetailsPresenter(mockTelevisionShowDetailsView, mockTelevisionShowRepository, new TestSchedulerTransformer<TelevisionShowDetailsWrapper>());
+        televisionShowDetailsPresenter = new TelevisionShowDetailsPresenter(mockTelevisionShowDetailsView, mockTelevisionShowDetailsUseCase);
     }
 
     // region Test Methods
@@ -71,13 +76,15 @@ public class TelevisionShowDetailsPresenterTest {
         List<TelevisionShow> similarTelevisionShows = new ArrayList<>();
         String rating = "";
         televisionShowDetailsWrapper = new TelevisionShowDetailsWrapper(televisionShow, cast, crew, similarTelevisionShows, rating);
-        stub = Observable.<TelevisionShowDetailsWrapper>error(new IOException());
-        when(mockTelevisionShowRepository.getTelevisionShowDetails(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         televisionShowDetailsPresenter.onLoadTelevisionShowDetails(televisionShow.getId());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
+        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
+        verify(mockTelevisionShowDetailsUseCase).getTelevisionShowDetails(anyInt(), subscriberArgumentCaptor.capture());
+        subscriberArgumentCaptor.getValue().onError(new UnknownHostException());
+
         verify(mockTelevisionShowDetailsView).showErrorView();
     }
 
@@ -91,13 +98,15 @@ public class TelevisionShowDetailsPresenterTest {
         List<TelevisionShow> similarTelevisionShows = new ArrayList<>();
         String rating = "";
         televisionShowDetailsWrapper = new TelevisionShowDetailsWrapper(televisionShow, cast, crew, similarTelevisionShows, rating);
-        stub = Observable.just(televisionShowDetailsWrapper);
-        when(mockTelevisionShowRepository.getTelevisionShowDetails(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         televisionShowDetailsPresenter.onLoadTelevisionShowDetails(televisionShow.getId());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
+        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
+        verify(mockTelevisionShowDetailsUseCase).getTelevisionShowDetails(anyInt(), subscriberArgumentCaptor.capture());
+        subscriberArgumentCaptor.getValue().onNext(televisionShowDetailsWrapper);
+
         verify(mockTelevisionShowDetailsView).showTelevisionShowDetails(televisionShowDetailsWrapper);
     }
 
@@ -112,7 +121,7 @@ public class TelevisionShowDetailsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockTelevisionShowDetailsView).openPersonDetails(person);
 
-        verifyZeroInteractions(mockTelevisionShowRepository);
+        verifyZeroInteractions(mockTelevisionShowDetailsUseCase);
     }
 
     @Test
@@ -126,7 +135,7 @@ public class TelevisionShowDetailsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockTelevisionShowDetailsView).openTelevisionShowDetails(televisionShow);
 
-        verifyZeroInteractions(mockTelevisionShowRepository);
+        verifyZeroInteractions(mockTelevisionShowDetailsUseCase);
     }
 
     @Test
@@ -140,7 +149,7 @@ public class TelevisionShowDetailsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockTelevisionShowDetailsView).showToolbarTitle();
 
-        verifyZeroInteractions(mockTelevisionShowRepository);
+        verifyZeroInteractions(mockTelevisionShowDetailsUseCase);
     }
 
     @Test
@@ -154,18 +163,18 @@ public class TelevisionShowDetailsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockTelevisionShowDetailsView).hideToolbarTitle();
 
-        verifyZeroInteractions(mockTelevisionShowRepository);
+        verifyZeroInteractions(mockTelevisionShowDetailsUseCase);
     }
 
     @Test
-    public void onDestroyView_shouldNotHaveInteractions() {
+    public void onDestroyView_shouldClearSubscriptions() {
         // 1. (Given) Set up conditions required for the test
 
         // 2. (When) Then perform one or more actions
         televisionShowDetailsPresenter.onDestroyView();
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verifyZeroInteractions(mockTelevisionShowDetailsView);
-        verifyZeroInteractions(mockTelevisionShowRepository);
+        verify(mockTelevisionShowDetailsUseCase).clearSubscriptions();
     }
 
     // endregion

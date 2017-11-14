@@ -5,20 +5,25 @@ import com.etiennelawlor.moviehub.data.network.response.MovieCredit;
 import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.data.repositories.movie.MovieDataSourceContract;
 import com.etiennelawlor.moviehub.data.repositories.movie.models.MovieDetailsWrapper;
+import com.etiennelawlor.moviehub.domain.MovieDetailsDomainContract;
+import com.etiennelawlor.moviehub.domain.MoviesDomainContract;
 import com.etiennelawlor.moviehub.presentation.moviedetails.MovieDetailsPresenter;
 import com.etiennelawlor.moviehub.presentation.moviedetails.MovieDetailsUiContract;
 import com.etiennelawlor.moviehub.util.rxjava.TestSchedulerTransformer;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
+import rx.Subscriber;
 
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.verify;
@@ -37,10 +42,10 @@ public class MovieDetailsPresenterTest {
     @Mock
     private MovieDetailsUiContract.View mockMovieDetailsView;
     @Mock
-    private MovieDataSourceContract.Repository mockMovieRepository;
+    private MovieDetailsDomainContract.UseCase mockMovieDetailsUseCase;
 
     // Stubs
-    private Observable stub;
+    private ArgumentCaptor<Subscriber> subscriberArgumentCaptor;
 
     // endregion
 
@@ -56,7 +61,7 @@ public class MovieDetailsPresenterTest {
         MockitoAnnotations.initMocks(this);
 
         // Get a reference to the class under test
-        movieDetailsPresenter = new MovieDetailsPresenter(mockMovieDetailsView, mockMovieRepository, new TestSchedulerTransformer<MovieDetailsWrapper>());
+        movieDetailsPresenter = new MovieDetailsPresenter(mockMovieDetailsView, mockMovieDetailsUseCase);
     }
 
     // region Test Methods
@@ -71,13 +76,15 @@ public class MovieDetailsPresenterTest {
         List<Movie> similarMovies = new ArrayList<>();
         String rating = "";
         movieDetailsWrapper = new MovieDetailsWrapper(movie, cast, crew, similarMovies, rating);
-        stub = Observable.<MovieDetailsWrapper>error(new IOException());
-        when(mockMovieRepository.getMovieDetails(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         movieDetailsPresenter.onLoadMovieDetails(movie.getId());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
+        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
+        verify(mockMovieDetailsUseCase).getMovieDetails(anyInt(), subscriberArgumentCaptor.capture());
+        subscriberArgumentCaptor.getValue().onError(new UnknownHostException());
+
         verify(mockMovieDetailsView).showErrorView();
     }
 
@@ -91,13 +98,15 @@ public class MovieDetailsPresenterTest {
         List<Movie> similarMovies = new ArrayList<>();
         String rating = "";
         movieDetailsWrapper = new MovieDetailsWrapper(movie, cast, crew, similarMovies, rating);
-        stub = Observable.just(movieDetailsWrapper);
-        when(mockMovieRepository.getMovieDetails(anyInt())).thenReturn(stub);
 
         // 2. (When) Then perform one or more actions
         movieDetailsPresenter.onLoadMovieDetails(movie.getId());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
+        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
+        verify(mockMovieDetailsUseCase).getMovieDetails(anyInt(), subscriberArgumentCaptor.capture());
+        subscriberArgumentCaptor.getValue().onNext(movieDetailsWrapper);
+
         verify(mockMovieDetailsView).showMovieDetails(movieDetailsWrapper);
     }
 
@@ -112,7 +121,7 @@ public class MovieDetailsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMovieDetailsView).openPersonDetails(person);
 
-        verifyZeroInteractions(mockMovieRepository);
+        verifyZeroInteractions(mockMovieDetailsUseCase);
     }
 
     @Test
@@ -126,7 +135,7 @@ public class MovieDetailsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMovieDetailsView).openMovieDetails(movie);
 
-        verifyZeroInteractions(mockMovieRepository);
+        verifyZeroInteractions(mockMovieDetailsUseCase);
     }
 
     @Test
@@ -140,7 +149,7 @@ public class MovieDetailsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMovieDetailsView).showToolbarTitle();
 
-        verifyZeroInteractions(mockMovieRepository);
+        verifyZeroInteractions(mockMovieDetailsUseCase);
     }
 
     @Test
@@ -154,18 +163,18 @@ public class MovieDetailsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMovieDetailsView).hideToolbarTitle();
 
-        verifyZeroInteractions(mockMovieRepository);
+        verifyZeroInteractions(mockMovieDetailsUseCase);
     }
 
     @Test
-    public void onDestroyView_shouldNotHaveInteractions() {
+    public void onDestroyView_shouldClearSubscriptions() {
         // 1. (Given) Set up conditions required for the test
 
         // 2. (When) Then perform one or more actions
         movieDetailsPresenter.onDestroyView();
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verifyZeroInteractions(mockMovieDetailsView);
-        verifyZeroInteractions(mockMovieRepository);
+        verify(mockMovieDetailsUseCase).clearSubscriptions();
     }
 
     // endregion
