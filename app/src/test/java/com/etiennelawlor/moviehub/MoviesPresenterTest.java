@@ -100,7 +100,7 @@ public class MoviesPresenterTest {
 
         subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
         verify(mockMoviesUseCase).getPopularMovies(anyInt(), subscriberArgumentCaptor.capture());
-        subscriberArgumentCaptor.getValue().onError(new ConnectException());
+        subscriberArgumentCaptor.getValue().onError(new UnknownHostException());
 
         verify(mockMoviesView).showErrorFooter();
     }
