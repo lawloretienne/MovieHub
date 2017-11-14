@@ -13,16 +13,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
-import java.net.ConnectException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import okhttp3.MediaType;
-import okhttp3.ResponseBody;
-import retrofit2.HttpException;
-import retrofit2.Response;
 import rx.Subscriber;
 
 import static org.mockito.Matchers.anyInt;
