@@ -1,0 +1,4 @@
+<adaptive-icon xmlns:android="http://schemas.android.com/tools">
+    <background android:drawable="@color/debug_red" />
+    <foreground android:drawable="@drawable/ic_movies" />
+</adaptive-icon>
