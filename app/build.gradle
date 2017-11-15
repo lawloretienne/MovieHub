@@ -122,14 +122,15 @@ dependencies {
     androidTestImplementation "com.android.support.test:rules:$rootProject.rulesVersion"
 
     // Espresso UI Testing dependencies.
-//    androidTestCompile "com.android.support.test.espresso:espresso-core:$rootProject.espressoVersion"
-    androidTestImplementation("com.android.support.test.espresso:espresso-core:$rootProject.espressoVersion", {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$rootProject.espressoVersion"
+//    androidTestImplementation("com.android.support.test.espresso:espresso-core:$rootProject.espressoVersion", {
+//        exclude group: 'com.android.support', module: 'support-annotations'
+//        exclude group: 'com.android.support', module: 'appcompat'
+//        exclude module: 'recyclerview-v7'
+//    })
     androidTestImplementation "com.android.support.test.espresso:espresso-contrib:$rootProject.espressoVersion"
     androidTestImplementation "com.android.support.test.espresso:espresso-intents:$rootProject.espressoVersion"
     implementation "com.android.support.test.espresso:espresso-idling-resource:$rootProject.espressoVersion"
-
 
     // UI testing with UI Automator
 //    androidTestImplementation 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
@@ -149,9 +150,9 @@ excluded from the test APK! This is necessary because both APKs will contain the
 excluding these dependencies from your test configuration will result in an dex pre-verifier error
 at runtime. More info in this tools bug: (https://code.google.com/p/android/issues/detail?id=192497)
 */
-configurations.implementation.dependencies.all { implementationDependency ->
-    println "Excluding implementation dependency: ${implementationDependency.getName()}"
-    configurations.androidTestImplementation.dependencies.all { androidTestImplementationDependency ->
-        configurations.androidTestImplementation.exclude module: "${implementationDependency.getName()}"
-    }
-}
+//configurations.implementation.dependencies.all { implementationDependency ->
+//    println "Excluding implementation dependency: ${implementationDependency.getName()}"
+//    configurations.androidTestImplementation.dependencies.all { androidTestImplementationDependency ->
+//        configurations.androidTestImplementation.exclude module: "${implementationDependency.getName()}"
+//    }
+//}

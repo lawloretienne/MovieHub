@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub;
 
-import android.support.test.espresso.Espresso;
+import android.support.test.espresso.IdlingRegistry;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -31,14 +31,13 @@ public class MoviesFragmentTest {
 
     // region Member Variables
     @Rule
-    public ActivityTestRule<MainActivity> activityRule = new ActivityTestRule<>(
-            MainActivity.class);
+    public ActivityTestRule<MainActivity> activityRule = new ActivityTestRule(MainActivity.class);
     // endregion
 
     @Before
     public void setUp() {
         // Register BackgroundWork IdlingResource
-        Espresso.registerIdlingResources(EspressoIdlingResource.getIdlingResource());
+        IdlingRegistry.getInstance().register(EspressoIdlingResource.getIdlingResource());
     }
 
     // region Test Methods
@@ -48,7 +47,7 @@ public class MoviesFragmentTest {
 
         // 2. (When) Then perform one or more actions
 //        onView(withId(R.id.rv)).perform(RecyclerViewActions.scrollToPosition(1));
-        onView(withId(R.id.rv)).perform(actionOnItemAtPosition(2, click()));
+        onView(withId(R.id.rv)).perform(actionOnItemAtPosition(8, click()));
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         onView(withId(R.id.backdrop_iv)).check(matches(isDisplayed()));
@@ -58,6 +57,6 @@ public class MoviesFragmentTest {
     @After
     public void tearDown() {
         // Unregister BackgroundWork IdlingResource
-        Espresso.unregisterIdlingResources(EspressoIdlingResource.getIdlingResource());
+        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.getIdlingResource());
     }
 }
