@@ -80,8 +80,7 @@ public class RealmUtility {
             realm.executeTransaction(new Realm.Transaction() {
                 @Override
                 public void execute(Realm realm) {
-                    RealmMoviesPage realmMoviesPage =
-                            realm.createObject(RealmMoviesPage.class, pageNumber);
+                    RealmMoviesPage realmMoviesPage = new RealmMoviesPage();
 
                     RealmList<RealmMovie> realmMovies = new RealmList<>();
                     for(Movie movie : movies){
@@ -89,6 +88,7 @@ public class RealmUtility {
                     }
 
                     realmMoviesPage.setMovies(realmMovies);
+                    realmMoviesPage.setPageNumber(pageNumber);
                     realmMoviesPage.setLastPage(isLastPage);
                     realmMoviesPage.setExpiredAt(expiredAt);
 
@@ -148,8 +148,7 @@ public class RealmUtility {
             realm.executeTransaction(new Realm.Transaction() {
                 @Override
                 public void execute(Realm realm) {
-                    RealmTelevisionShowsPage realmTelevisionShowsPage =
-                            realm.createObject(RealmTelevisionShowsPage.class, pageNumber);
+                    RealmTelevisionShowsPage realmTelevisionShowsPage = new RealmTelevisionShowsPage();
 
                     RealmList<RealmTelevisionShow> realmTelevisionShows = new RealmList<>();
                     for(TelevisionShow televisionShow : televisionShows){
@@ -157,6 +156,7 @@ public class RealmUtility {
                     }
 
                     realmTelevisionShowsPage.setTelevisionShows(realmTelevisionShows);
+                    realmTelevisionShowsPage.setPageNumber(pageNumber);
                     realmTelevisionShowsPage.setLastPage(isLastPage);
                     realmTelevisionShowsPage.setExpiredAt(expiredAt);
 
@@ -216,8 +216,7 @@ public class RealmUtility {
             realm.executeTransaction(new Realm.Transaction() {
                 @Override
                 public void execute(Realm realm) {
-                    RealmPersonsPage realmPersonsPage =
-                            realm.createObject(RealmPersonsPage.class, pageNumber);
+                    RealmPersonsPage realmPersonsPage = new RealmPersonsPage();
 
                     RealmList<RealmPerson> realmPersons = new RealmList<>();
                     for(Person person : persons){
@@ -225,6 +224,7 @@ public class RealmUtility {
                     }
 
                     realmPersonsPage.setPersons(realmPersons);
+                    realmPersonsPage.setPageNumber(pageNumber);
                     realmPersonsPage.setLastPage(isLastPage);
                     realmPersonsPage.setExpiredAt(expiredAt);
 
