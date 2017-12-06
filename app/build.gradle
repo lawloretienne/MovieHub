@@ -62,7 +62,7 @@ android {
         exclude 'META-INF/services/javax.annotation.processing.Processor'
         exclude 'META-INF/rxjava.properties'
     }
-    buildToolsVersion '26.0.2'
+    buildToolsVersion '27.0.1'
 }
 
 /*
@@ -76,6 +76,7 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofit2Version"
     implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofit2Version"
     implementation "com.squareup.retrofit2:adapter-rxjava:$rootProject.retrofit2Version"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:2.3.0"
     implementation "com.squareup.okhttp3:okhttp:$rootProject.okhttp3Version"
     implementation "com.squareup.okhttp3:mockwebserver:$rootProject.okhttp3Version"
     implementation "com.squareup.okhttp3:okhttp-urlconnection:$rootProject.okhttp3Version"
