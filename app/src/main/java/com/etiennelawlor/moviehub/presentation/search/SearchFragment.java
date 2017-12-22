@@ -36,6 +36,7 @@ import com.etiennelawlor.moviehub.data.repositories.search.SearchLocalDataSource
 import com.etiennelawlor.moviehub.data.repositories.search.SearchRemoteDataSource;
 import com.etiennelawlor.moviehub.data.repositories.search.SearchRepository;
 import com.etiennelawlor.moviehub.data.repositories.search.models.SearchWrapper;
+import com.etiennelawlor.moviehub.domain.SearchUseCase;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.common.GravitySnapHelper;
@@ -230,10 +231,10 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
 
         searchPresenter = new SearchPresenter(
                 this,
-                new SearchRepository(
+                new SearchUseCase(new SearchRepository(
                         new SearchLocalDataSource(getContext()),
                         new SearchRemoteDataSource(getContext())),
-                new ProductionSchedulerTransformer<SearchWrapper>()
+                new ProductionSchedulerTransformer<SearchWrapper>())
         );
 
         setHasOptionsMenu(true);

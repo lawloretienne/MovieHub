@@ -1,13 +1,13 @@
 package com.etiennelawlor.moviehub.presentation.search;
 
+import android.util.Log;
+
 import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.repositories.search.SearchDataSourceContract;
 import com.etiennelawlor.moviehub.data.repositories.search.models.SearchWrapper;
-import com.etiennelawlor.moviehub.util.EspressoIdlingResource;
+import com.etiennelawlor.moviehub.domain.SearchDomainContract;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
-import com.etiennelawlor.moviehub.util.rxjava.SchedulerTransformer;
 
 import java.util.concurrent.TimeUnit;
 
@@ -15,12 +15,7 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
-import timber.log.Timber;
 
 /**
  * Created by etiennelawlor on 2/9/17.
@@ -30,16 +25,14 @@ public class SearchPresenter implements SearchUiContract.Presenter {
 
     // region Member Variables
     private final SearchUiContract.View searchView;
-    private final SearchDataSourceContract.Repository searchRepository;
-    private final SchedulerTransformer<SearchWrapper> schedulerTransformer;
+    private final SearchDomainContract.UseCase searchUseCase;
     private CompositeSubscription compositeSubscription = new CompositeSubscription();
     // endregion
 
     // region Constructors
-    public SearchPresenter(SearchUiContract.View searchView, SearchDataSourceContract.Repository searchRepository, SchedulerTransformer<SearchWrapper> schedulerTransformer) {
+    public SearchPresenter(SearchUiContract.View searchView, SearchDomainContract.UseCase searchUseCase) {
         this.searchView = searchView;
-        this.searchRepository = searchRepository;
-        this.schedulerTransformer = schedulerTransformer;
+        this.searchUseCase = searchUseCase;
     }
     // endregion
 
@@ -53,10 +46,6 @@ public class SearchPresenter implements SearchUiContract.Presenter {
 
     @Override
     public void onLoadSearch(Observable<CharSequence> searchQueryChangeObservable) {
-        // The network request might be handled in a different thread so make sure Espresso knows
-        // that the app is busy until the response is handled.
-        EspressoIdlingResource.increment(); // App is busy until further notice
-
         Subscription subscription = searchQueryChangeObservable
                 .doOnNext(charSequence -> searchView.hideLoadingView())
                 .debounce(400, TimeUnit.MILLISECONDS)
@@ -82,71 +71,77 @@ public class SearchPresenter implements SearchUiContract.Presenter {
                     return !isEmpty(charSequence);
                 })
                 .map(charSequence -> charSequence.toString())
-                .observeOn(Schedulers.io())
-                .switchMap(q -> {
-//                        return searchRepository.getSearch(q)
-//                                .compose(schedulerTransformer);
-                    return searchRepository.getSearch(q);
-                })
-                .observeOn(AndroidSchedulers.mainThread()) // UI Thread
-                .doOnTerminate(() -> {
-                    if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
-                        EspressoIdlingResource.decrement(); // Set app as idle.
-                    }
-                })
-                .subscribe(new Subscriber<SearchWrapper>() {
+//                .switchMap(q -> {
+//                    return searchRepository.getSearch(q);
+//                })
+                .switchMap(q -> Observable.just(q))
+                .subscribe(new Subscriber<String>() {
                     @Override
                     public void onCompleted() {
-                        Timber.d("onCompleted()");
                     }
 
                     @Override
-                    public void onError(Throwable throwable) {
-                        throwable.printStackTrace();
+                    public void onError(Throwable e) {
 
-                        searchView.hideLoadingView();
-
-                        if (NetworkUtility.isKnownException(throwable)) {
-                            searchView.showErrorView();
-                        }
                     }
 
                     @Override
-                    public void onNext(SearchWrapper searchWrapper) {
-                        searchView.hideLoadingView();
-                        if (searchWrapper != null) {
-                            searchView.clearMoviesAdapter();
-                            searchView.clearTelevisionShowsAdapter();
-                            searchView.clearPersonsAdapter();
+                    public void onNext(String s) {
+                        searchUseCase.getSearchResponse(s, new Subscriber<SearchWrapper>() {
+                            @Override
+                            public void onCompleted() {
 
-                            if(searchWrapper.hasMovies()){
-                                searchView.addMoviesToAdapter(searchWrapper.getMovies());
-                                searchView.showMoviesView();
-                            } else {
-                                searchView.hideMoviesView();
                             }
 
-                            if(searchWrapper.hasTelevisionShows()){
-                                searchView.addTelevisionShowsToAdapter(searchWrapper.getTelevisionShows());
-                                searchView.showTelevisionShowsView();
-                            } else {
-                                searchView.hideTelevisionShowsView();
+                            @Override
+                            public void onError(Throwable throwable) {
+                                throwable.printStackTrace();
+
+                                searchView.hideLoadingView();
+
+                                if (NetworkUtility.isKnownException(throwable)) {
+                                    searchView.showErrorView();
+                                }
                             }
 
-                            if(searchWrapper.hasPersons()){
-                                searchView.addPersonsToAdapter(searchWrapper.getPersons());
-                                searchView.showPersonsView();
-                            } else {
-                                searchView.hidePersonsView();
-                            }
+                            @Override
+                            public void onNext(SearchWrapper searchWrapper) {
+                                searchView.hideLoadingView();
+                                if (searchWrapper != null) {
+                                    searchView.clearMoviesAdapter();
+                                    searchView.clearTelevisionShowsAdapter();
+                                    searchView.clearPersonsAdapter();
 
-                            if(searchWrapper.hasResults()){
-                                searchView.hideEmptyView();
-                            } else {
-                                searchView.setEmptyText(String.format("No results found for \"%s\"", searchWrapper.getQuery()));
-                                searchView.showEmptyView();
+                                    if(searchWrapper.hasMovies()){
+                                        searchView.addMoviesToAdapter(searchWrapper.getMovies());
+                                        searchView.showMoviesView();
+                                    } else {
+                                        searchView.hideMoviesView();
+                                    }
+
+                                    if(searchWrapper.hasTelevisionShows()){
+                                        searchView.addTelevisionShowsToAdapter(searchWrapper.getTelevisionShows());
+                                        searchView.showTelevisionShowsView();
+                                    } else {
+                                        searchView.hideTelevisionShowsView();
+                                    }
+
+                                    if(searchWrapper.hasPersons()){
+                                        searchView.addPersonsToAdapter(searchWrapper.getPersons());
+                                        searchView.showPersonsView();
+                                    } else {
+                                        searchView.hidePersonsView();
+                                    }
+
+                                    if(searchWrapper.hasResults()){
+                                        searchView.hideEmptyView();
+                                    } else {
+                                        searchView.setEmptyText(String.format("No results found for \"%s\"", searchWrapper.getQuery()));
+                                        searchView.showEmptyView();
+                                    }
+                                }
                             }
-                        }
+                        });
                     }
                 });
         compositeSubscription.add(subscription);
