@@ -3,6 +3,8 @@ package com.etiennelawlor.moviehub.data.repositories.person;
 import com.etiennelawlor.moviehub.data.repositories.person.models.PersonDetailsWrapper;
 import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsPage;
 
+import io.reactivex.Maybe;
+import io.reactivex.Single;
 import rx.Observable;
 
 /**
@@ -25,14 +27,14 @@ public class PersonRepository implements PersonDataSourceContract.Repository {
 
     // region PersonDataSourceContract.Repository Methods
     @Override
-    public Observable<PersonsPage> getPopularPersons(final int currentPage) {
-        Observable<PersonsPage> local = personLocalDataSource.getPopularPersons(currentPage)
+    public Single<PersonsPage> getPopularPersons(final int currentPage) {
+        Maybe<PersonsPage> local = personLocalDataSource.getPopularPersons(currentPage)
                 .filter(personsPage -> !personsPage.isExpired());
-        Observable<PersonsPage> remote =
+        Single<PersonsPage> remote =
                 personRemoteDataSource.getPopularPersons(currentPage)
-                        .doOnNext(personsPage -> personLocalDataSource.savePopularPersons(personsPage));
+                        .doOnSuccess(personsPage -> personLocalDataSource.savePopularPersons(personsPage));
 
-        return Observable.concat(local, remote).first();
+        return local.switchIfEmpty(remote);
     }
 
     @Override

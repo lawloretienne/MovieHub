@@ -28,7 +28,6 @@ import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.moviedetails.MovieDetailsActivity;
 import com.etiennelawlor.moviehub.util.FontCache;
-import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer2;
 
 import java.util.List;

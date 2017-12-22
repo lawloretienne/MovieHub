@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import io.reactivex.Single;
 import rx.Observable;
 
 /**
@@ -43,9 +44,9 @@ public class PersonRemoteDataSource implements PersonDataSourceContract.RemoteDa
     // region PersonDataSourceContract.RemoteDateSource Methods
 
     @Override
-    public Observable<PersonsPage> getPopularPersons(int currentPage) {
+    public Single<PersonsPage> getPopularPersons(int currentPage) {
         return movieHubService.getPopularPeople(currentPage)
-                .flatMap(peopleEnvelope -> Observable.just(peopleEnvelope.getPersons()))
+                .flatMap(peopleEnvelope -> Single.just(peopleEnvelope.getPersons()))
                 .map(persons -> {
                     boolean isLastPage = persons.size() < PAGE_SIZE ? true : false;
                     Calendar calendar = Calendar.getInstance();

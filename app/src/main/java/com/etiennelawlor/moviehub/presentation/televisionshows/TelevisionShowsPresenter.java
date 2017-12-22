@@ -8,7 +8,6 @@ import com.etiennelawlor.moviehub.util.NetworkUtility;
 import java.util.List;
 
 import io.reactivex.observers.DisposableSingleObserver;
-import rx.Subscriber;
 
 /**
  * Created by etiennelawlor on 2/9/17.

@@ -7,7 +7,7 @@ import com.etiennelawlor.moviehub.util.NetworkUtility;
 
 import java.util.List;
 
-import rx.Subscriber;
+import io.reactivex.observers.DisposableSingleObserver;
 
 /**
  * Created by etiennelawlor on 2/9/17.
@@ -43,32 +43,9 @@ public class PersonsPresenter implements PersonsUiContract.Presenter {
             personsView.showLoadingFooter();
         }
 
-        personsUseCase.getPopularPersons(currentPage, new Subscriber<PersonsPage>() {
+        personsUseCase.getPopularPersons(currentPage, new DisposableSingleObserver<PersonsPage>() {
             @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                throwable.printStackTrace();
-
-                if(currentPage == 1){
-                    personsView.hideLoadingView();
-
-                    if (NetworkUtility.isKnownException(throwable)) {
-                        personsView.setErrorText("Can't load data.\nCheck your network connection.");
-                        personsView.showErrorView();
-                    }
-                } else {
-                    if(NetworkUtility.isKnownException(throwable)){
-                        personsView.showErrorFooter();
-                    }
-                }
-            }
-
-            @Override
-            public void onNext(PersonsPage personsPage) {
+            public void onSuccess(PersonsPage personsPage) {
                 if(personsPage != null){
                     List<Person> persons = personsPage.getPersons();
                     int currentPage = personsPage.getPageNumber();
@@ -99,6 +76,24 @@ public class PersonsPresenter implements PersonsUiContract.Presenter {
                     }
 
                     personsView.setPersonsPage(personsPage);
+                }
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                throwable.printStackTrace();
+
+                if(currentPage == 1){
+                    personsView.hideLoadingView();
+
+                    if (NetworkUtility.isKnownException(throwable)) {
+                        personsView.setErrorText("Can't load data.\nCheck your network connection.");
+                        personsView.showErrorView();
+                    }
+                } else {
+                    if(NetworkUtility.isKnownException(throwable)){
+                        personsView.showErrorFooter();
+                    }
                 }
             }
         });

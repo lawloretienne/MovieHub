@@ -3,6 +3,8 @@ package com.etiennelawlor.moviehub.data.repositories.person;
 import com.etiennelawlor.moviehub.data.repositories.person.models.PersonDetailsWrapper;
 import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsPage;
 
+import io.reactivex.Maybe;
+import io.reactivex.Single;
 import rx.Observable;
 
 /**
@@ -12,13 +14,13 @@ import rx.Observable;
 public interface PersonDataSourceContract {
 
     interface Repository {
-        Observable<PersonsPage> getPopularPersons(int currentPage);
+        Single<PersonsPage> getPopularPersons(int currentPage);
 
         Observable<PersonDetailsWrapper> getPersonDetails(int personId);
     }
 
     interface LocalDateSource {
-        Observable<PersonsPage> getPopularPersons(int currentPage);
+        Maybe<PersonsPage> getPopularPersons(int currentPage);
         void savePopularPersons(PersonsPage personsPage);
 
         Observable<PersonDetailsWrapper> getPersonDetails(int personId);
@@ -26,7 +28,7 @@ public interface PersonDataSourceContract {
     }
 
     interface RemoteDateSource {
-         Observable<PersonsPage> getPopularPersons(int currentPage);
+         Single<PersonsPage> getPopularPersons(int currentPage);
 
          Observable<PersonDetailsWrapper> getPersonDetails(int personId);
     }

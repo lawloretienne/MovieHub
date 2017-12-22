@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import rx.Subscriber;
+import io.reactivex.observers.DisposableSingleObserver;
 
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
@@ -39,8 +39,7 @@ public class PersonsPresenterTest {
     private PersonsDomainContract.UseCase mockPersonsUseCase;
 
     // Stubs
-    private ArgumentCaptor<Subscriber> subscriberArgumentCaptor;
-
+    private ArgumentCaptor<DisposableSingleObserver> disposableSingleObserverArgumentCaptor;
     // endregion
 
     // region Member Variables
@@ -73,9 +72,9 @@ public class PersonsPresenterTest {
         verify(mockPersonsView).hideErrorView();
         verify(mockPersonsView).showLoadingView();
 
-        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
-        verify(mockPersonsUseCase).getPopularPersons(anyInt(), subscriberArgumentCaptor.capture());
-        subscriberArgumentCaptor.getValue().onError(new UnknownHostException());
+        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
+        verify(mockPersonsUseCase).getPopularPersons(anyInt(), disposableSingleObserverArgumentCaptor.capture());
+        disposableSingleObserverArgumentCaptor.getValue().onError(new UnknownHostException());
 
         verify(mockPersonsView).hideLoadingView();
         verify(mockPersonsView).setErrorText(anyString());
@@ -93,9 +92,9 @@ public class PersonsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockPersonsView).showLoadingFooter();
 
-        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
-        verify(mockPersonsUseCase).getPopularPersons(anyInt(), subscriberArgumentCaptor.capture());
-        subscriberArgumentCaptor.getValue().onError(new UnknownHostException());
+        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
+        verify(mockPersonsUseCase).getPopularPersons(anyInt(), disposableSingleObserverArgumentCaptor.capture());
+        disposableSingleObserverArgumentCaptor.getValue().onError(new UnknownHostException());
 
         verify(mockPersonsView).showErrorFooter();
     }
@@ -113,9 +112,9 @@ public class PersonsPresenterTest {
         verify(mockPersonsView).hideErrorView();
         verify(mockPersonsView).showLoadingView();
 
-        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
-        verify(mockPersonsUseCase).getPopularPersons(anyInt(), subscriberArgumentCaptor.capture());
-        subscriberArgumentCaptor.getValue().onNext(personsPage);
+        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
+        verify(mockPersonsUseCase).getPopularPersons(anyInt(), disposableSingleObserverArgumentCaptor.capture());
+        disposableSingleObserverArgumentCaptor.getValue().onSuccess(personsPage);
 
         verify(mockPersonsView).hideLoadingView();
         verify(mockPersonsView).showEmptyView();
@@ -133,9 +132,9 @@ public class PersonsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockPersonsView).showLoadingFooter();
 
-        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
-        verify(mockPersonsUseCase).getPopularPersons(anyInt(), subscriberArgumentCaptor.capture());
-        subscriberArgumentCaptor.getValue().onNext(personsPage);
+        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
+        verify(mockPersonsUseCase).getPopularPersons(anyInt(), disposableSingleObserverArgumentCaptor.capture());
+        disposableSingleObserverArgumentCaptor.getValue().onSuccess(personsPage);
 
         verify(mockPersonsView).removeFooter();
         verify(mockPersonsView).setPersonsPage(personsPage);
@@ -154,9 +153,9 @@ public class PersonsPresenterTest {
         verify(mockPersonsView).hideErrorView();
         verify(mockPersonsView).showLoadingView();
 
-        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
-        verify(mockPersonsUseCase).getPopularPersons(anyInt(), subscriberArgumentCaptor.capture());
-        subscriberArgumentCaptor.getValue().onNext(personsPage);
+        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
+        verify(mockPersonsUseCase).getPopularPersons(anyInt(), disposableSingleObserverArgumentCaptor.capture());
+        disposableSingleObserverArgumentCaptor.getValue().onSuccess(personsPage);
 
         verify(mockPersonsView).hideLoadingView();
         verify(mockPersonsView).addHeader();
@@ -177,9 +176,9 @@ public class PersonsPresenterTest {
         verify(mockPersonsView).hideErrorView();
         verify(mockPersonsView).showLoadingView();
 
-        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
-        verify(mockPersonsUseCase).getPopularPersons(anyInt(), subscriberArgumentCaptor.capture());
-        subscriberArgumentCaptor.getValue().onNext(personsPage);
+        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
+        verify(mockPersonsUseCase).getPopularPersons(anyInt(), disposableSingleObserverArgumentCaptor.capture());
+        disposableSingleObserverArgumentCaptor.getValue().onSuccess(personsPage);
 
         verify(mockPersonsView).hideLoadingView();
         verify(mockPersonsView).addHeader();
@@ -199,9 +198,9 @@ public class PersonsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockPersonsView).showLoadingFooter();
 
-        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
-        verify(mockPersonsUseCase).getPopularPersons(anyInt(), subscriberArgumentCaptor.capture());
-        subscriberArgumentCaptor.getValue().onNext(personsPage);
+        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
+        verify(mockPersonsUseCase).getPopularPersons(anyInt(), disposableSingleObserverArgumentCaptor.capture());
+        disposableSingleObserverArgumentCaptor.getValue().onSuccess(personsPage);
 
         verify(mockPersonsView).removeFooter();
         verify(mockPersonsView).addPersonsToAdapter(personsPage.getPersons());
@@ -219,9 +218,9 @@ public class PersonsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockPersonsView).showLoadingFooter();
 
-        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
-        verify(mockPersonsUseCase).getPopularPersons(anyInt(), subscriberArgumentCaptor.capture());
-        subscriberArgumentCaptor.getValue().onNext(personsPage);
+        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
+        verify(mockPersonsUseCase).getPopularPersons(anyInt(), disposableSingleObserverArgumentCaptor.capture());
+        disposableSingleObserverArgumentCaptor.getValue().onSuccess(personsPage);
 
         verify(mockPersonsView).removeFooter();
         verify(mockPersonsView).addPersonsToAdapter(personsPage.getPersons());

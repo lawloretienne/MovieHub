@@ -57,7 +57,7 @@ public interface MovieHubService {
     Observable<TelevisionShowContentRatingsEnvelope> getTelevisionShowContentRatings(@Path("tvId") long tvId);
 
     @GET("person/popular")
-    Observable<PeopleEnvelope> getPopularPeople(@Query("page") int page);
+    Single<PeopleEnvelope> getPopularPeople(@Query("page") int page);
 
     @GET("person/{personId}?append_to_response=images")
     Observable<Person> getPerson(@Path("personId") long personId);
