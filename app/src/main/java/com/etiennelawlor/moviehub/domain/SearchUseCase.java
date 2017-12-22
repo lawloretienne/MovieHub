@@ -31,7 +31,7 @@ public class SearchUseCase implements SearchDomainContract.UseCase {
     // endregion
 
     @Override
-    public void clearSubscriptions() {
+    public void clearDisposables() {
         if(compositeDisposable != null && compositeDisposable.isDisposed())
             compositeDisposable.clear();
     }

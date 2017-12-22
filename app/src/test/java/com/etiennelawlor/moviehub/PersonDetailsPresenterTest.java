@@ -165,7 +165,7 @@ public class PersonDetailsPresenterTest {
         personDetailsPresenter.onDestroyView();
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verifyZeroInteractions(mockPersonDetailsView);
-        verify(mockPersonDetailsUseCase).clearSubscriptions();
+        verify(mockPersonDetailsUseCase).clearDisposables();
     }
 
     // endregion

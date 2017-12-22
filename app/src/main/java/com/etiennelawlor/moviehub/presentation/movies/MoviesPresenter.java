@@ -30,7 +30,7 @@ public class MoviesPresenter implements MoviesUiContract.Presenter {
     // region MoviesUiContract.Presenter Methods
     @Override
     public void onDestroyView() {
-        moviesUseCase.clearSubscriptions();
+        moviesUseCase.clearDisposables();
     }
 
     @Override

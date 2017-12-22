@@ -30,7 +30,7 @@ public class TelevisionShowDetailsUseCase implements TelevisionShowDetailsDomain
 
     // region MovieDetailsDomainContract.UseCase Methods
     @Override
-    public void clearSubscriptions() {
+    public void clearDisposables() {
         if(compositeDisposable != null && compositeDisposable.isDisposed())
             compositeDisposable.clear();
     }

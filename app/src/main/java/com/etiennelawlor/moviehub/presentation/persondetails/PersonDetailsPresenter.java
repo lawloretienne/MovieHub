@@ -32,7 +32,7 @@ public class PersonDetailsPresenter implements PersonDetailsUiContract.Presenter
 
     @Override
     public void onDestroyView() {
-        personDetailsUseCase.clearSubscriptions();
+        personDetailsUseCase.clearDisposables();
     }
 
     @Override

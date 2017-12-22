@@ -266,7 +266,7 @@ public class MoviesPresenterTest {
         moviesPresenter.onDestroyView();
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verifyZeroInteractions(mockMoviesView);
-        verify(mockMoviesUseCase).clearSubscriptions();
+        verify(mockMoviesUseCase).clearDisposables();
     }
 
     // endregion

@@ -32,7 +32,7 @@ public class TelevisionShowDetailsPresenter implements TelevisionShowDetailsUiCo
 
     @Override
     public void onDestroyView() {
-        televisionShowDetailsUseCase.clearSubscriptions();
+        televisionShowDetailsUseCase.clearDisposables();
     }
 
     @Override

@@ -31,7 +31,7 @@ public class TelevisionShowsPresenter implements TelevisionShowsUiContract.Prese
 
     @Override
     public void onDestroyView() {
-        televisionShowsUseCase.clearSubscriptions();
+        televisionShowsUseCase.clearDisposables();
     }
 
     @Override

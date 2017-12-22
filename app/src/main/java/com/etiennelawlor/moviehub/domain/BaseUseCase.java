@@ -6,5 +6,5 @@ package com.etiennelawlor.moviehub.domain;
 
 public interface BaseUseCase {
 
-    void clearSubscriptions();
+    void clearDisposables();
 }

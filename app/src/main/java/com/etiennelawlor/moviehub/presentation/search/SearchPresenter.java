@@ -6,15 +6,16 @@ import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.repositories.search.models.SearchWrapper;
 import com.etiennelawlor.moviehub.domain.SearchDomainContract;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
+import com.jakewharton.rxbinding2.InitialValueObservable;
 
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
-import rx.Observable;
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by etiennelawlor on 2/9/17.
@@ -25,7 +26,7 @@ public class SearchPresenter implements SearchUiContract.Presenter {
     // region Member Variables
     private final SearchUiContract.View searchView;
     private final SearchDomainContract.UseCase searchUseCase;
-    private CompositeSubscription compositeSubscription = new CompositeSubscription();
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
     // endregion
 
     // region Constructors
@@ -39,13 +40,13 @@ public class SearchPresenter implements SearchUiContract.Presenter {
 
     @Override
     public void onDestroyView() {
-        if(compositeSubscription != null && compositeSubscription.hasSubscriptions())
-            compositeSubscription.clear();
+        if(compositeDisposable != null && compositeDisposable.isDisposed())
+            compositeDisposable.clear();
     }
 
     @Override
-    public void onLoadSearch(Observable<CharSequence> searchQueryChangeObservable) {
-        Subscription subscription = searchQueryChangeObservable
+    public void onLoadSearch(InitialValueObservable<CharSequence> searchQueryChangeObservable) {
+        Disposable disposable = searchQueryChangeObservable
                 .doOnNext(charSequence -> searchView.hideLoadingView())
                 .debounce(400, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -74,9 +75,10 @@ public class SearchPresenter implements SearchUiContract.Presenter {
 //                    return searchRepository.getSearch(q);
 //                })
                 .switchMap(q -> Observable.just(q))
-                .subscribe(new Subscriber<String>() {
+                .subscribeWith(new DisposableObserver<String>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
+
                     }
 
                     @Override
@@ -138,7 +140,7 @@ public class SearchPresenter implements SearchUiContract.Presenter {
                         });
                     }
                 });
-        compositeSubscription.add(subscription);
+        compositeDisposable.add(disposable);
     }
 
     @Override

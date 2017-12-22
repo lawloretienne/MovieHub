@@ -30,7 +30,7 @@ public class MovieDetailsUseCase implements MovieDetailsDomainContract.UseCase {
 
     // region MovieDetailsDomainContract.UseCase Methods
     @Override
-    public void clearSubscriptions() {
+    public void clearDisposables() {
         if(compositeDisposable != null && compositeDisposable.isDisposed())
             compositeDisposable.clear();
     }

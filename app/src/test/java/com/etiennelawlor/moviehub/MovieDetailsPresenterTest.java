@@ -167,7 +167,7 @@ public class MovieDetailsPresenterTest {
         movieDetailsPresenter.onDestroyView();
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verifyZeroInteractions(mockMovieDetailsView);
-        verify(mockMovieDetailsUseCase).clearSubscriptions();
+        verify(mockMovieDetailsUseCase).clearDisposables();
     }
 
     // endregion

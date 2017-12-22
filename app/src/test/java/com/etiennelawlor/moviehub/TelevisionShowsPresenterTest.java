@@ -264,7 +264,7 @@ public class TelevisionShowsPresenterTest {
         televisionShowsPresenter.onDestroyView();
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verifyZeroInteractions(mockTelevisionShowsView);
-        verify(mockTelevisionShowsUseCase).clearSubscriptions();
+        verify(mockTelevisionShowsUseCase).clearDisposables();
     }
 
     // endregion

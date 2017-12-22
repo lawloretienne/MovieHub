@@ -30,7 +30,7 @@ public class PersonsPresenter implements PersonsUiContract.Presenter {
     // region PersonsUiContract.Presenter Methods
     @Override
     public void onDestroyView() {
-        personsUseCase.clearSubscriptions();
+        personsUseCase.clearDisposables();
     }
 
     @Override

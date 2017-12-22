@@ -47,14 +47,14 @@ import com.etiennelawlor.moviehub.util.DisplayUtility;
 import com.etiennelawlor.moviehub.util.FontCache;
 import com.etiennelawlor.moviehub.util.TrestleUtility;
 import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
-import com.jakewharton.rxbinding.widget.RxTextView;
+import com.jakewharton.rxbinding2.InitialValueObservable;
+import com.jakewharton.rxbinding2.widget.RxTextView;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import rx.Observable;
 import timber.log.Timber;
 
 /**
@@ -107,7 +107,7 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
     private SearchMoviesAdapter searchMoviesAdapter;
     private SearchTelevisionShowsAdapter searchTelevisionShowsAdapter;
     private SearchPersonsAdapter searchPersonsAdapter;
-    private Observable<CharSequence> searchQueryChangeObservable;
+    private InitialValueObservable<CharSequence> searchQueryChangeObservable;
     private Transition sharedElementEnterTransition;
     private Transition sharedElementReturnTransition;
     // endregion
