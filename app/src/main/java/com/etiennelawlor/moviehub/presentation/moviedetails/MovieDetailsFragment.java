@@ -199,7 +199,6 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
         public void onTransitionEnd(Transition transition) {
             if(movie != null)
                 movieDetailsPresenter.onLoadMovieDetails(movie.getId());
-
             sharedElementEnterTransition.removeListener(this);
         }
 

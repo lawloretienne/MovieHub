@@ -16,7 +16,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import io.reactivex.Single;
-import rx.Observable;
 
 /**
  * Created by etiennelawlor on 2/13/17.
@@ -57,8 +56,8 @@ public class TelevisionShowRemoteDataSource implements TelevisionShowDataSourceC
     }
 
     @Override
-    public Observable<TelevisionShowDetailsWrapper> getTelevisionShowDetails(int tvId) {
-        return Observable.zip(
+    public Single<TelevisionShowDetailsWrapper> getTelevisionShowDetails(int tvId) {
+        return Single.zip(
                 movieHubService.getTelevisionShow(tvId),
                 movieHubService.getTelevisionShowCredits(tvId),
                 movieHubService.getSimilarTelevisionShows(tvId),

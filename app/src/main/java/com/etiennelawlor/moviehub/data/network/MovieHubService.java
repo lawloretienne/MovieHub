@@ -45,16 +45,16 @@ public interface MovieHubService {
     Single<TelevisionShowsEnvelope> getPopularTelevisionShows(@Query("page") int page);
 
     @GET("tv/{tvId}")
-    Observable<TelevisionShow> getTelevisionShow(@Path("tvId") long tvId);
+    Single<TelevisionShow> getTelevisionShow(@Path("tvId") long tvId);
 
     @GET("tv/{tvId}/credits")
-    Observable<TelevisionShowCreditsEnvelope> getTelevisionShowCredits(@Path("tvId") long tvId);
+    Single<TelevisionShowCreditsEnvelope> getTelevisionShowCredits(@Path("tvId") long tvId);
 
     @GET("tv/{tvId}/similar")
-    Observable<TelevisionShowsEnvelope> getSimilarTelevisionShows(@Path("tvId") long tvId);
+    Single<TelevisionShowsEnvelope> getSimilarTelevisionShows(@Path("tvId") long tvId);
 
     @GET("tv/{tvId}/content_ratings")
-    Observable<TelevisionShowContentRatingsEnvelope> getTelevisionShowContentRatings(@Path("tvId") long tvId);
+    Single<TelevisionShowContentRatingsEnvelope> getTelevisionShowContentRatings(@Path("tvId") long tvId);
 
     @GET("person/popular")
     Single<PeopleEnvelope> getPopularPeople(@Query("page") int page);

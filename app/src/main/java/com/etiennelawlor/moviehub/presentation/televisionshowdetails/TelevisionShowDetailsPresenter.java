@@ -6,7 +6,7 @@ import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowDeta
 import com.etiennelawlor.moviehub.domain.TelevisionShowDetailsDomainContract;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 
-import rx.Subscriber;
+import io.reactivex.observers.DisposableSingleObserver;
 
 /**
  * Created by etiennelawlor on 2/9/17.
@@ -37,10 +37,12 @@ public class TelevisionShowDetailsPresenter implements TelevisionShowDetailsUiCo
 
     @Override
     public void onLoadTelevisionShowDetails(int televisionShowId) {
-        televisionShowDetailsUseCase.getTelevisionShowDetails(televisionShowId, new Subscriber<TelevisionShowDetailsWrapper>() {
+        televisionShowDetailsUseCase.getTelevisionShowDetails(televisionShowId, new DisposableSingleObserver<TelevisionShowDetailsWrapper>() {
             @Override
-            public void onCompleted() {
-
+            public void onSuccess(TelevisionShowDetailsWrapper televisionShowDetailsWrapper) {
+                if(televisionShowDetailsWrapper != null){
+                    televisionShowDetailsView.showTelevisionShowDetails(televisionShowDetailsWrapper);
+                }
             }
 
             @Override
@@ -51,13 +53,6 @@ public class TelevisionShowDetailsPresenter implements TelevisionShowDetailsUiCo
 //                            moviesView.showErrorFooter();
 //                            moviesView.setErrorText("Can't load data.\nCheck your network connection.");
                     televisionShowDetailsView.showErrorView();
-                }
-            }
-
-            @Override
-            public void onNext(TelevisionShowDetailsWrapper televisionShowDetailsWrapper) {
-                if(televisionShowDetailsWrapper != null){
-                    televisionShowDetailsView.showTelevisionShowDetails(televisionShowDetailsWrapper);
                 }
             }
         });

@@ -39,7 +39,6 @@ public class MovieRepository implements MovieDataSourceContract.Repository {
     @Override
     public Single<MovieDetailsWrapper> getMovieDetails(int movieId) {
         Maybe<MovieDetailsWrapper> local = movieLocalDataSource.getMovieDetails(movieId);
-
         Single<MovieDetailsWrapper> remote =
                 movieRemoteDataSource.getMovieDetails(movieId)
                         .doOnSuccess(movieDetailsWrapper -> movieLocalDataSource.saveMovieDetails(movieDetailsWrapper));

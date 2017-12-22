@@ -52,7 +52,6 @@ public class MovieDetailsUseCase implements MovieDetailsDomainContract.UseCase {
                 })
                 .subscribeWith(disposableSingleObserver);
         compositeDisposable.add(disposable);
-
     }
     // endregion
 

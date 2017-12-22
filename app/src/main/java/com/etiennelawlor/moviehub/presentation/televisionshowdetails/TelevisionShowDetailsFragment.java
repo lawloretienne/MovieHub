@@ -66,7 +66,7 @@ import com.etiennelawlor.moviehub.util.DisplayUtility;
 import com.etiennelawlor.moviehub.util.FontCache;
 import com.etiennelawlor.moviehub.util.TrestleUtility;
 import com.etiennelawlor.moviehub.util.ViewUtility;
-import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
+import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer2;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -224,7 +224,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
         }
     };
 
-    private Transition.TransitionListener transitionTransitionListener = new Transition.TransitionListener() {
+    private Transition.TransitionListener enterTransitionListener = new Transition.TransitionListener() {
         @Override
         public void onTransitionStart(Transition transition) {
 
@@ -234,6 +234,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
         public void onTransitionEnd(Transition transition) {
             if(televisionShow != null)
                 televisionShowDetailsPresenter.onLoadTelevisionShowDetails(televisionShow.getId());
+            sharedElementEnterTransition.removeListener(this);
         }
 
         @Override
@@ -429,7 +430,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
                 new TelevisionShowDetailsUseCase(new TelevisionShowRepository(
                         new TelevisionShowLocalDataSource(getContext()),
                         new TelevisionShowRemoteDataSource(getContext())),
-                        new ProductionSchedulerTransformer<TelevisionShowDetailsWrapper>())
+                        new ProductionSchedulerTransformer2<TelevisionShowDetailsWrapper>())
                 );
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
@@ -444,7 +445,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
         setHasOptionsMenu(true);
 
         sharedElementEnterTransition = getActivity().getWindow().getSharedElementEnterTransition();
-        sharedElementEnterTransition.addListener(transitionTransitionListener);
+        sharedElementEnterTransition.addListener(enterTransitionListener);
     }
 
     @Override
@@ -476,6 +477,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
             televisionShowDetailsHeaderLinearLayout.getViewTreeObserver().addOnGlobalLayoutListener(televisionShowDetailsHeaderTreeObserverOnGlobalLayoutListener);
         }
 
+        nestedScrollView.setNestedScrollingEnabled(false);
         nestedScrollView.setOnScrollChangeListener(nestedScrollViewOnScrollChangeListener);
     }
 
@@ -494,6 +496,8 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     public void showTelevisionShowDetails(TelevisionShowDetailsWrapper televisionShowDetailsWrapper) {
         this.televisionShowDetailsWrapper = televisionShowDetailsWrapper;
         final Palette posterPalette = televisionShow.getPosterPalette();
+
+        nestedScrollView.setNestedScrollingEnabled(true);
 
         televisionShow = televisionShowDetailsWrapper.getTelevisionShow();
         televisionShow.setPosterPalette(posterPalette);
@@ -587,7 +591,6 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
 
     // region Helper Methods
     private void removeListeners() {
-        sharedElementEnterTransition.removeListener(transitionTransitionListener);
         nestedScrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) null);
 
         if(castAdapter != null)

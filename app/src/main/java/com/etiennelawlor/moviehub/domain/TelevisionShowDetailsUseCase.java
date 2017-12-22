@@ -3,12 +3,11 @@ package com.etiennelawlor.moviehub.domain;
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowDataSourceContract;
 import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowDetailsWrapper;
 import com.etiennelawlor.moviehub.util.EspressoIdlingResource;
-import com.etiennelawlor.moviehub.util.rxjava.SchedulerTransformer;
+import com.etiennelawlor.moviehub.util.rxjava.SchedulerTransformer2;
 
-import rx.Subscriber;
-import rx.Subscription;
-import rx.functions.Action0;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableSingleObserver;
 
 /**
  * Created by etiennelawlor on 6/26/17.
@@ -18,12 +17,12 @@ public class TelevisionShowDetailsUseCase implements TelevisionShowDetailsDomain
 
     // region Member Variables
     private final TelevisionShowDataSourceContract.Repository televisionShowRepository;
-    private final SchedulerTransformer<TelevisionShowDetailsWrapper> schedulerTransformer;
-    private CompositeSubscription compositeSubscription = new CompositeSubscription();
+    private final SchedulerTransformer2<TelevisionShowDetailsWrapper> schedulerTransformer;
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
     // endregion
 
     // region Constructors
-    public TelevisionShowDetailsUseCase(TelevisionShowDataSourceContract.Repository televisionShowRepository, SchedulerTransformer<TelevisionShowDetailsWrapper> schedulerTransformer) {
+    public TelevisionShowDetailsUseCase(TelevisionShowDataSourceContract.Repository televisionShowRepository, SchedulerTransformer2<TelevisionShowDetailsWrapper> schedulerTransformer) {
         this.televisionShowRepository = televisionShowRepository;
         this.schedulerTransformer = schedulerTransformer;
     }
@@ -32,28 +31,26 @@ public class TelevisionShowDetailsUseCase implements TelevisionShowDetailsDomain
     // region MovieDetailsDomainContract.UseCase Methods
     @Override
     public void clearSubscriptions() {
-        if(compositeSubscription != null && compositeSubscription.hasSubscriptions())
-            compositeSubscription.clear();
+        if(compositeDisposable != null && compositeDisposable.isDisposed())
+            compositeDisposable.clear();
     }
 
     @Override
-    public void getTelevisionShowDetails(int televisionShowId, Subscriber subscriber) {
-        // The network request might be handled in a different thread so make sure Espresso knows
-        // that the app is busy until the response is handled.
-        EspressoIdlingResource.increment(); // App is busy until further notice
-
-        Subscription subscription = televisionShowRepository.getTelevisionShowDetails(televisionShowId)
+    public void getTelevisionShowDetails(int televisionShowId, DisposableSingleObserver disposableSingleObserver) {
+        Disposable disposable = televisionShowRepository.getTelevisionShowDetails(televisionShowId)
                 .compose(schedulerTransformer)
-                .doOnTerminate(new Action0() {
-                    @Override
-                    public void call() {
-                        if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
-                            EspressoIdlingResource.decrement(); // Set app as idle.
-                        }
+                .doOnSubscribe(disposable1 -> {
+                    // The network request might be handled in a different thread so make sure Espresso knows
+                    // that the app is busy until the response is handled.
+                    EspressoIdlingResource.increment(); // App is busy until further notice
+                })
+                .doFinally(() -> {
+                    if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
+                        EspressoIdlingResource.decrement(); // Set app as idle.
                     }
                 })
-                .subscribe(subscriber);
-        compositeSubscription.add(subscription);
+                .subscribeWith(disposableSingleObserver);
+        compositeDisposable.add(disposable);
     }
     // endregion
 

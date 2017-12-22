@@ -18,7 +18,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Subscriber;
+import io.reactivex.observers.DisposableSingleObserver;
 
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.verify;
@@ -39,8 +39,7 @@ public class TelevisionShowDetailsPresenterTest {
     private TelevisionShowDetailsDomainContract.UseCase mockTelevisionShowDetailsUseCase;
 
     // Stubs
-    private ArgumentCaptor<Subscriber> subscriberArgumentCaptor;
-
+    private ArgumentCaptor<DisposableSingleObserver> disposableSingleObserverArgumentCaptor;
     // endregion
 
     // region Member Variables
@@ -75,9 +74,9 @@ public class TelevisionShowDetailsPresenterTest {
         televisionShowDetailsPresenter.onLoadTelevisionShowDetails(televisionShow.getId());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
-        verify(mockTelevisionShowDetailsUseCase).getTelevisionShowDetails(anyInt(), subscriberArgumentCaptor.capture());
-        subscriberArgumentCaptor.getValue().onError(new UnknownHostException());
+        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
+        verify(mockTelevisionShowDetailsUseCase).getTelevisionShowDetails(anyInt(), disposableSingleObserverArgumentCaptor.capture());
+        disposableSingleObserverArgumentCaptor.getValue().onError(new UnknownHostException());
 
         verify(mockTelevisionShowDetailsView).showErrorView();
     }
@@ -97,9 +96,9 @@ public class TelevisionShowDetailsPresenterTest {
         televisionShowDetailsPresenter.onLoadTelevisionShowDetails(televisionShow.getId());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
-        verify(mockTelevisionShowDetailsUseCase).getTelevisionShowDetails(anyInt(), subscriberArgumentCaptor.capture());
-        subscriberArgumentCaptor.getValue().onNext(televisionShowDetailsWrapper);
+        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
+        verify(mockTelevisionShowDetailsUseCase).getTelevisionShowDetails(anyInt(), disposableSingleObserverArgumentCaptor.capture());
+        disposableSingleObserverArgumentCaptor.getValue().onSuccess(televisionShowDetailsWrapper);
 
         verify(mockTelevisionShowDetailsView).showTelevisionShowDetails(televisionShowDetailsWrapper);
     }

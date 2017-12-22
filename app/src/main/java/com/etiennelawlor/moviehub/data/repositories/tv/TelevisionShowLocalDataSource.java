@@ -7,7 +7,6 @@ import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowDeta
 import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsPage;
 
 import io.reactivex.Maybe;
-import rx.Observable;
 
 /**
  * Created by etiennelawlor on 2/13/17.
@@ -37,9 +36,9 @@ public class TelevisionShowLocalDataSource implements TelevisionShowDataSourceCo
     }
 
     @Override
-    public Observable<TelevisionShowDetailsWrapper> getTelevisionShowDetails(int televisionShowId) {
+    public Maybe<TelevisionShowDetailsWrapper> getTelevisionShowDetails(int televisionShowId) {
         //        Use mapper to convert from realm objects to POJOs
-        return Observable.empty();
+        return Maybe.empty();
     }
 
     @Override

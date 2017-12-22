@@ -5,7 +5,6 @@ import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsPag
 
 import io.reactivex.Maybe;
 import io.reactivex.Single;
-import rx.Observable;
 
 /**
  * Created by etiennelawlor on 2/13/17.
@@ -38,13 +37,13 @@ public class TelevisionShowRepository implements TelevisionShowDataSourceContrac
     }
 
     @Override
-    public Observable<TelevisionShowDetailsWrapper> getTelevisionShowDetails(int tvId) {
-        Observable<TelevisionShowDetailsWrapper> local = televisionShowLocalDataSource.getTelevisionShowDetails(tvId);
-        Observable<TelevisionShowDetailsWrapper> remote =
+    public Single<TelevisionShowDetailsWrapper> getTelevisionShowDetails(int tvId) {
+        Maybe<TelevisionShowDetailsWrapper> local = televisionShowLocalDataSource.getTelevisionShowDetails(tvId);
+        Single<TelevisionShowDetailsWrapper> remote =
                 televisionShowRemoteDataSource.getTelevisionShowDetails(tvId)
-                        .doOnNext(televisionShowDetailsWrapper -> televisionShowLocalDataSource.saveTelevisionShowDetails(televisionShowDetailsWrapper));
+                        .doOnSuccess(televisionShowDetailsWrapper -> televisionShowLocalDataSource.saveTelevisionShowDetails(televisionShowDetailsWrapper));
 
-        return Observable.concat(local, remote).first();
+        return local.switchIfEmpty(remote);
     }
     // endregion
 }

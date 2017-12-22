@@ -5,7 +5,6 @@ import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsPag
 
 import io.reactivex.Maybe;
 import io.reactivex.Single;
-import rx.Observable;
 
 /**
  * Created by etiennelawlor on 2/13/17.
@@ -16,7 +15,7 @@ public interface TelevisionShowDataSourceContract {
     interface Repository {
         Single<TelevisionShowsPage> getPopularTelevisionShows(int currentPage);
 
-        Observable<TelevisionShowDetailsWrapper> getTelevisionShowDetails(int currentPage);
+        Single<TelevisionShowDetailsWrapper> getTelevisionShowDetails(int currentPage);
     }
 
     interface LocalDateSource {
@@ -24,7 +23,7 @@ public interface TelevisionShowDataSourceContract {
 
         void savePopularTelevisionShows(TelevisionShowsPage televisionShowsPage);
 
-        Observable<TelevisionShowDetailsWrapper> getTelevisionShowDetails(int currentPage);
+        Maybe<TelevisionShowDetailsWrapper> getTelevisionShowDetails(int currentPage);
 
         void saveTelevisionShowDetails(TelevisionShowDetailsWrapper televisionShowDetailsWrapper);
     }
@@ -32,6 +31,6 @@ public interface TelevisionShowDataSourceContract {
     interface RemoteDateSource {
         Single<TelevisionShowsPage> getPopularTelevisionShows(int currentPage);
 
-        Observable<TelevisionShowDetailsWrapper> getTelevisionShowDetails(int currentPage);
+        Single<TelevisionShowDetailsWrapper> getTelevisionShowDetails(int currentPage);
     }
 }
