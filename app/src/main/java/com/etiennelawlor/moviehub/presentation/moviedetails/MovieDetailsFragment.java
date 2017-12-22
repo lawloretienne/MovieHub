@@ -66,7 +66,7 @@ import com.etiennelawlor.moviehub.util.DisplayUtility;
 import com.etiennelawlor.moviehub.util.FontCache;
 import com.etiennelawlor.moviehub.util.TrestleUtility;
 import com.etiennelawlor.moviehub.util.ViewUtility;
-import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
+import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer2;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -190,31 +190,29 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
         }
     };
 
-    private Transition.TransitionListener transitionTransitionListener = new Transition.TransitionListener() {
+    private Transition.TransitionListener enterTransitionListener = new Transition.TransitionListener() {
         @Override
         public void onTransitionStart(Transition transition) {
-
         }
 
         @Override
         public void onTransitionEnd(Transition transition) {
             if(movie != null)
                 movieDetailsPresenter.onLoadMovieDetails(movie.getId());
+
+            sharedElementEnterTransition.removeListener(this);
         }
 
         @Override
         public void onTransitionCancel(Transition transition) {
-
         }
 
         @Override
         public void onTransitionPause(Transition transition) {
-
         }
 
         @Override
         public void onTransitionResume(Transition transition) {
-
         }
     };
 
@@ -428,7 +426,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
                 new MovieDetailsUseCase(new MovieRepository(
                         new MovieLocalDataSource(getContext()),
                         new MovieRemoteDataSource(getContext())),
-                        new ProductionSchedulerTransformer<MovieDetailsWrapper>())
+                        new ProductionSchedulerTransformer2<MovieDetailsWrapper>())
                 );
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
@@ -443,7 +441,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
         setHasOptionsMenu(true);
 
         sharedElementEnterTransition = getActivity().getWindow().getSharedElementEnterTransition();
-        sharedElementEnterTransition.addListener(transitionTransitionListener);
+        sharedElementEnterTransition.addListener(enterTransitionListener);
     }
 
     @Override
@@ -475,6 +473,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
             movieDetailsHeaderLinearLayout.getViewTreeObserver().addOnGlobalLayoutListener(movieDetailsHeaderTreeObserverOnGlobalLayoutListener);
         }
 
+        nestedScrollView.setNestedScrollingEnabled(false);
         nestedScrollView.setOnScrollChangeListener(nestedScrollViewOnScrollChangeListener);
     }
 
@@ -493,6 +492,8 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
     public void showMovieDetails(MovieDetailsWrapper movieDetailsWrapper) {
         this.movieDetailsWrapper = movieDetailsWrapper;
         final Palette posterPalette = movie.getPosterPalette();
+
+        nestedScrollView.setNestedScrollingEnabled(true);
 
         movie = movieDetailsWrapper.getMovie();
         movie.setPosterPalette(posterPalette);
@@ -588,7 +589,6 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
 
     // region Helper Methods
     private void removeListeners() {
-        sharedElementEnterTransition.removeListener(transitionTransitionListener);
         nestedScrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) null);
 
         if(castAdapter != null)

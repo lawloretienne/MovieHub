@@ -5,7 +5,6 @@ import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesPage;
 
 import io.reactivex.Maybe;
 import io.reactivex.Single;
-import rx.Observable;
 
 /**
  * Created by etiennelawlor on 2/13/17.
@@ -38,14 +37,14 @@ public class MovieRepository implements MovieDataSourceContract.Repository {
     }
 
     @Override
-    public Observable<MovieDetailsWrapper> getMovieDetails(int movieId) {
-        Observable<MovieDetailsWrapper> local = movieLocalDataSource.getMovieDetails(movieId);
+    public Single<MovieDetailsWrapper> getMovieDetails(int movieId) {
+        Maybe<MovieDetailsWrapper> local = movieLocalDataSource.getMovieDetails(movieId);
 
-        Observable<MovieDetailsWrapper> remote =
+        Single<MovieDetailsWrapper> remote =
                 movieRemoteDataSource.getMovieDetails(movieId)
-                        .doOnNext(movieDetailsWrapper -> movieLocalDataSource.saveMovieDetails(movieDetailsWrapper));
+                        .doOnSuccess(movieDetailsWrapper -> movieLocalDataSource.saveMovieDetails(movieDetailsWrapper));
 
-        return Observable.concat(local, remote).first();
+        return local.switchIfEmpty(remote);
     }
 
     // endregion

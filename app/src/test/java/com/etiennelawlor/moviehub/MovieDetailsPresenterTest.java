@@ -18,7 +18,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Subscriber;
+import io.reactivex.observers.DisposableSingleObserver;
 
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.verify;
@@ -39,8 +39,7 @@ public class MovieDetailsPresenterTest {
     private MovieDetailsDomainContract.UseCase mockMovieDetailsUseCase;
 
     // Stubs
-    private ArgumentCaptor<Subscriber> subscriberArgumentCaptor;
-
+    private ArgumentCaptor<DisposableSingleObserver> disposableSingleObserverArgumentCaptor;
     // endregion
 
     // region Member Variables
@@ -75,9 +74,9 @@ public class MovieDetailsPresenterTest {
         movieDetailsPresenter.onLoadMovieDetails(movie.getId());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
-        verify(mockMovieDetailsUseCase).getMovieDetails(anyInt(), subscriberArgumentCaptor.capture());
-        subscriberArgumentCaptor.getValue().onError(new UnknownHostException());
+        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
+        verify(mockMovieDetailsUseCase).getMovieDetails(anyInt(), disposableSingleObserverArgumentCaptor.capture());
+        disposableSingleObserverArgumentCaptor.getValue().onError(new UnknownHostException());
 
         verify(mockMovieDetailsView).showErrorView();
     }
@@ -97,9 +96,9 @@ public class MovieDetailsPresenterTest {
         movieDetailsPresenter.onLoadMovieDetails(movie.getId());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
-        verify(mockMovieDetailsUseCase).getMovieDetails(anyInt(), subscriberArgumentCaptor.capture());
-        subscriberArgumentCaptor.getValue().onNext(movieDetailsWrapper);
+        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
+        verify(mockMovieDetailsUseCase).getMovieDetails(anyInt(), disposableSingleObserverArgumentCaptor.capture());
+        disposableSingleObserverArgumentCaptor.getValue().onSuccess(movieDetailsWrapper);
 
         verify(mockMovieDetailsView).showMovieDetails(movieDetailsWrapper);
     }

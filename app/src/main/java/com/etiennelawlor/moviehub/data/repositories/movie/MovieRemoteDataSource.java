@@ -18,7 +18,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import io.reactivex.Single;
-import rx.Observable;
 
 /**
  * Created by etiennelawlor on 2/13/17.
@@ -59,8 +58,8 @@ public class MovieRemoteDataSource implements MovieDataSourceContract.RemoteDate
     }
 
     @Override
-    public Observable<MovieDetailsWrapper> getMovieDetails(int movieId) {
-        return Observable.zip(
+    public Single<MovieDetailsWrapper> getMovieDetails(int movieId) {
+        return Single.zip(
                 movieHubService.getMovie(movieId),
                 movieHubService.getMovieCredits(movieId),
                 movieHubService.getSimilarMovies(movieId),

@@ -6,7 +6,7 @@ import com.etiennelawlor.moviehub.data.repositories.movie.models.MovieDetailsWra
 import com.etiennelawlor.moviehub.domain.MovieDetailsDomainContract;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 
-import rx.Subscriber;
+import io.reactivex.observers.DisposableSingleObserver;
 
 /**
  * Created by etiennelawlor on 2/9/17.
@@ -34,10 +34,12 @@ public class MovieDetailsPresenter implements MovieDetailsUiContract.Presenter {
 
     @Override
     public void onLoadMovieDetails(int movieId) {
-        movieDetailsUseCase.getMovieDetails(movieId, new Subscriber<MovieDetailsWrapper>() {
+        movieDetailsUseCase.getMovieDetails(movieId, new DisposableSingleObserver<MovieDetailsWrapper>() {
             @Override
-            public void onCompleted() {
-
+            public void onSuccess(MovieDetailsWrapper movieDetailsWrapper) {
+                if(movieDetailsWrapper != null){
+                    movieDetailsView.showMovieDetails(movieDetailsWrapper);
+                }
             }
 
             @Override
@@ -48,13 +50,6 @@ public class MovieDetailsPresenter implements MovieDetailsUiContract.Presenter {
 //                            moviesView.showErrorFooter();
 //                            moviesView.setErrorText("Can't load data.\nCheck your network connection.");
                     movieDetailsView.showErrorView();
-                }
-            }
-
-            @Override
-            public void onNext(MovieDetailsWrapper movieDetailsWrapper) {
-                if(movieDetailsWrapper != null){
-                    movieDetailsView.showMovieDetails(movieDetailsWrapper);
                 }
             }
         });

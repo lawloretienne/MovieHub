@@ -3,12 +3,11 @@ package com.etiennelawlor.moviehub.domain;
 import com.etiennelawlor.moviehub.data.repositories.movie.MovieDataSourceContract;
 import com.etiennelawlor.moviehub.data.repositories.movie.models.MovieDetailsWrapper;
 import com.etiennelawlor.moviehub.util.EspressoIdlingResource;
-import com.etiennelawlor.moviehub.util.rxjava.SchedulerTransformer;
+import com.etiennelawlor.moviehub.util.rxjava.SchedulerTransformer2;
 
-import rx.Subscriber;
-import rx.Subscription;
-import rx.functions.Action0;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableSingleObserver;
 
 /**
  * Created by etiennelawlor on 6/26/17.
@@ -18,12 +17,12 @@ public class MovieDetailsUseCase implements MovieDetailsDomainContract.UseCase {
 
     // region Member Variables
     private final MovieDataSourceContract.Repository movieRepository;
-    private final SchedulerTransformer<MovieDetailsWrapper> schedulerTransformer;
-    private CompositeSubscription compositeSubscription = new CompositeSubscription();
+    private final SchedulerTransformer2<MovieDetailsWrapper> schedulerTransformer;
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
     // endregion
 
     // region Constructors
-    public MovieDetailsUseCase(MovieDataSourceContract.Repository movieRepository, SchedulerTransformer<MovieDetailsWrapper> schedulerTransformer) {
+    public MovieDetailsUseCase(MovieDataSourceContract.Repository movieRepository, SchedulerTransformer2<MovieDetailsWrapper> schedulerTransformer) {
         this.movieRepository = movieRepository;
         this.schedulerTransformer = schedulerTransformer;
     }
@@ -32,28 +31,28 @@ public class MovieDetailsUseCase implements MovieDetailsDomainContract.UseCase {
     // region MovieDetailsDomainContract.UseCase Methods
     @Override
     public void clearSubscriptions() {
-        if(compositeSubscription != null && compositeSubscription.hasSubscriptions())
-            compositeSubscription.clear();
+        if(compositeDisposable != null && compositeDisposable.isDisposed())
+            compositeDisposable.clear();
     }
 
     @Override
-    public void getMovieDetails(int movieId, Subscriber subscriber) {
-        // The network request might be handled in a different thread so make sure Espresso knows
-        // that the app is busy until the response is handled.
-        EspressoIdlingResource.increment(); // App is busy until further notice
-
-        Subscription subscription = movieRepository.getMovieDetails(movieId)
+    public void getMovieDetails(int movieId, DisposableSingleObserver disposableSingleObserver) {
+        Disposable disposable = movieRepository.getMovieDetails(movieId)
                 .compose(schedulerTransformer)
-                .doOnTerminate(new Action0() {
-                    @Override
-                    public void call() {
-                        if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
-                            EspressoIdlingResource.decrement(); // Set app as idle.
-                        }
+                .doOnSubscribe(disposable1 -> {
+                    // The network request might be handled in a different thread so make sure Espresso knows
+                    // that the app is busy until the response is handled.
+                    EspressoIdlingResource.increment(); // App is busy until further notice
+                })
+                .doFinally(() -> {
+                    // https://github.com/VisheshVadhera/PlacementApp/blob/f36e8c259cbba37c1be90409016854f8c64bb8a5/app/src/main/java/com/vishesh/placement/core/useCases/BaseUseCase.java
+                    if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
+                        EspressoIdlingResource.decrement(); // Set app as idle.
                     }
                 })
-                .subscribe(subscriber);
-        compositeSubscription.add(subscription);
+                .subscribeWith(disposableSingleObserver);
+        compositeDisposable.add(disposable);
+
     }
     // endregion
 
