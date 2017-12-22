@@ -69,7 +69,7 @@ import com.etiennelawlor.moviehub.util.DisplayUtility;
 import com.etiennelawlor.moviehub.util.FontCache;
 import com.etiennelawlor.moviehub.util.TrestleUtility;
 import com.etiennelawlor.moviehub.util.ViewUtility;
-import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
+import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer2;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -244,7 +244,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
         }
     };
 
-    private Transition.TransitionListener transitionTransitionListener = new Transition.TransitionListener() {
+    private Transition.TransitionListener enterTransitionListener = new Transition.TransitionListener() {
         @Override
         public void onTransitionStart(Transition transition) {
 
@@ -254,6 +254,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
         public void onTransitionEnd(Transition transition) {
             if(person != null)
                 personDetailsPresenter.onLoadPersonDetails(person.getId());
+            sharedElementEnterTransition.removeListener(this);
         }
 
         @Override
@@ -450,7 +451,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
                 new PersonDetailsUseCase(new PersonRepository(
                         new PersonLocalDataSource(getContext()),
                         new PersonRemoteDataSource(getContext())),
-                        new ProductionSchedulerTransformer<PersonDetailsWrapper>())
+                        new ProductionSchedulerTransformer2<PersonDetailsWrapper>())
                 );
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
@@ -465,7 +466,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
         setHasOptionsMenu(true);
 
         sharedElementEnterTransition = getActivity().getWindow().getSharedElementEnterTransition();
-        sharedElementEnterTransition.addListener(transitionTransitionListener);
+        sharedElementEnterTransition.addListener(enterTransitionListener);
     }
 
     @Override
@@ -496,6 +497,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
             personDetailsHeaderLinearLayout.getViewTreeObserver().addOnGlobalLayoutListener(personDetailsHeaderTreeObserverOnGlobalLayoutListener);
         }
 
+        nestedScrollView.setNestedScrollingEnabled(false);
         nestedScrollView.setOnScrollChangeListener(nestedScrollViewOnScrollChangeListener);
     }
 
@@ -514,6 +516,8 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     public void showPersonDetails(PersonDetailsWrapper personDetailsWrapper) {
         this.personDetailsWrapper = personDetailsWrapper;
         final Palette profilePalette = person.getProfilePalette();
+
+        nestedScrollView.setNestedScrollingEnabled(true);
 
         person = personDetailsWrapper.getPerson();
         person.setProfilePalette(profilePalette);
@@ -602,7 +606,6 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
 
     // region Helper Methods
     private void removeListeners() {
-        sharedElementEnterTransition.removeListener(transitionTransitionListener);
         nestedScrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) null);
 
         if(castAdapter != null)

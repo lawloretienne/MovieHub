@@ -14,7 +14,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import io.reactivex.Single;
-import rx.Observable;
 
 /**
  * Created by etiennelawlor on 2/13/17.
@@ -56,8 +55,8 @@ public class PersonRemoteDataSource implements PersonDataSourceContract.RemoteDa
     }
 
     @Override
-    public Observable<PersonDetailsWrapper> getPersonDetails(int personId) {
-        return Observable.zip(
+    public Single<PersonDetailsWrapper> getPersonDetails(int personId) {
+        return Single.zip(
                 movieHubService.getPerson(personId),
                 movieHubService.getPersonCredits(personId),
                 (person, personCreditsEnvelope) -> {

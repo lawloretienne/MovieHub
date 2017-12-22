@@ -7,7 +7,6 @@ import com.etiennelawlor.moviehub.data.repositories.person.models.PersonDetailsW
 import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsPage;
 
 import io.reactivex.Maybe;
-import rx.Observable;
 
 /**
  * Created by etiennelawlor on 2/13/17.
@@ -37,9 +36,9 @@ public class PersonLocalDataSource implements PersonDataSourceContract.LocalDate
     }
 
     @Override
-    public Observable<PersonDetailsWrapper> getPersonDetails(int personId) {
+    public Maybe<PersonDetailsWrapper> getPersonDetails(int personId) {
         //        Use mapper to convert from realm objects to POJOs
-        return Observable.empty();
+        return Maybe.empty();
     }
 
     @Override

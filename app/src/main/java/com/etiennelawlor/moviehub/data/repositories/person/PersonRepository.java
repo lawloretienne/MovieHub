@@ -5,7 +5,6 @@ import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsPage;
 
 import io.reactivex.Maybe;
 import io.reactivex.Single;
-import rx.Observable;
 
 /**
  * Created by etiennelawlor on 2/13/17.
@@ -38,13 +37,13 @@ public class PersonRepository implements PersonDataSourceContract.Repository {
     }
 
     @Override
-    public Observable<PersonDetailsWrapper> getPersonDetails(int personId) {
-        Observable<PersonDetailsWrapper> local = personLocalDataSource.getPersonDetails(personId);
-        Observable<PersonDetailsWrapper> remote =
+    public Single<PersonDetailsWrapper> getPersonDetails(int personId) {
+        Maybe<PersonDetailsWrapper> local = personLocalDataSource.getPersonDetails(personId);
+        Single<PersonDetailsWrapper> remote =
                 personRemoteDataSource.getPersonDetails(personId)
-                        .doOnNext(personDetailsWrapper -> personLocalDataSource.savePersonDetails(personDetailsWrapper));
+                        .doOnSuccess(personDetailsWrapper -> personLocalDataSource.savePersonDetails(personDetailsWrapper));
 
-        return Observable.concat(local, remote).first();
+        return local.switchIfEmpty(remote);
     }
     // endregion
 }

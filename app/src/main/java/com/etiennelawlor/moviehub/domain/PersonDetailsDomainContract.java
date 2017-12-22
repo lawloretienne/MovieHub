@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.domain;
 
-import rx.Subscriber;
+import io.reactivex.observers.DisposableSingleObserver;
 
 /**
  * Created by etiennelawlor on 6/26/17.
@@ -9,6 +9,6 @@ import rx.Subscriber;
 public interface PersonDetailsDomainContract {
 
     interface UseCase extends BaseUseCase {
-        void getPersonDetails(int personId, Subscriber subscriber);
+        void getPersonDetails(int personId, DisposableSingleObserver disposableSingleObserver);
     }
 }

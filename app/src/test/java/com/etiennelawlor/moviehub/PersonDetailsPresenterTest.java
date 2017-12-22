@@ -19,7 +19,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Subscriber;
+import io.reactivex.observers.DisposableSingleObserver;
 
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.verify;
@@ -40,7 +40,7 @@ public class PersonDetailsPresenterTest {
     private PersonDetailsDomainContract.UseCase mockPersonDetailsUseCase;
 
     // Stubs
-    private ArgumentCaptor<Subscriber> subscriberArgumentCaptor;
+    private ArgumentCaptor<DisposableSingleObserver> disposableSingleObserverArgumentCaptor;
 
     // endregion
 
@@ -74,9 +74,9 @@ public class PersonDetailsPresenterTest {
         personDetailsPresenter.onLoadPersonDetails(person.getId());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
-        verify(mockPersonDetailsUseCase).getPersonDetails(anyInt(), subscriberArgumentCaptor.capture());
-        subscriberArgumentCaptor.getValue().onError(new UnknownHostException());
+        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
+        verify(mockPersonDetailsUseCase).getPersonDetails(anyInt(), disposableSingleObserverArgumentCaptor.capture());
+        disposableSingleObserverArgumentCaptor.getValue().onError(new UnknownHostException());
 
         verify(mockPersonDetailsView).showErrorView();
     }
@@ -94,9 +94,9 @@ public class PersonDetailsPresenterTest {
         personDetailsPresenter.onLoadPersonDetails(person.getId());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
-        verify(mockPersonDetailsUseCase).getPersonDetails(anyInt(), subscriberArgumentCaptor.capture());
-        subscriberArgumentCaptor.getValue().onNext(personDetailsWrapper);
+        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
+        verify(mockPersonDetailsUseCase).getPersonDetails(anyInt(), disposableSingleObserverArgumentCaptor.capture());
+        disposableSingleObserverArgumentCaptor.getValue().onSuccess(personDetailsWrapper);
 
         verify(mockPersonDetailsView).showPersonDetails(personDetailsWrapper);
     }

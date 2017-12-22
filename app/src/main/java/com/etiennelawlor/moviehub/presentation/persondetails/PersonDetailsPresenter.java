@@ -6,7 +6,7 @@ import com.etiennelawlor.moviehub.data.repositories.person.models.PersonDetailsW
 import com.etiennelawlor.moviehub.domain.PersonDetailsDomainContract;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 
-import rx.Subscriber;
+import io.reactivex.observers.DisposableSingleObserver;
 
 /**
  * Created by etiennelawlor on 2/9/17.
@@ -37,10 +37,12 @@ public class PersonDetailsPresenter implements PersonDetailsUiContract.Presenter
 
     @Override
     public void onLoadPersonDetails(int personId) {
-        personDetailsUseCase.getPersonDetails(personId, new Subscriber<PersonDetailsWrapper>() {
+        personDetailsUseCase.getPersonDetails(personId, new DisposableSingleObserver<PersonDetailsWrapper>() {
             @Override
-            public void onCompleted() {
-
+            public void onSuccess(PersonDetailsWrapper personDetailsWrapper) {
+                if(personDetailsWrapper != null){
+                    personDetailsView.showPersonDetails(personDetailsWrapper);
+                }
             }
 
             @Override
@@ -51,13 +53,6 @@ public class PersonDetailsPresenter implements PersonDetailsUiContract.Presenter
 //                            moviesView.showErrorFooter();
 //                            moviesView.setErrorText("Can't load data.\nCheck your network connection.");
                     personDetailsView.showErrorView();
-                }
-            }
-
-            @Override
-            public void onNext(PersonDetailsWrapper personDetailsWrapper) {
-                if(personDetailsWrapper != null){
-                    personDetailsView.showPersonDetails(personDetailsWrapper);
                 }
             }
         });

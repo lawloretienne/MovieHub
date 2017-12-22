@@ -60,13 +60,13 @@ public interface MovieHubService {
     Single<PeopleEnvelope> getPopularPeople(@Query("page") int page);
 
     @GET("person/{personId}?append_to_response=images")
-    Observable<Person> getPerson(@Path("personId") long personId);
+    Single<Person> getPerson(@Path("personId") long personId);
 
     @GET("person/{personId}/combined_credits")
-    Observable<PersonCreditsEnvelope> getPersonCredits(@Path("personId") long personId);
+    Single<PersonCreditsEnvelope> getPersonCredits(@Path("personId") long personId);
 
     @GET("configuration")
-    Observable<Configuration> getConfiguration();
+    Single<Configuration> getConfiguration();
 
     @GET("search/movie")
     Observable<MoviesEnvelope> searchMovies(@Query("query") String query, @Query("page") int page);
