@@ -58,59 +58,40 @@ public class SearchPresenter implements SearchUiContract.Presenter {
         EspressoIdlingResource.increment(); // App is busy until further notice
 
         Subscription subscription = searchQueryChangeObservable
-                .doOnNext(new Action1<CharSequence>() {
-                    @Override
-                    public void call(CharSequence charSequence) {
-                        searchView.hideLoadingView();
-                    }
-                })
+                .doOnNext(charSequence -> searchView.hideLoadingView())
                 .debounce(400, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .filter(new Func1<CharSequence, Boolean>() {
-                    @Override
-                    public Boolean call(CharSequence charSequence) {
-                        if(isEmpty(charSequence)){
-                            searchView.hideLoadingView();
+                .filter(charSequence -> {
+                    if(isEmpty(charSequence)){
+                        searchView.hideLoadingView();
 
-                            searchView.clearMoviesAdapter();
-                            searchView.hideMoviesView();
+                        searchView.clearMoviesAdapter();
+                        searchView.hideMoviesView();
 
-                            searchView.clearTelevisionShowsAdapter();
-                            searchView.hideTelevisionShowsView();
+                        searchView.clearTelevisionShowsAdapter();
+                        searchView.hideTelevisionShowsView();
 
-                            searchView.clearPersonsAdapter();
-                            searchView.hidePersonsView();
+                        searchView.clearPersonsAdapter();
+                        searchView.hidePersonsView();
 
-                            searchView.hideEmptyView();
-                        } else {
-                            searchView.showLoadingView();
-                        }
-
-                        return !isEmpty(charSequence);
+                        searchView.hideEmptyView();
+                    } else {
+                        searchView.showLoadingView();
                     }
+
+                    return !isEmpty(charSequence);
                 })
-                .map(new Func1<CharSequence, String>() {
-                    @Override
-                    public String call(CharSequence charSequence) {
-                        return charSequence.toString();
-                    }
-                })
+                .map(charSequence -> charSequence.toString())
                 .observeOn(Schedulers.io())
-                .switchMap(new Func1<String, Observable<SearchWrapper>>() {
-                    @Override
-                    public Observable<SearchWrapper> call(String q) {
+                .switchMap(q -> {
 //                        return searchRepository.getSearch(q)
 //                                .compose(schedulerTransformer);
-                        return searchRepository.getSearch(q);
-                    }
+                    return searchRepository.getSearch(q);
                 })
                 .observeOn(AndroidSchedulers.mainThread()) // UI Thread
-                .doOnTerminate(new Action0() {
-                    @Override
-                    public void call() {
-                        if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
-                            EspressoIdlingResource.decrement(); // Set app as idle.
-                        }
+                .doOnTerminate(() -> {
+                    if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
+                        EspressoIdlingResource.decrement(); // Set app as idle.
                     }
                 })
                 .subscribe(new Subscriber<SearchWrapper>() {
