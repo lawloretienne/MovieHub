@@ -1,7 +1,5 @@
 package com.etiennelawlor.moviehub.presentation.search;
 
-import android.util.Log;
-
 import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
@@ -11,6 +9,7 @@ import com.etiennelawlor.moviehub.util.NetworkUtility;
 
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.observers.DisposableSingleObserver;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -87,25 +86,9 @@ public class SearchPresenter implements SearchUiContract.Presenter {
 
                     @Override
                     public void onNext(String s) {
-                        searchUseCase.getSearchResponse(s, new Subscriber<SearchWrapper>() {
+                        searchUseCase.getSearchResponse(s, new DisposableSingleObserver<SearchWrapper>() {
                             @Override
-                            public void onCompleted() {
-
-                            }
-
-                            @Override
-                            public void onError(Throwable throwable) {
-                                throwable.printStackTrace();
-
-                                searchView.hideLoadingView();
-
-                                if (NetworkUtility.isKnownException(throwable)) {
-                                    searchView.showErrorView();
-                                }
-                            }
-
-                            @Override
-                            public void onNext(SearchWrapper searchWrapper) {
+                            public void onSuccess(SearchWrapper searchWrapper) {
                                 searchView.hideLoadingView();
                                 if (searchWrapper != null) {
                                     searchView.clearMoviesAdapter();
@@ -139,6 +122,17 @@ public class SearchPresenter implements SearchUiContract.Presenter {
                                         searchView.setEmptyText(String.format("No results found for \"%s\"", searchWrapper.getQuery()));
                                         searchView.showEmptyView();
                                     }
+                                }
+                            }
+
+                            @Override
+                            public void onError(Throwable throwable) {
+                                throwable.printStackTrace();
+
+                                searchView.hideLoadingView();
+
+                                if (NetworkUtility.isKnownException(throwable)) {
+                                    searchView.showErrorView();
                                 }
                             }
                         });

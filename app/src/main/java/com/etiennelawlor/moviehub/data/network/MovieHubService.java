@@ -17,7 +17,6 @@ import io.reactivex.Single;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import rx.Observable;
 
 /**
  * Created by etiennelawlor on 5/17/16.
@@ -69,12 +68,12 @@ public interface MovieHubService {
     Single<Configuration> getConfiguration();
 
     @GET("search/movie")
-    Observable<MoviesEnvelope> searchMovies(@Query("query") String query, @Query("page") int page);
+    Single<MoviesEnvelope> searchMovies(@Query("query") String query, @Query("page") int page);
 
     @GET("search/tv")
-    Observable<TelevisionShowsEnvelope> searchTelevisionShows(@Query("query") String query, @Query("page") int page);
+    Single<TelevisionShowsEnvelope> searchTelevisionShows(@Query("query") String query, @Query("page") int page);
 
     @GET("search/person")
-    Observable<PeopleEnvelope> searchPeople(@Query("query") String query, @Query("page") int page);
+    Single<PeopleEnvelope> searchPeople(@Query("query") String query, @Query("page") int page);
 
 }

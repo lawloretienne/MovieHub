@@ -6,18 +6,14 @@ import com.etiennelawlor.moviehub.data.network.AuthorizedNetworkInterceptor;
 import com.etiennelawlor.moviehub.data.network.MovieHubService;
 import com.etiennelawlor.moviehub.data.network.ServiceGenerator;
 import com.etiennelawlor.moviehub.data.network.response.Movie;
-import com.etiennelawlor.moviehub.data.network.response.MoviesEnvelope;
-import com.etiennelawlor.moviehub.data.network.response.PeopleEnvelope;
 import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowsEnvelope;
 import com.etiennelawlor.moviehub.data.repositories.search.models.SearchWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Observable;
-import rx.functions.Func3;
+import io.reactivex.Single;
 
 /**
  * Created by etiennelawlor on 2/13/17.
@@ -41,32 +37,29 @@ public class SearchRemoteDataSource implements SearchDataSourceContract.RemoteDa
 
     // region SearchDataSourceContract.RemoteDateSource Methods
     @Override
-    public Observable<SearchWrapper> getSearch(final String query) {
-        return Observable.zip(
+    public Single<SearchWrapper> getSearch(final String query) {
+        return Single.zip(
                 movieHubService.searchMovies(query, 1),
                 movieHubService.searchTelevisionShows(query, 1),
                 movieHubService.searchPeople(query, 1),
-                new Func3<MoviesEnvelope, TelevisionShowsEnvelope, PeopleEnvelope, SearchWrapper>() {
-                    @Override
-                    public SearchWrapper call(MoviesEnvelope moviesEnvelope, TelevisionShowsEnvelope televisionShowsEnvelope, PeopleEnvelope peopleEnvelope) {
-                        List<Movie> movies = new ArrayList<>();
-                        List<TelevisionShow> televisionShows = new ArrayList<>();
-                        List<Person> persons = new ArrayList<>();
+                (moviesEnvelope, televisionShowsEnvelope, peopleEnvelope) -> {
+                    List<Movie> movies = new ArrayList<>();
+                    List<TelevisionShow> televisionShows = new ArrayList<>();
+                    List<Person> persons = new ArrayList<>();
 
-                        if(moviesEnvelope!=null){
-                            movies = moviesEnvelope.getMovies();
-                        }
-
-                        if(televisionShowsEnvelope!=null){
-                            televisionShows = televisionShowsEnvelope.getTelevisionShows();
-                        }
-
-                        if(peopleEnvelope!=null){
-                            persons = peopleEnvelope.getPersons();
-                        }
-
-                        return new SearchWrapper(query, movies, televisionShows, persons);
+                    if (moviesEnvelope != null) {
+                        movies = moviesEnvelope.getMovies();
                     }
+
+                    if (televisionShowsEnvelope != null) {
+                        televisionShows = televisionShowsEnvelope.getTelevisionShows();
+                    }
+
+                    if (peopleEnvelope != null) {
+                        persons = peopleEnvelope.getPersons();
+                    }
+
+                    return new SearchWrapper(query, movies, televisionShows, persons);
                 });
     }
 

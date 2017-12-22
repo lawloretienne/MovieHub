@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.etiennelawlor.moviehub.data.repositories.search.models.SearchWrapper;
 
-import rx.Observable;
+import io.reactivex.Maybe;
 
 /**
  * Created by etiennelawlor on 2/13/17.
@@ -20,9 +20,9 @@ public class SearchLocalDataSource implements SearchDataSourceContract.LocalDate
     // region SearchDataSourceContract.LocalDateSource Methods
 
     @Override
-    public Observable<SearchWrapper> getSearch(String query) {
+    public Maybe<SearchWrapper> getSearch(String query) {
         //        Use mapper to convert from realm objects to POJOs
-        return Observable.empty();
+        return Maybe.empty();
     }
 
     @Override
