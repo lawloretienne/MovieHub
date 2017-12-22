@@ -2,12 +2,12 @@ apply plugin: 'com.android.application'
 apply plugin: 'realm-android'
 
 android {
-    compileSdkVersion rootProject.compileSdkVersion
-    buildToolsVersion rootProject.buildToolsVersion
+    compileSdkVersion 27
+    buildToolsVersion '27.0.1'
     defaultConfig {
         applicationId "com.etiennelawlor.moviehub"
-        minSdkVersion rootProject.minSdkVersion
-        targetSdkVersion rootProject.targetSdkVersion
+        minSdkVersion 21
+        targetSdkVersion 27
         versionCode 3
         versionName "0.0.3"
         // Enabling multidex support.
@@ -62,7 +62,35 @@ android {
         exclude 'META-INF/services/javax.annotation.processing.Processor'
         exclude 'META-INF/rxjava.properties'
     }
-    buildToolsVersion '27.0.1'
+}
+
+// Define versions in a single place
+ext {
+    // App dependencies
+    supportLibraryVersion = '27.0.0'
+    picassoVersion = '2.5.2'
+    retrofit2Version = '2.3.0'
+    okhttp3Version = '3.9.0'
+    leakcanaryVersion = '1.5.4'
+    butterknifeVersion = '8.8.1'
+    timberVersion = '4.5.1'
+    recyclerviewAnimatorsVersion = '2.0.0'
+    trestleVersion = '0.0.7'
+    multidexVersion = '1.0.2'
+    rxjava2Version = '2.1.7' //
+    rxjava2RxandroidVersion = '2.0.1' //
+    rxbindingVersion = '1.0.1'
+    rxbinding2Version = '2.0.0'
+
+    // Test dependencies
+    junitVersion = '4.12'
+    mockitoVersion = '2.0.2-beta'
+    powerMockito = '1.6.6'
+    hamcrestVersion = '1.3'
+    runnerVersion = '1.0.1'
+    rulesVersion = '1.0.1'
+    espressoVersion = '3.0.1'
+    supportAnnotations = '24.2.0'
 }
 
 /*
@@ -72,68 +100,62 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation "com.squareup.picasso:picasso:$rootProject.picassoVersion"
-    implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofit2Version"
-    implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofit2Version"
-    implementation "com.squareup.retrofit2:adapter-rxjava:$rootProject.retrofit2Version"
+    implementation "com.squareup.picasso:picasso:$picassoVersion"
+    implementation "com.squareup.retrofit2:retrofit:retrofit2Version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit2Version"
     implementation "com.squareup.retrofit2:adapter-rxjava2:2.3.0"
-    implementation "com.squareup.okhttp3:okhttp:$rootProject.okhttp3Version"
-    implementation "com.squareup.okhttp3:mockwebserver:$rootProject.okhttp3Version"
-    implementation "com.squareup.okhttp3:okhttp-urlconnection:$rootProject.okhttp3Version"
-    implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.okhttp3Version"
-    debugImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$rootProject.leakcanaryVersion"
-    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$rootProject.leakcanaryVersion"
+    implementation "com.squareup.okhttp3:okhttp:$okhttp3Version"
+    implementation "com.squareup.okhttp3:mockwebserver:$okhttp3Version"
+    implementation "com.squareup.okhttp3:okhttp-urlconnection:$okhttp3Version"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp3Version"
+    debugImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakcanaryVersion"
+    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakcanaryVersion"
 
-    implementation "com.android.support:design:$rootProject.supportLibraryVersion"
-    implementation "com.android.support:cardview-v7:$rootProject.supportLibraryVersion"
-    implementation "com.android.support:palette-v7:$rootProject.supportLibraryVersion"
-    implementation "com.android.support:support-v4:$rootProject.supportLibraryVersion"
-    implementation "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
+    implementation "com.android.support:design:$supportLibraryVersion"
+    implementation "com.android.support:cardview-v7:$supportLibraryVersion"
+    implementation "com.android.support:palette-v7:$supportLibraryVersion"
+    implementation "com.android.support:support-v4:$supportLibraryVersion"
+    implementation "com.android.support:recyclerview-v7:$supportLibraryVersion"
 
-    implementation "com.jakewharton:butterknife:$rootProject.butterknifeVersion"
-    annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterknifeVersion"
-//    apt 'com.jakewharton:butterknife-compiler:$rootProject.butterknifeVersion'
-    implementation "com.jakewharton.timber:timber:$rootProject.timberVersion"
+    implementation "com.jakewharton:butterknife:$butterknifeVersion"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$butterknifeVersion"
+//    apt 'com.jakewharton:butterknife-compiler:$butterknifeVersion'
+    implementation "com.jakewharton.timber:timber:$timberVersion"
 
-    implementation "jp.wasabeef:recyclerview-animators:$rootProject.recyclerviewAnimatorsVersion" // Stable
+    implementation "jp.wasabeef:recyclerview-animators:$recyclerviewAnimatorsVersion" // Stable
 
-    implementation "com.github.lawloretienne:trestle:$rootProject.trestleVersion"
+    implementation "com.github.lawloretienne:trestle:$trestleVersion"
 
-    implementation "com.android.support:multidex:$rootProject.multidexVersion" //
+    implementation "com.android.support:multidex:$multidexVersion" //
 
-    implementation "io.reactivex:rxjava:$rootProject.rxjavaVersion" // RxJava // Should update at some point
-    implementation "io.reactivex.rxjava2:rxjava:$rootProject.rxjava2Version" // RxJava // Should update at some point
-    implementation "io.reactivex:rxandroid:$rootProject.rxandroidVersion" // RxAndroid providing Android Scheduler // Should update at some point
-    implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxjava2RxandroidVersion" // RxAndroid providing Android Scheduler // Should update at some point
-    implementation "com.jakewharton.rxbinding:rxbinding:$rootProject.rxbindingVersion" // RxBinding
-    implementation "com.jakewharton.rxbinding2:rxbinding:$rootProject.rxbinding2Version" // RxBinding2 only supports RxJava2
-
-    implementation "com.github.akarnokd:rxjava2-interop:0.11.2"
+    implementation "io.reactivex.rxjava2:rxjava:$rxjava2Version" // RxJava
+    implementation "io.reactivex.rxjava2:rxandroid:$rxjava2RxandroidVersion" // RxAndroid providing Android Scheduler
+    implementation "com.jakewharton.rxbinding2:rxbinding:$rxbinding2Version"
 
     // Dependencies for local unit tests
-    testImplementation "junit:junit:$rootProject.junitVersion"
-    testImplementation "org.mockito:mockito-all:$rootProject.mockitoVersion"
-    testImplementation "org.hamcrest:hamcrest-all:$rootProject.hamcrestVersion"
-    testImplementation "org.powermock:powermock-module-junit4:$rootProject.powerMockito"
-    testImplementation "org.powermock:powermock-api-mockito:$rootProject.powerMockito"
+    testImplementation "junit:junit:$junitVersion"
+    testImplementation "org.mockito:mockito-all:$mockitoVersion"
+    testImplementation "org.hamcrest:hamcrest-all:$hamcrestVersion"
+    testImplementation "org.powermock:powermock-module-junit4:$powerMockito"
+    testImplementation "org.powermock:powermock-api-mockito:$powerMockito"
 
     // Required for instrumented tests
-    androidTestImplementation "com.android.support:support-annotations:$rootProject.supportAnnotations"
+    androidTestImplementation "com.android.support:support-annotations:$supportAnnotations"
 
     // Android Testing Support Library's runner and rules
-    androidTestImplementation "com.android.support.test:runner:$rootProject.runnerVersion"
-    androidTestImplementation "com.android.support.test:rules:$rootProject.rulesVersion"
+    androidTestImplementation "com.android.support.test:runner:$runnerVersion"
+    androidTestImplementation "com.android.support.test:rules:$rulesVersion"
 
     // Espresso UI Testing dependencies.
-    androidTestImplementation "com.android.support.test.espresso:espresso-core:$rootProject.espressoVersion"
-//    androidTestImplementation("com.android.support.test.espresso:espresso-core:$rootProject.espressoVersion", {
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$espressoVersion"
+//    androidTestImplementation("com.android.support.test.espresso:espresso-core:$espressoVersion", {
 //        exclude group: 'com.android.support', module: 'support-annotations'
 //        exclude group: 'com.android.support', module: 'appcompat'
 //        exclude module: 'recyclerview-v7'
 //    })
-    androidTestImplementation "com.android.support.test.espresso:espresso-contrib:$rootProject.espressoVersion"
-    androidTestImplementation "com.android.support.test.espresso:espresso-intents:$rootProject.espressoVersion"
-    implementation "com.android.support.test.espresso:espresso-idling-resource:$rootProject.espressoVersion"
+    androidTestImplementation "com.android.support.test.espresso:espresso-contrib:$espressoVersion"
+    androidTestImplementation "com.android.support.test.espresso:espresso-intents:$espressoVersion"
+    implementation "com.android.support.test.espresso:espresso-idling-resource:$espressoVersion"
 
     // UI testing with UI Automator
 //    androidTestImplementation 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
@@ -144,7 +166,7 @@ Resolves dependency versions across test and production APKs, specifically, tran
 dependencies. This is required since Espresso internally has a dependency on support-annotations.
 */
 configurations.all {
-    resolutionStrategy.force "com.android.support:support-annotations:$rootProject.supportLibraryVersion"
+    resolutionStrategy.force "com.android.support:support-annotations:$supportLibraryVersion"
 }
 
 /*
