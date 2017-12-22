@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import rx.Subscriber;
+import io.reactivex.observers.DisposableSingleObserver;
 
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
@@ -40,7 +40,7 @@ public class MoviesPresenterTest {
     private MoviesDomainContract.UseCase mockMoviesUseCase;
 
     // Stubs
-    private ArgumentCaptor<Subscriber> subscriberArgumentCaptor;
+    private ArgumentCaptor<DisposableSingleObserver> disposableSingleObserverArgumentCaptor;
     // endregion
 
     // region Member Variables
@@ -73,9 +73,10 @@ public class MoviesPresenterTest {
         verify(mockMoviesView).hideErrorView();
         verify(mockMoviesView).showLoadingView();
 
-        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
-        verify(mockMoviesUseCase).getPopularMovies(anyInt(), subscriberArgumentCaptor.capture());
-        subscriberArgumentCaptor.getValue().onError(new IOException());
+        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
+        verify(mockMoviesUseCase).getPopularMovies(anyInt(), disposableSingleObserverArgumentCaptor.capture());
+        disposableSingleObserverArgumentCaptor.getValue().onError(new IOException());
+
 
         verify(mockMoviesView).hideLoadingView();
         verify(mockMoviesView).setErrorText(anyString());
@@ -93,9 +94,9 @@ public class MoviesPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMoviesView).showLoadingFooter();
 
-        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
-        verify(mockMoviesUseCase).getPopularMovies(anyInt(), subscriberArgumentCaptor.capture());
-        subscriberArgumentCaptor.getValue().onError(new UnknownHostException());
+        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
+        verify(mockMoviesUseCase).getPopularMovies(anyInt(), disposableSingleObserverArgumentCaptor.capture());
+        disposableSingleObserverArgumentCaptor.getValue().onError(new UnknownHostException());
 
         verify(mockMoviesView).showErrorFooter();
     }
@@ -113,9 +114,9 @@ public class MoviesPresenterTest {
         verify(mockMoviesView).hideErrorView();
         verify(mockMoviesView).showLoadingView();
 
-        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
-        verify(mockMoviesUseCase).getPopularMovies(anyInt(), subscriberArgumentCaptor.capture());
-        subscriberArgumentCaptor.getValue().onNext(moviesPage);
+        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
+        verify(mockMoviesUseCase).getPopularMovies(anyInt(), disposableSingleObserverArgumentCaptor.capture());
+        disposableSingleObserverArgumentCaptor.getValue().onSuccess(moviesPage);
 
         verify(mockMoviesView).hideLoadingView();
         verify(mockMoviesView).showEmptyView();
@@ -133,9 +134,9 @@ public class MoviesPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMoviesView).showLoadingFooter();
 
-        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
-        verify(mockMoviesUseCase).getPopularMovies(anyInt(), subscriberArgumentCaptor.capture());
-        subscriberArgumentCaptor.getValue().onNext(moviesPage);
+        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
+        verify(mockMoviesUseCase).getPopularMovies(anyInt(), disposableSingleObserverArgumentCaptor.capture());
+        disposableSingleObserverArgumentCaptor.getValue().onSuccess(moviesPage);
 
         verify(mockMoviesView).removeFooter();
         verify(mockMoviesView).setMoviesPage(moviesPage);
@@ -154,9 +155,9 @@ public class MoviesPresenterTest {
         verify(mockMoviesView).hideErrorView();
         verify(mockMoviesView).showLoadingView();
 
-        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
-        verify(mockMoviesUseCase).getPopularMovies(anyInt(), subscriberArgumentCaptor.capture());
-        subscriberArgumentCaptor.getValue().onNext(moviesPage);
+        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
+        verify(mockMoviesUseCase).getPopularMovies(anyInt(), disposableSingleObserverArgumentCaptor.capture());
+        disposableSingleObserverArgumentCaptor.getValue().onSuccess(moviesPage);
 
         verify(mockMoviesView).hideLoadingView();
         verify(mockMoviesView).addHeader();
@@ -177,9 +178,9 @@ public class MoviesPresenterTest {
         verify(mockMoviesView).hideErrorView();
         verify(mockMoviesView).showLoadingView();
 
-        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
-        verify(mockMoviesUseCase).getPopularMovies(anyInt(), subscriberArgumentCaptor.capture());
-        subscriberArgumentCaptor.getValue().onNext(moviesPage);
+        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
+        verify(mockMoviesUseCase).getPopularMovies(anyInt(), disposableSingleObserverArgumentCaptor.capture());
+        disposableSingleObserverArgumentCaptor.getValue().onSuccess(moviesPage);
 
         verify(mockMoviesView).hideLoadingView();
         verify(mockMoviesView).addHeader();
@@ -199,9 +200,9 @@ public class MoviesPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMoviesView).showLoadingFooter();
 
-        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
-        verify(mockMoviesUseCase).getPopularMovies(anyInt(), subscriberArgumentCaptor.capture());
-        subscriberArgumentCaptor.getValue().onNext(moviesPage);
+        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
+        verify(mockMoviesUseCase).getPopularMovies(anyInt(), disposableSingleObserverArgumentCaptor.capture());
+        disposableSingleObserverArgumentCaptor.getValue().onSuccess(moviesPage);
 
         verify(mockMoviesView).removeFooter();
         verify(mockMoviesView).addMoviesToAdapter(moviesPage.getMovies());
@@ -219,9 +220,9 @@ public class MoviesPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMoviesView).showLoadingFooter();
 
-        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
-        verify(mockMoviesUseCase).getPopularMovies(anyInt(), subscriberArgumentCaptor.capture());
-        subscriberArgumentCaptor.getValue().onNext(moviesPage);
+        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
+        verify(mockMoviesUseCase).getPopularMovies(anyInt(), disposableSingleObserverArgumentCaptor.capture());
+        disposableSingleObserverArgumentCaptor.getValue().onSuccess(moviesPage);
 
         verify(mockMoviesView).removeFooter();
         verify(mockMoviesView).addMoviesToAdapter(moviesPage.getMovies());

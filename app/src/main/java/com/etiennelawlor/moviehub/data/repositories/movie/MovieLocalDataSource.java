@@ -6,6 +6,7 @@ import com.etiennelawlor.moviehub.data.database.RealmUtility;
 import com.etiennelawlor.moviehub.data.repositories.movie.models.MovieDetailsWrapper;
 import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesPage;
 
+import io.reactivex.Maybe;
 import rx.Observable;
 
 /**
@@ -20,14 +21,13 @@ public class MovieLocalDataSource implements MovieDataSourceContract.LocalDateSo
     // endregion
 
     // region MoviesDataSourceContract.LocalDateSource Methods
-
     @Override
-    public Observable<MoviesPage> getPopularMovies(int currentPage) {
+    public Maybe<MoviesPage> getPopularMovies(int currentPage) {
         MoviesPage moviesPage = RealmUtility.getMoviesPage(currentPage);
-        if(moviesPage == null)
-            return Observable.empty();
+        if (moviesPage == null)
+            return Maybe.empty();
         else
-            return Observable.just(moviesPage);
+            return Maybe.just(moviesPage);
     }
 
     @Override

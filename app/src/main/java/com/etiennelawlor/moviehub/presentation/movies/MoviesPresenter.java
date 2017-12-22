@@ -7,7 +7,7 @@ import com.etiennelawlor.moviehub.util.NetworkUtility;
 
 import java.util.List;
 
-import rx.Subscriber;
+import io.reactivex.observers.DisposableSingleObserver;
 
 /**
  * Created by etiennelawlor on 2/9/17.
@@ -43,32 +43,9 @@ public class MoviesPresenter implements MoviesUiContract.Presenter {
             moviesView.showLoadingFooter();
         }
 
-        moviesUseCase.getPopularMovies(currentPage, new Subscriber<MoviesPage>() {
+        moviesUseCase.getPopularMovies(currentPage, new DisposableSingleObserver<MoviesPage>() {
             @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                throwable.printStackTrace();
-
-                if(currentPage == 1){
-                    moviesView.hideLoadingView();
-
-                    if (NetworkUtility.isKnownException(throwable)) {
-                        moviesView.setErrorText("Can't load data.\nCheck your network connection.");
-                        moviesView.showErrorView();
-                    }
-                } else {
-                    if(NetworkUtility.isKnownException(throwable)){
-                        moviesView.showErrorFooter();
-                    }
-                }
-            }
-
-            @Override
-            public void onNext(MoviesPage moviesPage) {
+            public void onSuccess(MoviesPage moviesPage) {
                 if(moviesPage != null){
                     List<Movie> movies = moviesPage.getMovies();
                     int currentPage = moviesPage.getPageNumber();
@@ -98,6 +75,24 @@ public class MoviesPresenter implements MoviesUiContract.Presenter {
                     }
 
                     moviesView.setMoviesPage(moviesPage);
+                }
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                throwable.printStackTrace();
+
+                if(currentPage == 1){
+                    moviesView.hideLoadingView();
+
+                    if (NetworkUtility.isKnownException(throwable)) {
+                        moviesView.setErrorText("Can't load data.\nCheck your network connection.");
+                        moviesView.showErrorView();
+                    }
+                } else {
+                    if(NetworkUtility.isKnownException(throwable)){
+                        moviesView.showErrorFooter();
+                    }
                 }
             }
         });

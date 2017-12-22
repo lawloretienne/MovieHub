@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import io.reactivex.Single;
 import rx.Observable;
 
 /**
@@ -46,14 +47,14 @@ public class MovieRemoteDataSource implements MovieDataSourceContract.RemoteDate
 
     // region MovieDataSourceContract.RemoteDateSource Methods
     @Override
-    public Observable<MoviesPage> getPopularMovies(final int currentPage) {
+    public Single<MoviesPage> getPopularMovies(final int currentPage) {
         return movieHubService.getPopularMovies(currentPage)
-                .flatMap(moviesEnvelope -> Observable.just(moviesEnvelope.getMovies()))
+                .flatMap(moviesEnvelope -> Single.just(moviesEnvelope.getMovies()))
                 .map(movies -> {
                     boolean isLastPage = movies.size() < PAGE_SIZE ? true : false;
                     Calendar calendar = Calendar.getInstance();
                     calendar.add(Calendar.DATE, SEVEN_DAYS);
-                    return new MoviesPage(movies, currentPage, isLastPage, calendar.getTime() );
+                    return new MoviesPage(movies, currentPage, isLastPage, calendar.getTime());
                 });
     }
 
@@ -70,29 +71,29 @@ public class MovieRemoteDataSource implements MovieDataSourceContract.RemoteDate
                     List<Movie> similarMovies = new ArrayList<>();
                     String rating = "";
 
-                    if(movieCreditsEnvelope!=null){
+                    if (movieCreditsEnvelope != null) {
                         cast = movieCreditsEnvelope.getCast();
                     }
 
-                    if(movieCreditsEnvelope!=null){
+                    if (movieCreditsEnvelope != null) {
                         crew = movieCreditsEnvelope.getCrew();
                     }
 
-                    if(moviesEnvelope!=null){
+                    if (moviesEnvelope != null) {
                         similarMovies = moviesEnvelope.getMovies();
                     }
 
-                    if(movieReleaseDatesEnvelope!=null){
+                    if (movieReleaseDatesEnvelope != null) {
                         List<MovieReleaseDateEnvelope> movieReleaseDateEnvelopes = movieReleaseDatesEnvelope.getMovieReleaseDateEnvelopes();
-                        if(movieReleaseDateEnvelopes != null && movieReleaseDateEnvelopes.size()>0){
-                            for(MovieReleaseDateEnvelope movieReleaseDateEnvelope : movieReleaseDateEnvelopes){
-                                if(movieReleaseDateEnvelope != null){
+                        if (movieReleaseDateEnvelopes != null && movieReleaseDateEnvelopes.size() > 0) {
+                            for (MovieReleaseDateEnvelope movieReleaseDateEnvelope : movieReleaseDateEnvelopes) {
+                                if (movieReleaseDateEnvelope != null) {
                                     String iso31661 = movieReleaseDateEnvelope.getIso31661();
-                                    if(iso31661.equals("US")){
+                                    if (iso31661.equals("US")) {
                                         List<MovieReleaseDate> movieReleaseDates = movieReleaseDateEnvelope.getMovieReleaseDates();
-                                        if(movieReleaseDates != null && movieReleaseDates.size()>0){
-                                            for(MovieReleaseDate movieReleaseDate : movieReleaseDates){
-                                                if(!TextUtils.isEmpty(movieReleaseDate.getCertification())){
+                                        if (movieReleaseDates != null && movieReleaseDates.size() > 0) {
+                                            for (MovieReleaseDate movieReleaseDate : movieReleaseDates) {
+                                                if (!TextUtils.isEmpty(movieReleaseDate.getCertification())) {
                                                     rating = movieReleaseDate.getCertification();
                                                     break;
                                                 }

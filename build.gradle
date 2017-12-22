@@ -50,7 +50,7 @@ ext {
     multidexVersion = '1.0.2'
     // Need to update these next
     rxjavaVersion = '1.1.8' //
-    rxjava2Version = '2.0.1' //
+    rxjava2Version = '2.1.7' //
     rxandroidVersion = '1.2.1' //
     rxjava2RxandroidVersion = '2.0.1' //
     rxbindingVersion = '1.0.1'

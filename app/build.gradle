@@ -108,6 +108,8 @@ dependencies {
     implementation "com.jakewharton.rxbinding:rxbinding:$rootProject.rxbindingVersion" // RxBinding
     implementation "com.jakewharton.rxbinding2:rxbinding:$rootProject.rxbinding2Version" // RxBinding2 only supports RxJava2
 
+    implementation "com.github.akarnokd:rxjava2-interop:0.11.2"
+
     // Dependencies for local unit tests
     testImplementation "junit:junit:$rootProject.junitVersion"
     testImplementation "org.mockito:mockito-all:$rootProject.mockitoVersion"

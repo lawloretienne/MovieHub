@@ -13,6 +13,7 @@ import com.etiennelawlor.moviehub.data.network.response.TelevisionShowContentRat
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCreditsEnvelope;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowsEnvelope;
 
+import io.reactivex.Single;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -26,7 +27,7 @@ public interface MovieHubService {
     String BASE_URL = "https://api.themoviedb.org/3/";
 
     @GET("movie/popular")
-    Observable<MoviesEnvelope> getPopularMovies(@Query("page") int page);
+    Single<MoviesEnvelope> getPopularMovies(@Query("page") int page);
 
     @GET("movie/{movieId}")
     Observable<Movie> getMovie(@Path("movieId") long movieId);

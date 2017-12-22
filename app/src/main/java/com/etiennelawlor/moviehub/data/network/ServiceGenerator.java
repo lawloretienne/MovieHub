@@ -27,7 +27,7 @@ public class ServiceGenerator {
     private static Retrofit.Builder retrofitBuilder
             = new Retrofit.Builder()
             .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-//            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create());
 
     private static OkHttpClient defaultOkHttpClient

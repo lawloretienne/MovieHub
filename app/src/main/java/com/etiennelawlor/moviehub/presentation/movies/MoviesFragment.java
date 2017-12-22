@@ -29,6 +29,7 @@ import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.moviedetails.MovieDetailsActivity;
 import com.etiennelawlor.moviehub.util.FontCache;
 import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
+import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer2;
 
 import java.util.List;
 
@@ -131,7 +132,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
                 new MoviesUseCase(new MovieRepository(
                         new MovieLocalDataSource(getContext()),
                         new MovieRemoteDataSource(getContext())),
-                        new ProductionSchedulerTransformer<MoviesPage>())
+                        new ProductionSchedulerTransformer2<MoviesPage>())
                 );
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
