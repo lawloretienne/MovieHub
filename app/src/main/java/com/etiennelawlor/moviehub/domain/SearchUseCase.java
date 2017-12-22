@@ -3,7 +3,7 @@ package com.etiennelawlor.moviehub.domain;
 import com.etiennelawlor.moviehub.data.repositories.search.SearchDataSourceContract;
 import com.etiennelawlor.moviehub.data.repositories.search.models.SearchWrapper;
 import com.etiennelawlor.moviehub.util.EspressoIdlingResource;
-import com.etiennelawlor.moviehub.util.rxjava.SchedulerTransformer2;
+import com.etiennelawlor.moviehub.util.rxjava.SchedulerTransformer;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -17,13 +17,13 @@ public class SearchUseCase implements SearchDomainContract.UseCase {
 
     // region Member Variables
     private final SearchDataSourceContract.Repository searchRepository;
-    private final SchedulerTransformer2<SearchWrapper> schedulerTransformer;
+    private final SchedulerTransformer<SearchWrapper> schedulerTransformer;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     // endregion
 
     // region Constructors
 
-    public SearchUseCase(SearchDataSourceContract.Repository searchRepository, SchedulerTransformer2<SearchWrapper> schedulerTransformer) {
+    public SearchUseCase(SearchDataSourceContract.Repository searchRepository, SchedulerTransformer<SearchWrapper> schedulerTransformer) {
         this.searchRepository = searchRepository;
         this.schedulerTransformer = schedulerTransformer;
     }

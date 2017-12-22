@@ -66,7 +66,7 @@ import com.etiennelawlor.moviehub.util.DisplayUtility;
 import com.etiennelawlor.moviehub.util.FontCache;
 import com.etiennelawlor.moviehub.util.TrestleUtility;
 import com.etiennelawlor.moviehub.util.ViewUtility;
-import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer2;
+import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -430,7 +430,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
                 new TelevisionShowDetailsUseCase(new TelevisionShowRepository(
                         new TelevisionShowLocalDataSource(getContext()),
                         new TelevisionShowRemoteDataSource(getContext())),
-                        new ProductionSchedulerTransformer2<TelevisionShowDetailsWrapper>())
+                        new ProductionSchedulerTransformer<TelevisionShowDetailsWrapper>())
                 );
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());

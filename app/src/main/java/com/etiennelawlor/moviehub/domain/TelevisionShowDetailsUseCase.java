@@ -3,7 +3,7 @@ package com.etiennelawlor.moviehub.domain;
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowDataSourceContract;
 import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowDetailsWrapper;
 import com.etiennelawlor.moviehub.util.EspressoIdlingResource;
-import com.etiennelawlor.moviehub.util.rxjava.SchedulerTransformer2;
+import com.etiennelawlor.moviehub.util.rxjava.SchedulerTransformer;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -17,12 +17,12 @@ public class TelevisionShowDetailsUseCase implements TelevisionShowDetailsDomain
 
     // region Member Variables
     private final TelevisionShowDataSourceContract.Repository televisionShowRepository;
-    private final SchedulerTransformer2<TelevisionShowDetailsWrapper> schedulerTransformer;
+    private final SchedulerTransformer<TelevisionShowDetailsWrapper> schedulerTransformer;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     // endregion
 
     // region Constructors
-    public TelevisionShowDetailsUseCase(TelevisionShowDataSourceContract.Repository televisionShowRepository, SchedulerTransformer2<TelevisionShowDetailsWrapper> schedulerTransformer) {
+    public TelevisionShowDetailsUseCase(TelevisionShowDataSourceContract.Repository televisionShowRepository, SchedulerTransformer<TelevisionShowDetailsWrapper> schedulerTransformer) {
         this.televisionShowRepository = televisionShowRepository;
         this.schedulerTransformer = schedulerTransformer;
     }

@@ -3,28 +3,28 @@ package com.etiennelawlor.moviehub;
 import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.repositories.search.SearchDataSourceContract;
 import com.etiennelawlor.moviehub.data.repositories.search.models.SearchWrapper;
+import com.etiennelawlor.moviehub.domain.SearchDomainContract;
 import com.etiennelawlor.moviehub.presentation.search.SearchPresenter;
 import com.etiennelawlor.moviehub.presentation.search.SearchUiContract;
-import com.etiennelawlor.moviehub.util.rxjava.TestSchedulerTransformer;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.observers.DisposableSingleObserver;
 import rx.Observable;
 
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by etiennelawlor on 2/9/17.
@@ -38,11 +38,10 @@ public class SearchPresenterTest {
     @Mock
     private SearchUiContract.View mockSearchView;
     @Mock
-    private SearchDataSourceContract.Repository mockSearchRepository;
+    private SearchDomainContract.UseCase mockSearchUseCase;
 
     // Stubs
-    private Observable stub;
-
+    private ArgumentCaptor<DisposableSingleObserver> disposableSingleObserverArgumentCaptor;
     // endregion
 
     // region Member Variables
@@ -57,7 +56,7 @@ public class SearchPresenterTest {
         MockitoAnnotations.initMocks(this);
 
         // Get a reference to the class under test
-        searchPresenter = new SearchPresenter(mockSearchView, mockSearchRepository, new TestSchedulerTransformer<SearchWrapper>());
+        searchPresenter = new SearchPresenter(mockSearchView, mockSearchUseCase);
     }
 
     // region Test Methods
@@ -72,8 +71,6 @@ public class SearchPresenterTest {
         List<TelevisionShow> televisionShows = getListOfTelevisionShows(0);
         List<Person> persons = getListOfPersons(0);
         searchWrapper = new SearchWrapper(query, movies, televisionShows, persons);
-        stub = Observable.<SearchWrapper>error(new IOException());
-        when(mockSearchRepository.getSearch(anyString())).thenReturn(stub);
 
         CharSequence[] queries = {"J", "Je", "Jen", "Jenn", "Jenni", "Jennif", "Jennife", "Jennifer"};
         Observable<CharSequence> searchQueryChangeObservable = Observable.from(queries);
@@ -83,6 +80,10 @@ public class SearchPresenterTest {
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockSearchView, times(queries.length+1)).hideLoadingView();
+
+        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
+        verify(mockSearchUseCase).getSearchResponse(anyString(), disposableSingleObserverArgumentCaptor.capture());
+        disposableSingleObserverArgumentCaptor.getValue().onError(new UnknownHostException());
 
         verify(mockSearchView).showErrorView();
     }
@@ -96,8 +97,6 @@ public class SearchPresenterTest {
         List<TelevisionShow> televisionShows = getListOfTelevisionShows(0);
         List<Person> persons = getListOfPersons(0);
         searchWrapper = new SearchWrapper(query, movies, televisionShows, persons);
-        stub = Observable.just(searchWrapper);
-        when(mockSearchRepository.getSearch(anyString())).thenReturn(stub);
 
         CharSequence[] queries = {"J", "Je", "Jen", "Jenn", "Jenni", "Jennif", "Jennife", "Jennifer"};
         Observable<CharSequence> searchQueryChangeObservable = Observable.from(queries);
@@ -107,6 +106,10 @@ public class SearchPresenterTest {
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockSearchView, times(queries.length+1)).hideLoadingView();
+
+        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
+        verify(mockSearchUseCase).getSearchResponse(anyString(), disposableSingleObserverArgumentCaptor.capture());
+        disposableSingleObserverArgumentCaptor.getValue().onSuccess(searchWrapper);
 
         verify(mockSearchView).clearMoviesAdapter();
         verify(mockSearchView).clearTelevisionShowsAdapter();
@@ -124,7 +127,7 @@ public class SearchPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockSearchView).openMovieDetails(movie);
 
-        verifyZeroInteractions(mockSearchRepository);
+        verifyZeroInteractions(mockSearchUseCase);
     }
 
     @Test
@@ -138,7 +141,7 @@ public class SearchPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockSearchView).openTelevisionShowDetails(televisionShow);
 
-        verifyZeroInteractions(mockSearchRepository);
+        verifyZeroInteractions(mockSearchUseCase);
     }
 
     @Test
@@ -152,7 +155,7 @@ public class SearchPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockSearchView).openPersonDetails(person);
 
-        verifyZeroInteractions(mockSearchRepository);
+        verifyZeroInteractions(mockSearchUseCase);
     }
 
     @Test
@@ -163,7 +166,7 @@ public class SearchPresenterTest {
         searchPresenter.onDestroyView();
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verifyZeroInteractions(mockSearchView);
-        verifyZeroInteractions(mockSearchRepository);
+        verifyZeroInteractions(mockSearchUseCase);
     }
 
     // endregion

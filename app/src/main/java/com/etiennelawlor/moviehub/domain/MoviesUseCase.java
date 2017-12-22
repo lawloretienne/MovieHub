@@ -3,7 +3,7 @@ package com.etiennelawlor.moviehub.domain;
 import com.etiennelawlor.moviehub.data.repositories.movie.MovieDataSourceContract;
 import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesPage;
 import com.etiennelawlor.moviehub.util.EspressoIdlingResource;
-import com.etiennelawlor.moviehub.util.rxjava.SchedulerTransformer2;
+import com.etiennelawlor.moviehub.util.rxjava.SchedulerTransformer;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -17,12 +17,12 @@ public class MoviesUseCase implements MoviesDomainContract.UseCase {
 
     // region Member Variables
     private final MovieDataSourceContract.Repository movieRepository;
-    private final SchedulerTransformer2<MoviesPage> schedulerTransformer;
+    private final SchedulerTransformer<MoviesPage> schedulerTransformer;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     // endregion
 
     // region Constructors
-    public MoviesUseCase(MovieDataSourceContract.Repository movieRepository, SchedulerTransformer2<MoviesPage> schedulerTransformer) {
+    public MoviesUseCase(MovieDataSourceContract.Repository movieRepository, SchedulerTransformer<MoviesPage> schedulerTransformer) {
         this.movieRepository = movieRepository;
         this.schedulerTransformer = schedulerTransformer;
     }

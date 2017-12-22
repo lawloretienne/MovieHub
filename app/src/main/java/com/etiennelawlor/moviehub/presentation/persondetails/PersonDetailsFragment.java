@@ -69,7 +69,7 @@ import com.etiennelawlor.moviehub.util.DisplayUtility;
 import com.etiennelawlor.moviehub.util.FontCache;
 import com.etiennelawlor.moviehub.util.TrestleUtility;
 import com.etiennelawlor.moviehub.util.ViewUtility;
-import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer2;
+import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -451,7 +451,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
                 new PersonDetailsUseCase(new PersonRepository(
                         new PersonLocalDataSource(getContext()),
                         new PersonRemoteDataSource(getContext())),
-                        new ProductionSchedulerTransformer2<PersonDetailsWrapper>())
+                        new ProductionSchedulerTransformer<PersonDetailsWrapper>())
                 );
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());

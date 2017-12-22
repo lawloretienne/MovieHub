@@ -66,7 +66,7 @@ import com.etiennelawlor.moviehub.util.DisplayUtility;
 import com.etiennelawlor.moviehub.util.FontCache;
 import com.etiennelawlor.moviehub.util.TrestleUtility;
 import com.etiennelawlor.moviehub.util.ViewUtility;
-import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer2;
+import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -425,7 +425,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
                 new MovieDetailsUseCase(new MovieRepository(
                         new MovieLocalDataSource(getContext()),
                         new MovieRemoteDataSource(getContext())),
-                        new ProductionSchedulerTransformer2<MovieDetailsWrapper>())
+                        new ProductionSchedulerTransformer<MovieDetailsWrapper>())
                 );
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
