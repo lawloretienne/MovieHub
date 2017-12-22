@@ -3,6 +3,8 @@ package com.etiennelawlor.moviehub.data.repositories.tv;
 import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowDetailsWrapper;
 import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsPage;
 
+import io.reactivex.Maybe;
+import io.reactivex.Single;
 import rx.Observable;
 
 /**
@@ -25,14 +27,14 @@ public class TelevisionShowRepository implements TelevisionShowDataSourceContrac
 
     // region TelevisionShowDataSourceContract.Repository Methods
     @Override
-    public Observable<TelevisionShowsPage> getPopularTelevisionShows(final int currentPage) {
-        Observable<TelevisionShowsPage> local = televisionShowLocalDataSource.getPopularTelevisionShows(currentPage)
+    public Single<TelevisionShowsPage> getPopularTelevisionShows(final int currentPage) {
+        Maybe<TelevisionShowsPage> local = televisionShowLocalDataSource.getPopularTelevisionShows(currentPage)
                 .filter(televisionShowsPage -> !televisionShowsPage.isExpired());
-        Observable<TelevisionShowsPage> remote =
+        Single<TelevisionShowsPage> remote =
                 televisionShowRemoteDataSource.getPopularTelevisionShows(currentPage)
-                        .doOnNext(televisionShowsPage -> televisionShowLocalDataSource.savePopularTelevisionShows(televisionShowsPage));
+                        .doOnSuccess(televisionShowsPage -> televisionShowLocalDataSource.savePopularTelevisionShows(televisionShowsPage));
 
-        return Observable.concat(local, remote).first();
+        return local.switchIfEmpty(remote);
     }
 
     @Override

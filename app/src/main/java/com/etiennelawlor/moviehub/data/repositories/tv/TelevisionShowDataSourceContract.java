@@ -3,6 +3,8 @@ package com.etiennelawlor.moviehub.data.repositories.tv;
 import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowDetailsWrapper;
 import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsPage;
 
+import io.reactivex.Maybe;
+import io.reactivex.Single;
 import rx.Observable;
 
 /**
@@ -12,21 +14,24 @@ import rx.Observable;
 public interface TelevisionShowDataSourceContract {
 
     interface Repository {
-        Observable<TelevisionShowsPage> getPopularTelevisionShows(int currentPage);
+        Single<TelevisionShowsPage> getPopularTelevisionShows(int currentPage);
+
         Observable<TelevisionShowDetailsWrapper> getTelevisionShowDetails(int currentPage);
     }
 
     interface LocalDateSource {
-        Observable<TelevisionShowsPage> getPopularTelevisionShows(int currentPage);
+        Maybe<TelevisionShowsPage> getPopularTelevisionShows(int currentPage);
+
         void savePopularTelevisionShows(TelevisionShowsPage televisionShowsPage);
 
         Observable<TelevisionShowDetailsWrapper> getTelevisionShowDetails(int currentPage);
+
         void saveTelevisionShowDetails(TelevisionShowDetailsWrapper televisionShowDetailsWrapper);
     }
 
     interface RemoteDateSource {
-         Observable<TelevisionShowsPage> getPopularTelevisionShows(int currentPage);
+        Single<TelevisionShowsPage> getPopularTelevisionShows(int currentPage);
 
-         Observable<TelevisionShowDetailsWrapper> getTelevisionShowDetails(int currentPage);
+        Observable<TelevisionShowDetailsWrapper> getTelevisionShowDetails(int currentPage);
     }
 }

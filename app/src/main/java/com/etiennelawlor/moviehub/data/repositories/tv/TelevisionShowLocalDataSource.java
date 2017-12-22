@@ -6,6 +6,7 @@ import com.etiennelawlor.moviehub.data.database.RealmUtility;
 import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowDetailsWrapper;
 import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsPage;
 
+import io.reactivex.Maybe;
 import rx.Observable;
 
 /**
@@ -22,12 +23,12 @@ public class TelevisionShowLocalDataSource implements TelevisionShowDataSourceCo
     // region TelevisionShowDataSourceContract.LocalDateSource Methods
 
     @Override
-    public Observable<TelevisionShowsPage> getPopularTelevisionShows(int currentPage) {
+    public Maybe<TelevisionShowsPage> getPopularTelevisionShows(int currentPage) {
         TelevisionShowsPage televisionShowsPage = RealmUtility.getTelevisionShowsPage(currentPage);
         if(televisionShowsPage == null)
-            return Observable.empty();
+            return Maybe.empty();
         else
-            return Observable.just(televisionShowsPage);
+            return Maybe.just(televisionShowsPage);
     }
 
     @Override

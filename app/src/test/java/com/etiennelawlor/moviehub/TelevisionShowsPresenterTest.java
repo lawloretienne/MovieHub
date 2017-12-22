@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import rx.Subscriber;
+import io.reactivex.observers.DisposableSingleObserver;
 
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
@@ -39,7 +39,7 @@ public class TelevisionShowsPresenterTest {
     private TelevisionShowsDomainContract.UseCase mockTelevisionShowsUseCase;
 
     // Stubs
-    private ArgumentCaptor<Subscriber> subscriberArgumentCaptor;
+    private ArgumentCaptor<DisposableSingleObserver> disposableSingleObserverArgumentCaptor;
     // endregion
 
     // region Member Variables
@@ -72,9 +72,9 @@ public class TelevisionShowsPresenterTest {
         verify(mockTelevisionShowsView).hideErrorView();
         verify(mockTelevisionShowsView).showLoadingView();
 
-        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
-        verify(mockTelevisionShowsUseCase).getPopularTelevisionShows(anyInt(), subscriberArgumentCaptor.capture());
-        subscriberArgumentCaptor.getValue().onError(new UnknownHostException());
+        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
+        verify(mockTelevisionShowsUseCase).getPopularTelevisionShows(anyInt(), disposableSingleObserverArgumentCaptor.capture());
+        disposableSingleObserverArgumentCaptor.getValue().onError(new UnknownHostException());
 
         verify(mockTelevisionShowsView).hideLoadingView();
         verify(mockTelevisionShowsView).setErrorText(anyString());
@@ -92,9 +92,9 @@ public class TelevisionShowsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockTelevisionShowsView).showLoadingFooter();
 
-        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
-        verify(mockTelevisionShowsUseCase).getPopularTelevisionShows(anyInt(), subscriberArgumentCaptor.capture());
-        subscriberArgumentCaptor.getValue().onError(new UnknownHostException());
+        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
+        verify(mockTelevisionShowsUseCase).getPopularTelevisionShows(anyInt(), disposableSingleObserverArgumentCaptor.capture());
+        disposableSingleObserverArgumentCaptor.getValue().onError(new UnknownHostException());
 
         verify(mockTelevisionShowsView).showErrorFooter();
     }
@@ -112,9 +112,9 @@ public class TelevisionShowsPresenterTest {
         verify(mockTelevisionShowsView).hideErrorView();
         verify(mockTelevisionShowsView).showLoadingView();
 
-        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
-        verify(mockTelevisionShowsUseCase).getPopularTelevisionShows(anyInt(), subscriberArgumentCaptor.capture());
-        subscriberArgumentCaptor.getValue().onNext(televisionShowsPage);
+        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
+        verify(mockTelevisionShowsUseCase).getPopularTelevisionShows(anyInt(), disposableSingleObserverArgumentCaptor.capture());
+        disposableSingleObserverArgumentCaptor.getValue().onSuccess(televisionShowsPage);
 
         verify(mockTelevisionShowsView).hideLoadingView();
         verify(mockTelevisionShowsView).showEmptyView();
@@ -132,9 +132,9 @@ public class TelevisionShowsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockTelevisionShowsView).showLoadingFooter();
 
-        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
-        verify(mockTelevisionShowsUseCase).getPopularTelevisionShows(anyInt(), subscriberArgumentCaptor.capture());
-        subscriberArgumentCaptor.getValue().onNext(televisionShowsPage);
+        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
+        verify(mockTelevisionShowsUseCase).getPopularTelevisionShows(anyInt(), disposableSingleObserverArgumentCaptor.capture());
+        disposableSingleObserverArgumentCaptor.getValue().onSuccess(televisionShowsPage);
 
         verify(mockTelevisionShowsView).removeFooter();
         verify(mockTelevisionShowsView).setTelevisionShowsPage(televisionShowsPage);
@@ -153,9 +153,9 @@ public class TelevisionShowsPresenterTest {
         verify(mockTelevisionShowsView).hideErrorView();
         verify(mockTelevisionShowsView).showLoadingView();
 
-        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
-        verify(mockTelevisionShowsUseCase).getPopularTelevisionShows(anyInt(), subscriberArgumentCaptor.capture());
-        subscriberArgumentCaptor.getValue().onNext(televisionShowsPage);
+        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
+        verify(mockTelevisionShowsUseCase).getPopularTelevisionShows(anyInt(), disposableSingleObserverArgumentCaptor.capture());
+        disposableSingleObserverArgumentCaptor.getValue().onSuccess(televisionShowsPage);
 
         verify(mockTelevisionShowsView).hideLoadingView();
         verify(mockTelevisionShowsView).addHeader();
@@ -176,9 +176,9 @@ public class TelevisionShowsPresenterTest {
         verify(mockTelevisionShowsView).hideErrorView();
         verify(mockTelevisionShowsView).showLoadingView();
 
-        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
-        verify(mockTelevisionShowsUseCase).getPopularTelevisionShows(anyInt(), subscriberArgumentCaptor.capture());
-        subscriberArgumentCaptor.getValue().onNext(televisionShowsPage);
+        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
+        verify(mockTelevisionShowsUseCase).getPopularTelevisionShows(anyInt(), disposableSingleObserverArgumentCaptor.capture());
+        disposableSingleObserverArgumentCaptor.getValue().onSuccess(televisionShowsPage);
 
         verify(mockTelevisionShowsView).hideLoadingView();
         verify(mockTelevisionShowsView).addHeader();
@@ -198,9 +198,9 @@ public class TelevisionShowsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockTelevisionShowsView).showLoadingFooter();
 
-        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
-        verify(mockTelevisionShowsUseCase).getPopularTelevisionShows(anyInt(), subscriberArgumentCaptor.capture());
-        subscriberArgumentCaptor.getValue().onNext(televisionShowsPage);
+        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
+        verify(mockTelevisionShowsUseCase).getPopularTelevisionShows(anyInt(), disposableSingleObserverArgumentCaptor.capture());
+        disposableSingleObserverArgumentCaptor.getValue().onSuccess(televisionShowsPage);
 
         verify(mockTelevisionShowsView).removeFooter();
         verify(mockTelevisionShowsView).addTelevisionShowsToAdapter(televisionShowsPage.getTelevisionShows());
@@ -218,9 +218,9 @@ public class TelevisionShowsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockTelevisionShowsView).showLoadingFooter();
 
-        subscriberArgumentCaptor = ArgumentCaptor.forClass(Subscriber.class);
-        verify(mockTelevisionShowsUseCase).getPopularTelevisionShows(anyInt(), subscriberArgumentCaptor.capture());
-        subscriberArgumentCaptor.getValue().onNext(televisionShowsPage);
+        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
+        verify(mockTelevisionShowsUseCase).getPopularTelevisionShows(anyInt(), disposableSingleObserverArgumentCaptor.capture());
+        disposableSingleObserverArgumentCaptor.getValue().onSuccess(televisionShowsPage);
 
         verify(mockTelevisionShowsView).removeFooter();
         verify(mockTelevisionShowsView).addTelevisionShowsToAdapter(televisionShowsPage.getTelevisionShows());

@@ -29,6 +29,7 @@ import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.televisionshowdetails.TelevisionShowDetailsActivity;
 import com.etiennelawlor.moviehub.util.FontCache;
 import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
+import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer2;
 
 import java.util.List;
 
@@ -132,7 +133,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
                 new TelevisionShowsUseCase( new TelevisionShowRepository(
                         new TelevisionShowLocalDataSource(getContext()),
                         new TelevisionShowRemoteDataSource(getContext())),
-                        new ProductionSchedulerTransformer<TelevisionShowsPage>())
+                        new ProductionSchedulerTransformer2<TelevisionShowsPage>())
                 );
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());

@@ -42,7 +42,7 @@ public interface MovieHubService {
     Observable<MovieReleaseDatesEnvelope> getMovieReleaseDates(@Path("movieId") long movieId);
 
     @GET("tv/popular")
-    Observable<TelevisionShowsEnvelope> getPopularTelevisionShows(@Query("page") int page);
+    Single<TelevisionShowsEnvelope> getPopularTelevisionShows(@Query("page") int page);
 
     @GET("tv/{tvId}")
     Observable<TelevisionShow> getTelevisionShow(@Path("tvId") long tvId);

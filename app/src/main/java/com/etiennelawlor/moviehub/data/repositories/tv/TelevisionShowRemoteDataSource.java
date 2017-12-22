@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import io.reactivex.Single;
 import rx.Observable;
 
 /**
@@ -44,9 +45,9 @@ public class TelevisionShowRemoteDataSource implements TelevisionShowDataSourceC
 
     // region TelevisionShowDataSourceContract.RemoteDateSource Methods
     @Override
-    public Observable<TelevisionShowsPage> getPopularTelevisionShows(int currentPage) {
+    public Single<TelevisionShowsPage> getPopularTelevisionShows(int currentPage) {
         return movieHubService.getPopularTelevisionShows(currentPage)
-                .flatMap(televisionShowsEnvelope -> Observable.just(televisionShowsEnvelope.getTelevisionShows()))
+                .flatMap(televisionShowsEnvelope -> Single.just(televisionShowsEnvelope.getTelevisionShows()))
                 .map(televisionShows -> {
                     boolean isLastPage = televisionShows.size() < PAGE_SIZE ? true : false;
                     Calendar calendar = Calendar.getInstance();

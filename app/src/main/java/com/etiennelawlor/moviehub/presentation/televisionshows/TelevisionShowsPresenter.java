@@ -7,6 +7,7 @@ import com.etiennelawlor.moviehub.util.NetworkUtility;
 
 import java.util.List;
 
+import io.reactivex.observers.DisposableSingleObserver;
 import rx.Subscriber;
 
 /**
@@ -44,32 +45,9 @@ public class TelevisionShowsPresenter implements TelevisionShowsUiContract.Prese
             televisionShowsView.showLoadingFooter();
         }
 
-        televisionShowsUseCase.getPopularTelevisionShows(currentPage, new Subscriber<TelevisionShowsPage>() {
+        televisionShowsUseCase.getPopularTelevisionShows(currentPage, new DisposableSingleObserver<TelevisionShowsPage>() {
             @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                throwable.printStackTrace();
-
-                if(currentPage == 1){
-                    televisionShowsView.hideLoadingView();
-
-                    if (NetworkUtility.isKnownException(throwable)) {
-                        televisionShowsView.setErrorText("Can't load data.\nCheck your network connection.");
-                        televisionShowsView.showErrorView();
-                    }
-                } else {
-                    if(NetworkUtility.isKnownException(throwable)){
-                        televisionShowsView.showErrorFooter();
-                    }
-                }
-            }
-
-            @Override
-            public void onNext(TelevisionShowsPage televisionShowsPage) {
+            public void onSuccess(TelevisionShowsPage televisionShowsPage) {
                 if(televisionShowsPage != null){
                     List<TelevisionShow> televisionShows = televisionShowsPage.getTelevisionShows();
                     int currentPage = televisionShowsPage.getPageNumber();
@@ -99,6 +77,24 @@ public class TelevisionShowsPresenter implements TelevisionShowsUiContract.Prese
                     }
 
                     televisionShowsView.setTelevisionShowsPage(televisionShowsPage);
+                }
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                throwable.printStackTrace();
+
+                if(currentPage == 1){
+                    televisionShowsView.hideLoadingView();
+
+                    if (NetworkUtility.isKnownException(throwable)) {
+                        televisionShowsView.setErrorText("Can't load data.\nCheck your network connection.");
+                        televisionShowsView.showErrorView();
+                    }
+                } else {
+                    if(NetworkUtility.isKnownException(throwable)){
+                        televisionShowsView.showErrorFooter();
+                    }
                 }
             }
         });
