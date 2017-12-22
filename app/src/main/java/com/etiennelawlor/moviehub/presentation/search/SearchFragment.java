@@ -46,6 +46,7 @@ import com.etiennelawlor.moviehub.presentation.televisionshowdetails.TelevisionS
 import com.etiennelawlor.moviehub.util.DisplayUtility;
 import com.etiennelawlor.moviehub.util.FontCache;
 import com.etiennelawlor.moviehub.util.TrestleUtility;
+import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerProvider;
 import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 import com.jakewharton.rxbinding2.InitialValueObservable;
 import com.jakewharton.rxbinding2.widget.RxTextView;
@@ -234,7 +235,8 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
                 new SearchUseCase(new SearchRepository(
                         new SearchLocalDataSource(getContext()),
                         new SearchRemoteDataSource(getContext())),
-                new ProductionSchedulerTransformer<SearchWrapper>())
+                new ProductionSchedulerTransformer<SearchWrapper>()),
+                new ProductionSchedulerProvider()
         );
 
         setHasOptionsMenu(true);

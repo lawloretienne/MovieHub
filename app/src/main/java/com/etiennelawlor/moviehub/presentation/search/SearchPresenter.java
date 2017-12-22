@@ -6,7 +6,7 @@ import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.repositories.search.models.SearchWrapper;
 import com.etiennelawlor.moviehub.domain.SearchDomainContract;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
-import com.jakewharton.rxbinding2.InitialValueObservable;
+import com.etiennelawlor.moviehub.util.rxjava.SchedulerProvider;
 
 import java.util.concurrent.TimeUnit;
 
@@ -16,6 +16,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by etiennelawlor on 2/9/17.
@@ -26,13 +27,15 @@ public class SearchPresenter implements SearchUiContract.Presenter {
     // region Member Variables
     private final SearchUiContract.View searchView;
     private final SearchDomainContract.UseCase searchUseCase;
+    private final SchedulerProvider schedulerProvider;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     // endregion
 
     // region Constructors
-    public SearchPresenter(SearchUiContract.View searchView, SearchDomainContract.UseCase searchUseCase) {
+    public SearchPresenter(SearchUiContract.View searchView, SearchDomainContract.UseCase searchUseCase, SchedulerProvider schedulerProvider) {
         this.searchView = searchView;
         this.searchUseCase = searchUseCase;
+        this.schedulerProvider = schedulerProvider;
     }
     // endregion
 
@@ -45,11 +48,11 @@ public class SearchPresenter implements SearchUiContract.Presenter {
     }
 
     @Override
-    public void onLoadSearch(InitialValueObservable<CharSequence> searchQueryChangeObservable) {
+    public void onLoadSearch(Observable<CharSequence> searchQueryChangeObservable) {
         Disposable disposable = searchQueryChangeObservable
                 .doOnNext(charSequence -> searchView.hideLoadingView())
                 .debounce(400, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(schedulerProvider.ui())
                 .filter(charSequence -> {
                     if(isEmpty(charSequence)){
                         searchView.hideLoadingView();

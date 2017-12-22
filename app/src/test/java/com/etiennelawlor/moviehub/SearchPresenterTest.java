@@ -7,6 +7,7 @@ import com.etiennelawlor.moviehub.data.repositories.search.models.SearchWrapper;
 import com.etiennelawlor.moviehub.domain.SearchDomainContract;
 import com.etiennelawlor.moviehub.presentation.search.SearchPresenter;
 import com.etiennelawlor.moviehub.presentation.search.SearchUiContract;
+import com.etiennelawlor.moviehub.util.rxjava.TestSchedulerProvider;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,8 +19,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
 import io.reactivex.observers.DisposableSingleObserver;
-import rx.Observable;
 
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
@@ -56,7 +57,7 @@ public class SearchPresenterTest {
         MockitoAnnotations.initMocks(this);
 
         // Get a reference to the class under test
-        searchPresenter = new SearchPresenter(mockSearchView, mockSearchUseCase);
+        searchPresenter = new SearchPresenter(mockSearchView, mockSearchUseCase, new TestSchedulerProvider());
     }
 
     // region Test Methods
@@ -73,13 +74,13 @@ public class SearchPresenterTest {
         searchWrapper = new SearchWrapper(query, movies, televisionShows, persons);
 
         CharSequence[] queries = {"J", "Je", "Jen", "Jenn", "Jenni", "Jennif", "Jennife", "Jennifer"};
-        Observable<CharSequence> searchQueryChangeObservable = Observable.from(queries);
+        Observable<CharSequence> searchQueriesObservable = Observable.fromArray(queries);
 
         // 2. (When) Then perform one or more actions
-        searchPresenter.onLoadSearch(searchQueryChangeObservable);
+        searchPresenter.onLoadSearch(searchQueriesObservable);
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-        verify(mockSearchView, times(queries.length+1)).hideLoadingView();
+        verify(mockSearchView, times(queries.length)).hideLoadingView();
 
         disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
         verify(mockSearchUseCase).getSearchResponse(anyString(), disposableSingleObserverArgumentCaptor.capture());
@@ -99,13 +100,13 @@ public class SearchPresenterTest {
         searchWrapper = new SearchWrapper(query, movies, televisionShows, persons);
 
         CharSequence[] queries = {"J", "Je", "Jen", "Jenn", "Jenni", "Jennif", "Jennife", "Jennifer"};
-        Observable<CharSequence> searchQueryChangeObservable = Observable.from(queries);
+        Observable<CharSequence> searchQueriesObservable = Observable.fromArray(queries);
 
         // 2. (When) Then perform one or more actions
-        searchPresenter.onLoadSearch(searchQueryChangeObservable);
+        searchPresenter.onLoadSearch(searchQueriesObservable);
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-        verify(mockSearchView, times(queries.length+1)).hideLoadingView();
+        verify(mockSearchView, times(queries.length)).hideLoadingView();
 
         disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
         verify(mockSearchUseCase).getSearchResponse(anyString(), disposableSingleObserverArgumentCaptor.capture());
