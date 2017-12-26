@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.android.AndroidInjection;
 import io.reactivex.Single;
 
 /**
@@ -31,16 +34,21 @@ public class MovieRemoteDataSource implements MovieDataSourceContract.RemoteDate
     // endregion
 
     // region Member Variables
-    private MovieHubService movieHubService;
+//    private MovieHubService movieHubService;
+
+    @Inject MovieHubService movieHubService;
     // endregion
 
     // region Constructors
     public MovieRemoteDataSource(Context context) {
-        movieHubService = ServiceGenerator.createService(
-                MovieHubService.class,
-                MovieHubService.BASE_URL,
-                new AuthorizedNetworkInterceptor(context));
+//        movieHubService = ServiceGenerator.createService(
+//                MovieHubService.class,
+//                MovieHubService.BASE_URL,
+//                new AuthorizedNetworkInterceptor(context));
 //        MovieHubApplication.getInstance().getApplicationContext();
+
+//        AndroidInjection.inject(this);
+
     }
     // endregion
 

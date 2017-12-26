@@ -6,6 +6,12 @@ import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 
+import com.etiennelawlor.moviehub.di.component.ApplicationComponent;
+import com.etiennelawlor.moviehub.di.component.DaggerApplicationComponent;
+import com.etiennelawlor.moviehub.di.module.ApplicationModule;
+import com.etiennelawlor.moviehub.di.module.FragmentModule;
+import com.etiennelawlor.moviehub.di.module.MoviesModule;
+import com.etiennelawlor.moviehub.di.module.NetworkModule;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
@@ -30,6 +36,7 @@ public class MovieHubApplication extends Application {
 
     // region Member Variables
     private RefWatcher refWatcher;
+    private ApplicationComponent component;
     // endregion
 
     // region Lifecycle Methods
@@ -42,6 +49,12 @@ public class MovieHubApplication extends Application {
         initializeRealm();
 
         currentApplication = this;
+
+        component = DaggerApplicationComponent.builder()
+                    .applicationModule(new ApplicationModule(this))
+                    .moviesModule(new MoviesModule())
+                    .networkModule(new NetworkModule())
+                    .build();
     }
     // endregion
 
@@ -52,6 +65,10 @@ public class MovieHubApplication extends Application {
     }
 
     // region Helper Methods
+    public ApplicationComponent getComponent() {
+        return component;
+    }
+
     public static MovieHubApplication getInstance() {
         return currentApplication;
     }

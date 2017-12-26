@@ -1,0 +1,68 @@
+{
+  "adult": false,
+  "backdrop_path": "/5Iw7zQTHVRBOYpA0V6z0yypOPZh.jpg",
+  "belongs_to_collection": {
+    "id": 10,
+    "name": "Star Wars Collection",
+    "poster_path": "/ghd5zOQnDaDW1mxO7R5fXXpZMu.jpg",
+    "backdrop_path": "/d8duYyyC9J5T825Hg7grmaabfxQ.jpg"
+  },
+  "budget": 200000000,
+  "genres": [
+    {
+      "id": 28,
+      "name": "Action"
+    },
+    {
+      "id": 12,
+      "name": "Adventure"
+    },
+    {
+      "id": 14,
+      "name": "Fantasy"
+    },
+    {
+      "id": 878,
+      "name": "Science Fiction"
+    }
+  ],
+  "homepage": "http://www.starwars.com",
+  "id": 181808,
+  "imdb_id": "tt2527336",
+  "original_language": "en",
+  "original_title": "Star Wars: The Last Jedi",
+  "overview": "Rey develops her newly discovered abilities with the guidance of Luke Skywalker, who is unsettled by the strength of her powers. Meanwhile, the Resistance prepares to do battle with the First Order.",
+  "popularity": 764.602056,
+  "poster_path": "/xGWVjewoXnJhvxKW619cMzppJDQ.jpg",
+  "production_companies": [
+    {
+      "name": "Lucasfilm",
+      "id": 1
+    },
+    {
+      "name": "Walt Disney Pictures",
+      "id": 2
+    }
+  ],
+  "production_countries": [
+    {
+      "iso_3166_1": "US",
+      "name": "United States of America"
+    }
+  ],
+  "release_date": "2017-12-13",
+  "revenue": 745000000,
+  "runtime": 152,
+  "spoken_languages": [
+    {
+      "iso_639_1": "en",
+      "name": "English"
+    }
+  ],
+  "status": "Released",
+  "tagline": "The Saga Continues",
+  "title": "Star Wars: The Last Jedi",
+  "video": false,
+  "vote_average": 7.4,
+  "vote_count": 1561
+}

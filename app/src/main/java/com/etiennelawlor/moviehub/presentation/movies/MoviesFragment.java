@@ -17,20 +17,19 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.data.network.response.Movie;
-import com.etiennelawlor.moviehub.data.repositories.movie.MovieLocalDataSource;
-import com.etiennelawlor.moviehub.data.repositories.movie.MovieRemoteDataSource;
-import com.etiennelawlor.moviehub.data.repositories.movie.MovieRepository;
 import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesPage;
-import com.etiennelawlor.moviehub.domain.MoviesUseCase;
+import com.etiennelawlor.moviehub.di.module.FragmentModule;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.moviedetails.MovieDetailsActivity;
 import com.etiennelawlor.moviehub.util.FontCache;
-import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -61,6 +60,9 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     LinearLayout emptyLinearLayout;
 
     private View selectedMovieView;
+
+    @Inject
+    MoviesPresenter moviesPresenter;
     // endregion
 
     // region Member Variables
@@ -68,7 +70,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     private Typeface font;
     private Unbinder unbinder;
     private StaggeredGridLayoutManager layoutManager;
-    private MoviesUiContract.Presenter moviesPresenter;
+//    private MoviesUiContract.Presenter moviesPresenter;
     private MoviesPage moviesPage;
     private boolean isLoading = false;
     // endregion
@@ -126,13 +128,20 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        moviesPresenter = new MoviesPresenter(
-                this,
-                new MoviesUseCase(new MovieRepository(
-                        new MovieLocalDataSource(getContext()),
-                        new MovieRemoteDataSource(getContext())),
-                        new ProductionSchedulerTransformer<MoviesPage>())
-                );
+//        ((MovieHubApplication)getActivity().getApplication()).getComponent().inject(this);
+
+        DaggerFragmentComponent.builder()
+                .fragmentModule(new FragmentModule(this))
+                .build()
+                .inject(this);
+
+//        moviesPresenter = new MoviesPresenter(
+//                this,
+//                new MoviesUseCase(new MovieRepository(
+//                        new MovieLocalDataSource(getContext()),
+//                        new MovieRemoteDataSource(getContext())),
+//                        new ProductionSchedulerTransformer<MoviesPage>())
+//                );
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
     }

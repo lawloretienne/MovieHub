@@ -92,6 +92,7 @@ ext {
     rulesVersion = '1.0.1'
     espressoVersion = '3.0.1'
     supportAnnotations = '24.2.0'
+    mockwebserver = '3.9.1'
 }
 
 /*
@@ -129,6 +130,14 @@ dependencies {
 
     implementation "com.android.support:multidex:$multidexVersion" //
 
+    // Dagger
+    implementation 'com.google.dagger:dagger:2.14.1'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.14.1'
+    implementation 'com.google.dagger:dagger-android:2.14.1'
+    annotationProcessor 'com.google.dagger:dagger-android-processor:2.14.1'
+    implementation 'com.google.dagger:dagger-android-support:2.14.1'
+    provided 'javax.annotation:jsr250-api:1.0'
+
     implementation "io.reactivex.rxjava2:rxjava:$rxjava2Version" // RxJava
     implementation "io.reactivex.rxjava2:rxandroid:$rxjava2RxandroidVersion" // RxAndroid providing Android Scheduler
     implementation "com.jakewharton.rxbinding2:rxbinding:$rxbinding2Version"
@@ -160,6 +169,8 @@ dependencies {
 
     // UI testing with UI Automator
 //    androidTestImplementation 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
+
+    testImplementation "com.squareup.okhttp3:mockwebserver:$mockwebserver"
 }
 
 /*
