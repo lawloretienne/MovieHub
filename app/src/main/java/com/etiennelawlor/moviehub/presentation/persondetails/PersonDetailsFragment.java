@@ -45,6 +45,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.Person;
@@ -52,11 +53,8 @@ import com.etiennelawlor.moviehub.data.network.response.PersonCredit;
 import com.etiennelawlor.moviehub.data.network.response.ProfileImage;
 import com.etiennelawlor.moviehub.data.network.response.ProfileImages;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.repositories.person.PersonLocalDataSource;
-import com.etiennelawlor.moviehub.data.repositories.person.PersonRemoteDataSource;
-import com.etiennelawlor.moviehub.data.repositories.person.PersonRepository;
 import com.etiennelawlor.moviehub.data.repositories.person.models.PersonDetailsWrapper;
-import com.etiennelawlor.moviehub.domain.PersonDetailsUseCase;
+import com.etiennelawlor.moviehub.di.module.PersonDetailsModule;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.common.GravitySnapHelper;
@@ -69,7 +67,6 @@ import com.etiennelawlor.moviehub.util.DisplayUtility;
 import com.etiennelawlor.moviehub.util.FontCache;
 import com.etiennelawlor.moviehub.util.TrestleUtility;
 import com.etiennelawlor.moviehub.util.ViewUtility;
-import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -77,6 +74,8 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -155,9 +154,13 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     private PersonCreditsAdapter castAdapter;
     private PersonCreditsAdapter crewAdapter;
     private Transition sharedElementEnterTransition;
-    private PersonDetailsPresenter personDetailsPresenter;
     private PersonDetailsWrapper personDetailsWrapper;
     private final Handler handler = new Handler();
+    // endregion
+
+    // region Injected Variables
+    @Inject
+    PersonDetailsPresenter personDetailsPresenter;
     // endregion
 
     // region Listeners
@@ -446,13 +449,10 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
 
         getActivity().supportPostponeEnterTransition();
 
-        personDetailsPresenter = new PersonDetailsPresenter(
-                this,
-                new PersonDetailsUseCase(new PersonRepository(
-                        new PersonLocalDataSource(),
-                        new PersonRemoteDataSource()),
-                        new ProductionSchedulerTransformer<PersonDetailsWrapper>())
-                );
+        ((MovieHubApplication)getActivity().getApplication())
+                .getComponent()
+                .plus(new PersonDetailsModule(this))
+                .inject(this);
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
 

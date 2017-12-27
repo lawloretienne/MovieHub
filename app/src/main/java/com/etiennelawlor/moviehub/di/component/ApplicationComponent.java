@@ -5,6 +5,7 @@ import com.etiennelawlor.moviehub.di.module.ApplicationModule;
 import com.etiennelawlor.moviehub.di.module.MovieDetailsModule;
 import com.etiennelawlor.moviehub.di.module.MoviesModule;
 import com.etiennelawlor.moviehub.di.module.NetworkModule;
+import com.etiennelawlor.moviehub.di.module.PersonDetailsModule;
 import com.etiennelawlor.moviehub.di.module.PersonsModule;
 import com.etiennelawlor.moviehub.di.module.SearchModule;
 import com.etiennelawlor.moviehub.di.module.TelevisionShowDetailsModule;
@@ -29,6 +30,7 @@ public interface ApplicationComponent {
     TelevisionShowsComponent plus(TelevisionShowsModule televisionShowsModule);
     TelevisionShowDetailsComponent plus(TelevisionShowDetailsModule televisionShowDetailsModule);
     PersonsComponent plus(PersonsModule personsModule);
+    PersonDetailsComponent plus(PersonDetailsModule personDetailsModule);
     SearchComponent plus(SearchModule searchModule);
 
 }
