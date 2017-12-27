@@ -2,6 +2,7 @@ package com.etiennelawlor.moviehub.di.component;
 
 import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.di.module.ApplicationModule;
+import com.etiennelawlor.moviehub.di.module.MovieDetailsModule;
 import com.etiennelawlor.moviehub.di.module.MoviesModule;
 import com.etiennelawlor.moviehub.di.module.NetworkModule;
 import com.etiennelawlor.moviehub.di.module.PersonsModule;
@@ -23,6 +24,7 @@ public interface ApplicationComponent {
 
     NetworkComponent plus(NetworkModule networkModule);
     MoviesComponent plus(MoviesModule moviesModule);
+    MovieDetailsComponent plus(MovieDetailsModule movieDetailsModule);
     TelevisionShowsComponent plus(TelevisionShowsModule televisionShowsModule);
     PersonsComponent plus(PersonsModule personsModule);
     SearchComponent plus(SearchModule searchModule);

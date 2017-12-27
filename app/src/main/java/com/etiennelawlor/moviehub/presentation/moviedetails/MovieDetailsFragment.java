@@ -45,16 +45,14 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.data.network.response.Genre;
 import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.MovieCredit;
 import com.etiennelawlor.moviehub.data.network.response.Person;
-import com.etiennelawlor.moviehub.data.repositories.movie.MovieLocalDataSource;
-import com.etiennelawlor.moviehub.data.repositories.movie.MovieRemoteDataSource;
-import com.etiennelawlor.moviehub.data.repositories.movie.MovieRepository;
 import com.etiennelawlor.moviehub.data.repositories.movie.models.MovieDetailsWrapper;
-import com.etiennelawlor.moviehub.domain.MovieDetailsUseCase;
+import com.etiennelawlor.moviehub.di.module.MovieDetailsModule;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.common.GravitySnapHelper;
@@ -66,7 +64,6 @@ import com.etiennelawlor.moviehub.util.DisplayUtility;
 import com.etiennelawlor.moviehub.util.FontCache;
 import com.etiennelawlor.moviehub.util.TrestleUtility;
 import com.etiennelawlor.moviehub.util.ViewUtility;
-import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -76,6 +73,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -164,8 +163,12 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
     private MovieCreditsAdapter crewAdapter;
     private Transition sharedElementEnterTransition;
     private MovieDetailsWrapper movieDetailsWrapper;
-    private MovieDetailsUiContract.Presenter movieDetailsPresenter;
     private final Handler handler = new Handler();
+    // endregion
+
+    // region Injected Variables
+    @Inject
+    MovieDetailsPresenter movieDetailsPresenter;
     // endregion
 
     // region Listeners
@@ -420,13 +423,10 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
 
         getActivity().supportPostponeEnterTransition();
 
-        movieDetailsPresenter = new MovieDetailsPresenter(
-                this,
-                new MovieDetailsUseCase(new MovieRepository(
-                        new MovieLocalDataSource(),
-                        new MovieRemoteDataSource()),
-                        new ProductionSchedulerTransformer<MovieDetailsWrapper>())
-                );
+        ((MovieHubApplication)getActivity().getApplication())
+                .getComponent()
+                .plus(new MovieDetailsModule(this))
+                .inject(this);
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
 
