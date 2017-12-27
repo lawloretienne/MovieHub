@@ -17,20 +17,26 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowLocalDataSource;
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowRemoteDataSource;
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowRepository;
 import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsPage;
+import com.etiennelawlor.moviehub.di.module.MoviesModule;
+import com.etiennelawlor.moviehub.di.module.TelevisionShowsModule;
 import com.etiennelawlor.moviehub.domain.TelevisionShowsUseCase;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
+import com.etiennelawlor.moviehub.presentation.movies.MoviesPresenter;
 import com.etiennelawlor.moviehub.presentation.televisionshowdetails.TelevisionShowDetailsActivity;
 import com.etiennelawlor.moviehub.util.FontCache;
 import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -70,7 +76,11 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
     private StaggeredGridLayoutManager layoutManager;
     private boolean isLoading = false;
     private TelevisionShowsPage televisionShowsPage;
-    private TelevisionShowsUiContract.Presenter televisionShowsPresenter;
+    // endregion
+
+    // region Injected Variables
+    @Inject
+    TelevisionShowsPresenter televisionShowsPresenter;
     // endregion
 
     // region Listeners
@@ -127,13 +137,10 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        televisionShowsPresenter = new TelevisionShowsPresenter(
-                this,
-                new TelevisionShowsUseCase( new TelevisionShowRepository(
-                        new TelevisionShowLocalDataSource(getContext()),
-                        new TelevisionShowRemoteDataSource(getContext())),
-                        new ProductionSchedulerTransformer<TelevisionShowsPage>())
-                );
+        ((MovieHubApplication)getActivity().getApplication())
+                .getComponent()
+                .plus(new TelevisionShowsModule(this))
+                .inject(this);
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
     }

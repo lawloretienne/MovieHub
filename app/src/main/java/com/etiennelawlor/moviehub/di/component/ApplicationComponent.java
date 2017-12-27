@@ -4,6 +4,7 @@ import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.di.module.ApplicationModule;
 import com.etiennelawlor.moviehub.di.module.MoviesModule;
 import com.etiennelawlor.moviehub.di.module.NetworkModule;
+import com.etiennelawlor.moviehub.di.module.TelevisionShowsModule;
 
 import javax.inject.Singleton;
 
@@ -20,4 +21,6 @@ public interface ApplicationComponent {
 
     NetworkComponent plus(NetworkModule networkModule);
     MoviesComponent plus(MoviesModule moviesModule);
+    TelevisionShowsComponent plus(TelevisionShowsModule televisionShowsModule);
+
 }

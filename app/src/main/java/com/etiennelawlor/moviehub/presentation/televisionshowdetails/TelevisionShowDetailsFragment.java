@@ -428,8 +428,8 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
         televisionShowDetailsPresenter = new TelevisionShowDetailsPresenter(
                 this,
                 new TelevisionShowDetailsUseCase(new TelevisionShowRepository(
-                        new TelevisionShowLocalDataSource(getContext()),
-                        new TelevisionShowRemoteDataSource(getContext())),
+                        new TelevisionShowLocalDataSource(),
+                        new TelevisionShowRemoteDataSource()),
                         new ProductionSchedulerTransformer<TelevisionShowDetailsWrapper>())
                 );
 

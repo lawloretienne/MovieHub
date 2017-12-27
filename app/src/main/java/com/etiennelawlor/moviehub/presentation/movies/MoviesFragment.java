@@ -21,8 +21,6 @@ import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesPage;
-import com.etiennelawlor.moviehub.di.component.DaggerApplicationComponent;
-import com.etiennelawlor.moviehub.di.module.ApplicationModule;
 import com.etiennelawlor.moviehub.di.module.MoviesModule;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
@@ -62,9 +60,6 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     LinearLayout emptyLinearLayout;
 
     private View selectedMovieView;
-
-    @Inject
-    MoviesPresenter moviesPresenter;
     // endregion
 
     // region Member Variables
@@ -72,9 +67,13 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     private Typeface font;
     private Unbinder unbinder;
     private StaggeredGridLayoutManager layoutManager;
-//    private MoviesUiContract.Presenter moviesPresenter;
     private MoviesPage moviesPage;
     private boolean isLoading = false;
+    // endregion
+
+    // region Injected Variables
+    @Inject
+    MoviesPresenter moviesPresenter;
     // endregion
 
     // region Listeners
@@ -134,14 +133,6 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
                 .getComponent()
                 .plus(new MoviesModule(this))
                 .inject(this);
-
-//        moviesPresenter = new MoviesPresenter(
-//                this,
-//                new MoviesUseCase(new MovieRepository(
-//                        new MovieLocalDataSource(getContext()),
-//                        new MovieRemoteDataSource(getContext())),
-//                        new ProductionSchedulerTransformer<MoviesPage>())
-//                );
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
     }

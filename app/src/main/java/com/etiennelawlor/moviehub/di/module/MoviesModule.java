@@ -41,12 +41,12 @@ public class MoviesModule {
     }
 
     @Provides
-    public ProductionSchedulerTransformer provideProductionSchedulerTransformer() {
+    public ProductionSchedulerTransformer<MoviesPage> provideProductionSchedulerTransformer() {
         return new ProductionSchedulerTransformer<MoviesPage>();
     }
 
     @Provides
-    public MoviesUseCase provideMoviesUseCase(MovieRepository movieRepository, ProductionSchedulerTransformer productionSchedulerTransformer) {
+    public MoviesUseCase provideMoviesUseCase(MovieRepository movieRepository, ProductionSchedulerTransformer<MoviesPage> productionSchedulerTransformer) {
         return new MoviesUseCase(movieRepository, productionSchedulerTransformer);
     }
 

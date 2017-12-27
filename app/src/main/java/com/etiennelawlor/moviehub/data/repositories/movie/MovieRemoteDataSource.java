@@ -29,24 +29,17 @@ import io.reactivex.Single;
 public class MovieRemoteDataSource implements MovieDataSourceContract.RemoteDateSource {
 
     // region Constants
+    private static final String ISO_31661 = "US";
     private static final int PAGE_SIZE = 20;
     private static final int SEVEN_DAYS = 7;
     // endregion
 
-    // region Member Variables
-//    private MovieHubService movieHubService;
-
+    // region Injected Variables
     @Inject MovieHubService movieHubService;
     // endregion
 
     // region Constructors
     public MovieRemoteDataSource() {
-//        movieHubService = ServiceGenerator.createService(
-//                MovieHubService.class,
-//                MovieHubService.BASE_URL,
-//                new AuthorizedNetworkInterceptor(context));
-//        MovieHubApplication.getInstance().getApplicationContext();
-
         DaggerApplicationComponent.builder()
                 .applicationModule(new ApplicationModule(MovieHubApplication.getInstance()))
                 .build()
@@ -99,7 +92,7 @@ public class MovieRemoteDataSource implements MovieDataSourceContract.RemoteDate
                             for (MovieReleaseDateEnvelope movieReleaseDateEnvelope : movieReleaseDateEnvelopes) {
                                 if (movieReleaseDateEnvelope != null) {
                                     String iso31661 = movieReleaseDateEnvelope.getIso31661();
-                                    if (iso31661.equals("US")) {
+                                    if (iso31661.equals(ISO_31661)) {
                                         List<MovieReleaseDate> movieReleaseDates = movieReleaseDateEnvelope.getMovieReleaseDates();
                                         if (movieReleaseDates != null && movieReleaseDates.size() > 0) {
                                             for (MovieReleaseDate movieReleaseDate : movieReleaseDates) {

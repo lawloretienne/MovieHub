@@ -1,7 +1,5 @@
 package com.etiennelawlor.moviehub.data.repositories.tv;
 
-import android.content.Context;
-
 import com.etiennelawlor.moviehub.data.database.RealmUtility;
 import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowDetailsWrapper;
 import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsPage;
@@ -15,7 +13,7 @@ import io.reactivex.Maybe;
 public class TelevisionShowLocalDataSource implements TelevisionShowDataSourceContract.LocalDateSource {
 
     // region Constructors
-    public TelevisionShowLocalDataSource(Context context) {
+    public TelevisionShowLocalDataSource() {
     }
     // endregion
 

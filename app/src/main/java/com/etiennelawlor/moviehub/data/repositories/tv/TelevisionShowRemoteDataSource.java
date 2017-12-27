@@ -1,19 +1,21 @@
 package com.etiennelawlor.moviehub.data.repositories.tv;
 
-import android.content.Context;
-
-import com.etiennelawlor.moviehub.data.network.AuthorizedNetworkInterceptor;
+import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.data.network.MovieHubService;
-import com.etiennelawlor.moviehub.data.network.ServiceGenerator;
 import com.etiennelawlor.moviehub.data.network.response.ContentRating;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCredit;
 import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowDetailsWrapper;
 import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsPage;
+import com.etiennelawlor.moviehub.di.component.DaggerApplicationComponent;
+import com.etiennelawlor.moviehub.di.module.ApplicationModule;
+import com.etiennelawlor.moviehub.di.module.NetworkModule;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import io.reactivex.Single;
 
@@ -24,21 +26,23 @@ import io.reactivex.Single;
 public class TelevisionShowRemoteDataSource implements TelevisionShowDataSourceContract.RemoteDateSource {
 
     // region Constants
+    private static final String ISO_31661 = "US";
     private static final int PAGE_SIZE = 20;
     private static final int SEVEN_DAYS = 7;
     // endregion
 
-    // region Member Variables
-    private MovieHubService movieHubService;
+    // region Injected Variables
+    @Inject
+    MovieHubService movieHubService;
     // endregion
 
     // region Constructors
-    public TelevisionShowRemoteDataSource(Context context) {
-        movieHubService = ServiceGenerator.createService(
-                MovieHubService.class,
-                MovieHubService.BASE_URL,
-                new AuthorizedNetworkInterceptor(context));
-//        MovieHubApplication.getInstance().getApplicationContext();
+    public TelevisionShowRemoteDataSource() {
+        DaggerApplicationComponent.builder()
+                .applicationModule(new ApplicationModule(MovieHubApplication.getInstance()))
+                .build()
+                .plus(new NetworkModule())
+                .inject(this);
     }
     // endregion
 
@@ -85,7 +89,7 @@ public class TelevisionShowRemoteDataSource implements TelevisionShowDataSourceC
                         if(contentRatings != null && contentRatings.size() > 0){
                             for(ContentRating contentRating : contentRatings){
                                 String iso31661 = contentRating.getIso31661();
-                                if(iso31661.equals("US")){
+                                if(iso31661.equals(ISO_31661)){
                                     rating = contentRating.getRating();
                                     break;
                                 }
