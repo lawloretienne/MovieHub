@@ -39,17 +39,6 @@ public class MovieDetailsUseCase implements MovieDetailsDomainContract.UseCase {
     public void getMovieDetails(int movieId, DisposableSingleObserver disposableSingleObserver) {
         Disposable disposable = movieRepository.getMovieDetails(movieId)
                 .compose(schedulerTransformer)
-                .doOnSubscribe(disposable1 -> {
-                    // The network request might be handled in a different thread so make sure Espresso knows
-                    // that the app is busy until the response is handled.
-                    EspressoIdlingResource.increment(); // App is busy until further notice
-                })
-                .doFinally(() -> {
-                    // https://github.com/VisheshVadhera/PlacementApp/blob/f36e8c259cbba37c1be90409016854f8c64bb8a5/app/src/main/java/com/vishesh/placement/core/useCases/BaseUseCase.java
-                    if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
-                        EspressoIdlingResource.decrement(); // Set app as idle.
-                    }
-                })
                 .subscribeWith(disposableSingleObserver);
         compositeDisposable.add(disposable);
     }

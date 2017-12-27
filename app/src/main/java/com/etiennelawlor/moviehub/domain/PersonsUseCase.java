@@ -39,16 +39,6 @@ public class PersonsUseCase implements PersonsDomainContract.UseCase {
     public void getPopularPersons(int currentPage, DisposableSingleObserver disposableSingleObserver) {
         Disposable disposable = personRepository.getPopularPersons(currentPage)
                 .compose(schedulerTransformer)
-                .doOnSubscribe(disposable1 -> {
-                    // The network request might be handled in a different thread so make sure Espresso knows
-                    // that the app is busy until the response is handled.
-                    EspressoIdlingResource.increment(); // App is busy until further notice
-                })
-                .doFinally(() -> {
-                    if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
-                        EspressoIdlingResource.decrement(); // Set app as idle.
-                    }
-                })
                 .subscribeWith(disposableSingleObserver);
         compositeDisposable.add(disposable);
     }
