@@ -45,16 +45,14 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.data.network.response.Genre;
 import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCredit;
-import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowLocalDataSource;
-import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowRemoteDataSource;
-import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowRepository;
 import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowDetailsWrapper;
-import com.etiennelawlor.moviehub.domain.TelevisionShowDetailsUseCase;
+import com.etiennelawlor.moviehub.di.module.TelevisionShowDetailsModule;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.common.GravitySnapHelper;
@@ -66,7 +64,6 @@ import com.etiennelawlor.moviehub.util.DisplayUtility;
 import com.etiennelawlor.moviehub.util.FontCache;
 import com.etiennelawlor.moviehub.util.TrestleUtility;
 import com.etiennelawlor.moviehub.util.ViewUtility;
-import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -74,6 +71,8 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -160,9 +159,13 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     private TelevisionShowCreditsAdapter castAdapter;
     private TelevisionShowCreditsAdapter crewAdapter;
     private Transition sharedElementEnterTransition;
-    private TelevisionShowDetailsUiContract.Presenter televisionShowDetailsPresenter;
     private TelevisionShowDetailsWrapper televisionShowDetailsWrapper;
     private final Handler handler = new Handler();
+    // endregion
+
+    // region Injected Variables
+    @Inject
+    TelevisionShowDetailsPresenter televisionShowDetailsPresenter;
     // endregion
 
     // region Listeners
@@ -425,13 +428,10 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
 
         getActivity().supportPostponeEnterTransition();
 
-        televisionShowDetailsPresenter = new TelevisionShowDetailsPresenter(
-                this,
-                new TelevisionShowDetailsUseCase(new TelevisionShowRepository(
-                        new TelevisionShowLocalDataSource(),
-                        new TelevisionShowRemoteDataSource()),
-                        new ProductionSchedulerTransformer<TelevisionShowDetailsWrapper>())
-                );
+        ((MovieHubApplication)getActivity().getApplication())
+                .getComponent()
+                .plus(new TelevisionShowDetailsModule(this))
+                .inject(this);
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
 
