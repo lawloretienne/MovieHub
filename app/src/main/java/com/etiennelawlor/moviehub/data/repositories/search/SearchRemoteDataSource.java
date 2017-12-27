@@ -1,17 +1,19 @@
 package com.etiennelawlor.moviehub.data.repositories.search;
 
-import android.content.Context;
-
-import com.etiennelawlor.moviehub.data.network.AuthorizedNetworkInterceptor;
+import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.data.network.MovieHubService;
-import com.etiennelawlor.moviehub.data.network.ServiceGenerator;
 import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.repositories.search.models.SearchWrapper;
+import com.etiennelawlor.moviehub.di.component.DaggerApplicationComponent;
+import com.etiennelawlor.moviehub.di.module.ApplicationModule;
+import com.etiennelawlor.moviehub.di.module.NetworkModule;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import io.reactivex.Single;
 
@@ -21,17 +23,18 @@ import io.reactivex.Single;
 
 public class SearchRemoteDataSource implements SearchDataSourceContract.RemoteDateSource {
 
-    // region Member Variables
-    private MovieHubService movieHubService;
+    // region Injected Variables
+    @Inject
+    MovieHubService movieHubService;
     // endregion
 
     // region Constructors
-    public SearchRemoteDataSource(Context context) {
-        movieHubService = ServiceGenerator.createService(
-                MovieHubService.class,
-                MovieHubService.BASE_URL,
-                new AuthorizedNetworkInterceptor(context));
-//        MovieHubApplication.getInstance().getApplicationContext();
+    public SearchRemoteDataSource() {
+        DaggerApplicationComponent.builder()
+                .applicationModule(new ApplicationModule(MovieHubApplication.getInstance()))
+                .build()
+                .plus(new NetworkModule())
+                .inject(this);
     }
     // endregion
 

@@ -1,7 +1,5 @@
 package com.etiennelawlor.moviehub.data.repositories.search;
 
-import android.content.Context;
-
 import com.etiennelawlor.moviehub.data.repositories.search.models.SearchWrapper;
 
 import io.reactivex.Maybe;
@@ -13,7 +11,7 @@ import io.reactivex.Maybe;
 public class SearchLocalDataSource implements SearchDataSourceContract.LocalDateSource {
 
     // region Constructors
-    public SearchLocalDataSource(Context context) {
+    public SearchLocalDataSource() {
     }
     // endregion
 

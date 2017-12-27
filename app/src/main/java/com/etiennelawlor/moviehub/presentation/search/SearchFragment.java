@@ -28,15 +28,12 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.repositories.search.SearchLocalDataSource;
-import com.etiennelawlor.moviehub.data.repositories.search.SearchRemoteDataSource;
-import com.etiennelawlor.moviehub.data.repositories.search.SearchRepository;
-import com.etiennelawlor.moviehub.data.repositories.search.models.SearchWrapper;
-import com.etiennelawlor.moviehub.domain.SearchUseCase;
+import com.etiennelawlor.moviehub.di.module.SearchModule;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.common.GravitySnapHelper;
@@ -46,12 +43,12 @@ import com.etiennelawlor.moviehub.presentation.televisionshowdetails.TelevisionS
 import com.etiennelawlor.moviehub.util.DisplayUtility;
 import com.etiennelawlor.moviehub.util.FontCache;
 import com.etiennelawlor.moviehub.util.TrestleUtility;
-import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerProvider;
-import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 import com.jakewharton.rxbinding2.InitialValueObservable;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -103,7 +100,6 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
 
     // region Member Variables
     private Typeface font;
-    private SearchPresenter searchPresenter;
     private Unbinder unbinder;
     private SearchMoviesAdapter searchMoviesAdapter;
     private SearchTelevisionShowsAdapter searchTelevisionShowsAdapter;
@@ -111,6 +107,11 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
     private InitialValueObservable<CharSequence> searchQueryChangeObservable;
     private Transition sharedElementEnterTransition;
     private Transition sharedElementReturnTransition;
+    // endregion
+
+    // region Injected Variables
+    @Inject
+    SearchPresenter searchPresenter;
     // endregion
 
     // region Listeners
@@ -230,14 +231,10 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        searchPresenter = new SearchPresenter(
-                this,
-                new SearchUseCase(new SearchRepository(
-                        new SearchLocalDataSource(getContext()),
-                        new SearchRemoteDataSource(getContext())),
-                new ProductionSchedulerTransformer<SearchWrapper>()),
-                new ProductionSchedulerProvider()
-        );
+        ((MovieHubApplication)getActivity().getApplication())
+                .getComponent()
+                .plus(new SearchModule(this))
+                .inject(this);
 
         setHasOptionsMenu(true);
 
