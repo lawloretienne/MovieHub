@@ -20,19 +20,12 @@ import android.widget.TextView;
 import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowLocalDataSource;
-import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowRemoteDataSource;
-import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowRepository;
 import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsPage;
-import com.etiennelawlor.moviehub.di.module.MoviesModule;
 import com.etiennelawlor.moviehub.di.module.TelevisionShowsModule;
-import com.etiennelawlor.moviehub.domain.TelevisionShowsUseCase;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
-import com.etiennelawlor.moviehub.presentation.movies.MoviesPresenter;
 import com.etiennelawlor.moviehub.presentation.televisionshowdetails.TelevisionShowDetailsActivity;
 import com.etiennelawlor.moviehub.util.FontCache;
-import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 
 import java.util.List;
 

@@ -449,8 +449,8 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
         personDetailsPresenter = new PersonDetailsPresenter(
                 this,
                 new PersonDetailsUseCase(new PersonRepository(
-                        new PersonLocalDataSource(getContext()),
-                        new PersonRemoteDataSource(getContext())),
+                        new PersonLocalDataSource(),
+                        new PersonRemoteDataSource()),
                         new ProductionSchedulerTransformer<PersonDetailsWrapper>())
                 );
 

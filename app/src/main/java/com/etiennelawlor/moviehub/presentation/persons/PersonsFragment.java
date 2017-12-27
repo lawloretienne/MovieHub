@@ -17,20 +17,19 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.data.network.response.Person;
-import com.etiennelawlor.moviehub.data.repositories.person.PersonLocalDataSource;
-import com.etiennelawlor.moviehub.data.repositories.person.PersonRemoteDataSource;
-import com.etiennelawlor.moviehub.data.repositories.person.PersonRepository;
 import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsPage;
-import com.etiennelawlor.moviehub.domain.PersonsUseCase;
+import com.etiennelawlor.moviehub.di.module.PersonsModule;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.persondetails.PersonDetailsActivity;
 import com.etiennelawlor.moviehub.util.FontCache;
-import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -68,9 +67,13 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     private Typeface font;
     private Unbinder unbinder;
     private StaggeredGridLayoutManager layoutManager;
-    private PersonsUiContract.Presenter personsPresenter;
     private PersonsPage personsPage;
     private boolean isLoading = false;
+    // endregion
+
+    // region Injected Variables
+    @Inject
+    PersonsPresenter personsPresenter;
     // endregion
 
     // region Listeners
@@ -127,13 +130,10 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        personsPresenter = new PersonsPresenter(
-                this,
-                new PersonsUseCase( new PersonRepository(
-                        new PersonLocalDataSource(getContext()),
-                        new PersonRemoteDataSource(getContext())),
-                        new ProductionSchedulerTransformer<PersonsPage>())
-                );
+        ((MovieHubApplication)getActivity().getApplication())
+                .getComponent()
+                .plus(new PersonsModule(this))
+                .inject(this);
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
     }

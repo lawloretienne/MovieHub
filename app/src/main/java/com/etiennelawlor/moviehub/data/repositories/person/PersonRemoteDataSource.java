@@ -1,17 +1,19 @@
 package com.etiennelawlor.moviehub.data.repositories.person;
 
-import android.content.Context;
-
-import com.etiennelawlor.moviehub.data.network.AuthorizedNetworkInterceptor;
+import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.data.network.MovieHubService;
-import com.etiennelawlor.moviehub.data.network.ServiceGenerator;
 import com.etiennelawlor.moviehub.data.network.response.PersonCredit;
 import com.etiennelawlor.moviehub.data.repositories.person.models.PersonDetailsWrapper;
 import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsPage;
+import com.etiennelawlor.moviehub.di.component.DaggerApplicationComponent;
+import com.etiennelawlor.moviehub.di.module.ApplicationModule;
+import com.etiennelawlor.moviehub.di.module.NetworkModule;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import io.reactivex.Single;
 
@@ -26,17 +28,18 @@ public class PersonRemoteDataSource implements PersonDataSourceContract.RemoteDa
     private static final int SEVEN_DAYS = 7;
     // endregion
 
-    // region Member Variables
-    private MovieHubService movieHubService;
+    // region Injected Variables
+    @Inject
+    MovieHubService movieHubService;
     // endregion
 
     // region Constructors
-    public PersonRemoteDataSource(Context context) {
-        movieHubService = ServiceGenerator.createService(
-                MovieHubService.class,
-                MovieHubService.BASE_URL,
-                new AuthorizedNetworkInterceptor(context));
-//        MovieHubApplication.getInstance().getApplicationContext();
+    public PersonRemoteDataSource() {
+        DaggerApplicationComponent.builder()
+                .applicationModule(new ApplicationModule(MovieHubApplication.getInstance()))
+                .build()
+                .plus(new NetworkModule())
+                .inject(this);
     }
     // endregion
 
@@ -74,7 +77,6 @@ public class PersonRemoteDataSource implements PersonDataSourceContract.RemoteDa
                     return new PersonDetailsWrapper(person, cast, crew);
                 });
     }
-
 
     // endregion
 }
