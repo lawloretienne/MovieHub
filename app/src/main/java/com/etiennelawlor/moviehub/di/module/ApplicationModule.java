@@ -5,12 +5,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.etiennelawlor.moviehub.MovieHubApplication;
-
-import javax.inject.Singleton;
+import com.etiennelawlor.moviehub.data.network.MovieHubService;
 
 import dagger.Module;
 import dagger.Provides;
+import retrofit2.Retrofit;
 
 /**
  * Created by etiennelawlor on 2/9/17.
@@ -26,14 +25,22 @@ public class ApplicationModule {
     }
 
     @Provides
-    @Singleton
     public Context provideContext() {
+        return application.getApplicationContext();
+    }
+
+    @Provides
+    public Application provideApplication() {
         return application;
     }
 
     @Provides
-    @Singleton
     public SharedPreferences provideSharedPreferences(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context);
+    }
+
+    @Provides
+    public MovieHubService provideMovieHubService(Retrofit retrofit) {
+        return retrofit.create(MovieHubService.class);
     }
 }

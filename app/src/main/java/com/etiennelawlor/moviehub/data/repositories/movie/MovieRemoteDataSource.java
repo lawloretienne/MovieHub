@@ -1,17 +1,18 @@
 package com.etiennelawlor.moviehub.data.repositories.movie;
 
-import android.content.Context;
 import android.text.TextUtils;
 
-import com.etiennelawlor.moviehub.data.network.AuthorizedNetworkInterceptor;
+import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.data.network.MovieHubService;
-import com.etiennelawlor.moviehub.data.network.ServiceGenerator;
 import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.MovieCredit;
 import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDate;
 import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDateEnvelope;
 import com.etiennelawlor.moviehub.data.repositories.movie.models.MovieDetailsWrapper;
 import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesPage;
+import com.etiennelawlor.moviehub.di.component.DaggerApplicationComponent;
+import com.etiennelawlor.moviehub.di.module.ApplicationModule;
+import com.etiennelawlor.moviehub.di.module.NetworkModule;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -19,7 +20,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import dagger.android.AndroidInjection;
 import io.reactivex.Single;
 
 /**
@@ -40,15 +40,18 @@ public class MovieRemoteDataSource implements MovieDataSourceContract.RemoteDate
     // endregion
 
     // region Constructors
-    public MovieRemoteDataSource(Context context) {
+    public MovieRemoteDataSource() {
 //        movieHubService = ServiceGenerator.createService(
 //                MovieHubService.class,
 //                MovieHubService.BASE_URL,
 //                new AuthorizedNetworkInterceptor(context));
 //        MovieHubApplication.getInstance().getApplicationContext();
 
-//        AndroidInjection.inject(this);
-
+        DaggerApplicationComponent.builder()
+                .applicationModule(new ApplicationModule(MovieHubApplication.getInstance()))
+                .build()
+                .plus(new NetworkModule())
+                .inject(this);
     }
     // endregion
 

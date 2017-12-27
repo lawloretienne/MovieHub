@@ -5,10 +5,15 @@ import com.etiennelawlor.moviehub.data.network.MovieHubService;
 import com.etiennelawlor.moviehub.data.network.ServiceGenerator;
 import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.MoviesEnvelope;
+import com.etiennelawlor.moviehub.di.component.DaggerApplicationComponent;
+import com.etiennelawlor.moviehub.di.module.ApplicationModule;
+import com.etiennelawlor.moviehub.di.module.NetworkModule;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import javax.inject.Inject;
 
 import io.reactivex.observers.TestObserver;
 import io.reactivex.subscribers.TestSubscriber;
@@ -33,6 +38,9 @@ public class MovieRemoteDataSourceTest {
     private MockWebServer server;
     private JsonReader jsonReader;
     private MovieHubService movieHubService;
+
+//    @Inject
+//    MovieHubService movieHubService;
 
     @Before
     public void setUp() throws Exception {
@@ -65,6 +73,12 @@ public class MovieRemoteDataSourceTest {
 //                MovieHubService.class,
 //                MovieHubService.BASE_URL,
 //                new AuthorizedNetworkInterceptor(context));
+
+//        DaggerApplicationComponent.builder()
+//                .applicationModule(new ApplicationModule(MovieHubApplication.getInstance()))
+//                .build()
+//                .plus(new NetworkModule())
+//                .inject(this);
     }
 
     @Test

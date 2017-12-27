@@ -9,9 +9,6 @@ import android.util.Log;
 import com.etiennelawlor.moviehub.di.component.ApplicationComponent;
 import com.etiennelawlor.moviehub.di.component.DaggerApplicationComponent;
 import com.etiennelawlor.moviehub.di.module.ApplicationModule;
-import com.etiennelawlor.moviehub.di.module.FragmentModule;
-import com.etiennelawlor.moviehub.di.module.MoviesModule;
-import com.etiennelawlor.moviehub.di.module.NetworkModule;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
@@ -51,10 +48,8 @@ public class MovieHubApplication extends Application {
         currentApplication = this;
 
         component = DaggerApplicationComponent.builder()
-                    .applicationModule(new ApplicationModule(this))
-                    .moviesModule(new MoviesModule())
-                    .networkModule(new NetworkModule())
-                    .build();
+                .applicationModule(new ApplicationModule(this))
+                .build();
     }
     // endregion
 
@@ -91,7 +86,7 @@ public class MovieHubApplication extends Application {
         refWatcher = LeakCanary.install(this);
     }
 
-    private void initializeRealm(){
+    private void initializeRealm() {
         Realm.init(this);
         RealmConfiguration realmConfiguration =
                 new RealmConfiguration.Builder()

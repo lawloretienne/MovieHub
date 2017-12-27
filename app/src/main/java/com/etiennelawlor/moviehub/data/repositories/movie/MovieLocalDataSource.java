@@ -1,7 +1,5 @@
 package com.etiennelawlor.moviehub.data.repositories.movie;
 
-import android.content.Context;
-
 import com.etiennelawlor.moviehub.data.database.RealmUtility;
 import com.etiennelawlor.moviehub.data.repositories.movie.models.MovieDetailsWrapper;
 import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesPage;
@@ -15,7 +13,7 @@ import io.reactivex.Maybe;
 public class MovieLocalDataSource implements MovieDataSourceContract.LocalDateSource {
 
     // region Constructors
-    public MovieLocalDataSource(Context context) {
+    public MovieLocalDataSource() {
     }
     // endregion
 

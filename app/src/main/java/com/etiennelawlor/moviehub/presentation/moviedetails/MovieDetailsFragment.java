@@ -423,8 +423,8 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
         movieDetailsPresenter = new MovieDetailsPresenter(
                 this,
                 new MovieDetailsUseCase(new MovieRepository(
-                        new MovieLocalDataSource(getContext()),
-                        new MovieRemoteDataSource(getContext())),
+                        new MovieLocalDataSource(),
+                        new MovieRemoteDataSource()),
                         new ProductionSchedulerTransformer<MovieDetailsWrapper>())
                 );
 

@@ -21,7 +21,9 @@ import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesPage;
-import com.etiennelawlor.moviehub.di.module.FragmentModule;
+import com.etiennelawlor.moviehub.di.component.DaggerApplicationComponent;
+import com.etiennelawlor.moviehub.di.module.ApplicationModule;
+import com.etiennelawlor.moviehub.di.module.MoviesModule;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.moviedetails.MovieDetailsActivity;
@@ -128,11 +130,9 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        ((MovieHubApplication)getActivity().getApplication()).getComponent().inject(this);
-
-        DaggerFragmentComponent.builder()
-                .fragmentModule(new FragmentModule(this))
-                .build()
+        ((MovieHubApplication)getActivity().getApplication())
+                .getComponent()
+                .plus(new MoviesModule(this))
                 .inject(this);
 
 //        moviesPresenter = new MoviesPresenter(
