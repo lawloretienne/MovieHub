@@ -111,7 +111,7 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
 
     // region Injected Variables
     @Inject
-    SearchPresenter searchPresenter;
+    SearchUiContract.Presenter searchPresenter;
     // endregion
 
     // region Listeners

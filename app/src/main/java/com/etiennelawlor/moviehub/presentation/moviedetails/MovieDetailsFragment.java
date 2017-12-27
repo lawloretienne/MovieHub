@@ -168,7 +168,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
 
     // region Injected Variables
     @Inject
-    MovieDetailsPresenter movieDetailsPresenter;
+    MovieDetailsUiContract.Presenter movieDetailsPresenter;
     // endregion
 
     // region Listeners

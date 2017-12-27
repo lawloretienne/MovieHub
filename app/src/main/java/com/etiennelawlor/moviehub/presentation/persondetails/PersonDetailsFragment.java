@@ -160,7 +160,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
 
     // region Injected Variables
     @Inject
-    PersonDetailsPresenter personDetailsPresenter;
+    PersonDetailsUiContract.Presenter personDetailsPresenter;
     // endregion
 
     // region Listeners

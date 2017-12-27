@@ -73,7 +73,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
 
     // region Injected Variables
     @Inject
-    MoviesPresenter moviesPresenter;
+    MoviesUiContract.Presenter moviesPresenter;
     // endregion
 
     // region Listeners

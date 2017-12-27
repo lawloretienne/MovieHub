@@ -1,15 +1,18 @@
 package com.etiennelawlor.moviehub.di.module;
 
+import com.etiennelawlor.moviehub.data.repositories.search.SearchDataSourceContract;
 import com.etiennelawlor.moviehub.data.repositories.search.SearchLocalDataSource;
 import com.etiennelawlor.moviehub.data.repositories.search.SearchRemoteDataSource;
 import com.etiennelawlor.moviehub.data.repositories.search.SearchRepository;
 import com.etiennelawlor.moviehub.data.repositories.search.models.SearchWrapper;
+import com.etiennelawlor.moviehub.domain.SearchDomainContract;
 import com.etiennelawlor.moviehub.domain.SearchUseCase;
 import com.etiennelawlor.moviehub.presentation.search.SearchPresenter;
 import com.etiennelawlor.moviehub.presentation.search.SearchUiContract;
 import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerProvider;
 import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 import com.etiennelawlor.moviehub.util.rxjava.SchedulerProvider;
+import com.etiennelawlor.moviehub.util.rxjava.SchedulerTransformer;
 
 import dagger.Module;
 import dagger.Provides;
@@ -28,28 +31,28 @@ public class SearchModule {
     }
 
     @Provides
-    public SearchLocalDataSource provideSearchLocalDataSource() {
+    public SearchDataSourceContract.LocalDateSource provideSearchLocalDataSource() {
         return new SearchLocalDataSource();
     }
 
     @Provides
-    public SearchRemoteDataSource provideSearchRemoteDataSource() {
+    public SearchDataSourceContract.RemoteDateSource provideSearchRemoteDataSource() {
         return new SearchRemoteDataSource();
     }
 
     @Provides
-    public SearchRepository provideMovieRepository(SearchLocalDataSource searchLocalDataSource, SearchRemoteDataSource searchRemoteDataSource) {
+    public SearchDataSourceContract.Repository provideSearchRepository(SearchDataSourceContract.LocalDateSource searchLocalDataSource, SearchDataSourceContract.RemoteDateSource searchRemoteDataSource) {
         return new SearchRepository(searchLocalDataSource, searchRemoteDataSource);
     }
 
     @Provides
-    public ProductionSchedulerTransformer<SearchWrapper> provideProductionSchedulerTransformer() {
+    public SchedulerTransformer<SearchWrapper> provideSchedulerTransformer() {
         return new ProductionSchedulerTransformer<SearchWrapper>();
     }
 
     @Provides
-    public SearchUseCase provideMoviesUseCase(SearchRepository searchRepository, ProductionSchedulerTransformer<SearchWrapper> productionSchedulerTransformer) {
-        return new SearchUseCase(searchRepository, productionSchedulerTransformer);
+    public SearchDomainContract.UseCase provideSearchUseCase(SearchDataSourceContract.Repository searchRepository, SchedulerTransformer<SearchWrapper> schedulerTransformer) {
+        return new SearchUseCase(searchRepository, schedulerTransformer);
     }
 
     @Provides
@@ -58,7 +61,7 @@ public class SearchModule {
     }
 
     @Provides
-    public SearchPresenter provideMoviesPresenter(SearchUseCase searchUseCase, SchedulerProvider schedulerProvider) {
+    public SearchUiContract.Presenter provideSearchPresenter(SearchDomainContract.UseCase searchUseCase, SchedulerProvider schedulerProvider) {
         return new SearchPresenter(searchView, searchUseCase, schedulerProvider);
     }
 }

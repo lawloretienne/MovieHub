@@ -165,7 +165,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
 
     // region Injected Variables
     @Inject
-    TelevisionShowDetailsPresenter televisionShowDetailsPresenter;
+    TelevisionShowDetailsUiContract.Presenter televisionShowDetailsPresenter;
     // endregion
 
     // region Listeners

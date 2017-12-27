@@ -1,13 +1,16 @@
 package com.etiennelawlor.moviehub.di.module;
 
+import com.etiennelawlor.moviehub.data.repositories.movie.MovieDataSourceContract;
 import com.etiennelawlor.moviehub.data.repositories.movie.MovieLocalDataSource;
 import com.etiennelawlor.moviehub.data.repositories.movie.MovieRemoteDataSource;
 import com.etiennelawlor.moviehub.data.repositories.movie.MovieRepository;
 import com.etiennelawlor.moviehub.data.repositories.movie.models.MovieDetailsWrapper;
+import com.etiennelawlor.moviehub.domain.MovieDetailsDomainContract;
 import com.etiennelawlor.moviehub.domain.MovieDetailsUseCase;
 import com.etiennelawlor.moviehub.presentation.moviedetails.MovieDetailsPresenter;
 import com.etiennelawlor.moviehub.presentation.moviedetails.MovieDetailsUiContract;
 import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
+import com.etiennelawlor.moviehub.util.rxjava.SchedulerTransformer;
 
 import dagger.Module;
 import dagger.Provides;
@@ -26,32 +29,32 @@ public class MovieDetailsModule {
     }
 
     @Provides
-    public MovieLocalDataSource provideMovieLocalDataSource() {
+    public MovieDataSourceContract.LocalDateSource provideMovieLocalDataSource() {
         return new MovieLocalDataSource();
     }
 
     @Provides
-    public MovieRemoteDataSource provideMovieRemoteDataSource() {
+    public MovieDataSourceContract.RemoteDateSource provideMovieRemoteDataSource() {
         return new MovieRemoteDataSource();
     }
 
     @Provides
-    public MovieRepository provideMovieRepository(MovieLocalDataSource movieLocalDataSource, MovieRemoteDataSource movieRemoteDataSource) {
+    public MovieDataSourceContract.Repository provideMovieRepository(MovieDataSourceContract.LocalDateSource movieLocalDataSource, MovieDataSourceContract.RemoteDateSource movieRemoteDataSource) {
         return new MovieRepository(movieLocalDataSource, movieRemoteDataSource);
     }
 
     @Provides
-    public ProductionSchedulerTransformer<MovieDetailsWrapper> provideProductionSchedulerTransformer() {
+    public SchedulerTransformer<MovieDetailsWrapper> provideSchedulerTransformer() {
         return new ProductionSchedulerTransformer<MovieDetailsWrapper>();
     }
 
     @Provides
-    public MovieDetailsUseCase provideMovieDetailsUseCase(MovieRepository movieRepository, ProductionSchedulerTransformer<MovieDetailsWrapper> productionSchedulerTransformer) {
-        return new MovieDetailsUseCase(movieRepository, productionSchedulerTransformer);
+    public MovieDetailsDomainContract.UseCase provideMovieDetailsUseCase(MovieDataSourceContract.Repository movieRepository, SchedulerTransformer<MovieDetailsWrapper> schedulerTransformer) {
+        return new MovieDetailsUseCase(movieRepository, schedulerTransformer);
     }
 
     @Provides
-    public MovieDetailsPresenter provideMovieDetailsPresenter(MovieDetailsUseCase movieDetailsUseCase) {
+    public MovieDetailsUiContract.Presenter provideMovieDetailsPresenter(MovieDetailsDomainContract.UseCase movieDetailsUseCase) {
         return new MovieDetailsPresenter(movieDetailsView, movieDetailsUseCase);
     }
 }

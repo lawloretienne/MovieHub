@@ -1,13 +1,16 @@
 package com.etiennelawlor.moviehub.di.module;
 
+import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowDataSourceContract;
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowLocalDataSource;
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowRemoteDataSource;
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowRepository;
 import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowDetailsWrapper;
+import com.etiennelawlor.moviehub.domain.TelevisionShowDetailsDomainContract;
 import com.etiennelawlor.moviehub.domain.TelevisionShowDetailsUseCase;
 import com.etiennelawlor.moviehub.presentation.televisionshowdetails.TelevisionShowDetailsPresenter;
 import com.etiennelawlor.moviehub.presentation.televisionshowdetails.TelevisionShowDetailsUiContract;
 import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
+import com.etiennelawlor.moviehub.util.rxjava.SchedulerTransformer;
 
 import dagger.Module;
 import dagger.Provides;
@@ -26,32 +29,32 @@ public class TelevisionShowDetailsModule {
     }
 
     @Provides
-    public TelevisionShowLocalDataSource provideTelevisionShowLocalDataSource() {
+    public TelevisionShowDataSourceContract.LocalDateSource provideTelevisionShowLocalDataSource() {
         return new TelevisionShowLocalDataSource();
     }
 
     @Provides
-    public TelevisionShowRemoteDataSource provideTelevisionShowRemoteDataSource() {
+    public TelevisionShowDataSourceContract.RemoteDateSource provideTelevisionShowRemoteDataSource() {
         return new TelevisionShowRemoteDataSource();
     }
 
     @Provides
-    public TelevisionShowRepository provideTelevisionShowRepository(TelevisionShowLocalDataSource televisionShowLocalDataSource, TelevisionShowRemoteDataSource televisionShowRemoteDataSource) {
+    public TelevisionShowDataSourceContract.Repository provideTelevisionShowRepository(TelevisionShowDataSourceContract.LocalDateSource televisionShowLocalDataSource, TelevisionShowDataSourceContract.RemoteDateSource televisionShowRemoteDataSource) {
         return new TelevisionShowRepository(televisionShowLocalDataSource, televisionShowRemoteDataSource);
     }
 
     @Provides
-    public ProductionSchedulerTransformer<TelevisionShowDetailsWrapper> provideProductionSchedulerTransformer() {
+    public SchedulerTransformer<TelevisionShowDetailsWrapper> proviedSchedulerTransformer() {
         return new ProductionSchedulerTransformer<TelevisionShowDetailsWrapper>();
     }
 
     @Provides
-    public TelevisionShowDetailsUseCase provideMovieDetailsUseCase(TelevisionShowRepository televisionShowRepository, ProductionSchedulerTransformer<TelevisionShowDetailsWrapper> productionSchedulerTransformer) {
-        return new TelevisionShowDetailsUseCase(televisionShowRepository, productionSchedulerTransformer);
+    public TelevisionShowDetailsDomainContract.UseCase provideTelevisionShowDetailsUseCase(TelevisionShowDataSourceContract.Repository televisionShowRepository, SchedulerTransformer<TelevisionShowDetailsWrapper> schedulerTransformer) {
+        return new TelevisionShowDetailsUseCase(televisionShowRepository, schedulerTransformer);
     }
 
     @Provides
-    public TelevisionShowDetailsPresenter provideTelevisionShowDetailsPresenter(TelevisionShowDetailsUseCase televisionShowDetailsUseCase) {
+    public TelevisionShowDetailsUiContract.Presenter provideTelevisionShowDetailsPresenter(TelevisionShowDetailsDomainContract.UseCase televisionShowDetailsUseCase) {
         return new TelevisionShowDetailsPresenter(televisionShowDetailsView, televisionShowDetailsUseCase);
     }
 }

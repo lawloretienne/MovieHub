@@ -73,7 +73,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
 
     // region Injected Variables
     @Inject
-    PersonsPresenter personsPresenter;
+    PersonsUiContract.Presenter personsPresenter;
     // endregion
 
     // region Listeners
