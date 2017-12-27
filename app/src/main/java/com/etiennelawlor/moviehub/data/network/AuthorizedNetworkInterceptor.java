@@ -19,6 +19,11 @@ import okhttp3.Response;
 
 public class AuthorizedNetworkInterceptor implements Interceptor {
 
+    // region Constants
+    private static final String KEY_API_KEY = "api_key";
+    private static final String KEY_LANGUAGE = "language";
+    // endregion
+
     // region Member Variables
     private Context context;
     // endregion
@@ -35,8 +40,8 @@ public class AuthorizedNetworkInterceptor implements Interceptor {
             Request originalRequest = chain.request();
 
             Map<String, String> queryParamsMap = new HashMap<>();
-            queryParamsMap.put("api_key", context.getString(R.string.api_key));
-            queryParamsMap.put("language", "en-US");
+            queryParamsMap.put(KEY_API_KEY, context.getString(R.string.api_key));
+            queryParamsMap.put(KEY_LANGUAGE, "en-US");
             Request modifiedRequest = RequestUtility.addQueryParams(originalRequest, queryParamsMap);
 
             return chain.proceed(modifiedRequest);

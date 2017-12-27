@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.etiennelawlor.moviehub.BuildConfig;
 import com.etiennelawlor.moviehub.data.network.AuthorizedNetworkInterceptor;
+import com.etiennelawlor.moviehub.data.network.MovieHubService;
 
 import java.io.File;
 
@@ -24,8 +25,6 @@ import timber.log.Timber;
 
 @Module(includes = ApplicationModule.class)
 public class NetworkModule {
-
-    private static String BASE_URL = "https://api.themoviedb.org/3/";
 
     public NetworkModule() {
     }
@@ -79,7 +78,7 @@ public class NetworkModule {
         Retrofit retrofit = new Retrofit.Builder()
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(BASE_URL)
+                .baseUrl(MovieHubService.BASE_URL)
                 .client(okHttpClient)
                 .build();
         return retrofit;
