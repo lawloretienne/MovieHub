@@ -31,16 +31,12 @@ public class PersonDetailsUseCase implements PersonDetailsDomainContract.UseCase
     // region MovieDetailsDomainContract.UseCase Methods
     @Override
     public void clearDisposables() {
-        if(compositeDisposable != null && compositeDisposable.isDisposed())
-            compositeDisposable.clear();
+        if(compositeDisposable != null && !compositeDisposable.isDisposed())
+            compositeDisposable.dispose();
     }
 
     @Override
     public void getPersonDetails(int personId, DisposableSingleObserver disposableSingleObserver) {
-        // The network request might be handled in a different thread so make sure Espresso knows
-        // that the app is busy until the response is handled.
-        EspressoIdlingResource.increment(); // App is busy until further notice
-
         Disposable disposable = personRepository.getPersonDetails(personId)
                 .compose(schedulerTransformer)
                 .doOnSubscribe(disposable1 -> {

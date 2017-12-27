@@ -31,16 +31,12 @@ public class PersonsUseCase implements PersonsDomainContract.UseCase {
     // region PersonsDomainContract.UseCase Methods
     @Override
     public void clearDisposables() {
-        if(compositeDisposable != null && compositeDisposable.isDisposed())
-            compositeDisposable.clear();
+        if(compositeDisposable != null && !compositeDisposable.isDisposed())
+            compositeDisposable.dispose();
     }
 
     @Override
     public void getPopularPersons(int currentPage, DisposableSingleObserver disposableSingleObserver) {
-        // The network request might be handled in a different thread so make sure Espresso knows
-        // that the app is busy until the response is handled.
-        EspressoIdlingResource.increment(); // App is busy until further notice
-
         Disposable disposable = personRepository.getPopularPersons(currentPage)
                 .compose(schedulerTransformer)
                 .doOnSubscribe(disposable1 -> {

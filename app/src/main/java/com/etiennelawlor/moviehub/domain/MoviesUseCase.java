@@ -31,8 +31,8 @@ public class MoviesUseCase implements MoviesDomainContract.UseCase {
     // region MoviesDomainContract.UseCase Methods
     @Override
     public void clearDisposables() {
-        if(compositeDisposable != null && compositeDisposable.isDisposed())
-            compositeDisposable.clear();
+        if(compositeDisposable != null && !compositeDisposable.isDisposed())
+            compositeDisposable.dispose();
     }
 
     @Override
