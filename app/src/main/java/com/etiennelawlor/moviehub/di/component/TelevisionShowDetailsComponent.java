@@ -13,5 +13,6 @@ import dagger.Subcomponent;
 @TelevisionShowsScope
 @Subcomponent(modules = {TelevisionShowDetailsModule.class})
 public interface TelevisionShowDetailsComponent {
+    // Setup injection targets
     void inject(TelevisionShowDetailsFragment target);
 }

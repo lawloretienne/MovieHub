@@ -7,9 +7,6 @@ import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCredit;
 import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowDetailsWrapper;
 import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsPage;
-import com.etiennelawlor.moviehub.di.component.DaggerApplicationComponent;
-import com.etiennelawlor.moviehub.di.module.ApplicationModule;
-import com.etiennelawlor.moviehub.di.module.NetworkModule;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -38,11 +35,7 @@ public class TelevisionShowRemoteDataSource implements TelevisionShowDataSourceC
 
     // region Constructors
     public TelevisionShowRemoteDataSource() {
-        DaggerApplicationComponent.builder()
-                .applicationModule(new ApplicationModule(MovieHubApplication.getInstance()))
-                .build()
-                .plus(new NetworkModule())
-                .inject(this);
+        MovieHubApplication.getInstance().createNetworkComponent().inject(this);
     }
     // endregion
 

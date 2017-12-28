@@ -21,7 +21,10 @@ import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesPage;
+import com.etiennelawlor.moviehub.di.component.MoviesComponent;
+import com.etiennelawlor.moviehub.di.component.SearchComponent;
 import com.etiennelawlor.moviehub.di.module.MoviesModule;
+import com.etiennelawlor.moviehub.di.module.SearchModule;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.moviedetails.MovieDetailsActivity;
@@ -69,6 +72,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     private StaggeredGridLayoutManager layoutManager;
     private MoviesPage moviesPage;
     private boolean isLoading = false;
+    private MoviesComponent moviesComponent;
     // endregion
 
     // region Injected Variables
@@ -129,10 +133,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ((MovieHubApplication)getActivity().getApplication())
-                .getComponent()
-                .plus(new MoviesModule(this))
-                .inject(this);
+        createMoviesComponent().inject(this);
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
     }
@@ -171,6 +172,13 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
         removeListeners();
         unbinder.unbind();
         moviesPresenter.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        releaseMoviesComponent();
     }
 
     // endregion
@@ -383,6 +391,17 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
 
     public void scrollToTop(){
         recyclerView.scrollToPosition(0);
+    }
+
+    private MoviesComponent createMoviesComponent(){
+        moviesComponent = ((MovieHubApplication)getActivity().getApplication())
+                .getApplicationComponent()
+                .newMoviesComponent(new MoviesModule(this));
+        return moviesComponent;
+    }
+
+    public void releaseMoviesComponent(){
+        moviesComponent = null;
     }
     // endregion
 }

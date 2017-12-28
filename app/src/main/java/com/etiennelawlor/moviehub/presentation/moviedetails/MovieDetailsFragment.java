@@ -52,7 +52,10 @@ import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.MovieCredit;
 import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.data.repositories.movie.models.MovieDetailsWrapper;
+import com.etiennelawlor.moviehub.di.component.MovieDetailsComponent;
+import com.etiennelawlor.moviehub.di.component.SearchComponent;
 import com.etiennelawlor.moviehub.di.module.MovieDetailsModule;
+import com.etiennelawlor.moviehub.di.module.SearchModule;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.common.GravitySnapHelper;
@@ -163,6 +166,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
     private MovieCreditsAdapter crewAdapter;
     private Transition sharedElementEnterTransition;
     private MovieDetailsWrapper movieDetailsWrapper;
+    private MovieDetailsComponent movieDetailsComponent;
     private final Handler handler = new Handler();
     // endregion
 
@@ -423,10 +427,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
 
         getActivity().supportPostponeEnterTransition();
 
-        ((MovieHubApplication)getActivity().getApplication())
-                .getComponent()
-                .plus(new MovieDetailsModule(this))
-                .inject(this);
+        createMovieDetailsComponent().inject(this);
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
 
@@ -483,6 +484,14 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
         unbinder.unbind();
         movieDetailsPresenter.onDestroyView();
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        releaseMovieDetailsComponent();
+    }
+
     // endregion
 
     // region MovieDetailsUiContract.View Methods
@@ -912,5 +921,15 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
         return pair;
     }
 
+    private MovieDetailsComponent createMovieDetailsComponent(){
+        movieDetailsComponent = ((MovieHubApplication)getActivity().getApplication())
+                .getApplicationComponent()
+                .newMovieDetailsComponent(new MovieDetailsModule(this));
+        return movieDetailsComponent;
+    }
+
+    public void releaseMovieDetailsComponent(){
+        movieDetailsComponent = null;
+    }
     // endregion
 }

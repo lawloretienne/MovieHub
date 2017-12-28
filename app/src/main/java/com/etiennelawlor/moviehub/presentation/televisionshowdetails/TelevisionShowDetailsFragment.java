@@ -52,6 +52,9 @@ import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCredit;
 import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowDetailsWrapper;
+import com.etiennelawlor.moviehub.di.component.SearchComponent;
+import com.etiennelawlor.moviehub.di.component.TelevisionShowDetailsComponent;
+import com.etiennelawlor.moviehub.di.module.SearchModule;
 import com.etiennelawlor.moviehub.di.module.TelevisionShowDetailsModule;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
@@ -160,6 +163,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     private TelevisionShowCreditsAdapter crewAdapter;
     private Transition sharedElementEnterTransition;
     private TelevisionShowDetailsWrapper televisionShowDetailsWrapper;
+    private TelevisionShowDetailsComponent televisionShowDetailsComponent;
     private final Handler handler = new Handler();
     // endregion
 
@@ -428,10 +432,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
 
         getActivity().supportPostponeEnterTransition();
 
-        ((MovieHubApplication)getActivity().getApplication())
-                .getComponent()
-                .plus(new TelevisionShowDetailsModule(this))
-                .inject(this);
+        createTelevisionShowDetailsComponent().inject(this);
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
 
@@ -487,6 +488,13 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
         removeListeners();
         unbinder.unbind();
         televisionShowDetailsPresenter.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        releaseTelevisionShowDetailsComponent();
     }
     // endregion
 
@@ -891,5 +899,15 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
         return pair;
     }
 
+    private TelevisionShowDetailsComponent createTelevisionShowDetailsComponent(){
+        televisionShowDetailsComponent = ((MovieHubApplication)getActivity().getApplication())
+                .getApplicationComponent()
+                .newTelevisionShowDetailsComponent(new TelevisionShowDetailsModule(this));
+        return televisionShowDetailsComponent;
+    }
+
+    public void releaseTelevisionShowDetailsComponent(){
+        televisionShowDetailsComponent = null;
+    }
     // endregion
 }

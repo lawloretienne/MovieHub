@@ -21,6 +21,9 @@ import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsPage;
+import com.etiennelawlor.moviehub.di.component.SearchComponent;
+import com.etiennelawlor.moviehub.di.component.TelevisionShowsComponent;
+import com.etiennelawlor.moviehub.di.module.SearchModule;
 import com.etiennelawlor.moviehub.di.module.TelevisionShowsModule;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
@@ -69,6 +72,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
     private StaggeredGridLayoutManager layoutManager;
     private boolean isLoading = false;
     private TelevisionShowsPage televisionShowsPage;
+    private TelevisionShowsComponent televisionShowsComponent;
     // endregion
 
     // region Injected Variables
@@ -130,10 +134,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ((MovieHubApplication)getActivity().getApplication())
-                .getComponent()
-                .plus(new TelevisionShowsModule(this))
-                .inject(this);
+        createTelevisionShowsComponent().inject(this);
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
     }
@@ -174,6 +175,12 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
         televisionShowsPresenter.onDestroyView();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        releaseTelevisionShowsComponent();
+    }
     // endregion
 
     // region TelevisionShowsAdapter.OnItemClickListener Methods
@@ -382,6 +389,17 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
 
     public void scrollToTop(){
         recyclerView.scrollToPosition(0);
+    }
+
+    private TelevisionShowsComponent createTelevisionShowsComponent(){
+        televisionShowsComponent = ((MovieHubApplication)getActivity().getApplication())
+                .getApplicationComponent()
+                .newTelevisionShowsComponent(new TelevisionShowsModule(this));
+        return televisionShowsComponent;
+    }
+
+    public void releaseTelevisionShowsComponent(){
+        televisionShowsComponent = null;
     }
     // endregion
 }

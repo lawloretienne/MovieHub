@@ -13,5 +13,6 @@ import dagger.Subcomponent;
 @MoviesScope
 @Subcomponent(modules = {MovieDetailsModule.class})
 public interface MovieDetailsComponent {
+    // Setup injection targets
     void inject(MovieDetailsFragment target);
 }

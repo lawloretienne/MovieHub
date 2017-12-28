@@ -10,9 +10,6 @@ import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDate;
 import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDateEnvelope;
 import com.etiennelawlor.moviehub.data.repositories.movie.models.MovieDetailsWrapper;
 import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesPage;
-import com.etiennelawlor.moviehub.di.component.DaggerApplicationComponent;
-import com.etiennelawlor.moviehub.di.module.ApplicationModule;
-import com.etiennelawlor.moviehub.di.module.NetworkModule;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -40,11 +37,7 @@ public class MovieRemoteDataSource implements MovieDataSourceContract.RemoteDate
 
     // region Constructors
     public MovieRemoteDataSource() {
-        DaggerApplicationComponent.builder()
-                .applicationModule(new ApplicationModule(MovieHubApplication.getInstance()))
-                .build()
-                .plus(new NetworkModule())
-                .inject(this);
+        MovieHubApplication.getInstance().createNetworkComponent().inject(this);
     }
     // endregion
 

@@ -16,6 +16,7 @@ import dagger.Subcomponent;
 @NetworkScope
 @Subcomponent(modules = {NetworkModule.class})
 public interface NetworkComponent {
+    // Setup injection targets
     void inject(MovieRemoteDataSource target);
     void inject(TelevisionShowRemoteDataSource target);
     void inject(PersonRemoteDataSource target);

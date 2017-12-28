@@ -5,9 +5,6 @@ import com.etiennelawlor.moviehub.data.network.MovieHubService;
 import com.etiennelawlor.moviehub.data.network.response.PersonCredit;
 import com.etiennelawlor.moviehub.data.repositories.person.models.PersonDetailsWrapper;
 import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsPage;
-import com.etiennelawlor.moviehub.di.component.DaggerApplicationComponent;
-import com.etiennelawlor.moviehub.di.module.ApplicationModule;
-import com.etiennelawlor.moviehub.di.module.NetworkModule;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -35,11 +32,7 @@ public class PersonRemoteDataSource implements PersonDataSourceContract.RemoteDa
 
     // region Constructors
     public PersonRemoteDataSource() {
-        DaggerApplicationComponent.builder()
-                .applicationModule(new ApplicationModule(MovieHubApplication.getInstance()))
-                .build()
-                .plus(new NetworkModule())
-                .inject(this);
+        MovieHubApplication.getInstance().createNetworkComponent().inject(this);
     }
     // endregion
 

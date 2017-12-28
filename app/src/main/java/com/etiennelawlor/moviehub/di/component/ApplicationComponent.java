@@ -1,6 +1,7 @@
 package com.etiennelawlor.moviehub.di.component;
 
 import com.etiennelawlor.moviehub.MovieHubApplication;
+import com.etiennelawlor.moviehub.di.module.AndroidModule;
 import com.etiennelawlor.moviehub.di.module.ApplicationModule;
 import com.etiennelawlor.moviehub.di.module.MovieDetailsModule;
 import com.etiennelawlor.moviehub.di.module.MoviesModule;
@@ -20,17 +21,17 @@ import dagger.Component;
  */
 
 @Singleton
-@Component(modules = ApplicationModule.class)
+@Component(modules = {ApplicationModule.class, AndroidModule.class} )
 public interface ApplicationComponent {
+    // Setup injection targets
     void inject(MovieHubApplication target);
 
-    NetworkComponent plus(NetworkModule networkModule);
-    MoviesComponent plus(MoviesModule moviesModule);
-    MovieDetailsComponent plus(MovieDetailsModule movieDetailsModule);
-    TelevisionShowsComponent plus(TelevisionShowsModule televisionShowsModule);
-    TelevisionShowDetailsComponent plus(TelevisionShowDetailsModule televisionShowDetailsModule);
-    PersonsComponent plus(PersonsModule personsModule);
-    PersonDetailsComponent plus(PersonDetailsModule personDetailsModule);
-    SearchComponent plus(SearchModule searchModule);
-
+    NetworkComponent newNetworkComponent(NetworkModule networkModule);
+    MoviesComponent newMoviesComponent(MoviesModule moviesModule);
+    MovieDetailsComponent newMovieDetailsComponent(MovieDetailsModule movieDetailsModule);
+    TelevisionShowsComponent newTelevisionShowsComponent(TelevisionShowsModule televisionShowsModule);
+    TelevisionShowDetailsComponent newTelevisionShowDetailsComponent(TelevisionShowDetailsModule televisionShowDetailsModule);
+    PersonsComponent newPersonsComponent(PersonsModule personsModule);
+    PersonDetailsComponent newPersonDetailsComponent(PersonDetailsModule personDetailsModule);
+    SearchComponent newSearchComponent(SearchModule searchModule);
 }

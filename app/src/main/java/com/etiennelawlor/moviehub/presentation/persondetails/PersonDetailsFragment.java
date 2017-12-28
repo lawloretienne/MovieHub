@@ -54,7 +54,10 @@ import com.etiennelawlor.moviehub.data.network.response.ProfileImage;
 import com.etiennelawlor.moviehub.data.network.response.ProfileImages;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.repositories.person.models.PersonDetailsWrapper;
+import com.etiennelawlor.moviehub.di.component.PersonDetailsComponent;
+import com.etiennelawlor.moviehub.di.component.TelevisionShowDetailsComponent;
 import com.etiennelawlor.moviehub.di.module.PersonDetailsModule;
+import com.etiennelawlor.moviehub.di.module.TelevisionShowDetailsModule;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.common.GravitySnapHelper;
@@ -155,6 +158,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     private PersonCreditsAdapter crewAdapter;
     private Transition sharedElementEnterTransition;
     private PersonDetailsWrapper personDetailsWrapper;
+    private PersonDetailsComponent personDetailsComponent;
     private final Handler handler = new Handler();
     // endregion
 
@@ -449,10 +453,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
 
         getActivity().supportPostponeEnterTransition();
 
-        ((MovieHubApplication)getActivity().getApplication())
-                .getComponent()
-                .plus(new PersonDetailsModule(this))
-                .inject(this);
+        createPersonDetailsComponent().inject(this);
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
 
@@ -507,6 +508,13 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
         removeListeners();
         unbinder.unbind();
         personDetailsPresenter.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        releasePersonDetailsComponent();
     }
     // endregion
 
@@ -910,5 +918,15 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
         return pair;
     }
 
+    private PersonDetailsComponent createPersonDetailsComponent(){
+        personDetailsComponent = ((MovieHubApplication)getActivity().getApplication())
+                .getApplicationComponent()
+                .newPersonDetailsComponent(new PersonDetailsModule(this));
+        return personDetailsComponent;
+    }
+
+    public void releasePersonDetailsComponent(){
+        personDetailsComponent = null;
+    }
     // endregion
 }

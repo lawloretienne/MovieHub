@@ -9,6 +9,8 @@ import com.etiennelawlor.moviehub.data.network.MovieHubService;
 
 import java.io.File;
 
+import javax.inject.Singleton;
+
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.Cache;
@@ -23,7 +25,7 @@ import timber.log.Timber;
  * Created by etiennelawlor on 12/25/17.
  */
 
-@Module(includes = ApplicationModule.class)
+@Module
 public class NetworkModule {
 
     public NetworkModule() {
@@ -82,5 +84,10 @@ public class NetworkModule {
                 .client(okHttpClient)
                 .build();
         return retrofit;
+    }
+
+    @Provides
+    public MovieHubService provideMovieHubService(Retrofit retrofit) {
+        return retrofit.create(MovieHubService.class);
     }
 }

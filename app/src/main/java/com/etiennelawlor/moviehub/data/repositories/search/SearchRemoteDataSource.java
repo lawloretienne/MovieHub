@@ -6,9 +6,6 @@ import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.repositories.search.models.SearchWrapper;
-import com.etiennelawlor.moviehub.di.component.DaggerApplicationComponent;
-import com.etiennelawlor.moviehub.di.module.ApplicationModule;
-import com.etiennelawlor.moviehub.di.module.NetworkModule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,11 +27,7 @@ public class SearchRemoteDataSource implements SearchDataSourceContract.RemoteDa
 
     // region Constructors
     public SearchRemoteDataSource() {
-        DaggerApplicationComponent.builder()
-                .applicationModule(new ApplicationModule(MovieHubApplication.getInstance()))
-                .build()
-                .plus(new NetworkModule())
-                .inject(this);
+        MovieHubApplication.getInstance().createNetworkComponent().inject(this);
     }
     // endregion
 

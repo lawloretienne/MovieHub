@@ -25,22 +25,7 @@ public class ApplicationModule {
     }
 
     @Provides
-    public Context provideContext() {
-        return application.getApplicationContext();
-    }
-
-    @Provides
     public Application provideApplication() {
         return application;
-    }
-
-    @Provides
-    public SharedPreferences provideSharedPreferences(Context context) {
-        return PreferenceManager.getDefaultSharedPreferences(context);
-    }
-
-    @Provides
-    public MovieHubService provideMovieHubService(Retrofit retrofit) {
-        return retrofit.create(MovieHubService.class);
     }
 }

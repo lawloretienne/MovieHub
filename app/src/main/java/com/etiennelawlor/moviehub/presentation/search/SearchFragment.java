@@ -33,6 +33,7 @@ import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
+import com.etiennelawlor.moviehub.di.component.SearchComponent;
 import com.etiennelawlor.moviehub.di.module.SearchModule;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
@@ -107,6 +108,7 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
     private InitialValueObservable<CharSequence> searchQueryChangeObservable;
     private Transition sharedElementEnterTransition;
     private Transition sharedElementReturnTransition;
+    private SearchComponent searchComponent;
     // endregion
 
     // region Injected Variables
@@ -231,10 +233,7 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ((MovieHubApplication)getActivity().getApplication())
-                .getComponent()
-                .plus(new SearchModule(this))
-                .inject(this);
+        createSearchComponent().inject(this);
 
         setHasOptionsMenu(true);
 
@@ -276,39 +275,6 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
         searchPresenter.onLoadSearch(searchQueryChangeObservable);
     }
 
-    private void setUpMoviesLayout(){
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        moviesRecyclerView.setLayoutManager(layoutManager);
-        searchMoviesAdapter = new SearchMoviesAdapter(getContext());
-//        moviesRecyclerView.setItemAnimator(new SlideInRightAnimator());
-        searchMoviesAdapter.setOnItemClickListener(searchMoviesAdapterOnItemClickListener);
-        moviesRecyclerView.setAdapter(searchMoviesAdapter);
-        SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
-        snapHelper.attachToRecyclerView(moviesRecyclerView);
-    }
-
-    private void setUpTelevisionShowsLayout(){
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        televisionShowsRecyclerView.setLayoutManager(layoutManager);
-        searchTelevisionShowsAdapter = new SearchTelevisionShowsAdapter(getContext());
-//        televisionShowsRecyclerView.setItemAnimator(new SlideInRightAnimator());
-        searchTelevisionShowsAdapter.setOnItemClickListener(searchTelevisionShowsAdapterOnItemClickListener);
-        televisionShowsRecyclerView.setAdapter(searchTelevisionShowsAdapter);
-        SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
-        snapHelper.attachToRecyclerView(televisionShowsRecyclerView);
-    }
-
-    private void setUpPeopleLayout(){
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        personsRecyclerView.setLayoutManager(layoutManager);
-        searchPersonsAdapter = new SearchPersonsAdapter(getContext());
-//        personsRecyclerView.setItemAnimator(new SlideInRightAnimator());
-        searchPersonsAdapter.setOnItemClickListener(searchPersonsAdapterOnItemClickListener);
-        personsRecyclerView.setAdapter(searchPersonsAdapter);
-        SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
-        snapHelper.attachToRecyclerView(personsRecyclerView);
-    }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -319,6 +285,12 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
         searchPresenter.onDestroyView();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        releaseSearchComponent();
+    }
     // endregion
 
     @Override
@@ -503,6 +475,39 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
     // endregion
 
     // region Helper Methods
+    private void setUpMoviesLayout(){
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        moviesRecyclerView.setLayoutManager(layoutManager);
+        searchMoviesAdapter = new SearchMoviesAdapter(getContext());
+//        moviesRecyclerView.setItemAnimator(new SlideInRightAnimator());
+        searchMoviesAdapter.setOnItemClickListener(searchMoviesAdapterOnItemClickListener);
+        moviesRecyclerView.setAdapter(searchMoviesAdapter);
+        SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
+        snapHelper.attachToRecyclerView(moviesRecyclerView);
+    }
+
+    private void setUpTelevisionShowsLayout(){
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        televisionShowsRecyclerView.setLayoutManager(layoutManager);
+        searchTelevisionShowsAdapter = new SearchTelevisionShowsAdapter(getContext());
+//        televisionShowsRecyclerView.setItemAnimator(new SlideInRightAnimator());
+        searchTelevisionShowsAdapter.setOnItemClickListener(searchTelevisionShowsAdapterOnItemClickListener);
+        televisionShowsRecyclerView.setAdapter(searchTelevisionShowsAdapter);
+        SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
+        snapHelper.attachToRecyclerView(televisionShowsRecyclerView);
+    }
+
+    private void setUpPeopleLayout(){
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        personsRecyclerView.setLayoutManager(layoutManager);
+        searchPersonsAdapter = new SearchPersonsAdapter(getContext());
+//        personsRecyclerView.setItemAnimator(new SlideInRightAnimator());
+        searchPersonsAdapter.setOnItemClickListener(searchPersonsAdapterOnItemClickListener);
+        personsRecyclerView.setAdapter(searchPersonsAdapter);
+        SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
+        snapHelper.attachToRecyclerView(personsRecyclerView);
+    }
+
     private void removeListeners() {
         sharedElementEnterTransition.removeListener(enterTransitionTransitionListener);
 //        sharedElementReturnTransition.removeListener(returnTransitionTransitionListener);
@@ -571,6 +576,17 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
             pair = Pair.create(appBar, resources.getString(R.string.transition_app_bar));
         }
         return pair;
+    }
+
+    private SearchComponent createSearchComponent(){
+        searchComponent = ((MovieHubApplication)getActivity().getApplication())
+                .getApplicationComponent()
+                .newSearchComponent(new SearchModule(this));
+        return searchComponent;
+    }
+
+    public void releaseSearchComponent(){
+        searchComponent = null;
     }
     // endregion
 }

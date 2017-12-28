@@ -13,5 +13,6 @@ import dagger.Subcomponent;
 @PersonsScope
 @Subcomponent(modules = {PersonsModule.class})
 public interface PersonsComponent {
+    // Setup injection targets
     void inject(PersonsFragment target);
 }

@@ -21,7 +21,10 @@ import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsPage;
+import com.etiennelawlor.moviehub.di.component.PersonsComponent;
+import com.etiennelawlor.moviehub.di.component.SearchComponent;
 import com.etiennelawlor.moviehub.di.module.PersonsModule;
+import com.etiennelawlor.moviehub.di.module.SearchModule;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.persondetails.PersonDetailsActivity;
@@ -68,6 +71,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     private Unbinder unbinder;
     private StaggeredGridLayoutManager layoutManager;
     private PersonsPage personsPage;
+    private PersonsComponent personsComponent;
     private boolean isLoading = false;
     // endregion
 
@@ -130,10 +134,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ((MovieHubApplication)getActivity().getApplication())
-                .getComponent()
-                .plus(new PersonsModule(this))
-                .inject(this);
+        createPersonsComponent().inject(this);
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
     }
@@ -174,6 +175,12 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
         personsPresenter.onDestroyView();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        releasePersonsComponent();
+    }
     // endregion
 
     // region PersonsAdapter.OnItemClickListener Methods
@@ -382,6 +389,17 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
 
     public void scrollToTop(){
         recyclerView.scrollToPosition(0);
+    }
+
+    private PersonsComponent createPersonsComponent(){
+        personsComponent = ((MovieHubApplication)getActivity().getApplication())
+                .getApplicationComponent()
+                .newPersonsComponent(new PersonsModule(this));
+        return personsComponent;
+    }
+
+    public void releasePersonsComponent(){
+        personsComponent = null;
     }
     // endregion
 }

@@ -13,5 +13,6 @@ import dagger.Subcomponent;
 @PersonsScope
 @Subcomponent(modules = {SearchModule.class})
 public interface SearchComponent {
+    // Setup injection targets
     void inject(SearchFragment target);
 }
