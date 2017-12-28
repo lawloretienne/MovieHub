@@ -11,8 +11,7 @@ import com.etiennelawlor.moviehub.di.module.PersonsModule;
 import com.etiennelawlor.moviehub.di.module.SearchModule;
 import com.etiennelawlor.moviehub.di.module.TelevisionShowDetailsModule;
 import com.etiennelawlor.moviehub.di.module.TelevisionShowsModule;
-
-import javax.inject.Singleton;
+import com.etiennelawlor.moviehub.di.scope.ApplicationScope;
 
 import dagger.Component;
 
@@ -20,7 +19,7 @@ import dagger.Component;
  * Created by etiennelawlor on 2/9/17.
  */
 
-@Singleton
+@ApplicationScope
 @Component(modules = {ApplicationModule.class, AndroidModule.class} )
 public interface ApplicationComponent {
     // Setup injection targets
