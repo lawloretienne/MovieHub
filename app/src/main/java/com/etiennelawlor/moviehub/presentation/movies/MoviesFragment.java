@@ -22,9 +22,7 @@ import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesPage;
 import com.etiennelawlor.moviehub.di.component.MoviesComponent;
-import com.etiennelawlor.moviehub.di.component.SearchComponent;
 import com.etiennelawlor.moviehub.di.module.MoviesModule;
-import com.etiennelawlor.moviehub.di.module.SearchModule;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.moviedetails.MovieDetailsActivity;
@@ -396,7 +394,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     private MoviesComponent createMoviesComponent(){
         moviesComponent = ((MovieHubApplication)getActivity().getApplication())
                 .getApplicationComponent()
-                .newMoviesComponent(new MoviesModule(this));
+                .linkMoviesComponent(new MoviesModule(this));
         return moviesComponent;
     }
 

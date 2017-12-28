@@ -21,9 +21,7 @@ import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsPage;
-import com.etiennelawlor.moviehub.di.component.SearchComponent;
 import com.etiennelawlor.moviehub.di.component.TelevisionShowsComponent;
-import com.etiennelawlor.moviehub.di.module.SearchModule;
 import com.etiennelawlor.moviehub.di.module.TelevisionShowsModule;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
@@ -394,7 +392,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
     private TelevisionShowsComponent createTelevisionShowsComponent(){
         televisionShowsComponent = ((MovieHubApplication)getActivity().getApplication())
                 .getApplicationComponent()
-                .newTelevisionShowsComponent(new TelevisionShowsModule(this));
+                .linkTelevisionShowsComponent(new TelevisionShowsModule(this));
         return televisionShowsComponent;
     }
 

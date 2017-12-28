@@ -2,7 +2,6 @@ package com.etiennelawlor.moviehub.domain;
 
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowDataSourceContract;
 import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsPage;
-import com.etiennelawlor.moviehub.util.EspressoIdlingResource;
 import com.etiennelawlor.moviehub.util.rxjava.SchedulerTransformer;
 
 import io.reactivex.disposables.CompositeDisposable;

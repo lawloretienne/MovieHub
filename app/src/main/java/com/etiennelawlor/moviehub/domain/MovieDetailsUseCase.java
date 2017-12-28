@@ -2,7 +2,6 @@ package com.etiennelawlor.moviehub.domain;
 
 import com.etiennelawlor.moviehub.data.repositories.movie.MovieDataSourceContract;
 import com.etiennelawlor.moviehub.data.repositories.movie.models.MovieDetailsWrapper;
-import com.etiennelawlor.moviehub.util.EspressoIdlingResource;
 import com.etiennelawlor.moviehub.util.rxjava.SchedulerTransformer;
 
 import io.reactivex.disposables.CompositeDisposable;

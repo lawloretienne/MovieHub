@@ -53,9 +53,7 @@ import com.etiennelawlor.moviehub.data.network.response.MovieCredit;
 import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.data.repositories.movie.models.MovieDetailsWrapper;
 import com.etiennelawlor.moviehub.di.component.MovieDetailsComponent;
-import com.etiennelawlor.moviehub.di.component.SearchComponent;
 import com.etiennelawlor.moviehub.di.module.MovieDetailsModule;
-import com.etiennelawlor.moviehub.di.module.SearchModule;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.common.GravitySnapHelper;
@@ -924,7 +922,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
     private MovieDetailsComponent createMovieDetailsComponent(){
         movieDetailsComponent = ((MovieHubApplication)getActivity().getApplication())
                 .getApplicationComponent()
-                .newMovieDetailsComponent(new MovieDetailsModule(this));
+                .linkMovieDetailsComponent(new MovieDetailsModule(this));
         return movieDetailsComponent;
     }
 

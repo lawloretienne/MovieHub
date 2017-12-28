@@ -9,8 +9,6 @@ import com.etiennelawlor.moviehub.data.network.MovieHubService;
 
 import java.io.File;
 
-import javax.inject.Singleton;
-
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.Cache;

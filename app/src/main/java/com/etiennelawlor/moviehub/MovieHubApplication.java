@@ -69,7 +69,7 @@ public class MovieHubApplication extends Application {
 
     public NetworkComponent createNetworkComponent(){
         return getApplicationComponent()
-                    .newNetworkComponent(new NetworkModule());
+                    .linkNetworkComponent(new NetworkModule());
     }
 
     public ApplicationComponent getApplicationComponent() {

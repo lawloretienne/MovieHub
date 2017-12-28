@@ -52,9 +52,7 @@ import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCredit;
 import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowDetailsWrapper;
-import com.etiennelawlor.moviehub.di.component.SearchComponent;
 import com.etiennelawlor.moviehub.di.component.TelevisionShowDetailsComponent;
-import com.etiennelawlor.moviehub.di.module.SearchModule;
 import com.etiennelawlor.moviehub.di.module.TelevisionShowDetailsModule;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
@@ -902,7 +900,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     private TelevisionShowDetailsComponent createTelevisionShowDetailsComponent(){
         televisionShowDetailsComponent = ((MovieHubApplication)getActivity().getApplication())
                 .getApplicationComponent()
-                .newTelevisionShowDetailsComponent(new TelevisionShowDetailsModule(this));
+                .linkTelevisionShowDetailsComponent(new TelevisionShowDetailsModule(this));
         return televisionShowDetailsComponent;
     }
 

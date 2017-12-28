@@ -55,9 +55,7 @@ import com.etiennelawlor.moviehub.data.network.response.ProfileImages;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.repositories.person.models.PersonDetailsWrapper;
 import com.etiennelawlor.moviehub.di.component.PersonDetailsComponent;
-import com.etiennelawlor.moviehub.di.component.TelevisionShowDetailsComponent;
 import com.etiennelawlor.moviehub.di.module.PersonDetailsModule;
-import com.etiennelawlor.moviehub.di.module.TelevisionShowDetailsModule;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.common.GravitySnapHelper;
@@ -921,7 +919,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     private PersonDetailsComponent createPersonDetailsComponent(){
         personDetailsComponent = ((MovieHubApplication)getActivity().getApplication())
                 .getApplicationComponent()
-                .newPersonDetailsComponent(new PersonDetailsModule(this));
+                .linkPersonDetailsComponent(new PersonDetailsModule(this));
         return personDetailsComponent;
     }
 
