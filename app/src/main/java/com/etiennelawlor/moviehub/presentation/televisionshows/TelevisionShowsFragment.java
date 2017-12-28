@@ -392,7 +392,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
     private TelevisionShowsComponent createTelevisionShowsComponent(){
         televisionShowsComponent = ((MovieHubApplication)getActivity().getApplication())
                 .getApplicationComponent()
-                .linkTelevisionShowsComponent(new TelevisionShowsModule(this));
+                .createSubcomponent(new TelevisionShowsModule(this));
         return televisionShowsComponent;
     }
 

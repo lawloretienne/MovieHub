@@ -919,7 +919,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     private PersonDetailsComponent createPersonDetailsComponent(){
         personDetailsComponent = ((MovieHubApplication)getActivity().getApplication())
                 .getApplicationComponent()
-                .linkPersonDetailsComponent(new PersonDetailsModule(this));
+                .createSubcomponent(new PersonDetailsModule(this));
         return personDetailsComponent;
     }
 

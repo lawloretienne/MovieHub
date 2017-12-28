@@ -581,7 +581,7 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
     private SearchComponent createSearchComponent(){
         searchComponent = ((MovieHubApplication)getActivity().getApplication())
                 .getApplicationComponent()
-                .linkSearchComponent(new SearchModule(this));
+                .createSubcomponent(new SearchModule(this));
         return searchComponent;
     }
 

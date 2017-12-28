@@ -8,6 +8,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.inject.Inject;
+
 import io.reactivex.observers.TestObserver;
 import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.Dispatcher;
@@ -27,6 +29,9 @@ public class MovieRemoteDataSourceTest {
     private MockWebServer server;
     private JsonReader jsonReader;
     private MovieHubService movieHubService;
+
+//    @Inject
+//    MovieHubService movieHubService;
 
 //    @Inject
 //    MovieHubService movieHubService;
@@ -68,6 +73,9 @@ public class MovieRemoteDataSourceTest {
 //                .build()
 //                .plus(new NetworkModule())
 //                .inject(this);
+
+//        MovieHubApplication.getInstance().createNetworkComponent().inject(this);
+
     }
 
     @Test

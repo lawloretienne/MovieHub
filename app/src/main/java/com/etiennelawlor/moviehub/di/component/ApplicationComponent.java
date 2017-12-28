@@ -25,12 +25,12 @@ public interface ApplicationComponent {
     // Setup injection targets
     void inject(MovieHubApplication target);
 
-    NetworkComponent linkNetworkComponent(NetworkModule networkModule);
-    MoviesComponent linkMoviesComponent(MoviesModule moviesModule);
-    MovieDetailsComponent linkMovieDetailsComponent(MovieDetailsModule movieDetailsModule);
-    TelevisionShowsComponent linkTelevisionShowsComponent(TelevisionShowsModule televisionShowsModule);
-    TelevisionShowDetailsComponent linkTelevisionShowDetailsComponent(TelevisionShowDetailsModule televisionShowDetailsModule);
-    PersonsComponent linkPersonsComponent(PersonsModule personsModule);
-    PersonDetailsComponent linkPersonDetailsComponent(PersonDetailsModule personDetailsModule);
-    SearchComponent linkSearchComponent(SearchModule searchModule);
+    NetworkComponent createSubcomponent(NetworkModule networkModule);
+    MoviesComponent createSubcomponent(MoviesModule moviesModule);
+    MovieDetailsComponent createSubcomponent(MovieDetailsModule movieDetailsModule);
+    TelevisionShowsComponent createSubcomponent(TelevisionShowsModule televisionShowsModule);
+    TelevisionShowDetailsComponent createSubcomponent(TelevisionShowDetailsModule televisionShowDetailsModule);
+    PersonsComponent createSubcomponent(PersonsModule personsModule);
+    PersonDetailsComponent createSubcomponent(PersonDetailsModule personDetailsModule);
+    SearchComponent createSubcomponent(SearchModule searchModule);
 }

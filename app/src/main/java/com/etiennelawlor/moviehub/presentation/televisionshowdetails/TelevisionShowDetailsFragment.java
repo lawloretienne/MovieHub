@@ -900,7 +900,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     private TelevisionShowDetailsComponent createTelevisionShowDetailsComponent(){
         televisionShowDetailsComponent = ((MovieHubApplication)getActivity().getApplication())
                 .getApplicationComponent()
-                .linkTelevisionShowDetailsComponent(new TelevisionShowDetailsModule(this));
+                .createSubcomponent(new TelevisionShowDetailsModule(this));
         return televisionShowDetailsComponent;
     }
 

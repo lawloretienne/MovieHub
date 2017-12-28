@@ -922,7 +922,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
     private MovieDetailsComponent createMovieDetailsComponent(){
         movieDetailsComponent = ((MovieHubApplication)getActivity().getApplication())
                 .getApplicationComponent()
-                .linkMovieDetailsComponent(new MovieDetailsModule(this));
+                .createSubcomponent(new MovieDetailsModule(this));
         return movieDetailsComponent;
     }
 

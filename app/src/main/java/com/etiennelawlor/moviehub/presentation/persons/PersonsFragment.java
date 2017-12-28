@@ -392,7 +392,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     private PersonsComponent createPersonsComponent(){
         personsComponent = ((MovieHubApplication)getActivity().getApplication())
                 .getApplicationComponent()
-                .linkPersonsComponent(new PersonsModule(this));
+                .createSubcomponent(new PersonsModule(this));
         return personsComponent;
     }
 

@@ -394,7 +394,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     private MoviesComponent createMoviesComponent(){
         moviesComponent = ((MovieHubApplication)getActivity().getApplication())
                 .getApplicationComponent()
-                .linkMoviesComponent(new MoviesModule(this));
+                .createSubcomponent(new MoviesModule(this));
         return moviesComponent;
     }
 
