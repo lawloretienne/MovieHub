@@ -1,5 +1,6 @@
 package com.etiennelawlor.moviehub.data.repositories.movie;
 
+import com.etiennelawlor.moviehub.data.network.response.MoviesEnvelope;
 import com.etiennelawlor.moviehub.data.repositories.movie.models.MovieDetailsWrapper;
 import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesPage;
 
@@ -27,7 +28,7 @@ public interface MovieDataSourceContract {
     }
 
     interface RemoteDateSource {
-        Single<MoviesPage> getPopularMovies(int currentPage);
+        Single<MoviesEnvelope> getPopularMovies(int currentPage);
 
         Single<MovieDetailsWrapper> getMovieDetails(int movieId);
     }

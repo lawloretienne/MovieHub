@@ -7,11 +7,10 @@ import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.MovieCredit;
 import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDate;
 import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDateEnvelope;
+import com.etiennelawlor.moviehub.data.network.response.MoviesEnvelope;
 import com.etiennelawlor.moviehub.data.repositories.movie.models.MovieDetailsWrapper;
-import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesPage;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -26,8 +25,6 @@ public class MovieRemoteDataSource implements MovieDataSourceContract.RemoteDate
 
     // region Constants
     private static final String ISO_31661 = "US";
-    private static final int PAGE_SIZE = 20;
-    private static final int SEVEN_DAYS = 7;
     // endregion
 
     // region Member Variables
@@ -43,15 +40,8 @@ public class MovieRemoteDataSource implements MovieDataSourceContract.RemoteDate
 
     // region MovieDataSourceContract.RemoteDateSource Methods
     @Override
-    public Single<MoviesPage> getPopularMovies(final int currentPage) {
-        return movieHubService.getPopularMovies(currentPage)
-                .flatMap(moviesEnvelope -> Single.just(moviesEnvelope.getMovies()))
-                .map(movies -> {
-                    boolean isLastPage = movies.size() < PAGE_SIZE ? true : false;
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.add(Calendar.DATE, SEVEN_DAYS);
-                    return new MoviesPage(movies, currentPage, isLastPage, calendar.getTime());
-                });
+    public Single<MoviesEnvelope> getPopularMovies(final int currentPage) {
+        return movieHubService.getPopularMovies(currentPage);
     }
 
     // one or more repositor(ies) -> map response to single domain model

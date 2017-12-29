@@ -1,5 +1,6 @@
 package com.etiennelawlor.moviehub.data.repositories.tv;
 
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowsEnvelope;
 import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowDetailsWrapper;
 import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsPage;
 
@@ -29,7 +30,7 @@ public interface TelevisionShowDataSourceContract {
     }
 
     interface RemoteDateSource {
-        Single<TelevisionShowsPage> getPopularTelevisionShows(int currentPage);
+        Single<TelevisionShowsEnvelope> getPopularTelevisionShows(int currentPage);
 
         Single<TelevisionShowDetailsWrapper> getTelevisionShowDetails(int currentPage);
     }

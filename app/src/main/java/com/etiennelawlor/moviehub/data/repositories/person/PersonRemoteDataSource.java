@@ -1,12 +1,11 @@
 package com.etiennelawlor.moviehub.data.repositories.person;
 
 import com.etiennelawlor.moviehub.data.network.MovieHubService;
+import com.etiennelawlor.moviehub.data.network.response.PeopleEnvelope;
 import com.etiennelawlor.moviehub.data.network.response.PersonCredit;
 import com.etiennelawlor.moviehub.data.repositories.person.models.PersonDetailsWrapper;
-import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsPage;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -18,11 +17,6 @@ import io.reactivex.Single;
  */
 
 public class PersonRemoteDataSource implements PersonDataSourceContract.RemoteDateSource {
-
-    // region Constants
-    private static final int PAGE_SIZE = 20;
-    private static final int SEVEN_DAYS = 7;
-    // endregion
 
     // region Member Variables
     private MovieHubService movieHubService;
@@ -38,15 +32,8 @@ public class PersonRemoteDataSource implements PersonDataSourceContract.RemoteDa
     // region PersonDataSourceContract.RemoteDateSource Methods
 
     @Override
-    public Single<PersonsPage> getPopularPersons(int currentPage) {
-        return movieHubService.getPopularPeople(currentPage)
-                .flatMap(peopleEnvelope -> Single.just(peopleEnvelope.getPersons()))
-                .map(persons -> {
-                    boolean isLastPage = persons.size() < PAGE_SIZE ? true : false;
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.add(Calendar.DATE, SEVEN_DAYS);
-                    return new PersonsPage(persons, currentPage, isLastPage, calendar.getTime() );
-                });
+    public Single<PeopleEnvelope> getPopularPersons(int currentPage) {
+        return movieHubService.getPopularPeople(currentPage);
     }
 
     @Override

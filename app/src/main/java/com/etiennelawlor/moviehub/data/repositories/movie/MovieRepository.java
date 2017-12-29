@@ -3,6 +3,8 @@ package com.etiennelawlor.moviehub.data.repositories.movie;
 import com.etiennelawlor.moviehub.data.repositories.movie.models.MovieDetailsWrapper;
 import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesPage;
 
+import java.util.Calendar;
+
 import io.reactivex.Maybe;
 import io.reactivex.Single;
 
@@ -11,6 +13,11 @@ import io.reactivex.Single;
  */
 
 public class MovieRepository implements MovieDataSourceContract.Repository {
+
+    // region Constants
+    private static final int PAGE_SIZE = 20;
+    private static final int SEVEN_DAYS = 7;
+    // endregion
 
     // region Member Variables
     private MovieDataSourceContract.LocalDateSource movieLocalDataSource;
@@ -31,6 +38,13 @@ public class MovieRepository implements MovieDataSourceContract.Repository {
                 .filter(moviesPage -> !moviesPage.isExpired());
         Single<MoviesPage> remote =
                 movieRemoteDataSource.getPopularMovies(currentPage)
+                        .flatMap(moviesEnvelope -> Single.just(moviesEnvelope.getMovies()))
+                        .map(movies -> {
+                            boolean isLastPage = movies.size() < PAGE_SIZE ? true : false;
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.add(Calendar.DATE, SEVEN_DAYS);
+                            return new MoviesPage(movies, currentPage, isLastPage, calendar.getTime());
+                        })
                         .doOnSuccess(moviesPage -> movieLocalDataSource.savePopularMovies(moviesPage));
 
         return local.switchIfEmpty(remote);

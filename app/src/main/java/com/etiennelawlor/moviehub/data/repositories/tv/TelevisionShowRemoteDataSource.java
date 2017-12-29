@@ -4,11 +4,10 @@ import com.etiennelawlor.moviehub.data.network.MovieHubService;
 import com.etiennelawlor.moviehub.data.network.response.ContentRating;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCredit;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowsEnvelope;
 import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowDetailsWrapper;
-import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsPage;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -23,8 +22,6 @@ public class TelevisionShowRemoteDataSource implements TelevisionShowDataSourceC
 
     // region Constants
     private static final String ISO_31661 = "US";
-    private static final int PAGE_SIZE = 20;
-    private static final int SEVEN_DAYS = 7;
     // endregion
 
     // region Member Variables
@@ -40,15 +37,8 @@ public class TelevisionShowRemoteDataSource implements TelevisionShowDataSourceC
 
     // region TelevisionShowDataSourceContract.RemoteDateSource Methods
     @Override
-    public Single<TelevisionShowsPage> getPopularTelevisionShows(int currentPage) {
-        return movieHubService.getPopularTelevisionShows(currentPage)
-                .flatMap(televisionShowsEnvelope -> Single.just(televisionShowsEnvelope.getTelevisionShows()))
-                .map(televisionShows -> {
-                    boolean isLastPage = televisionShows.size() < PAGE_SIZE ? true : false;
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.add(Calendar.DATE, SEVEN_DAYS);
-                    return new TelevisionShowsPage(televisionShows, currentPage, isLastPage, calendar.getTime() );
-                });
+    public Single<TelevisionShowsEnvelope> getPopularTelevisionShows(int currentPage) {
+        return movieHubService.getPopularTelevisionShows(currentPage);
     }
 
     @Override

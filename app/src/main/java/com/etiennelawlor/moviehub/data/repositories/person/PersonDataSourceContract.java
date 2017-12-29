@@ -1,5 +1,6 @@
 package com.etiennelawlor.moviehub.data.repositories.person;
 
+import com.etiennelawlor.moviehub.data.network.response.PeopleEnvelope;
 import com.etiennelawlor.moviehub.data.repositories.person.models.PersonDetailsWrapper;
 import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsPage;
 
@@ -29,7 +30,7 @@ public interface PersonDataSourceContract {
     }
 
     interface RemoteDateSource {
-        Single<PersonsPage> getPopularPersons(int currentPage);
+        Single<PeopleEnvelope> getPopularPersons(int currentPage);
 
         Single<PersonDetailsWrapper> getPersonDetails(int personId);
     }

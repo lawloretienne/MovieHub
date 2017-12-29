@@ -3,6 +3,8 @@ package com.etiennelawlor.moviehub.data.repositories.tv;
 import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowDetailsWrapper;
 import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsPage;
 
+import java.util.Calendar;
+
 import io.reactivex.Maybe;
 import io.reactivex.Single;
 
@@ -11,6 +13,11 @@ import io.reactivex.Single;
  */
 
 public class TelevisionShowRepository implements TelevisionShowDataSourceContract.Repository {
+
+    // region Constants
+    private static final int PAGE_SIZE = 20;
+    private static final int SEVEN_DAYS = 7;
+    // endregion
 
     // region Member Variables
     private TelevisionShowDataSourceContract.LocalDateSource televisionShowLocalDataSource;
@@ -31,6 +38,13 @@ public class TelevisionShowRepository implements TelevisionShowDataSourceContrac
                 .filter(televisionShowsPage -> !televisionShowsPage.isExpired());
         Single<TelevisionShowsPage> remote =
                 televisionShowRemoteDataSource.getPopularTelevisionShows(currentPage)
+                        .flatMap(televisionShowsEnvelope -> Single.just(televisionShowsEnvelope.getTelevisionShows()))
+                        .map(televisionShows -> {
+                            boolean isLastPage = televisionShows.size() < PAGE_SIZE ? true : false;
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.add(Calendar.DATE, SEVEN_DAYS);
+                            return new TelevisionShowsPage(televisionShows, currentPage, isLastPage, calendar.getTime() );
+                        })
                         .doOnSuccess(televisionShowsPage -> televisionShowLocalDataSource.savePopularTelevisionShows(televisionShowsPage));
 
         return local.switchIfEmpty(remote);
