@@ -27,16 +27,12 @@ public interface MovieHubService {
 
     @GET("movie/popular")
     Single<MoviesEnvelope> getPopularMovies(@Query("page") int page);
-    // MoviesEnvelope -> MoviesResponse
 
     @GET("movie/{movieId}")
     Single<Movie> getMovie(@Path("movieId") long movieId);
 
-    // Movie -> MovieResponse
-
     @GET("movie/{movieId}/credits")
     Single<MovieCreditsEnvelope> getMovieCredits(@Path("movieId") long movieId);
-//    MovieCreditsEnvelope -> MovieCreditsResponse
 
     @GET("movie/{movieId}/similar")
     Single<MoviesEnvelope> getSimilarMovies(@Path("movieId") long movieId);
@@ -79,7 +75,5 @@ public interface MovieHubService {
 
     @GET("search/person")
     Single<PeopleEnvelope> searchPeople(@Query("query") String query, @Query("page") int page);
-
-    // Fire and forget Completable
 
 }

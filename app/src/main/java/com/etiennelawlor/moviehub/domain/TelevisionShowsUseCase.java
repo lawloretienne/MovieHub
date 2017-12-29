@@ -45,7 +45,7 @@ public class TelevisionShowsUseCase implements TelevisionShowsDomainContract.Use
         compositeDisposable.add(disposable);
     }
 
-    // don't pass lifecycle info to usecase, make it simpler, so dont manage compositedisposable or schedulerTransformer inside of use case
+    // don't pass lifecycle info to usecase, make it simpler, so dont manage compositeDisposable or schedulerTransformer inside of use case
 
     // public Single<<X>DomainModel> getPopularTelevisionShows(){
 
