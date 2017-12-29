@@ -1,5 +1,6 @@
 package com.etiennelawlor.moviehub.di.module;
 
+import com.etiennelawlor.moviehub.data.network.MovieHubService;
 import com.etiennelawlor.moviehub.data.repositories.search.SearchDataSourceContract;
 import com.etiennelawlor.moviehub.data.repositories.search.SearchLocalDataSource;
 import com.etiennelawlor.moviehub.data.repositories.search.SearchRemoteDataSource;
@@ -36,8 +37,8 @@ public class SearchModule {
     }
 
     @Provides
-    public SearchDataSourceContract.RemoteDateSource provideSearchRemoteDataSource() {
-        return new SearchRemoteDataSource();
+    public SearchDataSourceContract.RemoteDateSource provideSearchRemoteDataSource(MovieHubService movieHubService) {
+        return new SearchRemoteDataSource(movieHubService);
     }
 
     @Provides

@@ -20,12 +20,11 @@ import dagger.Component;
  */
 
 @ApplicationScope
-@Component(modules = {ApplicationModule.class, AndroidModule.class} )
+@Component(modules = {ApplicationModule.class, AndroidModule.class, NetworkModule.class} )
 public interface ApplicationComponent {
     // Setup injection targets
     void inject(MovieHubApplication target);
 
-    NetworkComponent createSubcomponent(NetworkModule networkModule);
     MoviesComponent createSubcomponent(MoviesModule moviesModule);
     MovieDetailsComponent createSubcomponent(MovieDetailsModule movieDetailsModule);
     TelevisionShowsComponent createSubcomponent(TelevisionShowsModule televisionShowsModule);

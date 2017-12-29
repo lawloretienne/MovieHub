@@ -1,5 +1,6 @@
 package com.etiennelawlor.moviehub.di.module;
 
+import com.etiennelawlor.moviehub.data.network.MovieHubService;
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowDataSourceContract;
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowLocalDataSource;
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowRemoteDataSource;
@@ -34,8 +35,8 @@ public class TelevisionShowDetailsModule {
     }
 
     @Provides
-    public TelevisionShowDataSourceContract.RemoteDateSource provideTelevisionShowRemoteDataSource() {
-        return new TelevisionShowRemoteDataSource();
+    public TelevisionShowDataSourceContract.RemoteDateSource provideTelevisionShowRemoteDataSource(MovieHubService movieHubService) {
+        return new TelevisionShowRemoteDataSource(movieHubService);
     }
 
     @Provides

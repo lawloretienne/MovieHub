@@ -1,6 +1,5 @@
 package com.etiennelawlor.moviehub.data.repositories.search;
 
-import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.data.network.MovieHubService;
 import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.Person;
@@ -20,14 +19,14 @@ import io.reactivex.Single;
 
 public class SearchRemoteDataSource implements SearchDataSourceContract.RemoteDateSource {
 
-    // region Injected Variables
-    @Inject
-    MovieHubService movieHubService;
+    // region Member Variables
+    private MovieHubService movieHubService;
     // endregion
 
     // region Constructors
-    public SearchRemoteDataSource() {
-        MovieHubApplication.getInstance().createNetworkComponent().inject(this);
+    @Inject
+    public SearchRemoteDataSource(MovieHubService movieHubService) {
+        this.movieHubService = movieHubService;
     }
     // endregion
 

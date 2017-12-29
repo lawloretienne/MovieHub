@@ -1,6 +1,5 @@
 package com.etiennelawlor.moviehub.data.repositories.tv;
 
-import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.data.network.MovieHubService;
 import com.etiennelawlor.moviehub.data.network.response.ContentRating;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
@@ -28,14 +27,14 @@ public class TelevisionShowRemoteDataSource implements TelevisionShowDataSourceC
     private static final int SEVEN_DAYS = 7;
     // endregion
 
-    // region Injected Variables
-    @Inject
-    MovieHubService movieHubService;
+    // region Member Variables
+    private MovieHubService movieHubService;
     // endregion
 
     // region Constructors
-    public TelevisionShowRemoteDataSource() {
-        MovieHubApplication.getInstance().createNetworkComponent().inject(this);
+    @Inject
+    public TelevisionShowRemoteDataSource(MovieHubService movieHubService) {
+        this.movieHubService = movieHubService;
     }
     // endregion
 

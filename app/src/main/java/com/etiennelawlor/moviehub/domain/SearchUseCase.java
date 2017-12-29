@@ -31,8 +31,8 @@ public class SearchUseCase implements SearchDomainContract.UseCase {
 
     @Override
     public void clearDisposables() {
-        if(compositeDisposable != null && !compositeDisposable.isDisposed())
-            compositeDisposable.dispose();
+        if (compositeDisposable != null)
+            compositeDisposable.clear();
     }
 
     @Override

@@ -30,16 +30,30 @@ public class TelevisionShowsUseCase implements TelevisionShowsDomainContract.Use
     // region TelevisionShowsDomainContract.UseCase Methods
     @Override
     public void clearDisposables() {
-        if(compositeDisposable != null && !compositeDisposable.isDisposed())
-            compositeDisposable.dispose();
+        if (compositeDisposable != null)
+            compositeDisposable.clear();
+
+        // make use case life cycle aware
     }
 
     @Override
     public void getPopularTelevisionShows(int currentPage, DisposableSingleObserver disposableSingleObserver) {
         Disposable disposable = televisionShowRepository.getPopularTelevisionShows(currentPage)
                 .compose(schedulerTransformer)
+                // .map( transform response to domainmodel) // create mapper class to make this cleaner and write unit tests for the mapper
                 .subscribeWith(disposableSingleObserver);
         compositeDisposable.add(disposable);
     }
+
+    // don't pass lifecycle info to usecase, make it simpler, so dont manage compositedisposable or schedulerTransformer inside of use case
+
+    // public Single<<X>DomainModel> getPopularTelevisionShows(){
+
+    // }
+
+
+    // Execute repository call i get response.  map response -> domainmodel. pass domainmodel to presenter.
+    // DisposableSingleObserver has to be DisposableSingleObserver<<X>DomainModel>
+
     // endregion
 }

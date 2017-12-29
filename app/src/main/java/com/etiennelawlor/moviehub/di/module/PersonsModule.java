@@ -1,5 +1,6 @@
 package com.etiennelawlor.moviehub.di.module;
 
+import com.etiennelawlor.moviehub.data.network.MovieHubService;
 import com.etiennelawlor.moviehub.data.repositories.person.PersonDataSourceContract;
 import com.etiennelawlor.moviehub.data.repositories.person.PersonLocalDataSource;
 import com.etiennelawlor.moviehub.data.repositories.person.PersonRemoteDataSource;
@@ -34,8 +35,8 @@ public class PersonsModule {
     }
 
     @Provides
-    public PersonDataSourceContract.RemoteDateSource providePersonRemoteDataSource() {
-        return new PersonRemoteDataSource();
+    public PersonDataSourceContract.RemoteDateSource providePersonRemoteDataSource(MovieHubService movieHubService) {
+        return new PersonRemoteDataSource(movieHubService);
     }
 
     @Provides

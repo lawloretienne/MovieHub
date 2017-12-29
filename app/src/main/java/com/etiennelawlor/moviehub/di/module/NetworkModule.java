@@ -6,8 +6,11 @@ import android.content.Context;
 import com.etiennelawlor.moviehub.BuildConfig;
 import com.etiennelawlor.moviehub.data.network.AuthorizedNetworkInterceptor;
 import com.etiennelawlor.moviehub.data.network.MovieHubService;
+import com.etiennelawlor.moviehub.di.scope.ApplicationScope;
 
 import java.io.File;
+
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
@@ -85,6 +88,7 @@ public class NetworkModule {
     }
 
     @Provides
+    @ApplicationScope
     public MovieHubService provideMovieHubService(Retrofit retrofit) {
         return retrofit.create(MovieHubService.class);
     }

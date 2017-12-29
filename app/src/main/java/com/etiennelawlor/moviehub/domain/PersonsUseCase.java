@@ -30,8 +30,8 @@ public class PersonsUseCase implements PersonsDomainContract.UseCase {
     // region PersonsDomainContract.UseCase Methods
     @Override
     public void clearDisposables() {
-        if(compositeDisposable != null && !compositeDisposable.isDisposed())
-            compositeDisposable.dispose();
+        if (compositeDisposable != null)
+            compositeDisposable.clear();
     }
 
     @Override

@@ -8,3 +8,11 @@ import io.reactivex.SingleTransformer;
 
 public interface SchedulerTransformer<T> extends SingleTransformer<T, T> {
 }
+
+
+//public interface SchedulerTransformer {
+//    <T> SingleTransformer <T, T> applySchedulers();
+//}
+//
+//// T wrapper response
+//// X Domain Model

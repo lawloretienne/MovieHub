@@ -1,5 +1,6 @@
 package com.etiennelawlor.moviehub.di.module;
 
+import com.etiennelawlor.moviehub.data.network.MovieHubService;
 import com.etiennelawlor.moviehub.data.repositories.movie.MovieDataSourceContract;
 import com.etiennelawlor.moviehub.data.repositories.movie.MovieLocalDataSource;
 import com.etiennelawlor.moviehub.data.repositories.movie.MovieRemoteDataSource;
@@ -34,8 +35,8 @@ public class MovieDetailsModule {
     }
 
     @Provides
-    public MovieDataSourceContract.RemoteDateSource provideMovieRemoteDataSource() {
-        return new MovieRemoteDataSource();
+    public MovieDataSourceContract.RemoteDateSource provideMovieRemoteDataSource(MovieHubService movieHubService) {
+        return new MovieRemoteDataSource(movieHubService);
     }
 
     @Provides

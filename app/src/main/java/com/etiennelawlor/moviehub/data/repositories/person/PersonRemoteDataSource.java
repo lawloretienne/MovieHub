@@ -1,6 +1,5 @@
 package com.etiennelawlor.moviehub.data.repositories.person;
 
-import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.data.network.MovieHubService;
 import com.etiennelawlor.moviehub.data.network.response.PersonCredit;
 import com.etiennelawlor.moviehub.data.repositories.person.models.PersonDetailsWrapper;
@@ -25,14 +24,14 @@ public class PersonRemoteDataSource implements PersonDataSourceContract.RemoteDa
     private static final int SEVEN_DAYS = 7;
     // endregion
 
-    // region Injected Variables
-    @Inject
-    MovieHubService movieHubService;
+    // region Member Variables
+    private MovieHubService movieHubService;
     // endregion
 
     // region Constructors
-    public PersonRemoteDataSource() {
-        MovieHubApplication.getInstance().createNetworkComponent().inject(this);
+    @Inject
+    public PersonRemoteDataSource(MovieHubService movieHubService) {
+        this.movieHubService = movieHubService;
     }
     // endregion
 

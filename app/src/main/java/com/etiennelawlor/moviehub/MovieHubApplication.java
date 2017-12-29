@@ -8,10 +8,8 @@ import android.util.Log;
 
 import com.etiennelawlor.moviehub.di.component.ApplicationComponent;
 import com.etiennelawlor.moviehub.di.component.DaggerApplicationComponent;
-import com.etiennelawlor.moviehub.di.component.NetworkComponent;
 import com.etiennelawlor.moviehub.di.module.AndroidModule;
 import com.etiennelawlor.moviehub.di.module.ApplicationModule;
-import com.etiennelawlor.moviehub.di.module.NetworkModule;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
@@ -65,11 +63,6 @@ public class MovieHubApplication extends Application {
                 .applicationModule(new ApplicationModule(this))
                 .androidModule(new AndroidModule(this))
                 .build();
-    }
-
-    public NetworkComponent createNetworkComponent(){
-        return getApplicationComponent()
-                    .createSubcomponent(new NetworkModule());
     }
 
     public ApplicationComponent getApplicationComponent() {

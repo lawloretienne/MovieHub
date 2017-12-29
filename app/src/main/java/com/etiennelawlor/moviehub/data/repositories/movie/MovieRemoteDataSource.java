@@ -2,7 +2,6 @@ package com.etiennelawlor.moviehub.data.repositories.movie;
 
 import android.text.TextUtils;
 
-import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.data.network.MovieHubService;
 import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.MovieCredit;
@@ -31,13 +30,14 @@ public class MovieRemoteDataSource implements MovieDataSourceContract.RemoteDate
     private static final int SEVEN_DAYS = 7;
     // endregion
 
-    // region Injected Variables
-    @Inject MovieHubService movieHubService;
+    // region Member Variables
+    private MovieHubService movieHubService;
     // endregion
 
     // region Constructors
-    public MovieRemoteDataSource() {
-        MovieHubApplication.getInstance().createNetworkComponent().inject(this);
+    @Inject
+    public MovieRemoteDataSource(MovieHubService movieHubService) {
+        this.movieHubService = movieHubService;
     }
     // endregion
 
@@ -53,6 +53,9 @@ public class MovieRemoteDataSource implements MovieDataSourceContract.RemoteDate
                     return new MoviesPage(movies, currentPage, isLastPage, calendar.getTime());
                 });
     }
+
+    // one or more repositor(ies) -> map response to single domain model
+    // MovieDetailsWrapper to MovieDetailsDomainModel
 
     @Override
     public Single<MovieDetailsWrapper> getMovieDetails(int movieId) {
