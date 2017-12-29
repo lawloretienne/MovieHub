@@ -5,7 +5,10 @@ import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.repositories.person.models.PersonDetailsWrapper;
 import com.etiennelawlor.moviehub.domain.PersonDetailsDomainContract;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
+import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableSingleObserver;
 
 /**
@@ -17,6 +20,7 @@ public class PersonDetailsPresenter implements PersonDetailsUiContract.Presenter
     // region Member Variables
     private final PersonDetailsUiContract.View personDetailsView;
     private final PersonDetailsDomainContract.UseCase personDetailsUseCase;
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
     // endregion
 
     // region Constructors
@@ -32,30 +36,36 @@ public class PersonDetailsPresenter implements PersonDetailsUiContract.Presenter
 
     @Override
     public void onDestroyView() {
-        personDetailsUseCase.clearDisposables();
+        if (compositeDisposable != null)
+            compositeDisposable.clear();
     }
 
     @Override
     public void onLoadPersonDetails(int personId) {
-        personDetailsUseCase.getPersonDetails(personId, new DisposableSingleObserver<PersonDetailsWrapper>() {
-            @Override
-            public void onSuccess(PersonDetailsWrapper personDetailsWrapper) {
-                if(personDetailsWrapper != null){
-                    personDetailsView.showPersonDetails(personDetailsWrapper);
-                }
-            }
+        Disposable disposable = personDetailsUseCase.getPersonDetails(personId)
+//                .compose(schedulerTransformer)
+                .compose(new ProductionSchedulerTransformer<PersonDetailsWrapper>())
+                .subscribeWith(new DisposableSingleObserver<PersonDetailsWrapper>() {
+                    @Override
+                    public void onSuccess(PersonDetailsWrapper personDetailsWrapper) {
+                        if(personDetailsWrapper != null){
+                            personDetailsView.showPersonDetails(personDetailsWrapper);
+                        }
+                    }
 
-            @Override
-            public void onError(Throwable throwable) {
-                throwable.printStackTrace();
+                    @Override
+                    public void onError(Throwable throwable) {
+                        throwable.printStackTrace();
 
-                if(NetworkUtility.isKnownException(throwable)){
+                        if(NetworkUtility.isKnownException(throwable)){
 //                            moviesView.showErrorFooter();
 //                            moviesView.setErrorText("Can't load data.\nCheck your network connection.");
-                    personDetailsView.showErrorView();
-                }
-            }
-        });
+                            personDetailsView.showErrorView();
+                        }
+                    }
+                });
+
+        compositeDisposable.add(disposable);
     }
 
     @Override

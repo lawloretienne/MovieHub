@@ -5,13 +5,10 @@ import com.etiennelawlor.moviehub.data.repositories.person.PersonDataSourceContr
 import com.etiennelawlor.moviehub.data.repositories.person.PersonLocalDataSource;
 import com.etiennelawlor.moviehub.data.repositories.person.PersonRemoteDataSource;
 import com.etiennelawlor.moviehub.data.repositories.person.PersonRepository;
-import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsPage;
 import com.etiennelawlor.moviehub.domain.PersonsDomainContract;
 import com.etiennelawlor.moviehub.domain.PersonsUseCase;
 import com.etiennelawlor.moviehub.presentation.persons.PersonsPresenter;
 import com.etiennelawlor.moviehub.presentation.persons.PersonsUiContract;
-import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
-import com.etiennelawlor.moviehub.util.rxjava.SchedulerTransformer;
 
 import dagger.Module;
 import dagger.Provides;
@@ -45,13 +42,8 @@ public class PersonsModule {
     }
 
     @Provides
-    public SchedulerTransformer<PersonsPage> provideSchedulerTransformer() {
-        return new ProductionSchedulerTransformer<PersonsPage>();
-    }
-
-    @Provides
-    public PersonsDomainContract.UseCase providePersonsUseCase(PersonDataSourceContract.Repository personRepository, SchedulerTransformer<PersonsPage> schedulerTransformer) {
-        return new PersonsUseCase(personRepository, schedulerTransformer);
+    public PersonsDomainContract.UseCase providePersonsUseCase(PersonDataSourceContract.Repository personRepository) {
+        return new PersonsUseCase(personRepository);
     }
 
     @Provides

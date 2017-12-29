@@ -4,9 +4,12 @@ import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesPage;
 import com.etiennelawlor.moviehub.domain.MoviesDomainContract;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
+import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 
 import java.util.List;
 
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableSingleObserver;
 
 /**
@@ -18,6 +21,7 @@ public class MoviesPresenter implements MoviesUiContract.Presenter {
     // region Member Variables
     private final MoviesUiContract.View moviesView;
     private final MoviesDomainContract.UseCase moviesUseCase;
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
     // endregion
 
     // region Constructors
@@ -30,7 +34,8 @@ public class MoviesPresenter implements MoviesUiContract.Presenter {
     // region MoviesUiContract.Presenter Methods
     @Override
     public void onDestroyView() {
-        moviesUseCase.clearDisposables();
+        if (compositeDisposable != null)
+            compositeDisposable.clear();
     }
 
     @Override
@@ -43,59 +48,64 @@ public class MoviesPresenter implements MoviesUiContract.Presenter {
             moviesView.showLoadingFooter();
         }
 
-        moviesUseCase.getPopularMovies(currentPage, new DisposableSingleObserver<MoviesPage>() {
-            @Override
-            public void onSuccess(MoviesPage moviesPage) {
-                if(moviesPage != null){
-                    List<Movie> movies = moviesPage.getMovies();
-                    int currentPage = moviesPage.getPageNumber();
-                    boolean isLastPage = moviesPage.isLastPage();
-                    boolean hasMovies = moviesPage.hasMovies();
-                    if(currentPage == 1){
-                        moviesView.hideLoadingView();
+        Disposable disposable = moviesUseCase.getPopularMovies(currentPage)
+//                .compose(schedulerTransformer)
+                .compose(new ProductionSchedulerTransformer<MoviesPage>())
+                .subscribeWith(new DisposableSingleObserver<MoviesPage>() {
+                    @Override
+                    public void onSuccess(MoviesPage moviesPage) {
+                        if(moviesPage != null){
+                            List<Movie> movies = moviesPage.getMovies();
+                            int currentPage = moviesPage.getPageNumber();
+                            boolean isLastPage = moviesPage.isLastPage();
+                            boolean hasMovies = moviesPage.hasMovies();
+                            if(currentPage == 1){
+                                moviesView.hideLoadingView();
 
-                        if(hasMovies){
-                            moviesView.addHeader();
-                            moviesView.addMoviesToAdapter(movies);
+                                if(hasMovies){
+                                    moviesView.addHeader();
+                                    moviesView.addMoviesToAdapter(movies);
 
-                            if(!isLastPage)
-                                moviesView.addFooter();
+                                    if(!isLastPage)
+                                        moviesView.addFooter();
+                                } else {
+                                    moviesView.showEmptyView();
+                                }
+                            } else {
+                                moviesView.removeFooter();
+
+                                if(hasMovies){
+                                    moviesView.addMoviesToAdapter(movies);
+
+                                    if(!isLastPage)
+                                        moviesView.addFooter();
+                                }
+                            }
+
+                            moviesView.setMoviesPage(moviesPage);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        throwable.printStackTrace();
+
+                        if(currentPage == 1){
+                            moviesView.hideLoadingView();
+
+                            if (NetworkUtility.isKnownException(throwable)) {
+                                moviesView.setErrorText("Can't load data.\nCheck your network connection.");
+                                moviesView.showErrorView();
+                            }
                         } else {
-                            moviesView.showEmptyView();
-                        }
-                    } else {
-                        moviesView.removeFooter();
-
-                        if(hasMovies){
-                            moviesView.addMoviesToAdapter(movies);
-
-                            if(!isLastPage)
-                                moviesView.addFooter();
+                            if(NetworkUtility.isKnownException(throwable)){
+                                moviesView.showErrorFooter();
+                            }
                         }
                     }
+                });
 
-                    moviesView.setMoviesPage(moviesPage);
-                }
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                throwable.printStackTrace();
-
-                if(currentPage == 1){
-                    moviesView.hideLoadingView();
-
-                    if (NetworkUtility.isKnownException(throwable)) {
-                        moviesView.setErrorText("Can't load data.\nCheck your network connection.");
-                        moviesView.showErrorView();
-                    }
-                } else {
-                    if(NetworkUtility.isKnownException(throwable)){
-                        moviesView.showErrorFooter();
-                    }
-                }
-            }
-        });
+        compositeDisposable.add(disposable);
     }
 
     @Override

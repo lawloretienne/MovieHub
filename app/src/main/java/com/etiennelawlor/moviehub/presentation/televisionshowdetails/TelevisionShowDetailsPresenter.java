@@ -5,7 +5,10 @@ import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowDetailsWrapper;
 import com.etiennelawlor.moviehub.domain.TelevisionShowDetailsDomainContract;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
+import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableSingleObserver;
 
 /**
@@ -17,6 +20,7 @@ public class TelevisionShowDetailsPresenter implements TelevisionShowDetailsUiCo
     // region Member Variables
     private final TelevisionShowDetailsUiContract.View televisionShowDetailsView;
     private final TelevisionShowDetailsDomainContract.UseCase televisionShowDetailsUseCase;
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
     // endregion
 
     // region Constructors
@@ -32,30 +36,36 @@ public class TelevisionShowDetailsPresenter implements TelevisionShowDetailsUiCo
 
     @Override
     public void onDestroyView() {
-        televisionShowDetailsUseCase.clearDisposables();
+        if (compositeDisposable != null)
+            compositeDisposable.clear();
     }
 
     @Override
     public void onLoadTelevisionShowDetails(int televisionShowId) {
-        televisionShowDetailsUseCase.getTelevisionShowDetails(televisionShowId, new DisposableSingleObserver<TelevisionShowDetailsWrapper>() {
-            @Override
-            public void onSuccess(TelevisionShowDetailsWrapper televisionShowDetailsWrapper) {
-                if(televisionShowDetailsWrapper != null){
-                    televisionShowDetailsView.showTelevisionShowDetails(televisionShowDetailsWrapper);
-                }
-            }
+        Disposable disposable = televisionShowDetailsUseCase.getTelevisionShowDetails(televisionShowId)
+//                .compose(schedulerTransformer)
+                .compose(new ProductionSchedulerTransformer<TelevisionShowDetailsWrapper>())
+                .subscribeWith(new DisposableSingleObserver<TelevisionShowDetailsWrapper>() {
+                    @Override
+                    public void onSuccess(TelevisionShowDetailsWrapper televisionShowDetailsWrapper) {
+                        if(televisionShowDetailsWrapper != null){
+                            televisionShowDetailsView.showTelevisionShowDetails(televisionShowDetailsWrapper);
+                        }
+                    }
 
-            @Override
-            public void onError(Throwable throwable) {
-                throwable.printStackTrace();
+                    @Override
+                    public void onError(Throwable throwable) {
+                        throwable.printStackTrace();
 
-                if(NetworkUtility.isKnownException(throwable)){
+                        if(NetworkUtility.isKnownException(throwable)){
 //                            moviesView.showErrorFooter();
 //                            moviesView.setErrorText("Can't load data.\nCheck your network connection.");
-                    televisionShowDetailsView.showErrorView();
-                }
-            }
-        });
+                            televisionShowDetailsView.showErrorView();
+                        }
+                    }
+                });
+
+        compositeDisposable.add(disposable);
     }
 
     @Override

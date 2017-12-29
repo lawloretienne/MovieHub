@@ -6,6 +6,7 @@ import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.repositories.search.models.SearchWrapper;
 import com.etiennelawlor.moviehub.domain.SearchDomainContract;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
+import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 import com.etiennelawlor.moviehub.util.rxjava.SchedulerProvider;
 
 import java.util.concurrent.TimeUnit;
@@ -41,13 +42,13 @@ public class SearchPresenter implements SearchUiContract.Presenter {
 
     @Override
     public void onDestroyView() {
-        if(compositeDisposable != null && compositeDisposable.isDisposed())
+        if(compositeDisposable != null)
             compositeDisposable.clear();
     }
 
     @Override
     public void onLoadSearch(Observable<CharSequence> searchQueryChangeObservable) {
-        Disposable disposable = searchQueryChangeObservable
+        Disposable outerDisposable = searchQueryChangeObservable
                 .doOnNext(charSequence -> searchView.hideLoadingView())
                 .debounce(400, TimeUnit.MILLISECONDS)
                 .observeOn(schedulerProvider.ui())
@@ -89,59 +90,64 @@ public class SearchPresenter implements SearchUiContract.Presenter {
 
                     @Override
                     public void onNext(String s) {
-                        searchUseCase.getSearchResponse(s, new DisposableSingleObserver<SearchWrapper>() {
-                            @Override
-                            public void onSuccess(SearchWrapper searchWrapper) {
-                                searchView.hideLoadingView();
-                                if (searchWrapper != null) {
-                                    searchView.clearMoviesAdapter();
-                                    searchView.clearTelevisionShowsAdapter();
-                                    searchView.clearPersonsAdapter();
+                        Disposable innerDisposable = searchUseCase.getSearchResponse(s)
+                            //  .compose(schedulerTransformer)
+                                .compose(new ProductionSchedulerTransformer<>())
+                                .subscribeWith(new DisposableSingleObserver<SearchWrapper>() {
+                                    @Override
+                                    public void onSuccess(SearchWrapper searchWrapper) {
+                                        searchView.hideLoadingView();
+                                        if (searchWrapper != null) {
+                                            searchView.clearMoviesAdapter();
+                                            searchView.clearTelevisionShowsAdapter();
+                                            searchView.clearPersonsAdapter();
 
-                                    if(searchWrapper.hasMovies()){
-                                        searchView.addMoviesToAdapter(searchWrapper.getMovies());
-                                        searchView.showMoviesView();
-                                    } else {
-                                        searchView.hideMoviesView();
+                                            if(searchWrapper.hasMovies()){
+                                                searchView.addMoviesToAdapter(searchWrapper.getMovies());
+                                                searchView.showMoviesView();
+                                            } else {
+                                                searchView.hideMoviesView();
+                                            }
+
+                                            if(searchWrapper.hasTelevisionShows()){
+                                                searchView.addTelevisionShowsToAdapter(searchWrapper.getTelevisionShows());
+                                                searchView.showTelevisionShowsView();
+                                            } else {
+                                                searchView.hideTelevisionShowsView();
+                                            }
+
+                                            if(searchWrapper.hasPersons()){
+                                                searchView.addPersonsToAdapter(searchWrapper.getPersons());
+                                                searchView.showPersonsView();
+                                            } else {
+                                                searchView.hidePersonsView();
+                                            }
+
+                                            if(searchWrapper.hasResults()){
+                                                searchView.hideEmptyView();
+                                            } else {
+                                                searchView.setEmptyText(String.format("No results found for \"%s\"", searchWrapper.getQuery()));
+                                                searchView.showEmptyView();
+                                            }
+                                        }
                                     }
 
-                                    if(searchWrapper.hasTelevisionShows()){
-                                        searchView.addTelevisionShowsToAdapter(searchWrapper.getTelevisionShows());
-                                        searchView.showTelevisionShowsView();
-                                    } else {
-                                        searchView.hideTelevisionShowsView();
+                                    @Override
+                                    public void onError(Throwable throwable) {
+                                        throwable.printStackTrace();
+
+                                        searchView.hideLoadingView();
+
+                                        if (NetworkUtility.isKnownException(throwable)) {
+                                            searchView.showErrorView();
+                                        }
                                     }
+                                });
 
-                                    if(searchWrapper.hasPersons()){
-                                        searchView.addPersonsToAdapter(searchWrapper.getPersons());
-                                        searchView.showPersonsView();
-                                    } else {
-                                        searchView.hidePersonsView();
-                                    }
-
-                                    if(searchWrapper.hasResults()){
-                                        searchView.hideEmptyView();
-                                    } else {
-                                        searchView.setEmptyText(String.format("No results found for \"%s\"", searchWrapper.getQuery()));
-                                        searchView.showEmptyView();
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onError(Throwable throwable) {
-                                throwable.printStackTrace();
-
-                                searchView.hideLoadingView();
-
-                                if (NetworkUtility.isKnownException(throwable)) {
-                                    searchView.showErrorView();
-                                }
-                            }
-                        });
+                        compositeDisposable.add(innerDisposable);
                     }
                 });
-        compositeDisposable.add(disposable);
+        compositeDisposable.add(outerDisposable);
     }
 
     @Override

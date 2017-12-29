@@ -1,6 +1,8 @@
 package com.etiennelawlor.moviehub.domain;
 
-import io.reactivex.observers.DisposableSingleObserver;
+import com.etiennelawlor.moviehub.data.repositories.search.models.SearchWrapper;
+
+import io.reactivex.Single;
 
 /**
  * Created by etiennelawlor on 6/26/17.
@@ -8,7 +10,7 @@ import io.reactivex.observers.DisposableSingleObserver;
 
 public interface SearchDomainContract {
 
-    interface UseCase extends BaseUseCase {
-        void getSearchResponse(String query, DisposableSingleObserver disposableSingleObserver);
+    interface UseCase {
+        Single<SearchWrapper> getSearchResponse(String query);
     }
 }

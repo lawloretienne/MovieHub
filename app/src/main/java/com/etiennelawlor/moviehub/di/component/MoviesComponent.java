@@ -4,8 +4,6 @@ import com.etiennelawlor.moviehub.di.module.MoviesModule;
 import com.etiennelawlor.moviehub.di.scope.PresentationScope;
 import com.etiennelawlor.moviehub.presentation.movies.MoviesFragment;
 
-import javax.inject.Singleton;
-
 import dagger.Subcomponent;
 
 /**

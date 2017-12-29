@@ -5,13 +5,10 @@ import com.etiennelawlor.moviehub.data.repositories.movie.MovieDataSourceContrac
 import com.etiennelawlor.moviehub.data.repositories.movie.MovieLocalDataSource;
 import com.etiennelawlor.moviehub.data.repositories.movie.MovieRemoteDataSource;
 import com.etiennelawlor.moviehub.data.repositories.movie.MovieRepository;
-import com.etiennelawlor.moviehub.data.repositories.movie.models.MovieDetailsWrapper;
 import com.etiennelawlor.moviehub.domain.MovieDetailsDomainContract;
 import com.etiennelawlor.moviehub.domain.MovieDetailsUseCase;
 import com.etiennelawlor.moviehub.presentation.moviedetails.MovieDetailsPresenter;
 import com.etiennelawlor.moviehub.presentation.moviedetails.MovieDetailsUiContract;
-import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
-import com.etiennelawlor.moviehub.util.rxjava.SchedulerTransformer;
 
 import dagger.Module;
 import dagger.Provides;
@@ -45,13 +42,8 @@ public class MovieDetailsModule {
     }
 
     @Provides
-    public SchedulerTransformer<MovieDetailsWrapper> provideSchedulerTransformer() {
-        return new ProductionSchedulerTransformer<MovieDetailsWrapper>();
-    }
-
-    @Provides
-    public MovieDetailsDomainContract.UseCase provideMovieDetailsUseCase(MovieDataSourceContract.Repository movieRepository, SchedulerTransformer<MovieDetailsWrapper> schedulerTransformer) {
-        return new MovieDetailsUseCase(movieRepository, schedulerTransformer);
+    public MovieDetailsDomainContract.UseCase provideMovieDetailsUseCase(MovieDataSourceContract.Repository movieRepository) {
+        return new MovieDetailsUseCase(movieRepository);
     }
 
     @Provides

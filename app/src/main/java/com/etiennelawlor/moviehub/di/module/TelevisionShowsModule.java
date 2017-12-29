@@ -5,13 +5,10 @@ import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowDataSourceC
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowLocalDataSource;
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowRemoteDataSource;
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowRepository;
-import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsPage;
 import com.etiennelawlor.moviehub.domain.TelevisionShowsDomainContract;
 import com.etiennelawlor.moviehub.domain.TelevisionShowsUseCase;
 import com.etiennelawlor.moviehub.presentation.televisionshows.TelevisionShowsPresenter;
 import com.etiennelawlor.moviehub.presentation.televisionshows.TelevisionShowsUiContract;
-import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
-import com.etiennelawlor.moviehub.util.rxjava.SchedulerTransformer;
 
 import dagger.Module;
 import dagger.Provides;
@@ -45,13 +42,8 @@ public class TelevisionShowsModule {
     }
 
     @Provides
-    public SchedulerTransformer<TelevisionShowsPage> provideSchedulerTransformer() {
-        return new ProductionSchedulerTransformer<TelevisionShowsPage>();
-    }
-
-    @Provides
-    public TelevisionShowsDomainContract.UseCase provideTelevisionShowsUseCase(TelevisionShowDataSourceContract.Repository televisionShowRepository, SchedulerTransformer<TelevisionShowsPage> schedulerTransformer) {
-        return new TelevisionShowsUseCase(televisionShowRepository, schedulerTransformer);
+    public TelevisionShowsDomainContract.UseCase provideTelevisionShowsUseCase(TelevisionShowDataSourceContract.Repository televisionShowRepository) {
+        return new TelevisionShowsUseCase(televisionShowRepository);
     }
 
     @Provides

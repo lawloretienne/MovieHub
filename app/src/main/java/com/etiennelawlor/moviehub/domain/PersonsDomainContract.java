@@ -1,6 +1,8 @@
 package com.etiennelawlor.moviehub.domain;
 
-import io.reactivex.observers.DisposableSingleObserver;
+import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsPage;
+
+import io.reactivex.Single;
 
 /**
  * Created by etiennelawlor on 6/26/17.
@@ -8,7 +10,7 @@ import io.reactivex.observers.DisposableSingleObserver;
 
 public interface PersonsDomainContract {
 
-    interface UseCase extends BaseUseCase {
-        void getPopularPersons(int currentPage, DisposableSingleObserver disposableSingleObserver);
+    interface UseCase {
+        Single<PersonsPage> getPopularPersons(int currentPage);
     }
 }

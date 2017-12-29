@@ -4,9 +4,12 @@ import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsPage;
 import com.etiennelawlor.moviehub.domain.TelevisionShowsDomainContract;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
+import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 
 import java.util.List;
 
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableSingleObserver;
 
 /**
@@ -18,6 +21,7 @@ public class TelevisionShowsPresenter implements TelevisionShowsUiContract.Prese
     // region Member Variables
     private final TelevisionShowsUiContract.View televisionShowsView;
     private final TelevisionShowsDomainContract.UseCase televisionShowsUseCase;
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
     // endregion
 
     // region Constructors
@@ -31,7 +35,8 @@ public class TelevisionShowsPresenter implements TelevisionShowsUiContract.Prese
 
     @Override
     public void onDestroyView() {
-        televisionShowsUseCase.clearDisposables();
+        if (compositeDisposable != null)
+            compositeDisposable.clear();
     }
 
     @Override
@@ -44,59 +49,64 @@ public class TelevisionShowsPresenter implements TelevisionShowsUiContract.Prese
             televisionShowsView.showLoadingFooter();
         }
 
-        televisionShowsUseCase.getPopularTelevisionShows(currentPage, new DisposableSingleObserver<TelevisionShowsPage>() {
-            @Override
-            public void onSuccess(TelevisionShowsPage televisionShowsPage) {
-                if(televisionShowsPage != null){
-                    List<TelevisionShow> televisionShows = televisionShowsPage.getTelevisionShows();
-                    int currentPage = televisionShowsPage.getPageNumber();
-                    boolean isLastPage = televisionShowsPage.isLastPage();
-                    boolean hasTelevisionShows = televisionShowsPage.hasTelevisionShows();
-                    if(currentPage == 1){
-                        televisionShowsView.hideLoadingView();
+        Disposable disposable = televisionShowsUseCase.getPopularTelevisionShows(currentPage)
+//                .compose(schedulerTransformer)
+                .compose(new ProductionSchedulerTransformer<TelevisionShowsPage>())
+                .subscribeWith(new DisposableSingleObserver<TelevisionShowsPage>() {
+                    @Override
+                    public void onSuccess(TelevisionShowsPage televisionShowsPage) {
+                        if(televisionShowsPage != null){
+                            List<TelevisionShow> televisionShows = televisionShowsPage.getTelevisionShows();
+                            int currentPage = televisionShowsPage.getPageNumber();
+                            boolean isLastPage = televisionShowsPage.isLastPage();
+                            boolean hasTelevisionShows = televisionShowsPage.hasTelevisionShows();
+                            if(currentPage == 1){
+                                televisionShowsView.hideLoadingView();
 
-                        if(hasTelevisionShows){
-                            televisionShowsView.addHeader();
-                            televisionShowsView.addTelevisionShowsToAdapter(televisionShows);
+                                if(hasTelevisionShows){
+                                    televisionShowsView.addHeader();
+                                    televisionShowsView.addTelevisionShowsToAdapter(televisionShows);
 
-                            if(!isLastPage)
-                                televisionShowsView.addFooter();
+                                    if(!isLastPage)
+                                        televisionShowsView.addFooter();
+                                } else {
+                                    televisionShowsView.showEmptyView();
+                                }
+                            } else {
+                                televisionShowsView.removeFooter();
+
+                                if(hasTelevisionShows){
+                                    televisionShowsView.addTelevisionShowsToAdapter(televisionShows);
+
+                                    if(!isLastPage)
+                                        televisionShowsView.addFooter();
+                                }
+                            }
+
+                            televisionShowsView.setTelevisionShowsPage(televisionShowsPage);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        throwable.printStackTrace();
+
+                        if(currentPage == 1){
+                            televisionShowsView.hideLoadingView();
+
+                            if (NetworkUtility.isKnownException(throwable)) {
+                                televisionShowsView.setErrorText("Can't load data.\nCheck your network connection.");
+                                televisionShowsView.showErrorView();
+                            }
                         } else {
-                            televisionShowsView.showEmptyView();
-                        }
-                    } else {
-                        televisionShowsView.removeFooter();
-
-                        if(hasTelevisionShows){
-                            televisionShowsView.addTelevisionShowsToAdapter(televisionShows);
-
-                            if(!isLastPage)
-                                televisionShowsView.addFooter();
+                            if(NetworkUtility.isKnownException(throwable)){
+                                televisionShowsView.showErrorFooter();
+                            }
                         }
                     }
+                });
 
-                    televisionShowsView.setTelevisionShowsPage(televisionShowsPage);
-                }
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                throwable.printStackTrace();
-
-                if(currentPage == 1){
-                    televisionShowsView.hideLoadingView();
-
-                    if (NetworkUtility.isKnownException(throwable)) {
-                        televisionShowsView.setErrorText("Can't load data.\nCheck your network connection.");
-                        televisionShowsView.showErrorView();
-                    }
-                } else {
-                    if(NetworkUtility.isKnownException(throwable)){
-                        televisionShowsView.showErrorFooter();
-                    }
-                }
-            }
-        });
+        compositeDisposable.add(disposable);
     }
 
     @Override

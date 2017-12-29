@@ -8,8 +8,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.inject.Inject;
-
 import io.reactivex.observers.TestObserver;
 import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.Dispatcher;

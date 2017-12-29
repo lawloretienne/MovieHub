@@ -5,13 +5,10 @@ import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowDataSourceC
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowLocalDataSource;
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowRemoteDataSource;
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowRepository;
-import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowDetailsWrapper;
 import com.etiennelawlor.moviehub.domain.TelevisionShowDetailsDomainContract;
 import com.etiennelawlor.moviehub.domain.TelevisionShowDetailsUseCase;
 import com.etiennelawlor.moviehub.presentation.televisionshowdetails.TelevisionShowDetailsPresenter;
 import com.etiennelawlor.moviehub.presentation.televisionshowdetails.TelevisionShowDetailsUiContract;
-import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
-import com.etiennelawlor.moviehub.util.rxjava.SchedulerTransformer;
 
 import dagger.Module;
 import dagger.Provides;
@@ -44,14 +41,14 @@ public class TelevisionShowDetailsModule {
         return new TelevisionShowRepository(televisionShowLocalDataSource, televisionShowRemoteDataSource);
     }
 
-    @Provides
-    public SchedulerTransformer<TelevisionShowDetailsWrapper> proviedSchedulerTransformer() {
-        return new ProductionSchedulerTransformer<TelevisionShowDetailsWrapper>();
-    }
+//    @Provides
+//    public SchedulerTransformer<TelevisionShowDetailsWrapper> proviedSchedulerTransformer() {
+//        return new ProductionSchedulerTransformer<TelevisionShowDetailsWrapper>();
+//    }
 
     @Provides
-    public TelevisionShowDetailsDomainContract.UseCase provideTelevisionShowDetailsUseCase(TelevisionShowDataSourceContract.Repository televisionShowRepository, SchedulerTransformer<TelevisionShowDetailsWrapper> schedulerTransformer) {
-        return new TelevisionShowDetailsUseCase(televisionShowRepository, schedulerTransformer);
+    public TelevisionShowDetailsDomainContract.UseCase provideTelevisionShowDetailsUseCase(TelevisionShowDataSourceContract.Repository televisionShowRepository) {
+        return new TelevisionShowDetailsUseCase(televisionShowRepository);
     }
 
     @Provides

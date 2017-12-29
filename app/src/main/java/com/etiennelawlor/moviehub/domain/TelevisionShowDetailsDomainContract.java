@@ -1,6 +1,8 @@
 package com.etiennelawlor.moviehub.domain;
 
-import io.reactivex.observers.DisposableSingleObserver;
+import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowDetailsWrapper;
+
+import io.reactivex.Single;
 
 /**
  * Created by etiennelawlor on 6/26/17.
@@ -8,7 +10,7 @@ import io.reactivex.observers.DisposableSingleObserver;
 
 public interface TelevisionShowDetailsDomainContract {
 
-    interface UseCase extends BaseUseCase {
-        void getTelevisionShowDetails(int televisionShowId, DisposableSingleObserver disposableSingleObserver);
+    interface UseCase {
+        Single<TelevisionShowDetailsWrapper> getTelevisionShowDetails(int televisionShowId);
     }
 }
