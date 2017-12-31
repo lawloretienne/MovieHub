@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.data.repositories.mappers;
 
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowsEnvelope;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowsResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowsDataModel;
 
 import java.util.Calendar;
@@ -11,7 +11,7 @@ import java.util.List;
  * Created by etiennelawlor on 12/30/17.
  */
 
-public class TelevisionShowsDataModelMapper implements DataModelMapper<TelevisionShowsEnvelope, TelevisionShowsDataModel> {
+public class TelevisionShowsDataModelMapper implements DataModelMapper<TelevisionShowsResponse, TelevisionShowsDataModel> {
 
     // region Constants
     private static final int PAGE_SIZE = 20;
@@ -19,12 +19,12 @@ public class TelevisionShowsDataModelMapper implements DataModelMapper<Televisio
     // endregion
 
     @Override
-    public TelevisionShowsDataModel mapToDataModel(TelevisionShowsEnvelope televisionShowsEnvelope) {
+    public TelevisionShowsDataModel mapToDataModel(TelevisionShowsResponse televisionShowsResponse) {
         TelevisionShowsDataModel televisionShowsDataModel = new TelevisionShowsDataModel();
 
-        List<TelevisionShow> televisionShows = televisionShowsEnvelope.getTelevisionShows();
+        List<TelevisionShow> televisionShows = televisionShowsResponse.getTelevisionShows();
         televisionShowsDataModel.setLastPage(televisionShows.size() < PAGE_SIZE ? true : false);
-        televisionShowsDataModel.setPageNumber(televisionShowsEnvelope.getPage());
+        televisionShowsDataModel.setPageNumber(televisionShowsResponse.getPage());
         televisionShowsDataModel.setTelevisionShows(televisionShows);
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, SEVEN_DAYS);

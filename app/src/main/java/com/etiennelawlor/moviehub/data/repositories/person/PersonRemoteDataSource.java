@@ -2,8 +2,8 @@ package com.etiennelawlor.moviehub.data.repositories.person;
 
 import com.etiennelawlor.moviehub.data.network.MovieHubService;
 import com.etiennelawlor.moviehub.data.network.response.Person;
-import com.etiennelawlor.moviehub.data.network.response.PersonCreditsEnvelope;
-import com.etiennelawlor.moviehub.data.network.response.PersonsEnvelope;
+import com.etiennelawlor.moviehub.data.network.response.PersonCreditsResponse;
+import com.etiennelawlor.moviehub.data.network.response.PersonsResponse;
 
 import javax.inject.Inject;
 
@@ -29,7 +29,7 @@ public class PersonRemoteDataSource implements PersonDataSourceContract.RemoteDa
     // region PersonDataSourceContract.RemoteDateSource Methods
 
     @Override
-    public Single<PersonsEnvelope> getPopularPersons(int currentPage) {
+    public Single<PersonsResponse> getPopularPersons(int currentPage) {
         return movieHubService.getPopularPersons(currentPage);
     }
 
@@ -39,7 +39,7 @@ public class PersonRemoteDataSource implements PersonDataSourceContract.RemoteDa
     }
 
     @Override
-    public Single<PersonCreditsEnvelope> getPersonCredits(int personId) {
+    public Single<PersonCreditsResponse> getPersonCredits(int personId) {
         return movieHubService.getPersonCredits(personId);
     }
 

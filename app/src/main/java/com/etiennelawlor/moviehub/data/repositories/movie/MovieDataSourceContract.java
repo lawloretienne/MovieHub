@@ -3,7 +3,7 @@ package com.etiennelawlor.moviehub.data.repositories.movie;
 import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.MovieCreditsResponse;
 import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDatesResponse;
-import com.etiennelawlor.moviehub.data.network.response.MoviesEnvelope;
+import com.etiennelawlor.moviehub.data.network.response.MoviesResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.MovieCreditsDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.MovieReleaseDatesDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.MoviesDataModel;
@@ -44,10 +44,10 @@ public interface MovieDataSourceContract {
     }
 
     interface RemoteDateSource {
-        Single<MoviesEnvelope> getPopularMovies(int currentPage);
+        Single<MoviesResponse> getPopularMovies(int currentPage);
         Single<Movie> getMovie(int movieId);
         Single<MovieCreditsResponse> getMovieCredits(int movieId);
-        Single<MoviesEnvelope> getSimilarMovies(int movieId);
+        Single<MoviesResponse> getSimilarMovies(int movieId);
         Single<MovieReleaseDatesResponse> getMovieReleaseDates(int movieId);
     }
 }

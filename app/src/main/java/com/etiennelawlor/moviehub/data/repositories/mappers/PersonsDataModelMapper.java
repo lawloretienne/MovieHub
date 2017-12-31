@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.data.repositories.mappers;
 
 import com.etiennelawlor.moviehub.data.network.response.Person;
-import com.etiennelawlor.moviehub.data.network.response.PersonsEnvelope;
+import com.etiennelawlor.moviehub.data.network.response.PersonsResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.PersonsDataModel;
 
 import java.util.Calendar;
@@ -11,7 +11,7 @@ import java.util.List;
  * Created by etiennelawlor on 12/30/17.
  */
 
-public class PersonsDataModelMapper implements DataModelMapper<PersonsEnvelope, PersonsDataModel> {
+public class PersonsDataModelMapper implements DataModelMapper<PersonsResponse, PersonsDataModel> {
 
     // region Constants
     private static final int PAGE_SIZE = 20;
@@ -19,12 +19,12 @@ public class PersonsDataModelMapper implements DataModelMapper<PersonsEnvelope, 
     // endregion
 
     @Override
-    public PersonsDataModel mapToDataModel(PersonsEnvelope personsEnvelope) {
+    public PersonsDataModel mapToDataModel(PersonsResponse personsResponse) {
         PersonsDataModel personsDataModel = new PersonsDataModel();
 
-        List<Person> persons = personsEnvelope.getPersons();
+        List<Person> persons = personsResponse.getPersons();
         personsDataModel.setLastPage(persons.size() < PAGE_SIZE ? true : false);
-        personsDataModel.setPageNumber(personsEnvelope.getPage());
+        personsDataModel.setPageNumber(personsResponse.getPage());
         personsDataModel.setPersons(persons);
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, SEVEN_DAYS);

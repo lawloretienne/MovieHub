@@ -1,9 +1,9 @@
 package com.etiennelawlor.moviehub.data.repositories.tv;
 
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowContentRatingsEnvelope;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCreditsEnvelope;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowsEnvelope;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowContentRatingsResponse;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCreditsResponse;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowsResponse;
 import com.etiennelawlor.moviehub.data.repositories.mappers.TelevisionShowsDataModelMapper;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowsDataModel;
 
@@ -53,9 +53,9 @@ public class TelevisionShowRepository implements TelevisionShowDataSourceContrac
     }
 
     @Override
-    public Single<TelevisionShowCreditsEnvelope> getTelevisionShowCredits(int tvId) {
-        Maybe<TelevisionShowCreditsEnvelope> local = televisionShowLocalDataSource.getTelevisionShowCredits(tvId);
-        Single<TelevisionShowCreditsEnvelope> remote =
+    public Single<TelevisionShowCreditsResponse> getTelevisionShowCredits(int tvId) {
+        Maybe<TelevisionShowCreditsResponse> local = televisionShowLocalDataSource.getTelevisionShowCredits(tvId);
+        Single<TelevisionShowCreditsResponse> remote =
                 televisionShowRemoteDataSource.getTelevisionShowCredits(tvId)
                         .doOnSuccess(televisionShowCreditsEnvelope -> televisionShowLocalDataSource.saveTelevisionShowCredits(televisionShowCreditsEnvelope));
 
@@ -63,19 +63,19 @@ public class TelevisionShowRepository implements TelevisionShowDataSourceContrac
     }
 
     @Override
-    public Single<TelevisionShowsEnvelope> getSimilarTelevisionShows(int tvId) {
-        Maybe<TelevisionShowsEnvelope> local = televisionShowLocalDataSource.getSimilarTelevisionShows(tvId);
-        Single<TelevisionShowsEnvelope> remote =
+    public Single<TelevisionShowsResponse> getSimilarTelevisionShows(int tvId) {
+        Maybe<TelevisionShowsResponse> local = televisionShowLocalDataSource.getSimilarTelevisionShows(tvId);
+        Single<TelevisionShowsResponse> remote =
                 televisionShowRemoteDataSource.getSimilarTelevisionShows(tvId)
-                        .doOnSuccess(televisionShowsEnvelope -> televisionShowLocalDataSource.saveSimilarTelevisionShows(televisionShowsEnvelope));
+                        .doOnSuccess(televisionShowsResponse -> televisionShowLocalDataSource.saveSimilarTelevisionShows(televisionShowsResponse));
 
         return local.switchIfEmpty(remote);
     }
 
     @Override
-    public Single<TelevisionShowContentRatingsEnvelope> getTelevisionShowContentRatings(int tvId) {
-        Maybe<TelevisionShowContentRatingsEnvelope> local = televisionShowLocalDataSource.getTelevisionShowContentRatings(tvId);
-        Single<TelevisionShowContentRatingsEnvelope> remote =
+    public Single<TelevisionShowContentRatingsResponse> getTelevisionShowContentRatings(int tvId) {
+        Maybe<TelevisionShowContentRatingsResponse> local = televisionShowLocalDataSource.getTelevisionShowContentRatings(tvId);
+        Single<TelevisionShowContentRatingsResponse> remote =
                 televisionShowRemoteDataSource.getTelevisionShowContentRatings(tvId)
                         .doOnSuccess(televisionShowContentRatingsEnvelope -> televisionShowLocalDataSource.saveTelevisionShowContentRatings(televisionShowContentRatingsEnvelope));
 

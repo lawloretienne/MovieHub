@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.data.repositories.person;
 
 import com.etiennelawlor.moviehub.data.network.response.Person;
-import com.etiennelawlor.moviehub.data.network.response.PersonCreditsEnvelope;
+import com.etiennelawlor.moviehub.data.network.response.PersonCreditsResponse;
 import com.etiennelawlor.moviehub.data.repositories.mappers.PersonsDataModelMapper;
 import com.etiennelawlor.moviehub.data.repositories.models.PersonsDataModel;
 
@@ -51,9 +51,9 @@ public class PersonRepository implements PersonDataSourceContract.Repository {
     }
 
     @Override
-    public Single<PersonCreditsEnvelope> getPersonCredits(int personId) {
-        Maybe<PersonCreditsEnvelope> local = personLocalDataSource.getPersonCredits(personId);
-        Single<PersonCreditsEnvelope> remote =
+    public Single<PersonCreditsResponse> getPersonCredits(int personId) {
+        Maybe<PersonCreditsResponse> local = personLocalDataSource.getPersonCredits(personId);
+        Single<PersonCreditsResponse> remote =
                 personRemoteDataSource.getPersonCredits(personId)
                         .doOnSuccess(personCreditsEnvelope -> personLocalDataSource.savePersonCredits(personCreditsEnvelope));
 

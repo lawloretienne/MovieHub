@@ -1,8 +1,8 @@
 package com.etiennelawlor.moviehub.data.repositories.search;
 
-import com.etiennelawlor.moviehub.data.network.response.MoviesEnvelope;
-import com.etiennelawlor.moviehub.data.network.response.PersonsEnvelope;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowsEnvelope;
+import com.etiennelawlor.moviehub.data.network.response.MoviesResponse;
+import com.etiennelawlor.moviehub.data.network.response.PersonsResponse;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowsResponse;
 
 import io.reactivex.Maybe;
 
@@ -20,35 +20,35 @@ public class SearchLocalDataSource implements SearchDataSourceContract.LocalDate
     // region SearchDataSourceContract.LocalDateSource Methods
 
     @Override
-    public Maybe<MoviesEnvelope> getMovieSearchResults(String query, int page) {
+    public Maybe<MoviesResponse> getMovieSearchResults(String query, int page) {
         //        Use mapper to convert from realm objects to POJOs
         return Maybe.empty();
     }
 
     @Override
-    public void saveMovieSearchResults(MoviesEnvelope moviesEnvelope) {
+    public void saveMovieSearchResults(MoviesResponse moviesResponse) {
 //        Use mapper to convert from POJOs to realm objects
     }
 
     @Override
-    public Maybe<TelevisionShowsEnvelope> getTelevisionShowSearchResults(String query, int page) {
+    public Maybe<TelevisionShowsResponse> getTelevisionShowSearchResults(String query, int page) {
         //        Use mapper to convert from realm objects to POJOs
         return Maybe.empty();
     }
 
     @Override
-    public void saveTelevisionShowSearchResults(TelevisionShowsEnvelope televisionShowsEnvelope) {
+    public void saveTelevisionShowSearchResults(TelevisionShowsResponse televisionShowsResponse) {
 //        Use mapper to convert from POJOs to realm objects
     }
 
     @Override
-    public Maybe<PersonsEnvelope> getPersonSearchResults(String query, int page) {
+    public Maybe<PersonsResponse> getPersonSearchResults(String query, int page) {
         //        Use mapper to convert from realm objects to POJOs
         return Maybe.empty();
     }
 
     @Override
-    public void savePersonSearchResults(PersonsEnvelope personsEnvelope) {
+    public void savePersonSearchResults(PersonsResponse personsResponse) {
 //        Use mapper to convert from POJOs to realm objects
     }
 

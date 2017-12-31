@@ -1,9 +1,9 @@
 package com.etiennelawlor.moviehub.data.repositories.tv;
 
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowContentRatingsEnvelope;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCreditsEnvelope;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowsEnvelope;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowContentRatingsResponse;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCreditsResponse;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowsResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowsDataModel;
 
 import io.reactivex.Maybe;
@@ -18,9 +18,9 @@ public interface TelevisionShowDataSourceContract {
     interface Repository {
         Single<TelevisionShowsDataModel> getPopularTelevisionShows(int currentPage);
         Single<TelevisionShow> getTelevisionShow(int tvId);
-        Single<TelevisionShowCreditsEnvelope> getTelevisionShowCredits(int tvId);
-        Single<TelevisionShowsEnvelope> getSimilarTelevisionShows(int tvId);
-        Single<TelevisionShowContentRatingsEnvelope> getTelevisionShowContentRatings(int tvId);
+        Single<TelevisionShowCreditsResponse> getTelevisionShowCredits(int tvId);
+        Single<TelevisionShowsResponse> getSimilarTelevisionShows(int tvId);
+        Single<TelevisionShowContentRatingsResponse> getTelevisionShowContentRatings(int tvId);
     }
 
     interface LocalDateSource {
@@ -31,21 +31,21 @@ public interface TelevisionShowDataSourceContract {
         Maybe<TelevisionShow> getTelevisionShow(int tvId);
         void saveTelevisionShow(TelevisionShow televisionShow);
 
-        Maybe<TelevisionShowCreditsEnvelope> getTelevisionShowCredits(int tvId);
-        void saveTelevisionShowCredits(TelevisionShowCreditsEnvelope televisionShowCreditsEnvelope);
+        Maybe<TelevisionShowCreditsResponse> getTelevisionShowCredits(int tvId);
+        void saveTelevisionShowCredits(TelevisionShowCreditsResponse televisionShowCreditsResponse);
 
-        Maybe<TelevisionShowsEnvelope> getSimilarTelevisionShows(int tvId);
-        void saveSimilarTelevisionShows(TelevisionShowsEnvelope televisionShowsEnvelope);
+        Maybe<TelevisionShowsResponse> getSimilarTelevisionShows(int tvId);
+        void saveSimilarTelevisionShows(TelevisionShowsResponse televisionShowsResponse);
 
-        Maybe<TelevisionShowContentRatingsEnvelope> getTelevisionShowContentRatings(int tvId);
-        void saveTelevisionShowContentRatings(TelevisionShowContentRatingsEnvelope televisionShowContentRatingsEnvelope);
+        Maybe<TelevisionShowContentRatingsResponse> getTelevisionShowContentRatings(int tvId);
+        void saveTelevisionShowContentRatings(TelevisionShowContentRatingsResponse televisionShowContentRatingsResponse);
     }
 
     interface RemoteDateSource {
-        Single<TelevisionShowsEnvelope> getPopularTelevisionShows(int currentPage);
+        Single<TelevisionShowsResponse> getPopularTelevisionShows(int currentPage);
         Single<TelevisionShow> getTelevisionShow(int tvId);
-        Single<TelevisionShowCreditsEnvelope> getTelevisionShowCredits(int tvId);
-        Single<TelevisionShowsEnvelope> getSimilarTelevisionShows(int tvId);
-        Single<TelevisionShowContentRatingsEnvelope> getTelevisionShowContentRatings(int tvId);
+        Single<TelevisionShowCreditsResponse> getTelevisionShowCredits(int tvId);
+        Single<TelevisionShowsResponse> getSimilarTelevisionShows(int tvId);
+        Single<TelevisionShowContentRatingsResponse> getTelevisionShowContentRatings(int tvId);
     }
 }

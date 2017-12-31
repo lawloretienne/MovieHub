@@ -1,8 +1,8 @@
 package com.etiennelawlor.moviehub.data.repositories.search;
 
-import com.etiennelawlor.moviehub.data.network.response.MoviesEnvelope;
-import com.etiennelawlor.moviehub.data.network.response.PersonsEnvelope;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowsEnvelope;
+import com.etiennelawlor.moviehub.data.network.response.MoviesResponse;
+import com.etiennelawlor.moviehub.data.network.response.PersonsResponse;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowsResponse;
 
 import io.reactivex.Maybe;
 import io.reactivex.Single;
@@ -14,28 +14,28 @@ import io.reactivex.Single;
 public interface SearchDataSourceContract {
 
     interface Repository {
-        Single<MoviesEnvelope> getMovieSearchResults(String query, int page);
-        Single<TelevisionShowsEnvelope> getTelevisionShowSearchResults(String query, int page);
-        Single<PersonsEnvelope> getPersonSearchResults(String query, int page);
+        Single<MoviesResponse> getMovieSearchResults(String query, int page);
+        Single<TelevisionShowsResponse> getTelevisionShowSearchResults(String query, int page);
+        Single<PersonsResponse> getPersonSearchResults(String query, int page);
     }
 
     interface LocalDateSource {
-        Maybe<MoviesEnvelope> getMovieSearchResults(String query, int page);
+        Maybe<MoviesResponse> getMovieSearchResults(String query, int page);
 
-        void saveMovieSearchResults(MoviesEnvelope moviesEnvelope);
+        void saveMovieSearchResults(MoviesResponse moviesResponse);
 
-        Maybe<TelevisionShowsEnvelope> getTelevisionShowSearchResults(String query, int page);
+        Maybe<TelevisionShowsResponse> getTelevisionShowSearchResults(String query, int page);
 
-        void saveTelevisionShowSearchResults(TelevisionShowsEnvelope televisionShowsEnvelope);
+        void saveTelevisionShowSearchResults(TelevisionShowsResponse televisionShowsResponse);
 
-        Maybe<PersonsEnvelope> getPersonSearchResults(String query, int page);
+        Maybe<PersonsResponse> getPersonSearchResults(String query, int page);
 
-        void savePersonSearchResults(PersonsEnvelope personsEnvelope);
+        void savePersonSearchResults(PersonsResponse personsResponse);
     }
 
     interface RemoteDateSource {
-        Single<MoviesEnvelope> getMovieSearchResults(String query, int page);
-        Single<TelevisionShowsEnvelope> getTelevisionShowSearchResults(String query, int page);
-        Single<PersonsEnvelope> getPersonSearchResults(String query, int page);
+        Single<MoviesResponse> getMovieSearchResults(String query, int page);
+        Single<TelevisionShowsResponse> getTelevisionShowSearchResults(String query, int page);
+        Single<PersonsResponse> getPersonSearchResults(String query, int page);
     }
 }

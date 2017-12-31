@@ -8,7 +8,7 @@ import java.util.List;
  * Created by etiennelawlor on 12/16/16.
  */
 
-public class TelevisionShowContentRatingsEnvelope {
+public class TelevisionShowContentRatingsResponse {
 
     // region Fields
     @SerializedName("id")
@@ -43,7 +43,7 @@ public class TelevisionShowContentRatingsEnvelope {
 
     @Override
     public String toString() {
-        return "TelevisionShowContentRatingsEnvelope{" +
+        return "TelevisionShowContentRatingsResponse{" +
                 "id=" + id +
                 ", contentRatings=" + contentRatings +
                 '}';

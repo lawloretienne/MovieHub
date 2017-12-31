@@ -4,7 +4,7 @@ import com.etiennelawlor.moviehub.data.network.MovieHubService;
 import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.MovieCreditsResponse;
 import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDatesResponse;
-import com.etiennelawlor.moviehub.data.network.response.MoviesEnvelope;
+import com.etiennelawlor.moviehub.data.network.response.MoviesResponse;
 
 import javax.inject.Inject;
 
@@ -29,7 +29,7 @@ public class MovieRemoteDataSource implements MovieDataSourceContract.RemoteDate
 
     // region MovieDataSourceContract.RemoteDateSource Methods
     @Override
-    public Single<MoviesEnvelope> getPopularMovies(final int currentPage) {
+    public Single<MoviesResponse> getPopularMovies(final int currentPage) {
         return movieHubService.getPopularMovies(currentPage);
     }
 
@@ -44,7 +44,7 @@ public class MovieRemoteDataSource implements MovieDataSourceContract.RemoteDate
     }
 
     @Override
-    public Single<MoviesEnvelope> getSimilarMovies(int movieId) {
+    public Single<MoviesResponse> getSimilarMovies(int movieId) {
         return movieHubService.getSimilarMovies(movieId);
     }
 

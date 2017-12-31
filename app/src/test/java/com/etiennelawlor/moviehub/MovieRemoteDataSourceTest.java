@@ -2,7 +2,7 @@ package com.etiennelawlor.moviehub;
 
 import com.etiennelawlor.moviehub.data.network.MovieHubService;
 import com.etiennelawlor.moviehub.data.network.response.Movie;
-import com.etiennelawlor.moviehub.data.network.response.MoviesEnvelope;
+import com.etiennelawlor.moviehub.data.network.response.MoviesResponse;
 
 import org.junit.After;
 import org.junit.Before;
@@ -78,14 +78,14 @@ public class MovieRemoteDataSourceTest {
 
     @Test
     public void getPopularMovies() throws Exception {
-        TestObserver<MoviesEnvelope> testObserver = new TestObserver<>();
+        TestObserver<MoviesResponse> testObserver = new TestObserver<>();
         movieHubService.getPopularMovies(PAGE)
                 .subscribeWith(testObserver);
 
         testObserver.assertNoErrors();
         testObserver.assertValueCount(1);
 
-//        MoviesEnvelope moviesEnvelope = (MoviesEnvelope) testObserver.getEvents().get(0).get(0);
+//        MoviesResponse moviesReponse = (MoviesResponse) testObserver.getEvents().get(0).get(0);
 
 //        assertEquals( , moviesEnvelope.getMovies());
 
