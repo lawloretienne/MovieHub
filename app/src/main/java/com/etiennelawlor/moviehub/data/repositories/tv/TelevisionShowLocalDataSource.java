@@ -59,13 +59,13 @@ public class TelevisionShowLocalDataSource implements TelevisionShowDataSourceCo
     }
 
     @Override
-    public Maybe<TelevisionShowsResponse> getSimilarTelevisionShows(int tvId) {
+    public Maybe<TelevisionShowsDataModel> getSimilarTelevisionShows(int tvId) {
         //        Use mapper to convert from realm objects to POJOs
         return Maybe.empty();
     }
 
     @Override
-    public void saveSimilarTelevisionShows(TelevisionShowsResponse televisionShowsResponse) {
+    public void saveSimilarTelevisionShows(TelevisionShowsDataModel televisionShowsDataModel) {
 //        Use mapper to convert from POJOs to realm objects
     }
 

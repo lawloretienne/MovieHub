@@ -34,7 +34,7 @@ public class PersonRepository implements PersonDataSourceContract.Repository {
                 .filter(personsDataModel -> !personsDataModel.isExpired());
         Single<PersonsDataModel> remote =
                 personRemoteDataSource.getPopularPersons(currentPage)
-                        .map(personsEnvelope -> personsDataModelMapper.mapToDataModel(personsEnvelope))
+                        .map(personsResponse -> personsDataModelMapper.mapToDataModel(personsResponse))
                         .doOnSuccess(personsDataModel -> personLocalDataSource.savePopularPersons(personsDataModel));
 
         return local.switchIfEmpty(remote);

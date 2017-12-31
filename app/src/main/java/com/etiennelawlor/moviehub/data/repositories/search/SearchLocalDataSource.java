@@ -1,8 +1,8 @@
 package com.etiennelawlor.moviehub.data.repositories.search;
 
-import com.etiennelawlor.moviehub.data.network.response.MoviesResponse;
-import com.etiennelawlor.moviehub.data.network.response.PersonsResponse;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowsResponse;
+import com.etiennelawlor.moviehub.data.repositories.models.MoviesDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.PersonsDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowsDataModel;
 
 import io.reactivex.Maybe;
 
@@ -20,35 +20,35 @@ public class SearchLocalDataSource implements SearchDataSourceContract.LocalDate
     // region SearchDataSourceContract.LocalDateSource Methods
 
     @Override
-    public Maybe<MoviesResponse> getMovieSearchResults(String query, int page) {
+    public Maybe<MoviesDataModel> getMovieSearchResults(String query, int page) {
         //        Use mapper to convert from realm objects to POJOs
         return Maybe.empty();
     }
 
     @Override
-    public void saveMovieSearchResults(MoviesResponse moviesResponse) {
+    public void saveMovieSearchResults(MoviesDataModel moviesDataModel) {
 //        Use mapper to convert from POJOs to realm objects
     }
 
     @Override
-    public Maybe<TelevisionShowsResponse> getTelevisionShowSearchResults(String query, int page) {
+    public Maybe<TelevisionShowsDataModel> getTelevisionShowSearchResults(String query, int page) {
         //        Use mapper to convert from realm objects to POJOs
         return Maybe.empty();
     }
 
     @Override
-    public void saveTelevisionShowSearchResults(TelevisionShowsResponse televisionShowsResponse) {
+    public void saveTelevisionShowSearchResults(TelevisionShowsDataModel televisionShowsDataModel) {
 //        Use mapper to convert from POJOs to realm objects
     }
 
     @Override
-    public Maybe<PersonsResponse> getPersonSearchResults(String query, int page) {
+    public Maybe<PersonsDataModel> getPersonSearchResults(String query, int page) {
         //        Use mapper to convert from realm objects to POJOs
         return Maybe.empty();
     }
 
     @Override
-    public void savePersonSearchResults(PersonsResponse personsResponse) {
+    public void savePersonSearchResults(PersonsDataModel personsDataModel) {
 //        Use mapper to convert from POJOs to realm objects
     }
 

@@ -1,8 +1,11 @@
 package com.etiennelawlor.moviehub.data.repositories.search;
 
-import com.etiennelawlor.moviehub.data.network.response.MoviesResponse;
-import com.etiennelawlor.moviehub.data.network.response.PersonsResponse;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowsResponse;
+import com.etiennelawlor.moviehub.data.repositories.mappers.MoviesDataModelMapper;
+import com.etiennelawlor.moviehub.data.repositories.mappers.PersonsDataModelMapper;
+import com.etiennelawlor.moviehub.data.repositories.mappers.TelevisionShowsDataModelMapper;
+import com.etiennelawlor.moviehub.data.repositories.models.MoviesDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.PersonsDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowsDataModel;
 
 import io.reactivex.Maybe;
 import io.reactivex.Single;
@@ -16,6 +19,9 @@ public class SearchRepository implements SearchDataSourceContract.Repository {
     // region Member Variables
     private SearchDataSourceContract.LocalDateSource searchLocalDataSource;
     private SearchDataSourceContract.RemoteDateSource searchRemoteDataSource;
+    private MoviesDataModelMapper moviesDataModelMapper = new MoviesDataModelMapper();
+    private PersonsDataModelMapper personsDataModelMapper = new PersonsDataModelMapper();
+    private TelevisionShowsDataModelMapper televisionShowsDataModelMapper = new TelevisionShowsDataModelMapper();
     // endregion
 
     // region Constructors
@@ -27,30 +33,33 @@ public class SearchRepository implements SearchDataSourceContract.Repository {
 
     // region SearchDataSourceContract.Repository Methods
     @Override
-    public Single<MoviesResponse> getMovieSearchResults(String query, int page) {
-        Maybe<MoviesResponse> local = searchLocalDataSource.getMovieSearchResults(query, page);
-        Single<MoviesResponse> remote =
+    public Single<MoviesDataModel> getMovieSearchResults(String query, int page) {
+        Maybe<MoviesDataModel> local = searchLocalDataSource.getMovieSearchResults(query, page);
+        Single<MoviesDataModel> remote =
                 searchRemoteDataSource.getMovieSearchResults(query, page)
-                        .doOnSuccess(moviesResponse -> searchLocalDataSource.saveMovieSearchResults(moviesResponse));
+                        .map(moviesResponse -> moviesDataModelMapper.mapToDataModel(moviesResponse))
+                        .doOnSuccess(moviesDataModel -> searchLocalDataSource.saveMovieSearchResults(moviesDataModel));
 
         return local.switchIfEmpty(remote);
     }
 
     @Override
-    public Single<TelevisionShowsResponse> getTelevisionShowSearchResults(String query, int page) {
-        Maybe<TelevisionShowsResponse> local = searchLocalDataSource.getTelevisionShowSearchResults(query, page);
-        Single<TelevisionShowsResponse> remote =
+    public Single<TelevisionShowsDataModel> getTelevisionShowSearchResults(String query, int page) {
+        Maybe<TelevisionShowsDataModel> local = searchLocalDataSource.getTelevisionShowSearchResults(query, page);
+        Single<TelevisionShowsDataModel> remote =
                 searchRemoteDataSource.getTelevisionShowSearchResults(query, page)
-                        .doOnSuccess(televisionShowsResponse -> searchLocalDataSource.saveTelevisionShowSearchResults(televisionShowsResponse));
+                        .map(televisionShowsResponse -> televisionShowsDataModelMapper.mapToDataModel(televisionShowsResponse))
+                        .doOnSuccess(televisionShowsDataModel -> searchLocalDataSource.saveTelevisionShowSearchResults(televisionShowsDataModel));
 
         return local.switchIfEmpty(remote);
     }
 
     @Override
-    public Single<PersonsResponse> getPersonSearchResults(String query, int page) {
-        Maybe<PersonsResponse> local = searchLocalDataSource.getPersonSearchResults(query, page);
-        Single<PersonsResponse> remote =
+    public Single<PersonsDataModel> getPersonSearchResults(String query, int page) {
+        Maybe<PersonsDataModel> local = searchLocalDataSource.getPersonSearchResults(query, page);
+        Single<PersonsDataModel> remote =
                 searchRemoteDataSource.getPersonSearchResults(query, page)
+                        .map(personsResponse -> personsDataModelMapper.mapToDataModel(personsResponse))
                         .doOnSuccess(personsResponse -> searchLocalDataSource.savePersonSearchResults(personsResponse));
 
         return local.switchIfEmpty(remote);

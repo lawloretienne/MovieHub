@@ -19,13 +19,12 @@ public interface TelevisionShowDataSourceContract {
         Single<TelevisionShowsDataModel> getPopularTelevisionShows(int currentPage);
         Single<TelevisionShow> getTelevisionShow(int tvId);
         Single<TelevisionShowCreditsResponse> getTelevisionShowCredits(int tvId);
-        Single<TelevisionShowsResponse> getSimilarTelevisionShows(int tvId);
+        Single<TelevisionShowsDataModel> getSimilarTelevisionShows(int tvId);
         Single<TelevisionShowContentRatingsResponse> getTelevisionShowContentRatings(int tvId);
     }
 
     interface LocalDateSource {
         Maybe<TelevisionShowsDataModel> getPopularTelevisionShows(int currentPage);
-
         void savePopularTelevisionShows(TelevisionShowsDataModel televisionShowsDataModel);
 
         Maybe<TelevisionShow> getTelevisionShow(int tvId);
@@ -34,8 +33,8 @@ public interface TelevisionShowDataSourceContract {
         Maybe<TelevisionShowCreditsResponse> getTelevisionShowCredits(int tvId);
         void saveTelevisionShowCredits(TelevisionShowCreditsResponse televisionShowCreditsResponse);
 
-        Maybe<TelevisionShowsResponse> getSimilarTelevisionShows(int tvId);
-        void saveSimilarTelevisionShows(TelevisionShowsResponse televisionShowsResponse);
+        Maybe<TelevisionShowsDataModel> getSimilarTelevisionShows(int tvId);
+        void saveSimilarTelevisionShows(TelevisionShowsDataModel televisionShowsDataModel);
 
         Maybe<TelevisionShowContentRatingsResponse> getTelevisionShowContentRatings(int tvId);
         void saveTelevisionShowContentRatings(TelevisionShowContentRatingsResponse televisionShowContentRatingsResponse);

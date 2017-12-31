@@ -3,7 +3,6 @@ package com.etiennelawlor.moviehub.data.repositories.tv;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowContentRatingsResponse;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCreditsResponse;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowsResponse;
 import com.etiennelawlor.moviehub.data.repositories.mappers.TelevisionShowsDataModelMapper;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowsDataModel;
 
@@ -63,11 +62,12 @@ public class TelevisionShowRepository implements TelevisionShowDataSourceContrac
     }
 
     @Override
-    public Single<TelevisionShowsResponse> getSimilarTelevisionShows(int tvId) {
-        Maybe<TelevisionShowsResponse> local = televisionShowLocalDataSource.getSimilarTelevisionShows(tvId);
-        Single<TelevisionShowsResponse> remote =
+    public Single<TelevisionShowsDataModel> getSimilarTelevisionShows(int tvId) {
+        Maybe<TelevisionShowsDataModel> local = televisionShowLocalDataSource.getSimilarTelevisionShows(tvId);
+        Single<TelevisionShowsDataModel> remote =
                 televisionShowRemoteDataSource.getSimilarTelevisionShows(tvId)
-                        .doOnSuccess(televisionShowsResponse -> televisionShowLocalDataSource.saveSimilarTelevisionShows(televisionShowsResponse));
+                        .map(televisionShowsEnvelope -> televisionShowsDataModelMapper.mapToDataModel(televisionShowsEnvelope))
+                        .doOnSuccess(televisionShowsDataModel -> televisionShowLocalDataSource.saveSimilarTelevisionShows(televisionShowsDataModel));
 
         return local.switchIfEmpty(remote);
     }
