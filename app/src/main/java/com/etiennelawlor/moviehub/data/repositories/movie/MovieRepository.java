@@ -60,7 +60,7 @@ public class MovieRepository implements MovieDataSourceContract.Repository {
         Maybe<MovieCreditsDataModel> local = movieLocalDataSource.getMovieCredits(movieId);
         Single<MovieCreditsDataModel> remote =
                 movieRemoteDataSource.getMovieCredits(movieId)
-                        .map(movieCreditsEnvelope -> movieCreditsDataModelMapper.mapToDataModel(movieCreditsEnvelope))
+                        .map(movieCreditsResponse -> movieCreditsDataModelMapper.mapToDataModel(movieCreditsResponse))
                         .doOnSuccess(movieCreditsDataModel -> movieLocalDataSource.saveMovieCredits(movieCreditsDataModel));
 
         return local.switchIfEmpty(remote);

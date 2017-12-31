@@ -8,7 +8,7 @@ import java.util.List;
  * Created by etiennelawlor on 12/16/16.
  */
 
-public class MovieReleaseDateEnvelope {
+public class MovieReleaseDateResponse {
 
     // region Fields
     @SerializedName("iso_3166_1")
@@ -43,7 +43,7 @@ public class MovieReleaseDateEnvelope {
 
     @Override
     public String toString() {
-        return "MovieReleaseDateEnvelope{" +
+        return "MovieReleaseDateResponse{" +
                 "iso31661='" + iso31661 + '\'' +
                 ", movieReleaseDates=" + movieReleaseDates +
                 '}';

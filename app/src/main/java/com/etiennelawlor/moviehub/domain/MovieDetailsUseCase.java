@@ -5,7 +5,7 @@ import android.text.TextUtils;
 import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.MovieCredit;
 import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDate;
-import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDateEnvelope;
+import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDateResponse;
 import com.etiennelawlor.moviehub.data.repositories.movie.MovieDataSourceContract;
 import com.etiennelawlor.moviehub.domain.models.MovieDetailsDomainModel;
 
@@ -61,13 +61,13 @@ public class MovieDetailsUseCase implements MovieDetailsDomainContract.UseCase {
                     }
 
                     if (movieReleaseDatesDataModel != null) {
-                        List<MovieReleaseDateEnvelope> movieReleaseDateEnvelopes = movieReleaseDatesDataModel.getMovieReleaseDateEnvelopes();
-                        if (movieReleaseDateEnvelopes != null && movieReleaseDateEnvelopes.size() > 0) {
-                            for (MovieReleaseDateEnvelope movieReleaseDateEnvelope : movieReleaseDateEnvelopes) {
-                                if (movieReleaseDateEnvelope != null) {
-                                    String iso31661 = movieReleaseDateEnvelope.getIso31661();
+                        List<MovieReleaseDateResponse> movieReleaseDateResponses = movieReleaseDatesDataModel.getMovieReleaseDateResponses();
+                        if (movieReleaseDateResponses != null && movieReleaseDateResponses.size() > 0) {
+                            for (MovieReleaseDateResponse movieReleaseDateResponse : movieReleaseDateResponses) {
+                                if (movieReleaseDateResponse != null) {
+                                    String iso31661 = movieReleaseDateResponse.getIso31661();
                                     if (iso31661.equals(ISO_31661)) {
-                                        List<MovieReleaseDate> movieReleaseDates = movieReleaseDateEnvelope.getMovieReleaseDates();
+                                        List<MovieReleaseDate> movieReleaseDates = movieReleaseDateResponse.getMovieReleaseDates();
                                         if (movieReleaseDates != null && movieReleaseDates.size() > 0) {
                                             for (MovieReleaseDate movieReleaseDate : movieReleaseDates) {
                                                 if (!TextUtils.isEmpty(movieReleaseDate.getCertification())) {

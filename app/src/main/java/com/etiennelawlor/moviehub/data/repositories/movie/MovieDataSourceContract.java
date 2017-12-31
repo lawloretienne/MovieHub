@@ -1,8 +1,8 @@
 package com.etiennelawlor.moviehub.data.repositories.movie;
 
 import com.etiennelawlor.moviehub.data.network.response.Movie;
-import com.etiennelawlor.moviehub.data.network.response.MovieCreditsEnvelope;
-import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDatesEnvelope;
+import com.etiennelawlor.moviehub.data.network.response.MovieCreditsResponse;
+import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDatesResponse;
 import com.etiennelawlor.moviehub.data.network.response.MoviesEnvelope;
 import com.etiennelawlor.moviehub.data.repositories.models.MovieCreditsDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.MovieReleaseDatesDataModel;
@@ -46,8 +46,8 @@ public interface MovieDataSourceContract {
     interface RemoteDateSource {
         Single<MoviesEnvelope> getPopularMovies(int currentPage);
         Single<Movie> getMovie(int movieId);
-        Single<MovieCreditsEnvelope> getMovieCredits(int movieId);
+        Single<MovieCreditsResponse> getMovieCredits(int movieId);
         Single<MoviesEnvelope> getSimilarMovies(int movieId);
-        Single<MovieReleaseDatesEnvelope> getMovieReleaseDates(int movieId);
+        Single<MovieReleaseDatesResponse> getMovieReleaseDates(int movieId);
     }
 }

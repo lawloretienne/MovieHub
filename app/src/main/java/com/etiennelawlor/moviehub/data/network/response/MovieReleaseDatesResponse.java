@@ -8,15 +8,13 @@ import java.util.List;
  * Created by etiennelawlor on 12/16/16.
  */
 
-public class MovieCreditsEnvelope {
+public class MovieReleaseDatesResponse {
 
     // region Fields
     @SerializedName("id")
     public int id;
-    @SerializedName("cast")
-    public List<MovieCredit> cast = null;
-    @SerializedName("crew")
-    public List<MovieCredit> crew = null;
+    @SerializedName("results")
+    public List<MovieReleaseDateResponse> movieReleaseDateResponses = null;
     // endregion
 
     // region Getters
@@ -25,12 +23,8 @@ public class MovieCreditsEnvelope {
         return id;
     }
 
-    public List<MovieCredit> getCast() {
-        return cast;
-    }
-
-    public List<MovieCredit> getCrew() {
-        return crew;
+    public List<MovieReleaseDateResponse> getMovieReleaseDateResponses() {
+        return movieReleaseDateResponses;
     }
 
     // endregion
@@ -41,22 +35,17 @@ public class MovieCreditsEnvelope {
         this.id = id;
     }
 
-    public void setCast(List<MovieCredit> cast) {
-        this.cast = cast;
-    }
-
-    public void setCrew(List<MovieCredit> crew) {
-        this.crew = crew;
+    public void setMovieReleaseDateResponses(List<MovieReleaseDateResponse> movieReleaseDateResponses) {
+        this.movieReleaseDateResponses = movieReleaseDateResponses;
     }
 
     // endregion
 
     @Override
     public String toString() {
-        return "MovieCreditsEnvelope{" +
+        return "MovieReleaseDatesResponse{" +
                 "id=" + id +
-                ", cast=" + cast +
-                ", crew=" + crew +
+                ", movieReleaseDateResponses=" + movieReleaseDateResponses +
                 '}';
     }
 }

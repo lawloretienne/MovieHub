@@ -2,8 +2,8 @@ package com.etiennelawlor.moviehub.data.network;
 
 import com.etiennelawlor.moviehub.data.network.response.Configuration;
 import com.etiennelawlor.moviehub.data.network.response.Movie;
-import com.etiennelawlor.moviehub.data.network.response.MovieCreditsEnvelope;
-import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDatesEnvelope;
+import com.etiennelawlor.moviehub.data.network.response.MovieCreditsResponse;
+import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDatesResponse;
 import com.etiennelawlor.moviehub.data.network.response.MoviesEnvelope;
 import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.data.network.response.PersonCreditsEnvelope;
@@ -32,13 +32,13 @@ public interface MovieHubService {
     Single<Movie> getMovie(@Path("movieId") long movieId);
 
     @GET("movie/{movieId}/credits")
-    Single<MovieCreditsEnvelope> getMovieCredits(@Path("movieId") long movieId);
+    Single<MovieCreditsResponse> getMovieCredits(@Path("movieId") long movieId);
 
     @GET("movie/{movieId}/similar")
     Single<MoviesEnvelope> getSimilarMovies(@Path("movieId") long movieId);
 
     @GET("movie/{movieId}/release_dates")
-    Single<MovieReleaseDatesEnvelope> getMovieReleaseDates(@Path("movieId") long movieId);
+    Single<MovieReleaseDatesResponse> getMovieReleaseDates(@Path("movieId") long movieId);
 
     @GET("tv/popular")
     Single<TelevisionShowsEnvelope> getPopularTelevisionShows(@Query("page") int page);

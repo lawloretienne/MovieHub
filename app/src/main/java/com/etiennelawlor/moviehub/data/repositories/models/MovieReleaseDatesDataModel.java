@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.data.repositories.models;
 
-import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDateEnvelope;
+import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDateResponse;
 
 import java.util.Date;
 import java.util.List;
@@ -13,7 +13,7 @@ public class MovieReleaseDatesDataModel {
 
     // region Fields
     public int id;
-    public List<MovieReleaseDateEnvelope> movieReleaseDateEnvelopes = null;
+    public List<MovieReleaseDateResponse> movieReleaseDateResponses = null;
     private Date expiredAt;
     // endregion
 
@@ -23,8 +23,8 @@ public class MovieReleaseDatesDataModel {
         return id;
     }
 
-    public List<MovieReleaseDateEnvelope> getMovieReleaseDateEnvelopes() {
-        return movieReleaseDateEnvelopes;
+    public List<MovieReleaseDateResponse> getMovieReleaseDateResponses() {
+        return movieReleaseDateResponses;
     }
 
     public Date getExpiredAt() {
@@ -39,8 +39,8 @@ public class MovieReleaseDatesDataModel {
         this.id = id;
     }
 
-    public void setMovieReleaseDateEnvelopes(List<MovieReleaseDateEnvelope> movieReleaseDateEnvelopes) {
-        this.movieReleaseDateEnvelopes = movieReleaseDateEnvelopes;
+    public void setMovieReleaseDateResponses(List<MovieReleaseDateResponse> movieReleaseDateResponses) {
+        this.movieReleaseDateResponses = movieReleaseDateResponses;
     }
 
     public void setExpiredAt(Date expiredAt) {
@@ -53,7 +53,7 @@ public class MovieReleaseDatesDataModel {
     public String toString() {
         return "MovieReleaseDatesDataModel{" +
                 "id=" + id +
-                ", movieReleaseDateEnvelopes=" + movieReleaseDateEnvelopes +
+                ", movieReleaseDateResponses=" + movieReleaseDateResponses +
                 ", expiredAt=" + expiredAt +
                 '}';
     }
