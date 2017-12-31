@@ -2,8 +2,8 @@ package com.etiennelawlor.moviehub.presentation.televisionshowdetails;
 
 import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowDetailsWrapper;
 import com.etiennelawlor.moviehub.domain.TelevisionShowDetailsDomainContract;
+import com.etiennelawlor.moviehub.domain.models.TelevisionShowDetailsDomainModel;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 
@@ -44,12 +44,12 @@ public class TelevisionShowDetailsPresenter implements TelevisionShowDetailsUiCo
     public void onLoadTelevisionShowDetails(int televisionShowId) {
         Disposable disposable = televisionShowDetailsUseCase.getTelevisionShowDetails(televisionShowId)
 //                .compose(schedulerTransformer)
-                .compose(new ProductionSchedulerTransformer<TelevisionShowDetailsWrapper>())
-                .subscribeWith(new DisposableSingleObserver<TelevisionShowDetailsWrapper>() {
+                .compose(new ProductionSchedulerTransformer<TelevisionShowDetailsDomainModel>())
+                .subscribeWith(new DisposableSingleObserver<TelevisionShowDetailsDomainModel>() {
                     @Override
-                    public void onSuccess(TelevisionShowDetailsWrapper televisionShowDetailsWrapper) {
-                        if(televisionShowDetailsWrapper != null){
-                            televisionShowDetailsView.showTelevisionShowDetails(televisionShowDetailsWrapper);
+                    public void onSuccess(TelevisionShowDetailsDomainModel televisionShowDetailsDomainModel) {
+                        if(televisionShowDetailsDomainModel != null){
+                            televisionShowDetailsView.showTelevisionShowDetails(televisionShowDetailsDomainModel);
                         }
                     }
 

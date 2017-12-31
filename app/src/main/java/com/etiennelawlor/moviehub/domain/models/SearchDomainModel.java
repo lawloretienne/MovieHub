@@ -1,4 +1,4 @@
-package com.etiennelawlor.moviehub.data.repositories.search.models;
+package com.etiennelawlor.moviehub.domain.models;
 
 import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.Person;
@@ -10,7 +10,7 @@ import java.util.List;
  * Created by etiennelawlor on 3/4/17.
  */
 
-public class SearchWrapper {
+public class SearchDomainModel {
 
     // region Member Variables
     private String query;
@@ -21,7 +21,7 @@ public class SearchWrapper {
 
     // region Constructors
 
-    public SearchWrapper(String query, List<Movie> movies, List<TelevisionShow> televisionShows, List<Person> persons) {
+    public SearchDomainModel(String query, List<Movie> movies, List<TelevisionShow> televisionShows, List<Person> persons) {
         this.query = query;
         this.movies = movies;
         this.televisionShows = televisionShows;

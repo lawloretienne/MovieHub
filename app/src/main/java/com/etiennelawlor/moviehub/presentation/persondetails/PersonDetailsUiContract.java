@@ -2,7 +2,7 @@ package com.etiennelawlor.moviehub.presentation.persondetails;
 
 import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.repositories.person.models.PersonDetailsWrapper;
+import com.etiennelawlor.moviehub.domain.models.PersonDetailsDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BasePresenter;
 
 /**
@@ -12,7 +12,7 @@ import com.etiennelawlor.moviehub.presentation.base.BasePresenter;
 public interface PersonDetailsUiContract {
 
     interface View {
-        void showPersonDetails(PersonDetailsWrapper personDetailsWrapper);
+        void showPersonDetails(PersonDetailsDomainModel personDetailsDomainModel);
         void showToolbarTitle();
         void hideToolbarTitle();
         void showErrorView();

@@ -1,7 +1,8 @@
 package com.etiennelawlor.moviehub.data.repositories.person;
 
 import com.etiennelawlor.moviehub.data.database.RealmUtility;
-import com.etiennelawlor.moviehub.data.repositories.person.models.PersonDetailsWrapper;
+import com.etiennelawlor.moviehub.data.network.response.Person;
+import com.etiennelawlor.moviehub.data.network.response.PersonCreditsEnvelope;
 import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsPage;
 
 import io.reactivex.Maybe;
@@ -34,13 +35,24 @@ public class PersonLocalDataSource implements PersonDataSourceContract.LocalDate
     }
 
     @Override
-    public Maybe<PersonDetailsWrapper> getPersonDetails(int personId) {
+    public Maybe<Person> getPerson(int personId) {
         //        Use mapper to convert from realm objects to POJOs
         return Maybe.empty();
     }
 
     @Override
-    public void savePersonDetails(PersonDetailsWrapper personDetailsWrapper) {
+    public void savePerson(Person person) {
+//        Use mapper to convert from POJOs to realm objects
+    }
+
+    @Override
+    public Maybe<PersonCreditsEnvelope> getPersonCredits(int personId) {
+        //        Use mapper to convert from realm objects to POJOs
+        return Maybe.empty();
+    }
+
+    @Override
+    public void savePersonCredits(PersonCreditsEnvelope personCreditsEnvelope) {
 //        Use mapper to convert from POJOs to realm objects
     }
 

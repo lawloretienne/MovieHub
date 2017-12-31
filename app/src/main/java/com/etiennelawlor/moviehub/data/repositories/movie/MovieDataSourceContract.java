@@ -1,7 +1,9 @@
 package com.etiennelawlor.moviehub.data.repositories.movie;
 
+import com.etiennelawlor.moviehub.data.network.response.Movie;
+import com.etiennelawlor.moviehub.data.network.response.MovieCreditsEnvelope;
+import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDatesEnvelope;
 import com.etiennelawlor.moviehub.data.network.response.MoviesEnvelope;
-import com.etiennelawlor.moviehub.data.repositories.movie.models.MovieDetailsWrapper;
 import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesPage;
 
 import io.reactivex.Maybe;
@@ -16,20 +18,34 @@ public interface MovieDataSourceContract {
     interface Repository {
 //        Restful VERB is the first part of method name GET , POST , DELETE, PUT
         Single<MoviesPage> getPopularMovies(int currentPage);
-        Single<MovieDetailsWrapper> getMovieDetails(int movieId);
+        Single<Movie> getMovie(int movieId);
+        Single<MovieCreditsEnvelope> getMovieCredits(int movieId);
+        Single<MoviesEnvelope> getSimilarMovies(int movieId);
+        Single<MovieReleaseDatesEnvelope> getMovieReleaseDates(int movieId);
     }
 
     interface LocalDateSource {
         Maybe<MoviesPage> getPopularMovies(int currentPage);
         void savePopularMovies(MoviesPage moviesPage);
 
-        Maybe<MovieDetailsWrapper> getMovieDetails(int movieId);
-        void saveMovieDetails(MovieDetailsWrapper movieDetailsWrapper);
+        Maybe<Movie> getMovie(int movieId);
+        void saveMovie(Movie movie);
+
+        Maybe<MovieCreditsEnvelope> getMovieCredits(int movieId);
+        void saveMovieCredits(MovieCreditsEnvelope movieCreditsEnvelope);
+
+        Maybe<MoviesEnvelope> getSimilarMovies(int movieId);
+        void saveSimilarMovies(MoviesEnvelope movies);
+
+        Maybe<MovieReleaseDatesEnvelope> getMovieReleaseDates(int movieId);
+        void saveMovieReleaseDates(MovieReleaseDatesEnvelope movieReleaseDatesEnvelope);
     }
 
     interface RemoteDateSource {
         Single<MoviesEnvelope> getPopularMovies(int currentPage);
-
-        Single<MovieDetailsWrapper> getMovieDetails(int movieId);
+        Single<Movie> getMovie(int movieId);
+        Single<MovieCreditsEnvelope> getMovieCredits(int movieId);
+        Single<MoviesEnvelope> getSimilarMovies(int movieId);
+        Single<MovieReleaseDatesEnvelope> getMovieReleaseDates(int movieId);
     }
 }

@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.domain;
 
-import com.etiennelawlor.moviehub.data.repositories.movie.models.MovieDetailsWrapper;
+import com.etiennelawlor.moviehub.domain.models.MovieDetailsDomainModel;
 
 import io.reactivex.Single;
 
@@ -11,6 +11,6 @@ import io.reactivex.Single;
 public interface MovieDetailsDomainContract {
 
     interface UseCase {
-        Single<MovieDetailsWrapper> getMovieDetails(int movieId);
+        Single<MovieDetailsDomainModel> getMovieDetails(int movieId);
     }
 }

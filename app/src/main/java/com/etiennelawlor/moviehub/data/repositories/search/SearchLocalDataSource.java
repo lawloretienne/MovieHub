@@ -1,6 +1,8 @@
 package com.etiennelawlor.moviehub.data.repositories.search;
 
-import com.etiennelawlor.moviehub.data.repositories.search.models.SearchWrapper;
+import com.etiennelawlor.moviehub.data.network.response.MoviesEnvelope;
+import com.etiennelawlor.moviehub.data.network.response.PersonsEnvelope;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowsEnvelope;
 
 import io.reactivex.Maybe;
 
@@ -18,13 +20,35 @@ public class SearchLocalDataSource implements SearchDataSourceContract.LocalDate
     // region SearchDataSourceContract.LocalDateSource Methods
 
     @Override
-    public Maybe<SearchWrapper> getSearch(String query) {
+    public Maybe<MoviesEnvelope> getMovieSearchResults(String query, int page) {
         //        Use mapper to convert from realm objects to POJOs
         return Maybe.empty();
     }
 
     @Override
-    public void saveSearch(SearchWrapper searchWrapper) {
+    public void saveMovieSearchResults(MoviesEnvelope moviesEnvelope) {
+//        Use mapper to convert from POJOs to realm objects
+    }
+
+    @Override
+    public Maybe<TelevisionShowsEnvelope> getTelevisionShowSearchResults(String query, int page) {
+        //        Use mapper to convert from realm objects to POJOs
+        return Maybe.empty();
+    }
+
+    @Override
+    public void saveTelevisionShowSearchResults(TelevisionShowsEnvelope televisionShowsEnvelope) {
+//        Use mapper to convert from POJOs to realm objects
+    }
+
+    @Override
+    public Maybe<PersonsEnvelope> getPersonSearchResults(String query, int page) {
+        //        Use mapper to convert from realm objects to POJOs
+        return Maybe.empty();
+    }
+
+    @Override
+    public void savePersonSearchResults(PersonsEnvelope personsEnvelope) {
 //        Use mapper to convert from POJOs to realm objects
     }
 

@@ -51,9 +51,9 @@ import com.etiennelawlor.moviehub.data.network.response.Genre;
 import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCredit;
-import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowDetailsWrapper;
 import com.etiennelawlor.moviehub.di.component.TelevisionShowDetailsComponent;
 import com.etiennelawlor.moviehub.di.module.TelevisionShowDetailsModule;
+import com.etiennelawlor.moviehub.domain.models.TelevisionShowDetailsDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.common.GravitySnapHelper;
@@ -160,7 +160,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     private TelevisionShowCreditsAdapter castAdapter;
     private TelevisionShowCreditsAdapter crewAdapter;
     private Transition sharedElementEnterTransition;
-    private TelevisionShowDetailsWrapper televisionShowDetailsWrapper;
+    private TelevisionShowDetailsDomainModel televisionShowDetailsDomainModel;
     private TelevisionShowDetailsComponent televisionShowDetailsComponent;
     private final Handler handler = new Handler();
     // endregion
@@ -499,13 +499,13 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     // region TelevisionShowDetailsUiContract.View Methods
 
     @Override
-    public void showTelevisionShowDetails(TelevisionShowDetailsWrapper televisionShowDetailsWrapper) {
-        this.televisionShowDetailsWrapper = televisionShowDetailsWrapper;
+    public void showTelevisionShowDetails(TelevisionShowDetailsDomainModel televisionShowDetailsDomainModel) {
+        this.televisionShowDetailsDomainModel = televisionShowDetailsDomainModel;
         final Palette posterPalette = televisionShow.getPosterPalette();
 
         nestedScrollView.setNestedScrollingEnabled(true);
 
-        televisionShow = televisionShowDetailsWrapper.getTelevisionShow();
+        televisionShow = televisionShowDetailsDomainModel.getTelevisionShow();
         televisionShow.setPosterPalette(posterPalette);
 
         setUpBackdrop();
@@ -659,7 +659,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     }
 
     private void setUpCast(){
-        List<TelevisionShowCredit> cast = televisionShowDetailsWrapper.getCast();
+        List<TelevisionShowCredit> cast = televisionShowDetailsDomainModel.getCast();
         if(cast != null && cast.size()>0){
             View castView = castViewStub.inflate();
 
@@ -678,7 +678,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     }
 
     private void setUpCrew(){
-        List<TelevisionShowCredit> crew = televisionShowDetailsWrapper.getCrew();
+        List<TelevisionShowCredit> crew = televisionShowDetailsDomainModel.getCrew();
         if(crew != null && crew.size()>0){
             View crewView = crewViewStub.inflate();
 
@@ -697,7 +697,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     }
 
     private void setUpSimilarTelevisionShows(){
-        List<TelevisionShow> similarTelevisionShows = televisionShowDetailsWrapper.getSimilarTelevisionShows();
+        List<TelevisionShow> similarTelevisionShows = televisionShowDetailsDomainModel.getSimilarTelevisionShows();
         if(similarTelevisionShows != null && similarTelevisionShows.size()>0){
             View similarTelevisionShowsView = similarTelevisionShowsViewStub.inflate();
 
@@ -828,7 +828,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     }
 
     private void setUpRating(){
-        String rating = televisionShowDetailsWrapper.getRating();
+        String rating = televisionShowDetailsDomainModel.getRating();
 
         if(!TextUtils.isEmpty(rating)){
             ratingTextView.setText(rating);

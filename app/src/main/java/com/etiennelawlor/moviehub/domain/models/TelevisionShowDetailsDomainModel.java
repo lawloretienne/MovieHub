@@ -1,4 +1,4 @@
-package com.etiennelawlor.moviehub.data.repositories.tv.models;
+package com.etiennelawlor.moviehub.domain.models;
 
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCredit;
@@ -9,7 +9,7 @@ import java.util.List;
  * Created by etiennelawlor on 3/4/17.
  */
 
-public class TelevisionShowDetailsWrapper {
+public class TelevisionShowDetailsDomainModel {
 
     // region Member Variables
     private TelevisionShow televisionShow;
@@ -21,7 +21,7 @@ public class TelevisionShowDetailsWrapper {
 
     // region Constructors
 
-    public TelevisionShowDetailsWrapper(TelevisionShow televisionShow, List<TelevisionShowCredit> cast, List<TelevisionShowCredit> crew, List<TelevisionShow> similarTelevisionShows, String rating) {
+    public TelevisionShowDetailsDomainModel(TelevisionShow televisionShow, List<TelevisionShowCredit> cast, List<TelevisionShowCredit> crew, List<TelevisionShow> similarTelevisionShows, String rating) {
         this.televisionShow = televisionShow;
         this.cast = cast;
         this.crew = crew;

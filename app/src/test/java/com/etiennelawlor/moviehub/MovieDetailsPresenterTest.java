@@ -3,8 +3,8 @@ package com.etiennelawlor.moviehub;
 import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.MovieCredit;
 import com.etiennelawlor.moviehub.data.network.response.Person;
-import com.etiennelawlor.moviehub.data.repositories.movie.models.MovieDetailsWrapper;
 import com.etiennelawlor.moviehub.domain.MovieDetailsDomainContract;
+import com.etiennelawlor.moviehub.domain.models.MovieDetailsDomainModel;
 import com.etiennelawlor.moviehub.presentation.moviedetails.MovieDetailsPresenter;
 import com.etiennelawlor.moviehub.presentation.moviedetails.MovieDetailsUiContract;
 
@@ -43,7 +43,7 @@ public class MovieDetailsPresenterTest {
     // endregion
 
     // region Member Variables
-    private MovieDetailsWrapper movieDetailsWrapper;
+    private MovieDetailsDomainModel movieDetailsDomainModel;
     private MovieDetailsPresenter movieDetailsPresenter;
     // endregion
 
@@ -68,7 +68,7 @@ public class MovieDetailsPresenterTest {
         List<MovieCredit> crew = new ArrayList<>();
         List<Movie> similarMovies = new ArrayList<>();
         String rating = "";
-        movieDetailsWrapper = new MovieDetailsWrapper(movie, cast, crew, similarMovies, rating);
+        movieDetailsDomainModel = new MovieDetailsDomainModel(movie, cast, crew, similarMovies, rating);
 
         // 2. (When) Then perform one or more actions
         movieDetailsPresenter.onLoadMovieDetails(movie.getId());
@@ -90,7 +90,7 @@ public class MovieDetailsPresenterTest {
         List<MovieCredit> crew = new ArrayList<>();
         List<Movie> similarMovies = new ArrayList<>();
         String rating = "";
-        movieDetailsWrapper = new MovieDetailsWrapper(movie, cast, crew, similarMovies, rating);
+        movieDetailsDomainModel = new MovieDetailsDomainModel(movie, cast, crew, similarMovies, rating);
 
         // 2. (When) Then perform one or more actions
         movieDetailsPresenter.onLoadMovieDetails(movie.getId());
@@ -98,9 +98,9 @@ public class MovieDetailsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
         verify(mockMovieDetailsUseCase).getMovieDetails(anyInt(), disposableSingleObserverArgumentCaptor.capture());
-        disposableSingleObserverArgumentCaptor.getValue().onSuccess(movieDetailsWrapper);
+        disposableSingleObserverArgumentCaptor.getValue().onSuccess(movieDetailsDomainModel);
 
-        verify(mockMovieDetailsView).showMovieDetails(movieDetailsWrapper);
+        verify(mockMovieDetailsView).showMovieDetails(movieDetailsDomainModel);
     }
 
     @Test

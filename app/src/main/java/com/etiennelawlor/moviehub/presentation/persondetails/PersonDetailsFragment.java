@@ -53,9 +53,9 @@ import com.etiennelawlor.moviehub.data.network.response.PersonCredit;
 import com.etiennelawlor.moviehub.data.network.response.ProfileImage;
 import com.etiennelawlor.moviehub.data.network.response.ProfileImages;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.repositories.person.models.PersonDetailsWrapper;
 import com.etiennelawlor.moviehub.di.component.PersonDetailsComponent;
 import com.etiennelawlor.moviehub.di.module.PersonDetailsModule;
+import com.etiennelawlor.moviehub.domain.models.PersonDetailsDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.common.GravitySnapHelper;
@@ -155,7 +155,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     private PersonCreditsAdapter castAdapter;
     private PersonCreditsAdapter crewAdapter;
     private Transition sharedElementEnterTransition;
-    private PersonDetailsWrapper personDetailsWrapper;
+    private PersonDetailsDomainModel personDetailsDomainModel;
     private PersonDetailsComponent personDetailsComponent;
     private final Handler handler = new Handler();
     // endregion
@@ -519,13 +519,13 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     // region PersonDetailsUiContract.View Methods
 
     @Override
-    public void showPersonDetails(PersonDetailsWrapper personDetailsWrapper) {
-        this.personDetailsWrapper = personDetailsWrapper;
+    public void showPersonDetails(PersonDetailsDomainModel personDetailsDomainModel) {
+        this.personDetailsDomainModel = personDetailsDomainModel;
         final Palette profilePalette = person.getProfilePalette();
 
         nestedScrollView.setNestedScrollingEnabled(true);
 
-        person = personDetailsWrapper.getPerson();
+        person = personDetailsDomainModel.getPerson();
         person.setProfilePalette(profilePalette);
 
         setUpBackdrop();
@@ -685,7 +685,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     }
 
     private void setUpCast(){
-        List<PersonCredit> cast = personDetailsWrapper.getCast();
+        List<PersonCredit> cast = personDetailsDomainModel.getCast();
         if(cast != null && cast.size()>0){
             View castView = castViewStub.inflate();
 
@@ -730,7 +730,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     }
 
     private void setUpCrew(){
-        List<PersonCredit> crew = personDetailsWrapper.getCrew();
+        List<PersonCredit> crew = personDetailsDomainModel.getCrew();
         if(crew != null && crew.size()>0){
             View crewView = crewViewStub.inflate();
 

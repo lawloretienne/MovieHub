@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.domain;
 
-import com.etiennelawlor.moviehub.data.repositories.person.models.PersonDetailsWrapper;
+import com.etiennelawlor.moviehub.domain.models.PersonDetailsDomainModel;
 
 import io.reactivex.Single;
 
@@ -11,6 +11,6 @@ import io.reactivex.Single;
 public interface PersonDetailsDomainContract {
 
     interface UseCase {
-        Single<PersonDetailsWrapper> getPersonDetails(int personId);
+        Single<PersonDetailsDomainModel> getPersonDetails(int personId);
     }
 }

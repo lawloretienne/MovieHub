@@ -1,13 +1,9 @@
 package com.etiennelawlor.moviehub.data.repositories.search;
 
 import com.etiennelawlor.moviehub.data.network.MovieHubService;
-import com.etiennelawlor.moviehub.data.network.response.Movie;
-import com.etiennelawlor.moviehub.data.network.response.Person;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.repositories.search.models.SearchWrapper;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.etiennelawlor.moviehub.data.network.response.MoviesEnvelope;
+import com.etiennelawlor.moviehub.data.network.response.PersonsEnvelope;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowsEnvelope;
 
 import javax.inject.Inject;
 
@@ -32,30 +28,18 @@ public class SearchRemoteDataSource implements SearchDataSourceContract.RemoteDa
 
     // region SearchDataSourceContract.RemoteDateSource Methods
     @Override
-    public Single<SearchWrapper> getSearch(final String query) {
-        return Single.zip(
-                movieHubService.searchMovies(query, 1),
-                movieHubService.searchTelevisionShows(query, 1),
-                movieHubService.searchPeople(query, 1),
-                (moviesEnvelope, televisionShowsEnvelope, peopleEnvelope) -> {
-                    List<Movie> movies = new ArrayList<>();
-                    List<TelevisionShow> televisionShows = new ArrayList<>();
-                    List<Person> persons = new ArrayList<>();
+    public Single<MoviesEnvelope> getMovieSearchResults(String query, int page) {
+        return movieHubService.getMovieSearchResults(query, page);
+    }
 
-                    if (moviesEnvelope != null) {
-                        movies = moviesEnvelope.getMovies();
-                    }
+    @Override
+    public Single<TelevisionShowsEnvelope> getTelevisionShowSearchResults(String query, int page) {
+        return movieHubService.getTelevisionShowSearchResults(query, page);
+    }
 
-                    if (televisionShowsEnvelope != null) {
-                        televisionShows = televisionShowsEnvelope.getTelevisionShows();
-                    }
-
-                    if (peopleEnvelope != null) {
-                        persons = peopleEnvelope.getPersons();
-                    }
-
-                    return new SearchWrapper(query, movies, televisionShows, persons);
-                });
+    @Override
+    public Single<PersonsEnvelope> getPersonSearchResults(String query, int page) {
+        return movieHubService.getPersonSearchResults(query, page);
     }
 
     // endregion

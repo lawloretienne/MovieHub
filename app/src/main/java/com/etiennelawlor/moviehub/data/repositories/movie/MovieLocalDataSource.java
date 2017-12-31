@@ -1,7 +1,10 @@
 package com.etiennelawlor.moviehub.data.repositories.movie;
 
 import com.etiennelawlor.moviehub.data.database.RealmUtility;
-import com.etiennelawlor.moviehub.data.repositories.movie.models.MovieDetailsWrapper;
+import com.etiennelawlor.moviehub.data.network.response.Movie;
+import com.etiennelawlor.moviehub.data.network.response.MovieCreditsEnvelope;
+import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDatesEnvelope;
+import com.etiennelawlor.moviehub.data.network.response.MoviesEnvelope;
 import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesPage;
 
 import io.reactivex.Maybe;
@@ -33,13 +36,46 @@ public class MovieLocalDataSource implements MovieDataSourceContract.LocalDateSo
     }
 
     @Override
-    public Maybe<MovieDetailsWrapper> getMovieDetails(int movieId) {
+    public Maybe<Movie> getMovie(int movieId) {
         //        Use mapper to convert from realm objects to POJOs
         return Maybe.empty();
     }
 
     @Override
-    public void saveMovieDetails(MovieDetailsWrapper movieDetailsWrapper) {
+    public void saveMovie(Movie movie) {
+//        Use mapper to convert from POJOs to realm objects
+    }
+
+    @Override
+    public Maybe<MovieCreditsEnvelope> getMovieCredits(int movieId) {
+        //        Use mapper to convert from realm objects to POJOs
+        return Maybe.empty();
+    }
+
+    @Override
+    public void saveMovieCredits(MovieCreditsEnvelope movieCreditsEnvelope) {
+//        Use mapper to convert from POJOs to realm objects
+    }
+
+    @Override
+    public Maybe<MoviesEnvelope> getSimilarMovies(int movieId) {
+        //        Use mapper to convert from realm objects to POJOs
+        return Maybe.empty();
+    }
+
+    @Override
+    public void saveSimilarMovies(MoviesEnvelope movies) {
+//        Use mapper to convert from POJOs to realm objects
+    }
+
+    @Override
+    public Maybe<MovieReleaseDatesEnvelope> getMovieReleaseDates(int movieId) {
+        //        Use mapper to convert from realm objects to POJOs
+        return Maybe.empty();
+    }
+
+    @Override
+    public void saveMovieReleaseDates(MovieReleaseDatesEnvelope movieReleaseDatesEnvelope) {
 //        Use mapper to convert from POJOs to realm objects
     }
 

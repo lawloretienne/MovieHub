@@ -1,12 +1,9 @@
 package com.etiennelawlor.moviehub.data.repositories.person;
 
 import com.etiennelawlor.moviehub.data.network.MovieHubService;
-import com.etiennelawlor.moviehub.data.network.response.PeopleEnvelope;
-import com.etiennelawlor.moviehub.data.network.response.PersonCredit;
-import com.etiennelawlor.moviehub.data.repositories.person.models.PersonDetailsWrapper;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.etiennelawlor.moviehub.data.network.response.Person;
+import com.etiennelawlor.moviehub.data.network.response.PersonCreditsEnvelope;
+import com.etiennelawlor.moviehub.data.network.response.PersonsEnvelope;
 
 import javax.inject.Inject;
 
@@ -32,29 +29,18 @@ public class PersonRemoteDataSource implements PersonDataSourceContract.RemoteDa
     // region PersonDataSourceContract.RemoteDateSource Methods
 
     @Override
-    public Single<PeopleEnvelope> getPopularPersons(int currentPage) {
-        return movieHubService.getPopularPeople(currentPage);
+    public Single<PersonsEnvelope> getPopularPersons(int currentPage) {
+        return movieHubService.getPopularPersons(currentPage);
     }
 
     @Override
-    public Single<PersonDetailsWrapper> getPersonDetails(int personId) {
-        return Single.zip(
-                movieHubService.getPerson(personId),
-                movieHubService.getPersonCredits(personId),
-                (person, personCreditsEnvelope) -> {
-                    List<PersonCredit> cast = new ArrayList<>();
-                    List<PersonCredit> crew = new ArrayList<>();
+    public Single<Person> getPerson(int personId) {
+        return movieHubService.getPerson(personId);
+    }
 
-                    if(personCreditsEnvelope!=null){
-                        cast = personCreditsEnvelope.getCast();
-                    }
-
-                    if(personCreditsEnvelope!=null){
-                        crew = personCreditsEnvelope.getCrew();
-                    }
-
-                    return new PersonDetailsWrapper(person, cast, crew);
-                });
+    @Override
+    public Single<PersonCreditsEnvelope> getPersonCredits(int personId) {
+        return movieHubService.getPersonCredits(personId);
     }
 
     // endregion

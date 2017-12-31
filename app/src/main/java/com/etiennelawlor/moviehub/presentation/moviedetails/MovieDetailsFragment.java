@@ -51,9 +51,9 @@ import com.etiennelawlor.moviehub.data.network.response.Genre;
 import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.MovieCredit;
 import com.etiennelawlor.moviehub.data.network.response.Person;
-import com.etiennelawlor.moviehub.data.repositories.movie.models.MovieDetailsWrapper;
 import com.etiennelawlor.moviehub.di.component.MovieDetailsComponent;
 import com.etiennelawlor.moviehub.di.module.MovieDetailsModule;
+import com.etiennelawlor.moviehub.domain.models.MovieDetailsDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.common.GravitySnapHelper;
@@ -163,7 +163,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
     private MovieCreditsAdapter castAdapter;
     private MovieCreditsAdapter crewAdapter;
     private Transition sharedElementEnterTransition;
-    private MovieDetailsWrapper movieDetailsWrapper;
+    private MovieDetailsDomainModel movieDetailsDomainModel;
     private MovieDetailsComponent movieDetailsComponent;
     private final Handler handler = new Handler();
     // endregion
@@ -495,13 +495,13 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
     // region MovieDetailsUiContract.View Methods
 
     @Override
-    public void showMovieDetails(MovieDetailsWrapper movieDetailsWrapper) {
-        this.movieDetailsWrapper = movieDetailsWrapper;
+    public void showMovieDetails(MovieDetailsDomainModel movieDetailsDomainModel) {
+        this.movieDetailsDomainModel = movieDetailsDomainModel;
         final Palette posterPalette = movie.getPosterPalette();
 
         nestedScrollView.setNestedScrollingEnabled(true);
 
-        movie = movieDetailsWrapper.getMovie();
+        movie = movieDetailsDomainModel.getMovie();
         movie.setPosterPalette(posterPalette);
 
         setUpBackdrop();
@@ -657,7 +657,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
     }
 
     private void setUpCast(){
-        List<MovieCredit> cast = movieDetailsWrapper.getCast();
+        List<MovieCredit> cast = movieDetailsDomainModel.getCast();
         if(cast != null && cast.size()>0){
             View castView = castViewStub.inflate();
 
@@ -676,7 +676,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
     }
 
     private void setUpCrew(){
-        List<MovieCredit> crew = movieDetailsWrapper.getCrew();
+        List<MovieCredit> crew = movieDetailsDomainModel.getCrew();
         if(crew != null && crew.size()>0){
             View crewView = crewViewStub.inflate();
 
@@ -695,7 +695,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
     }
 
     private void setUpSimilarMovies(){
-        List<Movie> similarMovies = movieDetailsWrapper.getSimilarMovies();
+        List<Movie> similarMovies = movieDetailsDomainModel.getSimilarMovies();
         if(similarMovies != null && similarMovies.size()>0){
             View similarMoviesView = similarMoviesViewStub.inflate();
 
@@ -850,7 +850,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
     }
 
     private void setUpRating(){
-        String rating = movieDetailsWrapper.getRating();
+        String rating = movieDetailsDomainModel.getRating();
 
         if(!TextUtils.isEmpty(rating)){
             ratingTextView.setText(rating);

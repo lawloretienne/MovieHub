@@ -1,6 +1,7 @@
 package com.etiennelawlor.moviehub.data.repositories.person;
 
-import com.etiennelawlor.moviehub.data.repositories.person.models.PersonDetailsWrapper;
+import com.etiennelawlor.moviehub.data.network.response.Person;
+import com.etiennelawlor.moviehub.data.network.response.PersonCreditsEnvelope;
 import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsPage;
 
 import java.util.Calendar;
@@ -51,13 +52,24 @@ public class PersonRepository implements PersonDataSourceContract.Repository {
     }
 
     @Override
-    public Single<PersonDetailsWrapper> getPersonDetails(int personId) {
-        Maybe<PersonDetailsWrapper> local = personLocalDataSource.getPersonDetails(personId);
-        Single<PersonDetailsWrapper> remote =
-                personRemoteDataSource.getPersonDetails(personId)
-                        .doOnSuccess(personDetailsWrapper -> personLocalDataSource.savePersonDetails(personDetailsWrapper));
+    public Single<Person> getPerson(int personId) {
+        Maybe<Person> local = personLocalDataSource.getPerson(personId);
+        Single<Person> remote =
+                personRemoteDataSource.getPerson(personId)
+                        .doOnSuccess(person -> personLocalDataSource.savePerson(person));
 
         return local.switchIfEmpty(remote);
     }
+
+    @Override
+    public Single<PersonCreditsEnvelope> getPersonCredits(int personId) {
+        Maybe<PersonCreditsEnvelope> local = personLocalDataSource.getPersonCredits(personId);
+        Single<PersonCreditsEnvelope> remote =
+                personRemoteDataSource.getPersonCredits(personId)
+                        .doOnSuccess(personCreditsEnvelope -> personLocalDataSource.savePersonCredits(personCreditsEnvelope));
+
+        return local.switchIfEmpty(remote);
+    }
+
     // endregion
 }

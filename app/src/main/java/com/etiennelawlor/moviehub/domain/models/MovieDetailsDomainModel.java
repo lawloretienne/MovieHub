@@ -1,4 +1,4 @@
-package com.etiennelawlor.moviehub.data.repositories.movie.models;
+package com.etiennelawlor.moviehub.domain.models;
 
 import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.MovieCredit;
@@ -9,7 +9,7 @@ import java.util.List;
  * Created by etiennelawlor on 3/4/17.
  */
 
-public class MovieDetailsWrapper {
+public class MovieDetailsDomainModel {
 
     // region Member Variables
     private Movie movie;
@@ -21,7 +21,7 @@ public class MovieDetailsWrapper {
 
     // region Constructors
 
-    public MovieDetailsWrapper(Movie movie, List<MovieCredit> cast, List<MovieCredit> crew, List<Movie> similarMovies, String rating) {
+    public MovieDetailsDomainModel(Movie movie, List<MovieCredit> cast, List<MovieCredit> crew, List<Movie> similarMovies, String rating) {
         this.movie = movie;
         this.cast = cast;
         this.crew = crew;

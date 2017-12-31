@@ -42,8 +42,8 @@ public class TelevisionShowDetailsModule {
     }
 
 //    @Provides
-//    public SchedulerTransformer<TelevisionShowDetailsWrapper> proviedSchedulerTransformer() {
-//        return new ProductionSchedulerTransformer<TelevisionShowDetailsWrapper>();
+//    public SchedulerTransformer<TelevisionShowDetailsDomainModel> proviedSchedulerTransformer() {
+//        return new ProductionSchedulerTransformer<TelevisionShowDetailsDomainModel>();
 //    }
 
     @Provides

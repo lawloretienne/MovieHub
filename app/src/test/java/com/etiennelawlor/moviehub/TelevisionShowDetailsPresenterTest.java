@@ -3,8 +3,8 @@ package com.etiennelawlor.moviehub;
 import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCredit;
-import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowDetailsWrapper;
 import com.etiennelawlor.moviehub.domain.TelevisionShowDetailsDomainContract;
+import com.etiennelawlor.moviehub.domain.models.TelevisionShowDetailsDomainModel;
 import com.etiennelawlor.moviehub.presentation.televisionshowdetails.TelevisionShowDetailsPresenter;
 import com.etiennelawlor.moviehub.presentation.televisionshowdetails.TelevisionShowDetailsUiContract;
 
@@ -43,7 +43,7 @@ public class TelevisionShowDetailsPresenterTest {
     // endregion
 
     // region Member Variables
-    private TelevisionShowDetailsWrapper televisionShowDetailsWrapper;
+    private TelevisionShowDetailsDomainModel televisionShowDetailsDomainModel;
     private TelevisionShowDetailsPresenter televisionShowDetailsPresenter;
     // endregion
 
@@ -68,7 +68,7 @@ public class TelevisionShowDetailsPresenterTest {
         List<TelevisionShowCredit> crew = new ArrayList<>();
         List<TelevisionShow> similarTelevisionShows = new ArrayList<>();
         String rating = "";
-        televisionShowDetailsWrapper = new TelevisionShowDetailsWrapper(televisionShow, cast, crew, similarTelevisionShows, rating);
+        televisionShowDetailsDomainModel = new TelevisionShowDetailsDomainModel(televisionShow, cast, crew, similarTelevisionShows, rating);
 
         // 2. (When) Then perform one or more actions
         televisionShowDetailsPresenter.onLoadTelevisionShowDetails(televisionShow.getId());
@@ -90,7 +90,7 @@ public class TelevisionShowDetailsPresenterTest {
         List<TelevisionShowCredit> crew = new ArrayList<>();
         List<TelevisionShow> similarTelevisionShows = new ArrayList<>();
         String rating = "";
-        televisionShowDetailsWrapper = new TelevisionShowDetailsWrapper(televisionShow, cast, crew, similarTelevisionShows, rating);
+        televisionShowDetailsDomainModel = new TelevisionShowDetailsDomainModel(televisionShow, cast, crew, similarTelevisionShows, rating);
 
         // 2. (When) Then perform one or more actions
         televisionShowDetailsPresenter.onLoadTelevisionShowDetails(televisionShow.getId());
@@ -98,9 +98,9 @@ public class TelevisionShowDetailsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
         verify(mockTelevisionShowDetailsUseCase).getTelevisionShowDetails(anyInt(), disposableSingleObserverArgumentCaptor.capture());
-        disposableSingleObserverArgumentCaptor.getValue().onSuccess(televisionShowDetailsWrapper);
+        disposableSingleObserverArgumentCaptor.getValue().onSuccess(televisionShowDetailsDomainModel);
 
-        verify(mockTelevisionShowDetailsView).showTelevisionShowDetails(televisionShowDetailsWrapper);
+        verify(mockTelevisionShowDetailsView).showTelevisionShowDetails(televisionShowDetailsDomainModel);
     }
 
     @Test

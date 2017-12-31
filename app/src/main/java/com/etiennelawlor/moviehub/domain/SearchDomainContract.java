@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.domain;
 
-import com.etiennelawlor.moviehub.data.repositories.search.models.SearchWrapper;
+import com.etiennelawlor.moviehub.domain.models.SearchDomainModel;
 
 import io.reactivex.Single;
 
@@ -11,6 +11,6 @@ import io.reactivex.Single;
 public interface SearchDomainContract {
 
     interface UseCase {
-        Single<SearchWrapper> getSearchResponse(String query);
+        Single<SearchDomainModel> getSearchResponse(String query);
     }
 }

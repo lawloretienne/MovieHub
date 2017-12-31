@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.domain;
 
-import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowDetailsWrapper;
+import com.etiennelawlor.moviehub.domain.models.TelevisionShowDetailsDomainModel;
 
 import io.reactivex.Single;
 
@@ -11,6 +11,6 @@ import io.reactivex.Single;
 public interface TelevisionShowDetailsDomainContract {
 
     interface UseCase {
-        Single<TelevisionShowDetailsWrapper> getTelevisionShowDetails(int televisionShowId);
+        Single<TelevisionShowDetailsDomainModel> getTelevisionShowDetails(int televisionShowId);
     }
 }

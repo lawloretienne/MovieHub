@@ -5,9 +5,9 @@ import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.MovieCreditsEnvelope;
 import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDatesEnvelope;
 import com.etiennelawlor.moviehub.data.network.response.MoviesEnvelope;
-import com.etiennelawlor.moviehub.data.network.response.PeopleEnvelope;
 import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.data.network.response.PersonCreditsEnvelope;
+import com.etiennelawlor.moviehub.data.network.response.PersonsEnvelope;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowContentRatingsEnvelope;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCreditsEnvelope;
@@ -56,7 +56,7 @@ public interface MovieHubService {
     Single<TelevisionShowContentRatingsEnvelope> getTelevisionShowContentRatings(@Path("tvId") long tvId);
 
     @GET("person/popular")
-    Single<PeopleEnvelope> getPopularPeople(@Query("page") int page);
+    Single<PersonsEnvelope> getPopularPersons(@Query("page") int page);
 
     @GET("person/{personId}?append_to_response=images")
     Single<Person> getPerson(@Path("personId") long personId);
@@ -68,12 +68,12 @@ public interface MovieHubService {
     Single<Configuration> getConfiguration();
 
     @GET("search/movie")
-    Single<MoviesEnvelope> searchMovies(@Query("query") String query, @Query("page") int page);
+    Single<MoviesEnvelope> getMovieSearchResults(@Query("query") String query, @Query("page") int page);
 
     @GET("search/tv")
-    Single<TelevisionShowsEnvelope> searchTelevisionShows(@Query("query") String query, @Query("page") int page);
+    Single<TelevisionShowsEnvelope> getTelevisionShowSearchResults(@Query("query") String query, @Query("page") int page);
 
     @GET("search/person")
-    Single<PeopleEnvelope> searchPeople(@Query("query") String query, @Query("page") int page);
+    Single<PersonsEnvelope> getPersonSearchResults(@Query("query") String query, @Query("page") int page);
 
 }

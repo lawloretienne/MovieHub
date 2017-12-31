@@ -2,8 +2,8 @@ package com.etiennelawlor.moviehub.presentation.persondetails;
 
 import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.repositories.person.models.PersonDetailsWrapper;
 import com.etiennelawlor.moviehub.domain.PersonDetailsDomainContract;
+import com.etiennelawlor.moviehub.domain.models.PersonDetailsDomainModel;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 
@@ -44,12 +44,12 @@ public class PersonDetailsPresenter implements PersonDetailsUiContract.Presenter
     public void onLoadPersonDetails(int personId) {
         Disposable disposable = personDetailsUseCase.getPersonDetails(personId)
 //                .compose(schedulerTransformer)
-                .compose(new ProductionSchedulerTransformer<PersonDetailsWrapper>())
-                .subscribeWith(new DisposableSingleObserver<PersonDetailsWrapper>() {
+                .compose(new ProductionSchedulerTransformer<PersonDetailsDomainModel>())
+                .subscribeWith(new DisposableSingleObserver<PersonDetailsDomainModel>() {
                     @Override
-                    public void onSuccess(PersonDetailsWrapper personDetailsWrapper) {
-                        if(personDetailsWrapper != null){
-                            personDetailsView.showPersonDetails(personDetailsWrapper);
+                    public void onSuccess(PersonDetailsDomainModel personDetailsDomainModel) {
+                        if(personDetailsDomainModel != null){
+                            personDetailsView.showPersonDetails(personDetailsDomainModel);
                         }
                     }
 

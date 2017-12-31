@@ -1,7 +1,8 @@
 package com.etiennelawlor.moviehub.data.repositories.person;
 
-import com.etiennelawlor.moviehub.data.network.response.PeopleEnvelope;
-import com.etiennelawlor.moviehub.data.repositories.person.models.PersonDetailsWrapper;
+import com.etiennelawlor.moviehub.data.network.response.Person;
+import com.etiennelawlor.moviehub.data.network.response.PersonCreditsEnvelope;
+import com.etiennelawlor.moviehub.data.network.response.PersonsEnvelope;
 import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsPage;
 
 import io.reactivex.Maybe;
@@ -15,23 +16,24 @@ public interface PersonDataSourceContract {
 
     interface Repository {
         Single<PersonsPage> getPopularPersons(int currentPage);
-
-        Single<PersonDetailsWrapper> getPersonDetails(int personId);
+        Single<Person> getPerson(int personId);
+        Single<PersonCreditsEnvelope> getPersonCredits(int personId);
     }
 
     interface LocalDateSource {
         Maybe<PersonsPage> getPopularPersons(int currentPage);
-
         void savePopularPersons(PersonsPage personsPage);
 
-        Maybe<PersonDetailsWrapper> getPersonDetails(int personId);
+        Maybe<Person> getPerson(int personId);
+        void savePerson(Person person);
 
-        void savePersonDetails(PersonDetailsWrapper personDetailsWrapper);
+        Maybe<PersonCreditsEnvelope> getPersonCredits(int personId);
+        void savePersonCredits(PersonCreditsEnvelope personCreditsEnvelope);
     }
 
     interface RemoteDateSource {
-        Single<PeopleEnvelope> getPopularPersons(int currentPage);
-
-        Single<PersonDetailsWrapper> getPersonDetails(int personId);
+        Single<PersonsEnvelope> getPopularPersons(int currentPage);
+        Single<Person> getPerson(int personId);
+        Single<PersonCreditsEnvelope> getPersonCredits(int personId);
     }
 }

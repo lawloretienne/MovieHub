@@ -1,7 +1,11 @@
 package com.etiennelawlor.moviehub.domain;
 
+import com.etiennelawlor.moviehub.data.network.response.PersonCredit;
 import com.etiennelawlor.moviehub.data.repositories.person.PersonDataSourceContract;
-import com.etiennelawlor.moviehub.data.repositories.person.models.PersonDetailsWrapper;
+import com.etiennelawlor.moviehub.domain.models.PersonDetailsDomainModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.Single;
 
@@ -23,8 +27,24 @@ public class PersonDetailsUseCase implements PersonDetailsDomainContract.UseCase
 
     // region MovieDetailsDomainContract.UseCase Methods
     @Override
-    public Single<PersonDetailsWrapper> getPersonDetails(int personId) {
-        return personRepository.getPersonDetails(personId);
+    public Single<PersonDetailsDomainModel> getPersonDetails(int personId) {
+        return Single.zip(
+                personRepository.getPerson(personId),
+                personRepository.getPersonCredits(personId),
+                (person, personCreditsEnvelope) -> {
+                    List<PersonCredit> cast = new ArrayList<>();
+                    List<PersonCredit> crew = new ArrayList<>();
+
+                    if(personCreditsEnvelope!=null){
+                        cast = personCreditsEnvelope.getCast();
+                    }
+
+                    if(personCreditsEnvelope!=null){
+                        crew = personCreditsEnvelope.getCrew();
+                    }
+
+                    return new PersonDetailsDomainModel(person, cast, crew);
+                });
     }
     // endregion
 

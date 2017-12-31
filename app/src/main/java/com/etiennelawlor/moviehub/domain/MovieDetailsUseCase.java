@@ -1,7 +1,16 @@
 package com.etiennelawlor.moviehub.domain;
 
+import android.text.TextUtils;
+
+import com.etiennelawlor.moviehub.data.network.response.Movie;
+import com.etiennelawlor.moviehub.data.network.response.MovieCredit;
+import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDate;
+import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDateEnvelope;
 import com.etiennelawlor.moviehub.data.repositories.movie.MovieDataSourceContract;
-import com.etiennelawlor.moviehub.data.repositories.movie.models.MovieDetailsWrapper;
+import com.etiennelawlor.moviehub.domain.models.MovieDetailsDomainModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.Single;
 
@@ -10,6 +19,10 @@ import io.reactivex.Single;
  */
 
 public class MovieDetailsUseCase implements MovieDetailsDomainContract.UseCase {
+
+    // region Constants
+    private static final String ISO_31661 = "US";
+    // endregion
 
     // region Member Variables
     private final MovieDataSourceContract.Repository movieRepository;
@@ -23,8 +36,54 @@ public class MovieDetailsUseCase implements MovieDetailsDomainContract.UseCase {
 
     // region MovieDetailsDomainContract.UseCase Methods
     @Override
-    public Single<MovieDetailsWrapper> getMovieDetails(int movieId) {
-        return movieRepository.getMovieDetails(movieId);
+    public Single<MovieDetailsDomainModel> getMovieDetails(int movieId) {
+        return Single.zip(
+                movieRepository.getMovie(movieId),
+                movieRepository.getMovieCredits(movieId),
+                movieRepository.getSimilarMovies(movieId),
+                movieRepository.getMovieReleaseDates(movieId),
+                (movie, movieCreditsEnvelope, moviesEnvelope, movieReleaseDatesEnvelope) -> {
+                    List<MovieCredit> cast = new ArrayList<>();
+                    List<MovieCredit> crew = new ArrayList<>();
+                    List<Movie> similarMovies = new ArrayList<>();
+                    String rating = "";
+
+                    if (movieCreditsEnvelope != null) {
+                        cast = movieCreditsEnvelope.getCast();
+                    }
+
+                    if (movieCreditsEnvelope != null) {
+                        crew = movieCreditsEnvelope.getCrew();
+                    }
+
+                    if (moviesEnvelope != null) {
+                        similarMovies = moviesEnvelope.getMovies();
+                    }
+
+                    if (movieReleaseDatesEnvelope != null) {
+                        List<MovieReleaseDateEnvelope> movieReleaseDateEnvelopes = movieReleaseDatesEnvelope.getMovieReleaseDateEnvelopes();
+                        if (movieReleaseDateEnvelopes != null && movieReleaseDateEnvelopes.size() > 0) {
+                            for (MovieReleaseDateEnvelope movieReleaseDateEnvelope : movieReleaseDateEnvelopes) {
+                                if (movieReleaseDateEnvelope != null) {
+                                    String iso31661 = movieReleaseDateEnvelope.getIso31661();
+                                    if (iso31661.equals(ISO_31661)) {
+                                        List<MovieReleaseDate> movieReleaseDates = movieReleaseDateEnvelope.getMovieReleaseDates();
+                                        if (movieReleaseDates != null && movieReleaseDates.size() > 0) {
+                                            for (MovieReleaseDate movieReleaseDate : movieReleaseDates) {
+                                                if (!TextUtils.isEmpty(movieReleaseDate.getCertification())) {
+                                                    rating = movieReleaseDate.getCertification();
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    return new MovieDetailsDomainModel(movie, cast, crew, similarMovies, rating);
+                });
     }
     // endregion
 

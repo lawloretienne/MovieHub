@@ -3,8 +3,8 @@ package com.etiennelawlor.moviehub;
 import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.repositories.search.models.SearchWrapper;
 import com.etiennelawlor.moviehub.domain.SearchDomainContract;
+import com.etiennelawlor.moviehub.domain.models.SearchDomainModel;
 import com.etiennelawlor.moviehub.presentation.search.SearchPresenter;
 import com.etiennelawlor.moviehub.presentation.search.SearchUiContract;
 import com.etiennelawlor.moviehub.util.rxjava.TestSchedulerProvider;
@@ -46,7 +46,7 @@ public class SearchPresenterTest {
     // endregion
 
     // region Member Variables
-    private SearchWrapper searchWrapper;
+    private SearchDomainModel searchDomainModel;
     private SearchPresenter searchPresenter;
     // endregion
 
@@ -71,7 +71,7 @@ public class SearchPresenterTest {
         List<Movie> movies = getListOfMovies(0);
         List<TelevisionShow> televisionShows = getListOfTelevisionShows(0);
         List<Person> persons = getListOfPersons(0);
-        searchWrapper = new SearchWrapper(query, movies, televisionShows, persons);
+        searchDomainModel = new SearchDomainModel(query, movies, televisionShows, persons);
 
         CharSequence[] queries = {"J", "Je", "Jen", "Jenn", "Jenni", "Jennif", "Jennife", "Jennifer"};
         Observable<CharSequence> searchQueriesObservable = Observable.fromArray(queries);
@@ -97,7 +97,7 @@ public class SearchPresenterTest {
         List<Movie> movies = getListOfMovies(0);
         List<TelevisionShow> televisionShows = getListOfTelevisionShows(0);
         List<Person> persons = getListOfPersons(0);
-        searchWrapper = new SearchWrapper(query, movies, televisionShows, persons);
+        searchDomainModel = new SearchDomainModel(query, movies, televisionShows, persons);
 
         CharSequence[] queries = {"J", "Je", "Jen", "Jenn", "Jenni", "Jennif", "Jennife", "Jennifer"};
         Observable<CharSequence> searchQueriesObservable = Observable.fromArray(queries);
@@ -110,7 +110,7 @@ public class SearchPresenterTest {
 
         disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
         verify(mockSearchUseCase).getSearchResponse(anyString(), disposableSingleObserverArgumentCaptor.capture());
-        disposableSingleObserverArgumentCaptor.getValue().onSuccess(searchWrapper);
+        disposableSingleObserverArgumentCaptor.getValue().onSuccess(searchDomainModel);
 
         verify(mockSearchView).clearMoviesAdapter();
         verify(mockSearchView).clearTelevisionShowsAdapter();
