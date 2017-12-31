@@ -4,9 +4,8 @@ import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.MovieCreditsEnvelope;
 import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDatesEnvelope;
 import com.etiennelawlor.moviehub.data.network.response.MoviesEnvelope;
+import com.etiennelawlor.moviehub.data.repositories.mappers.MoviesDataModelMapper;
 import com.etiennelawlor.moviehub.data.repositories.models.MoviesDataModel;
-
-import java.util.Calendar;
 
 import io.reactivex.Maybe;
 import io.reactivex.Single;
@@ -17,14 +16,10 @@ import io.reactivex.Single;
 
 public class MovieRepository implements MovieDataSourceContract.Repository {
 
-    // region Constants
-    private static final int PAGE_SIZE = 20;
-    private static final int SEVEN_DAYS = 7;
-    // endregion
-
     // region Member Variables
     private MovieDataSourceContract.LocalDateSource movieLocalDataSource;
     private MovieDataSourceContract.RemoteDateSource movieRemoteDataSource;
+    private MoviesDataModelMapper moviesDataModelMapper = new MoviesDataModelMapper();
     // endregion
 
     // region Constructors
@@ -41,13 +36,7 @@ public class MovieRepository implements MovieDataSourceContract.Repository {
                 .filter(moviesDataModel -> !moviesDataModel.isExpired());
         Single<MoviesDataModel> remote =
                 movieRemoteDataSource.getPopularMovies(currentPage)
-                        .flatMap(moviesEnvelope -> Single.just(moviesEnvelope.getMovies()))
-                        .map(movies -> {
-                            boolean isLastPage = movies.size() < PAGE_SIZE ? true : false;
-                            Calendar calendar = Calendar.getInstance();
-                            calendar.add(Calendar.DATE, SEVEN_DAYS);
-                            return new MoviesDataModel(movies, currentPage, isLastPage, calendar.getTime());
-                        })
+                        .map(moviesEnvelope -> moviesDataModelMapper.mapToDataModel(moviesEnvelope))
                         .doOnSuccess(moviesDataModel -> movieLocalDataSource.savePopularMovies(moviesDataModel));
 
         return local.switchIfEmpty(remote);

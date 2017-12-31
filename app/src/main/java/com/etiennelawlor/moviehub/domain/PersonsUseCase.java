@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.domain;
 
-import com.etiennelawlor.moviehub.data.repositories.person.PersonDataSourceContract;
 import com.etiennelawlor.moviehub.data.repositories.models.PersonsDataModel;
+import com.etiennelawlor.moviehub.data.repositories.person.PersonDataSourceContract;
 
 import io.reactivex.Single;
 
