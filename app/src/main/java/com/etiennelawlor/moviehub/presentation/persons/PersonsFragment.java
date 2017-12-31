@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.data.network.response.Person;
-import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.PersonsDataModel;
 import com.etiennelawlor.moviehub.di.component.PersonsComponent;
 import com.etiennelawlor.moviehub.di.module.PersonsModule;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;

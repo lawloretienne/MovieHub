@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.presentation.movies;
 
 import com.etiennelawlor.moviehub.data.network.response.Movie;
-import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.MoviesDataModel;
 import com.etiennelawlor.moviehub.presentation.base.BasePresenter;
 
 import java.util.List;

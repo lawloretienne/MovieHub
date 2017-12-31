@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowsDataModel;
 import com.etiennelawlor.moviehub.di.component.TelevisionShowsComponent;
 import com.etiennelawlor.moviehub.di.module.TelevisionShowsModule;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;

@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.domain;
 
-import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.PersonsDataModel;
 
 import io.reactivex.Single;
 

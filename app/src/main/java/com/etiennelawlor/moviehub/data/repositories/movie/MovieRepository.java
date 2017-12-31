@@ -4,7 +4,7 @@ import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.MovieCreditsEnvelope;
 import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDatesEnvelope;
 import com.etiennelawlor.moviehub.data.network.response.MoviesEnvelope;
-import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.MoviesDataModel;
 
 import java.util.Calendar;
 

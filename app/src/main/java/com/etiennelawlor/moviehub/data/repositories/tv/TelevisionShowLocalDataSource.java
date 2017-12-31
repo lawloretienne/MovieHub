@@ -5,7 +5,7 @@ import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowContentRatingsEnvelope;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCreditsEnvelope;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowsEnvelope;
-import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowsDataModel;
 
 import io.reactivex.Maybe;
 

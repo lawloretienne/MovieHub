@@ -1,6 +1,6 @@
-package com.etiennelawlor.moviehub.data.repositories.movie.models;
+package com.etiennelawlor.moviehub.data.repositories.models;
 
-import com.etiennelawlor.moviehub.data.network.response.Movie;
+import com.etiennelawlor.moviehub.data.network.response.Person;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -10,10 +10,10 @@ import java.util.List;
  * Created by etiennelawlor on 2/20/17.
  */
 
-public class MoviesDataModel {
+public class PersonsDataModel {
 
     // region Member Variables
-    private List<Movie> movies;
+    private List<Person> persons;
     private int pageNumber;
     private boolean isLastPage;
     private Date expiredAt;
@@ -21,22 +21,22 @@ public class MoviesDataModel {
 
     // region Constructors
 
-    public MoviesDataModel(List<Movie> movies, int pageNumber, boolean isLastPage, Date expiredAt) {
-        this.movies = movies;
+    public PersonsDataModel(List<Person> persons, int pageNumber, boolean isLastPage, Date expiredAt) {
+        this.persons = persons;
         this.pageNumber = pageNumber;
         this.isLastPage = isLastPage;
         this.expiredAt = expiredAt;
     }
 
-    public MoviesDataModel() {
+    public PersonsDataModel() {
     }
 
     // endregion
 
     // region Getters
 
-    public List<Movie> getMovies() {
-        return movies;
+    public List<Person> getPersons() {
+        return persons;
     }
 
     public int getPageNumber() {
@@ -55,8 +55,8 @@ public class MoviesDataModel {
 
     // region Setters
 
-    public void setMovies(List<Movie> movies) {
-        this.movies = movies;
+    public void setPersons(List<Person> persons) {
+        this.persons = persons;
     }
 
     public void setPageNumber(int pageNumber) {
@@ -74,7 +74,7 @@ public class MoviesDataModel {
     // endregion
 
     // Helper Methods
-    public boolean hasMovies() { return movies.size() > 0;}
+    public boolean hasPersons() { return persons.size() > 0;}
 
     public void incrementPageNumber() { this.pageNumber += 1; }
 

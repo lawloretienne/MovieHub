@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.domain;
 
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowDataSourceContract;
-import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowsDataModel;
 
 import io.reactivex.Single;
 

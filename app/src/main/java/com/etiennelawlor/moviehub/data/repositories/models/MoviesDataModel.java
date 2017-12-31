@@ -1,6 +1,6 @@
-package com.etiennelawlor.moviehub.data.repositories.tv.models;
+package com.etiennelawlor.moviehub.data.repositories.models;
 
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
+import com.etiennelawlor.moviehub.data.network.response.Movie;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -10,10 +10,10 @@ import java.util.List;
  * Created by etiennelawlor on 2/20/17.
  */
 
-public class TelevisionShowsDataModel {
+public class MoviesDataModel {
 
     // region Member Variables
-    private List<TelevisionShow> televisionShows;
+    private List<Movie> movies;
     private int pageNumber;
     private boolean isLastPage;
     private Date expiredAt;
@@ -21,22 +21,22 @@ public class TelevisionShowsDataModel {
 
     // region Constructors
 
-    public TelevisionShowsDataModel(List<TelevisionShow> televisionShows, int pageNumber, boolean isLastPage, Date expiredAt) {
-        this.televisionShows = televisionShows;
+    public MoviesDataModel(List<Movie> movies, int pageNumber, boolean isLastPage, Date expiredAt) {
+        this.movies = movies;
         this.pageNumber = pageNumber;
         this.isLastPage = isLastPage;
         this.expiredAt = expiredAt;
     }
 
-    public TelevisionShowsDataModel() {
+    public MoviesDataModel() {
     }
 
     // endregion
 
     // region Getters
 
-    public List<TelevisionShow> getTelevisionShows() {
-        return televisionShows;
+    public List<Movie> getMovies() {
+        return movies;
     }
 
     public int getPageNumber() {
@@ -55,8 +55,8 @@ public class TelevisionShowsDataModel {
 
     // region Setters
 
-    public void setTelevisionShows(List<TelevisionShow> televisionShows) {
-        this.televisionShows = televisionShows;
+    public void setMovies(List<Movie> movies) {
+        this.movies = movies;
     }
 
     public void setPageNumber(int pageNumber) {
@@ -74,7 +74,7 @@ public class TelevisionShowsDataModel {
     // endregion
 
     // Helper Methods
-    public boolean hasTelevisionShows() { return televisionShows.size() > 0;}
+    public boolean hasMovies() { return movies.size() > 0;}
 
     public void incrementPageNumber() { this.pageNumber += 1; }
 
