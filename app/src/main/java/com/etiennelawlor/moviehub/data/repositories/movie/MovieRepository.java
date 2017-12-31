@@ -1,10 +1,11 @@
 package com.etiennelawlor.moviehub.data.repositories.movie;
 
 import com.etiennelawlor.moviehub.data.network.response.Movie;
-import com.etiennelawlor.moviehub.data.network.response.MovieCreditsEnvelope;
-import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDatesEnvelope;
-import com.etiennelawlor.moviehub.data.network.response.MoviesEnvelope;
+import com.etiennelawlor.moviehub.data.repositories.mappers.MovieCreditsDataModelMapper;
+import com.etiennelawlor.moviehub.data.repositories.mappers.MovieReleaseDatesDataModelMapper;
 import com.etiennelawlor.moviehub.data.repositories.mappers.MoviesDataModelMapper;
+import com.etiennelawlor.moviehub.data.repositories.models.MovieCreditsDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.MovieReleaseDatesDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.MoviesDataModel;
 
 import io.reactivex.Maybe;
@@ -20,6 +21,8 @@ public class MovieRepository implements MovieDataSourceContract.Repository {
     private MovieDataSourceContract.LocalDateSource movieLocalDataSource;
     private MovieDataSourceContract.RemoteDateSource movieRemoteDataSource;
     private MoviesDataModelMapper moviesDataModelMapper = new MoviesDataModelMapper();
+    private MovieCreditsDataModelMapper movieCreditsDataModelMapper = new MovieCreditsDataModelMapper();
+    private MovieReleaseDatesDataModelMapper movieReleaseDatesDataModelMapper = new MovieReleaseDatesDataModelMapper();
     // endregion
 
     // region Constructors
@@ -53,31 +56,34 @@ public class MovieRepository implements MovieDataSourceContract.Repository {
     }
 
     @Override
-    public Single<MovieCreditsEnvelope> getMovieCredits(int movieId) {
-        Maybe<MovieCreditsEnvelope> local = movieLocalDataSource.getMovieCredits(movieId);
-        Single<MovieCreditsEnvelope> remote =
+    public Single<MovieCreditsDataModel> getMovieCredits(int movieId) {
+        Maybe<MovieCreditsDataModel> local = movieLocalDataSource.getMovieCredits(movieId);
+        Single<MovieCreditsDataModel> remote =
                 movieRemoteDataSource.getMovieCredits(movieId)
-                        .doOnSuccess(movieCreditsEnvelope -> movieLocalDataSource.saveMovieCredits(movieCreditsEnvelope));
+                        .map(movieCreditsEnvelope -> movieCreditsDataModelMapper.mapToDataModel(movieCreditsEnvelope))
+                        .doOnSuccess(movieCreditsDataModel -> movieLocalDataSource.saveMovieCredits(movieCreditsDataModel));
 
         return local.switchIfEmpty(remote);
     }
 
     @Override
-    public Single<MoviesEnvelope> getSimilarMovies(int movieId) {
-        Maybe<MoviesEnvelope> local = movieLocalDataSource.getSimilarMovies(movieId);
-        Single<MoviesEnvelope> remote =
+    public Single<MoviesDataModel> getSimilarMovies(int movieId) {
+        Maybe<MoviesDataModel> local = movieLocalDataSource.getSimilarMovies(movieId);
+        Single<MoviesDataModel> remote =
                 movieRemoteDataSource.getSimilarMovies(movieId)
-                        .doOnSuccess(moviesEnvelope -> movieLocalDataSource.saveSimilarMovies(moviesEnvelope));
+                        .map(moviesEnvelope -> moviesDataModelMapper.mapToDataModel(moviesEnvelope))
+                        .doOnSuccess(moviesDataModel -> movieLocalDataSource.saveSimilarMovies(moviesDataModel));
 
         return local.switchIfEmpty(remote);
     }
 
     @Override
-    public Single<MovieReleaseDatesEnvelope> getMovieReleaseDates(int movieId) {
-        Maybe<MovieReleaseDatesEnvelope> local = movieLocalDataSource.getMovieReleaseDates(movieId);
-        Single<MovieReleaseDatesEnvelope> remote =
+    public Single<MovieReleaseDatesDataModel> getMovieReleaseDates(int movieId) {
+        Maybe<MovieReleaseDatesDataModel> local = movieLocalDataSource.getMovieReleaseDates(movieId);
+        Single<MovieReleaseDatesDataModel> remote =
                 movieRemoteDataSource.getMovieReleaseDates(movieId)
-                        .doOnSuccess(movieReleaseDatesEnvelope -> movieLocalDataSource.saveMovieReleaseDates(movieReleaseDatesEnvelope));
+                        .map(movieReleaseDatesEnvelope -> movieReleaseDatesDataModelMapper.mapToDataModel(movieReleaseDatesEnvelope))
+                        .doOnSuccess(movieReleaseDatesDataModel -> movieLocalDataSource.saveMovieReleaseDates(movieReleaseDatesDataModel));
 
         return local.switchIfEmpty(remote);
     }

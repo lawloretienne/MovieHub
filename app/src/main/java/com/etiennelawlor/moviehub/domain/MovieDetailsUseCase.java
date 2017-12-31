@@ -42,26 +42,26 @@ public class MovieDetailsUseCase implements MovieDetailsDomainContract.UseCase {
                 movieRepository.getMovieCredits(movieId),
                 movieRepository.getSimilarMovies(movieId),
                 movieRepository.getMovieReleaseDates(movieId),
-                (movie, movieCreditsEnvelope, moviesEnvelope, movieReleaseDatesEnvelope) -> {
+                (movie, movieCreditsDataModel, moviesDataModel, movieReleaseDatesDataModel) -> {
                     List<MovieCredit> cast = new ArrayList<>();
                     List<MovieCredit> crew = new ArrayList<>();
                     List<Movie> similarMovies = new ArrayList<>();
                     String rating = "";
 
-                    if (movieCreditsEnvelope != null) {
-                        cast = movieCreditsEnvelope.getCast();
+                    if (movieCreditsDataModel != null) {
+                        cast = movieCreditsDataModel.getCast();
                     }
 
-                    if (movieCreditsEnvelope != null) {
-                        crew = movieCreditsEnvelope.getCrew();
+                    if (movieCreditsDataModel != null) {
+                        crew = movieCreditsDataModel.getCrew();
                     }
 
-                    if (moviesEnvelope != null) {
-                        similarMovies = moviesEnvelope.getMovies();
+                    if (moviesDataModel != null) {
+                        similarMovies = moviesDataModel.getMovies();
                     }
 
-                    if (movieReleaseDatesEnvelope != null) {
-                        List<MovieReleaseDateEnvelope> movieReleaseDateEnvelopes = movieReleaseDatesEnvelope.getMovieReleaseDateEnvelopes();
+                    if (movieReleaseDatesDataModel != null) {
+                        List<MovieReleaseDateEnvelope> movieReleaseDateEnvelopes = movieReleaseDatesDataModel.getMovieReleaseDateEnvelopes();
                         if (movieReleaseDateEnvelopes != null && movieReleaseDateEnvelopes.size() > 0) {
                             for (MovieReleaseDateEnvelope movieReleaseDateEnvelope : movieReleaseDateEnvelopes) {
                                 if (movieReleaseDateEnvelope != null) {

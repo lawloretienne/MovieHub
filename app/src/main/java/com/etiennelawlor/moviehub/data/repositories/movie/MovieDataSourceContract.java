@@ -4,6 +4,8 @@ import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.MovieCreditsEnvelope;
 import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDatesEnvelope;
 import com.etiennelawlor.moviehub.data.network.response.MoviesEnvelope;
+import com.etiennelawlor.moviehub.data.repositories.models.MovieCreditsDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.MovieReleaseDatesDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.MoviesDataModel;
 
 import io.reactivex.Maybe;
@@ -19,9 +21,9 @@ public interface MovieDataSourceContract {
 //        Restful VERB is the first part of method name GET , POST , DELETE, PUT
         Single<MoviesDataModel> getPopularMovies(int currentPage);
         Single<Movie> getMovie(int movieId);
-        Single<MovieCreditsEnvelope> getMovieCredits(int movieId);
-        Single<MoviesEnvelope> getSimilarMovies(int movieId);
-        Single<MovieReleaseDatesEnvelope> getMovieReleaseDates(int movieId);
+        Single<MovieCreditsDataModel> getMovieCredits(int movieId);
+        Single<MoviesDataModel> getSimilarMovies(int movieId);
+        Single<MovieReleaseDatesDataModel> getMovieReleaseDates(int movieId);
     }
 
     interface LocalDateSource {
@@ -31,14 +33,14 @@ public interface MovieDataSourceContract {
         Maybe<Movie> getMovie(int movieId);
         void saveMovie(Movie movie);
 
-        Maybe<MovieCreditsEnvelope> getMovieCredits(int movieId);
-        void saveMovieCredits(MovieCreditsEnvelope movieCreditsEnvelope);
+        Maybe<MovieCreditsDataModel> getMovieCredits(int movieId);
+        void saveMovieCredits(MovieCreditsDataModel movieCreditsDataModel);
 
-        Maybe<MoviesEnvelope> getSimilarMovies(int movieId);
-        void saveSimilarMovies(MoviesEnvelope movies);
+        Maybe<MoviesDataModel> getSimilarMovies(int movieId);
+        void saveSimilarMovies(MoviesDataModel moviesDataModel);
 
-        Maybe<MovieReleaseDatesEnvelope> getMovieReleaseDates(int movieId);
-        void saveMovieReleaseDates(MovieReleaseDatesEnvelope movieReleaseDatesEnvelope);
+        Maybe<MovieReleaseDatesDataModel> getMovieReleaseDates(int movieId);
+        void saveMovieReleaseDates(MovieReleaseDatesDataModel movieReleaseDatesEnvelope);
     }
 
     interface RemoteDateSource {
