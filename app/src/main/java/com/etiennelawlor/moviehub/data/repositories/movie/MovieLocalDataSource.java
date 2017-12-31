@@ -5,7 +5,7 @@ import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.MovieCreditsEnvelope;
 import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDatesEnvelope;
 import com.etiennelawlor.moviehub.data.network.response.MoviesEnvelope;
-import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesPage;
+import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesDataModel;
 
 import io.reactivex.Maybe;
 
@@ -22,17 +22,17 @@ public class MovieLocalDataSource implements MovieDataSourceContract.LocalDateSo
 
     // region MoviesDataSourceContract.LocalDateSource Methods
     @Override
-    public Maybe<MoviesPage> getPopularMovies(int currentPage) {
-        MoviesPage moviesPage = RealmUtility.getMoviesPage(currentPage);
-        if (moviesPage == null)
+    public Maybe<MoviesDataModel> getPopularMovies(int currentPage) {
+        MoviesDataModel moviesDataModel = RealmUtility.getMoviesDataModel(currentPage);
+        if (moviesDataModel == null)
             return Maybe.empty();
         else
-            return Maybe.just(moviesPage);
+            return Maybe.just(moviesDataModel);
     }
 
     @Override
-    public void savePopularMovies(MoviesPage moviesPage) {
-        RealmUtility.saveMoviesPage(moviesPage);
+    public void savePopularMovies(MoviesDataModel moviesDataModel) {
+        RealmUtility.saveMoviesDataModel(moviesDataModel);
     }
 
     @Override

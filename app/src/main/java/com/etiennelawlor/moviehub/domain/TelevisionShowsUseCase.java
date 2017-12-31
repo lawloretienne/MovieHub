@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.domain;
 
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowDataSourceContract;
-import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsPage;
+import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsDataModel;
 
 import io.reactivex.Single;
 
@@ -23,7 +23,7 @@ public class TelevisionShowsUseCase implements TelevisionShowsDomainContract.Use
 
     // region TelevisionShowsDomainContract.UseCase Methods
     @Override
-    public Single<TelevisionShowsPage> getPopularTelevisionShows(int currentPage) {
+    public Single<TelevisionShowsDataModel> getPopularTelevisionShows(int currentPage) {
         return televisionShowRepository.getPopularTelevisionShows(currentPage);
                 // .map( transform response to domainmodel) // create mapper class to make this cleaner and write unit tests for the mapper
     }

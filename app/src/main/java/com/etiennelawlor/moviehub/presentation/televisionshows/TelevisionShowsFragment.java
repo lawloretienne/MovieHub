@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsPage;
+import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsDataModel;
 import com.etiennelawlor.moviehub.di.component.TelevisionShowsComponent;
 import com.etiennelawlor.moviehub.di.module.TelevisionShowsModule;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
@@ -69,7 +69,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
     private Unbinder unbinder;
     private StaggeredGridLayoutManager layoutManager;
     private boolean isLoading = false;
-    private TelevisionShowsPage televisionShowsPage;
+    private TelevisionShowsDataModel televisionShowsDataModel;
     private TelevisionShowsComponent televisionShowsComponent;
     // endregion
 
@@ -81,7 +81,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
     // region Listeners
     @OnClick(R.id.reload_btn)
     public void onReloadButtonClicked() {
-        televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsPage == null ? 1 : televisionShowsPage.getPageNumber());
+        televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsDataModel == null ? 1 : televisionShowsDataModel.getPageNumber());
     }
 
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
@@ -102,7 +102,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
             if ((visibleItemCount + firstVisibleItem) >= totalItemCount
                     && totalItemCount > 0
                     && !isLoading
-                    && !televisionShowsPage.isLastPage()) {
+                    && !televisionShowsDataModel.isLastPage()) {
                 televisionShowsPresenter.onScrollToEndOfList();
             }
         }
@@ -162,7 +162,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
         // Pagination
         recyclerView.addOnScrollListener(recyclerViewOnScrollListener);
 
-        televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsPage == null ? 1 : televisionShowsPage.getPageNumber());
+        televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsDataModel == null ? 1 : televisionShowsDataModel.getPageNumber());
     }
 
     @Override
@@ -196,7 +196,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
     // region TelevisionShowsAdapter.OnReloadClickListener Methods
     @Override
     public void onReloadClick() {
-        televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsPage.getPageNumber());
+        televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsDataModel.getPageNumber());
     }
     // endregion
 
@@ -273,13 +273,13 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
 
     @Override
     public void loadMoreItems() {
-        televisionShowsPage.incrementPageNumber();
-        televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsPage.getPageNumber());
+        televisionShowsDataModel.incrementPageNumber();
+        televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsDataModel.getPageNumber());
     }
 
     @Override
-    public void setTelevisionShowsPage(TelevisionShowsPage televisionShowsPage) {
-        this.televisionShowsPage = televisionShowsPage;
+    public void setTelevisionShowsDataModel(TelevisionShowsDataModel televisionShowsDataModel) {
+        this.televisionShowsDataModel = televisionShowsDataModel;
     }
 
     @Override

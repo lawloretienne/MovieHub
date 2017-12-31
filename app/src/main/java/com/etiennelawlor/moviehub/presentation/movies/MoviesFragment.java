@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.data.network.response.Movie;
-import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesPage;
+import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesDataModel;
 import com.etiennelawlor.moviehub.di.component.MoviesComponent;
 import com.etiennelawlor.moviehub.di.module.MoviesModule;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
@@ -68,7 +68,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     private Typeface font;
     private Unbinder unbinder;
     private StaggeredGridLayoutManager layoutManager;
-    private MoviesPage moviesPage;
+    private MoviesDataModel moviesPage;
     private boolean isLoading = false;
     private MoviesComponent moviesComponent;
     // endregion
@@ -277,7 +277,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     }
 
     @Override
-    public void setMoviesPage(MoviesPage moviesPage) {
+    public void setMoviesDataModel(MoviesDataModel moviesPage) {
         this.moviesPage = moviesPage;
     }
 

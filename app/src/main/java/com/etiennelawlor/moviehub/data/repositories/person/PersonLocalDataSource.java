@@ -3,7 +3,7 @@ package com.etiennelawlor.moviehub.data.repositories.person;
 import com.etiennelawlor.moviehub.data.database.RealmUtility;
 import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.data.network.response.PersonCreditsEnvelope;
-import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsPage;
+import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsDataModel;
 
 import io.reactivex.Maybe;
 
@@ -21,17 +21,17 @@ public class PersonLocalDataSource implements PersonDataSourceContract.LocalDate
     // region PersonDataSourceContract.LocalDateSource Methods
 
     @Override
-    public Maybe<PersonsPage> getPopularPersons(int currentPage) {
-        PersonsPage personsPage = RealmUtility.getPersonsPage(currentPage);
-        if(personsPage == null)
+    public Maybe<PersonsDataModel> getPopularPersons(int currentPage) {
+        PersonsDataModel personsDataModel = RealmUtility.getPersonsDataModel(currentPage);
+        if(personsDataModel == null)
             return Maybe.empty();
         else
-            return Maybe.just(personsPage);
+            return Maybe.just(personsDataModel);
     }
 
     @Override
-    public void savePopularPersons(PersonsPage personsPage) {
-        RealmUtility.savePersonsPage(personsPage);
+    public void savePopularPersons(PersonsDataModel personsDataModel) {
+        RealmUtility.savePersonsDataModel(personsDataModel);
     }
 
     @Override

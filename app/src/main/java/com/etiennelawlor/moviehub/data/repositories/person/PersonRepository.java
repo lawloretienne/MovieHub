@@ -2,7 +2,7 @@ package com.etiennelawlor.moviehub.data.repositories.person;
 
 import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.data.network.response.PersonCreditsEnvelope;
-import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsPage;
+import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsDataModel;
 
 import java.util.Calendar;
 
@@ -34,19 +34,19 @@ public class PersonRepository implements PersonDataSourceContract.Repository {
 
     // region PersonDataSourceContract.Repository Methods
     @Override
-    public Single<PersonsPage> getPopularPersons(final int currentPage) {
-        Maybe<PersonsPage> local = personLocalDataSource.getPopularPersons(currentPage)
-                .filter(personsPage -> !personsPage.isExpired());
-        Single<PersonsPage> remote =
+    public Single<PersonsDataModel> getPopularPersons(final int currentPage) {
+        Maybe<PersonsDataModel> local = personLocalDataSource.getPopularPersons(currentPage)
+                .filter(personsDataModel -> !personsDataModel.isExpired());
+        Single<PersonsDataModel> remote =
                 personRemoteDataSource.getPopularPersons(currentPage)
                         .flatMap(peopleEnvelope -> Single.just(peopleEnvelope.getPersons()))
                         .map(persons -> {
                             boolean isLastPage = persons.size() < PAGE_SIZE ? true : false;
                             Calendar calendar = Calendar.getInstance();
                             calendar.add(Calendar.DATE, SEVEN_DAYS);
-                            return new PersonsPage(persons, currentPage, isLastPage, calendar.getTime() );
+                            return new PersonsDataModel(persons, currentPage, isLastPage, calendar.getTime() );
                         })
-                        .doOnSuccess(personsPage -> personLocalDataSource.savePopularPersons(personsPage));
+                        .doOnSuccess(personsDataModel -> personLocalDataSource.savePopularPersons(personsDataModel));
 
         return local.switchIfEmpty(remote);
     }

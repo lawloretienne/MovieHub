@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.presentation.persons;
 
 import com.etiennelawlor.moviehub.data.network.response.Person;
-import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsPage;
+import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsDataModel;
 import com.etiennelawlor.moviehub.domain.PersonsDomainContract;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
@@ -50,15 +50,15 @@ public class PersonsPresenter implements PersonsUiContract.Presenter {
 
         Disposable disposable = personsUseCase.getPopularPersons(currentPage)
 //                .compose(schedulerTransformer)
-                .compose(new ProductionSchedulerTransformer<PersonsPage>())
-                .subscribeWith(new DisposableSingleObserver<PersonsPage>() {
+                .compose(new ProductionSchedulerTransformer<PersonsDataModel>())
+                .subscribeWith(new DisposableSingleObserver<PersonsDataModel>() {
                     @Override
-                    public void onSuccess(PersonsPage personsPage) {
-                        if(personsPage != null){
-                            List<Person> persons = personsPage.getPersons();
-                            int currentPage = personsPage.getPageNumber();
-                            boolean isLastPage = personsPage.isLastPage();
-                            boolean hasMovies = personsPage.hasPersons();
+                    public void onSuccess(PersonsDataModel personsDataModel) {
+                        if(personsDataModel != null){
+                            List<Person> persons = personsDataModel.getPersons();
+                            int currentPage = personsDataModel.getPageNumber();
+                            boolean isLastPage = personsDataModel.isLastPage();
+                            boolean hasMovies = personsDataModel.hasPersons();
 
                             if(currentPage == 1){
                                 personsView.hideLoadingView();
@@ -83,7 +83,7 @@ public class PersonsPresenter implements PersonsUiContract.Presenter {
                                 }
                             }
 
-                            personsView.setPersonsPage(personsPage);
+                            personsView.setPersonsDataModel(personsDataModel);
                         }
                     }
 

@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub;
 
 import com.etiennelawlor.moviehub.data.network.response.Person;
-import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsPage;
+import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsDataModel;
 import com.etiennelawlor.moviehub.domain.PersonsDomainContract;
 import com.etiennelawlor.moviehub.presentation.persons.PersonsPresenter;
 import com.etiennelawlor.moviehub.presentation.persons.PersonsUiContract;
@@ -43,7 +43,7 @@ public class PersonsPresenterTest {
     // endregion
 
     // region Member Variables
-    private PersonsPage personsPage;
+    private PersonsDataModel personsDataModel;
     private PersonsPresenter personsPresenter;
     // endregion
 
@@ -62,10 +62,10 @@ public class PersonsPresenterTest {
     @Test
     public void onLoadPopularPersons_shouldShowError_whenFirstPageRequestFailed() {
         // 1. (Given) Set up conditions required for the test
-        personsPage = new PersonsPage(getListOfPersons(0), 1, true, Calendar.getInstance().getTime());
+        personsDataModel = new PersonsDataModel(getListOfPersons(0), 1, true, Calendar.getInstance().getTime());
 
         // 2. (When) Then perform one or more actions
-        personsPresenter.onLoadPopularPersons(personsPage.getPageNumber());
+        personsPresenter.onLoadPopularPersons(personsDataModel.getPageNumber());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockPersonsView).hideEmptyView();
@@ -84,10 +84,10 @@ public class PersonsPresenterTest {
     @Test
     public void onLoadPopularPersons_shouldShowError_whenNextPageRequestFailed() {
         // 1. (Given) Set up conditions required for the test
-        personsPage = new PersonsPage(getListOfPersons(0), 2, true, Calendar.getInstance().getTime());
+        personsDataModel = new PersonsDataModel(getListOfPersons(0), 2, true, Calendar.getInstance().getTime());
 
         // 2. (When) Then perform one or more actions
-        personsPresenter.onLoadPopularPersons(personsPage.getPageNumber());
+        personsPresenter.onLoadPopularPersons(personsDataModel.getPageNumber());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockPersonsView).showLoadingFooter();
@@ -102,10 +102,10 @@ public class PersonsPresenterTest {
     @Test
     public void onLoadPopularPersons_shouldShowEmpty_whenFirstPageHasNoPersons() {
         // 1. (Given) Set up conditions required for the test
-        personsPage = new PersonsPage(getListOfPersons(0), 1, true, Calendar.getInstance().getTime());
+        personsDataModel = new PersonsDataModel(getListOfPersons(0), 1, true, Calendar.getInstance().getTime());
 
         // 2. (When) Then perform one or more actions
-        personsPresenter.onLoadPopularPersons(personsPage.getPageNumber());
+        personsPresenter.onLoadPopularPersons(personsDataModel.getPageNumber());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockPersonsView).hideEmptyView();
@@ -114,39 +114,39 @@ public class PersonsPresenterTest {
 
         disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
         verify(mockPersonsUseCase).getPopularPersons(anyInt(), disposableSingleObserverArgumentCaptor.capture());
-        disposableSingleObserverArgumentCaptor.getValue().onSuccess(personsPage);
+        disposableSingleObserverArgumentCaptor.getValue().onSuccess(personsDataModel);
 
         verify(mockPersonsView).hideLoadingView();
         verify(mockPersonsView).showEmptyView();
-        verify(mockPersonsView).setPersonsPage(personsPage);
+        verify(mockPersonsView).setPersonsDataModel(personsDataModel);
     }
 
     @Test
     public void onLoadPopularPersons_shouldNotAddPersons_whenNextPageHasNoPersons() {
         // 1. (Given) Set up conditions required for the test
-        personsPage = new PersonsPage(getListOfPersons(0), 2, true, Calendar.getInstance().getTime());
+        personsDataModel = new PersonsDataModel(getListOfPersons(0), 2, true, Calendar.getInstance().getTime());
 
         // 2. (When) Then perform one or more actions
-        personsPresenter.onLoadPopularPersons(personsPage.getPageNumber());
+        personsPresenter.onLoadPopularPersons(personsDataModel.getPageNumber());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockPersonsView).showLoadingFooter();
 
         disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
         verify(mockPersonsUseCase).getPopularPersons(anyInt(), disposableSingleObserverArgumentCaptor.capture());
-        disposableSingleObserverArgumentCaptor.getValue().onSuccess(personsPage);
+        disposableSingleObserverArgumentCaptor.getValue().onSuccess(personsDataModel);
 
         verify(mockPersonsView).removeFooter();
-        verify(mockPersonsView).setPersonsPage(personsPage);
+        verify(mockPersonsView).setPersonsDataModel(personsDataModel);
     }
 
     @Test
     public void onLoadPopularPersons_shouldAddPersons_whenFirstPageHasPersonsAndIsLastPage() {
         // 1. (Given) Set up conditions required for the test
-        personsPage = new PersonsPage(getListOfPersons(5), 1, true, Calendar.getInstance().getTime());
+        personsDataModel = new PersonsDataModel(getListOfPersons(5), 1, true, Calendar.getInstance().getTime());
 
         // 2. (When) Then perform one or more actions
-        personsPresenter.onLoadPopularPersons(personsPage.getPageNumber());
+        personsPresenter.onLoadPopularPersons(personsDataModel.getPageNumber());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockPersonsView).hideEmptyView();
@@ -155,21 +155,21 @@ public class PersonsPresenterTest {
 
         disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
         verify(mockPersonsUseCase).getPopularPersons(anyInt(), disposableSingleObserverArgumentCaptor.capture());
-        disposableSingleObserverArgumentCaptor.getValue().onSuccess(personsPage);
+        disposableSingleObserverArgumentCaptor.getValue().onSuccess(personsDataModel);
 
         verify(mockPersonsView).hideLoadingView();
         verify(mockPersonsView).addHeader();
-        verify(mockPersonsView).addPersonsToAdapter(personsPage.getPersons());
-        verify(mockPersonsView).setPersonsPage(personsPage);
+        verify(mockPersonsView).addPersonsToAdapter(personsDataModel.getPersons());
+        verify(mockPersonsView).setPersonsDataModel(personsDataModel);
     }
 
     @Test
     public void onLoadPopularPersons_shouldAddPersons_whenFirstPageHasPersonsAndIsNotLastPage() {
         // 1. (Given) Set up conditions required for the test
-        personsPage = new PersonsPage(getListOfPersons(5), 1, false, Calendar.getInstance().getTime());
+        personsDataModel = new PersonsDataModel(getListOfPersons(5), 1, false, Calendar.getInstance().getTime());
 
         // 2. (When) Then perform one or more actions
-        personsPresenter.onLoadPopularPersons(personsPage.getPageNumber());
+        personsPresenter.onLoadPopularPersons(personsDataModel.getPageNumber());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockPersonsView).hideEmptyView();
@@ -178,54 +178,54 @@ public class PersonsPresenterTest {
 
         disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
         verify(mockPersonsUseCase).getPopularPersons(anyInt(), disposableSingleObserverArgumentCaptor.capture());
-        disposableSingleObserverArgumentCaptor.getValue().onSuccess(personsPage);
+        disposableSingleObserverArgumentCaptor.getValue().onSuccess(personsDataModel);
 
         verify(mockPersonsView).hideLoadingView();
         verify(mockPersonsView).addHeader();
-        verify(mockPersonsView).addPersonsToAdapter(personsPage.getPersons());
+        verify(mockPersonsView).addPersonsToAdapter(personsDataModel.getPersons());
         verify(mockPersonsView).addFooter();
-        verify(mockPersonsView).setPersonsPage(personsPage);
+        verify(mockPersonsView).setPersonsDataModel(personsDataModel);
     }
 
     @Test
     public void onLoadPopularPersons_shouldAddPersons_whenNextPageHasPersonsAndIsLastPage() {
         // 1. (Given) Set up conditions required for the test
-        personsPage = new PersonsPage(getListOfPersons(5), 2, true, Calendar.getInstance().getTime());
+        personsDataModel = new PersonsDataModel(getListOfPersons(5), 2, true, Calendar.getInstance().getTime());
 
         // 2. (When) Then perform one or more actions
-        personsPresenter.onLoadPopularPersons(personsPage.getPageNumber());
+        personsPresenter.onLoadPopularPersons(personsDataModel.getPageNumber());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockPersonsView).showLoadingFooter();
 
         disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
         verify(mockPersonsUseCase).getPopularPersons(anyInt(), disposableSingleObserverArgumentCaptor.capture());
-        disposableSingleObserverArgumentCaptor.getValue().onSuccess(personsPage);
+        disposableSingleObserverArgumentCaptor.getValue().onSuccess(personsDataModel);
 
         verify(mockPersonsView).removeFooter();
-        verify(mockPersonsView).addPersonsToAdapter(personsPage.getPersons());
-        verify(mockPersonsView).setPersonsPage(personsPage);
+        verify(mockPersonsView).addPersonsToAdapter(personsDataModel.getPersons());
+        verify(mockPersonsView).setPersonsDataModel(personsDataModel);
     }
 
     @Test
     public void onLoadPopularPersons_shouldAddPersons_whenNextPageHasPersonsAndIsNotLastPage() {
         // 1. (Given) Set up conditions required for the test
-        personsPage = new PersonsPage(getListOfPersons(5), 2, false, Calendar.getInstance().getTime());
+        personsDataModel = new PersonsDataModel(getListOfPersons(5), 2, false, Calendar.getInstance().getTime());
 
         // 2. (When) Then perform one or more actions
-        personsPresenter.onLoadPopularPersons(personsPage.getPageNumber());
+        personsPresenter.onLoadPopularPersons(personsDataModel.getPageNumber());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockPersonsView).showLoadingFooter();
 
         disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
         verify(mockPersonsUseCase).getPopularPersons(anyInt(), disposableSingleObserverArgumentCaptor.capture());
-        disposableSingleObserverArgumentCaptor.getValue().onSuccess(personsPage);
+        disposableSingleObserverArgumentCaptor.getValue().onSuccess(personsDataModel);
 
         verify(mockPersonsView).removeFooter();
-        verify(mockPersonsView).addPersonsToAdapter(personsPage.getPersons());
+        verify(mockPersonsView).addPersonsToAdapter(personsDataModel.getPersons());
         verify(mockPersonsView).addFooter();
-        verify(mockPersonsView).setPersonsPage(personsPage);
+        verify(mockPersonsView).setPersonsDataModel(personsDataModel);
 //        verify(mockPersonsView, times(1)).setModel(any(PersonsWrapper.class)); // Alternative verify check
     }
 

@@ -4,7 +4,7 @@ import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.MovieCreditsEnvelope;
 import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDatesEnvelope;
 import com.etiennelawlor.moviehub.data.network.response.MoviesEnvelope;
-import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesPage;
+import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesDataModel;
 
 import java.util.Calendar;
 
@@ -36,19 +36,19 @@ public class MovieRepository implements MovieDataSourceContract.Repository {
 
     // region MovieDataSourceContract.Repository Methods
     @Override
-    public Single<MoviesPage> getPopularMovies(final int currentPage) {
-        Maybe<MoviesPage> local = movieLocalDataSource.getPopularMovies(currentPage)
-                .filter(moviesPage -> !moviesPage.isExpired());
-        Single<MoviesPage> remote =
+    public Single<MoviesDataModel> getPopularMovies(final int currentPage) {
+        Maybe<MoviesDataModel> local = movieLocalDataSource.getPopularMovies(currentPage)
+                .filter(moviesDataModel -> !moviesDataModel.isExpired());
+        Single<MoviesDataModel> remote =
                 movieRemoteDataSource.getPopularMovies(currentPage)
                         .flatMap(moviesEnvelope -> Single.just(moviesEnvelope.getMovies()))
                         .map(movies -> {
                             boolean isLastPage = movies.size() < PAGE_SIZE ? true : false;
                             Calendar calendar = Calendar.getInstance();
                             calendar.add(Calendar.DATE, SEVEN_DAYS);
-                            return new MoviesPage(movies, currentPage, isLastPage, calendar.getTime());
+                            return new MoviesDataModel(movies, currentPage, isLastPage, calendar.getTime());
                         })
-                        .doOnSuccess(moviesPage -> movieLocalDataSource.savePopularMovies(moviesPage));
+                        .doOnSuccess(moviesDataModel -> movieLocalDataSource.savePopularMovies(moviesDataModel));
 
         return local.switchIfEmpty(remote);
     }

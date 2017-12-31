@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.presentation.televisionshows;
 
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsPage;
+import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsDataModel;
 import com.etiennelawlor.moviehub.domain.TelevisionShowsDomainContract;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
@@ -51,15 +51,15 @@ public class TelevisionShowsPresenter implements TelevisionShowsUiContract.Prese
 
         Disposable disposable = televisionShowsUseCase.getPopularTelevisionShows(currentPage)
 //                .compose(schedulerTransformer)
-                .compose(new ProductionSchedulerTransformer<TelevisionShowsPage>())
-                .subscribeWith(new DisposableSingleObserver<TelevisionShowsPage>() {
+                .compose(new ProductionSchedulerTransformer<TelevisionShowsDataModel>())
+                .subscribeWith(new DisposableSingleObserver<TelevisionShowsDataModel>() {
                     @Override
-                    public void onSuccess(TelevisionShowsPage televisionShowsPage) {
-                        if(televisionShowsPage != null){
-                            List<TelevisionShow> televisionShows = televisionShowsPage.getTelevisionShows();
-                            int currentPage = televisionShowsPage.getPageNumber();
-                            boolean isLastPage = televisionShowsPage.isLastPage();
-                            boolean hasTelevisionShows = televisionShowsPage.hasTelevisionShows();
+                    public void onSuccess(TelevisionShowsDataModel televisionShowsDataModel) {
+                        if(televisionShowsDataModel != null){
+                            List<TelevisionShow> televisionShows = televisionShowsDataModel.getTelevisionShows();
+                            int currentPage = televisionShowsDataModel.getPageNumber();
+                            boolean isLastPage = televisionShowsDataModel.isLastPage();
+                            boolean hasTelevisionShows = televisionShowsDataModel.hasTelevisionShows();
                             if(currentPage == 1){
                                 televisionShowsView.hideLoadingView();
 
@@ -83,7 +83,7 @@ public class TelevisionShowsPresenter implements TelevisionShowsUiContract.Prese
                                 }
                             }
 
-                            televisionShowsView.setTelevisionShowsPage(televisionShowsPage);
+                            televisionShowsView.setTelevisionShowsDataModel(televisionShowsDataModel);
                         }
                     }
 

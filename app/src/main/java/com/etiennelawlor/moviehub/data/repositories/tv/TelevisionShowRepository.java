@@ -4,7 +4,7 @@ import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowContentRatingsEnvelope;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCreditsEnvelope;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowsEnvelope;
-import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsPage;
+import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsDataModel;
 
 import java.util.Calendar;
 
@@ -36,19 +36,19 @@ public class TelevisionShowRepository implements TelevisionShowDataSourceContrac
 
     // region TelevisionShowDataSourceContract.Repository Methods
     @Override
-    public Single<TelevisionShowsPage> getPopularTelevisionShows(final int currentPage) {
-        Maybe<TelevisionShowsPage> local = televisionShowLocalDataSource.getPopularTelevisionShows(currentPage)
-                .filter(televisionShowsPage -> !televisionShowsPage.isExpired());
-        Single<TelevisionShowsPage> remote =
+    public Single<TelevisionShowsDataModel> getPopularTelevisionShows(final int currentPage) {
+        Maybe<TelevisionShowsDataModel> local = televisionShowLocalDataSource.getPopularTelevisionShows(currentPage)
+                .filter(televisionShowsDataModel -> !televisionShowsDataModel.isExpired());
+        Single<TelevisionShowsDataModel> remote =
                 televisionShowRemoteDataSource.getPopularTelevisionShows(currentPage)
                         .flatMap(televisionShowsEnvelope -> Single.just(televisionShowsEnvelope.getTelevisionShows()))
                         .map(televisionShows -> {
                             boolean isLastPage = televisionShows.size() < PAGE_SIZE ? true : false;
                             Calendar calendar = Calendar.getInstance();
                             calendar.add(Calendar.DATE, SEVEN_DAYS);
-                            return new TelevisionShowsPage(televisionShows, currentPage, isLastPage, calendar.getTime() );
+                            return new TelevisionShowsDataModel(televisionShows, currentPage, isLastPage, calendar.getTime() );
                         })
-                        .doOnSuccess(televisionShowsPage -> televisionShowLocalDataSource.savePopularTelevisionShows(televisionShowsPage));
+                        .doOnSuccess(televisionShowsDataModel -> televisionShowLocalDataSource.savePopularTelevisionShows(televisionShowsDataModel));
 
         return local.switchIfEmpty(remote);
     }

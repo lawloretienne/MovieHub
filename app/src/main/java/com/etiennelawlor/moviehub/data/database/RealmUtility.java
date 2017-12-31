@@ -12,9 +12,9 @@ import com.etiennelawlor.moviehub.data.database.models.RealmTelevisionShowsPage;
 import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesPage;
-import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsPage;
-import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsPage;
+import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesDataModel;
+import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsDataModel;
+import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsDataModel;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,8 +35,8 @@ public class RealmUtility {
     private static final TelevisionShowRealmMapper televisionShowRealmMapper = new TelevisionShowRealmMapper();
     private static final PersonRealmMapper personRealmMapper = new PersonRealmMapper();
 
-    public static MoviesPage getMoviesPage(int pageNumber){
-        MoviesPage moviesPage = new MoviesPage();
+    public static MoviesDataModel getMoviesDataModel(int pageNumber){
+        MoviesDataModel moviesDataModel = new MoviesDataModel();
 
         Realm realm = Realm.getDefaultInstance();
         try {
@@ -55,12 +55,12 @@ public class RealmUtility {
                     movies.add(movieRealmMapper.mapFromRealmObject(realmMovie));
                 }
 
-                moviesPage.setMovies(movies);
-                moviesPage.setPageNumber(realmMoviesPage.getPageNumber());
-                moviesPage.setLastPage(realmMoviesPage.isLastPage());
-                moviesPage.setExpiredAt(realmMoviesPage.getExpiredAt());
+                moviesDataModel.setMovies(movies);
+                moviesDataModel.setPageNumber(realmMoviesPage.getPageNumber());
+                moviesDataModel.setLastPage(realmMoviesPage.isLastPage());
+                moviesDataModel.setExpiredAt(realmMoviesPage.getExpiredAt());
 
-                return moviesPage;
+                return moviesDataModel;
             } else {
                 return null;
             }
@@ -69,13 +69,13 @@ public class RealmUtility {
         }
     }
 
-    public static void saveMoviesPage(MoviesPage moviesPage){
+    public static void saveMoviesDataModel(MoviesDataModel moviesDataModel){
         Realm realm = Realm.getDefaultInstance();
         try {
-            List<Movie> movies = moviesPage.getMovies();
-            int pageNumber = moviesPage.getPageNumber();
-            boolean isLastPage = moviesPage.isLastPage();
-            Date expiredAt = moviesPage.getExpiredAt();
+            List<Movie> movies = moviesDataModel.getMovies();
+            int pageNumber = moviesDataModel.getPageNumber();
+            boolean isLastPage = moviesDataModel.isLastPage();
+            Date expiredAt = moviesDataModel.getExpiredAt();
 
             realm.executeTransaction(new Realm.Transaction() {
                 @Override
@@ -103,8 +103,8 @@ public class RealmUtility {
         }
     }
 
-    public static TelevisionShowsPage getTelevisionShowsPage(int pageNumber){
-        TelevisionShowsPage televisionShowsPage = new TelevisionShowsPage();
+    public static TelevisionShowsDataModel getTelevisionShowsDataModel(int pageNumber){
+        TelevisionShowsDataModel televisionShowsDataModel = new TelevisionShowsDataModel();
 
         Realm realm = Realm.getDefaultInstance();
         try {
@@ -123,12 +123,12 @@ public class RealmUtility {
                     televisionShows.add(televisionShowRealmMapper.mapFromRealmObject(realmTelevisionShow));
                 }
 
-                televisionShowsPage.setTelevisionShows(televisionShows);
-                televisionShowsPage.setPageNumber(realmTelevisionShowsPage.getPageNumber());
-                televisionShowsPage.setLastPage(realmTelevisionShowsPage.isLastPage());
-                televisionShowsPage.setExpiredAt(realmTelevisionShowsPage.getExpiredAt());
+                televisionShowsDataModel.setTelevisionShows(televisionShows);
+                televisionShowsDataModel.setPageNumber(realmTelevisionShowsPage.getPageNumber());
+                televisionShowsDataModel.setLastPage(realmTelevisionShowsPage.isLastPage());
+                televisionShowsDataModel.setExpiredAt(realmTelevisionShowsPage.getExpiredAt());
 
-                return televisionShowsPage;
+                return televisionShowsDataModel;
             } else {
                 return null;
             }
@@ -137,13 +137,13 @@ public class RealmUtility {
         }
     }
 
-    public static void saveTelevisionShowsPage(TelevisionShowsPage televisionShowsPage){
+    public static void saveTelevisionShowsDataModel(TelevisionShowsDataModel televisionShowsDataModel){
         Realm realm = Realm.getDefaultInstance();
         try {
-            List<TelevisionShow> televisionShows = televisionShowsPage.getTelevisionShows();
-            int pageNumber = televisionShowsPage.getPageNumber();
-            boolean isLastPage = televisionShowsPage.isLastPage();
-            Date expiredAt = televisionShowsPage.getExpiredAt();
+            List<TelevisionShow> televisionShows = televisionShowsDataModel.getTelevisionShows();
+            int pageNumber = televisionShowsDataModel.getPageNumber();
+            boolean isLastPage = televisionShowsDataModel.isLastPage();
+            Date expiredAt = televisionShowsDataModel.getExpiredAt();
 
             realm.executeTransaction(new Realm.Transaction() {
                 @Override
@@ -171,8 +171,8 @@ public class RealmUtility {
         }
     }
 
-    public static PersonsPage getPersonsPage(int pageNumber){
-        PersonsPage personsPage = new PersonsPage();
+    public static PersonsDataModel getPersonsDataModel(int pageNumber){
+        PersonsDataModel personsDataModel = new PersonsDataModel();
 
         Realm realm = Realm.getDefaultInstance();
         try {
@@ -191,12 +191,12 @@ public class RealmUtility {
                     persons.add(personRealmMapper.mapFromRealmObject(realmPerson));
                 }
 
-                personsPage.setPersons(persons);
-                personsPage.setPageNumber(realmPersonsPage.getPageNumber());
-                personsPage.setLastPage(realmPersonsPage.isLastPage());
-                personsPage.setExpiredAt(realmPersonsPage.getExpiredAt());
+                personsDataModel.setPersons(persons);
+                personsDataModel.setPageNumber(realmPersonsPage.getPageNumber());
+                personsDataModel.setLastPage(realmPersonsPage.isLastPage());
+                personsDataModel.setExpiredAt(realmPersonsPage.getExpiredAt());
 
-                return personsPage;
+                return personsDataModel;
             } else {
                 return null;
             }
@@ -205,13 +205,13 @@ public class RealmUtility {
         }
     }
 
-    public static void savePersonsPage(PersonsPage personsPage){
+    public static void savePersonsDataModel(PersonsDataModel personsDataModel){
         Realm realm = Realm.getDefaultInstance();
         try {
-            List<Person> persons = personsPage.getPersons();
-            int pageNumber = personsPage.getPageNumber();
-            boolean isLastPage = personsPage.isLastPage();
-            Date expiredAt = personsPage.getExpiredAt();
+            List<Person> persons = personsDataModel.getPersons();
+            int pageNumber = personsDataModel.getPageNumber();
+            boolean isLastPage = personsDataModel.isLastPage();
+            Date expiredAt = personsDataModel.getExpiredAt();
 
             realm.executeTransaction(new Realm.Transaction() {
                 @Override

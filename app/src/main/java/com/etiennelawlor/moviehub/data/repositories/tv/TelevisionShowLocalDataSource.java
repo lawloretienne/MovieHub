@@ -5,7 +5,7 @@ import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowContentRatingsEnvelope;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCreditsEnvelope;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowsEnvelope;
-import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsPage;
+import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsDataModel;
 
 import io.reactivex.Maybe;
 
@@ -23,17 +23,17 @@ public class TelevisionShowLocalDataSource implements TelevisionShowDataSourceCo
     // region TelevisionShowDataSourceContract.LocalDateSource Methods
 
     @Override
-    public Maybe<TelevisionShowsPage> getPopularTelevisionShows(int currentPage) {
-        TelevisionShowsPage televisionShowsPage = RealmUtility.getTelevisionShowsPage(currentPage);
-        if(televisionShowsPage == null)
+    public Maybe<TelevisionShowsDataModel> getPopularTelevisionShows(int currentPage) {
+        TelevisionShowsDataModel televisionShowsDataModel = RealmUtility.getTelevisionShowsDataModel(currentPage);
+        if(televisionShowsDataModel == null)
             return Maybe.empty();
         else
-            return Maybe.just(televisionShowsPage);
+            return Maybe.just(televisionShowsDataModel);
     }
 
     @Override
-    public void savePopularTelevisionShows(TelevisionShowsPage televisionShowsPage) {
-        RealmUtility.saveTelevisionShowsPage(televisionShowsPage);
+    public void savePopularTelevisionShows(TelevisionShowsDataModel televisionShowsDataModel) {
+        RealmUtility.saveTelevisionShowsDataModel(televisionShowsDataModel);
     }
 
     @Override

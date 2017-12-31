@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.domain;
 
 import com.etiennelawlor.moviehub.data.repositories.movie.MovieDataSourceContract;
-import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesPage;
+import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesDataModel;
 
 import io.reactivex.Single;
 
@@ -23,7 +23,7 @@ public class MoviesUseCase implements MoviesDomainContract.UseCase {
 
     // region MoviesDomainContract.UseCase Methods
     @Override
-    public Single<MoviesPage> getPopularMovies(int currentPage) {
+    public Single<MoviesDataModel> getPopularMovies(int currentPage) {
         return movieRepository.getPopularMovies(currentPage);
                 // Espresso should only show up in instrumented unit tests, in the androidTest/ directory
 //                .doOnSubscribe(disposable1 -> {

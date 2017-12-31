@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.domain;
 
 import com.etiennelawlor.moviehub.data.repositories.person.PersonDataSourceContract;
-import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsPage;
+import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsDataModel;
 
 import io.reactivex.Single;
 
@@ -23,7 +23,7 @@ public class PersonsUseCase implements PersonsDomainContract.UseCase {
 
     // region PersonsDomainContract.UseCase Methods
     @Override
-    public Single<PersonsPage> getPopularPersons(int currentPage) {
+    public Single<PersonsDataModel> getPopularPersons(int currentPage) {
         return personRepository.getPopularPersons(currentPage);
     }
     // endregion

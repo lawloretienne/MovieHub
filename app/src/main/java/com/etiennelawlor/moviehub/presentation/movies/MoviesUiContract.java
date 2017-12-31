@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.presentation.movies;
 
 import com.etiennelawlor.moviehub.data.network.response.Movie;
-import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesPage;
+import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesDataModel;
 import com.etiennelawlor.moviehub.presentation.base.BasePresenter;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public interface MoviesUiContract {
         void showLoadingFooter();
         void addMoviesToAdapter(List<Movie> movies);
         void loadMoreItems();
-        void setMoviesPage(MoviesPage moviesPage);
+        void setMoviesDataModel(MoviesDataModel moviesDataModel);
 
         // Navigation methods
         void openMovieDetails(Movie movie);

@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.data.network.response.Person;
-import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsPage;
+import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsDataModel;
 import com.etiennelawlor.moviehub.di.component.PersonsComponent;
 import com.etiennelawlor.moviehub.di.module.PersonsModule;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
@@ -68,7 +68,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     private Typeface font;
     private Unbinder unbinder;
     private StaggeredGridLayoutManager layoutManager;
-    private PersonsPage personsPage;
+    private PersonsDataModel personsDataModel;
     private PersonsComponent personsComponent;
     private boolean isLoading = false;
     // endregion
@@ -81,7 +81,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     // region Listeners
     @OnClick(R.id.reload_btn)
     public void onReloadButtonClicked() {
-        personsPresenter.onLoadPopularPersons(personsPage == null ? 1 : personsPage.getPageNumber());
+        personsPresenter.onLoadPopularPersons(personsDataModel == null ? 1 : personsDataModel.getPageNumber());
     }
 
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
@@ -102,7 +102,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
             if ((visibleItemCount + firstVisibleItem) >= totalItemCount
                     && totalItemCount > 0
                     && !isLoading
-                    && !personsPage.isLastPage()) {
+                    && !personsDataModel.isLastPage()) {
                 personsPresenter.onScrollToEndOfList();
             }
         }
@@ -162,7 +162,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
         // Pagination
         recyclerView.addOnScrollListener(recyclerViewOnScrollListener);
 
-        personsPresenter.onLoadPopularPersons(personsPage == null ? 1 : personsPage.getPageNumber());
+        personsPresenter.onLoadPopularPersons(personsDataModel == null ? 1 : personsDataModel.getPageNumber());
     }
 
     @Override
@@ -195,7 +195,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     // region PersonsAdapter.OnReloadClickListener Methods
     @Override
     public void onReloadClick() {
-        personsPresenter.onLoadPopularPersons(personsPage.getPageNumber());
+        personsPresenter.onLoadPopularPersons(personsDataModel.getPageNumber());
     }
     // endregion
 
@@ -272,13 +272,13 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
 
     @Override
     public void loadMoreItems() {
-        personsPage.incrementPageNumber();
-        personsPresenter.onLoadPopularPersons(personsPage.getPageNumber());
+        personsDataModel.incrementPageNumber();
+        personsPresenter.onLoadPopularPersons(personsDataModel.getPageNumber());
     }
 
     @Override
-    public void setPersonsPage(PersonsPage personsPage) {
-        this.personsPage = personsPage;
+    public void setPersonsDataModel(PersonsDataModel personsDataModel) {
+        this.personsDataModel = personsDataModel;
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.presentation.televisionshows;
 
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsPage;
+import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsDataModel;
 import com.etiennelawlor.moviehub.presentation.base.BasePresenter;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public interface TelevisionShowsUiContract {
         void showLoadingFooter();
         void addTelevisionShowsToAdapter(List<TelevisionShow> televisionShows);
         void loadMoreItems();
-        void setTelevisionShowsPage(TelevisionShowsPage televisionShowsPage);
+        void setTelevisionShowsDataModel(TelevisionShowsDataModel televisionShowsDataModel);
 
         // Navigation methods
         void openTelevisionShowDetails(TelevisionShow televisionShow);

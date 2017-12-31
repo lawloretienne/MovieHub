@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.presentation.movies;
 
 import com.etiennelawlor.moviehub.data.network.response.Movie;
-import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesPage;
+import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesDataModel;
 import com.etiennelawlor.moviehub.domain.MoviesDomainContract;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
@@ -50,15 +50,15 @@ public class MoviesPresenter implements MoviesUiContract.Presenter {
 
         Disposable disposable = moviesUseCase.getPopularMovies(currentPage)
 //                .compose(schedulerTransformer)
-                .compose(new ProductionSchedulerTransformer<MoviesPage>())
-                .subscribeWith(new DisposableSingleObserver<MoviesPage>() {
+                .compose(new ProductionSchedulerTransformer<MoviesDataModel>())
+                .subscribeWith(new DisposableSingleObserver<MoviesDataModel>() {
                     @Override
-                    public void onSuccess(MoviesPage moviesPage) {
-                        if(moviesPage != null){
-                            List<Movie> movies = moviesPage.getMovies();
-                            int currentPage = moviesPage.getPageNumber();
-                            boolean isLastPage = moviesPage.isLastPage();
-                            boolean hasMovies = moviesPage.hasMovies();
+                    public void onSuccess(MoviesDataModel moviesDataModel) {
+                        if(moviesDataModel != null){
+                            List<Movie> movies = moviesDataModel.getMovies();
+                            int currentPage = moviesDataModel.getPageNumber();
+                            boolean isLastPage = moviesDataModel.isLastPage();
+                            boolean hasMovies = moviesDataModel.hasMovies();
                             if(currentPage == 1){
                                 moviesView.hideLoadingView();
 
@@ -82,7 +82,7 @@ public class MoviesPresenter implements MoviesUiContract.Presenter {
                                 }
                             }
 
-                            moviesView.setMoviesPage(moviesPage);
+                            moviesView.setMoviesDataModel(moviesDataModel);
                         }
                     }
 

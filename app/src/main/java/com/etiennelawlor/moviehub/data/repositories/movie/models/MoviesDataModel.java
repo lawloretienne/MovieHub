@@ -10,7 +10,7 @@ import java.util.List;
  * Created by etiennelawlor on 2/20/17.
  */
 
-public class MoviesPage {
+public class MoviesDataModel {
 
     // region Member Variables
     private List<Movie> movies;
@@ -21,14 +21,14 @@ public class MoviesPage {
 
     // region Constructors
 
-    public MoviesPage(List<Movie> movies, int pageNumber, boolean isLastPage, Date expiredAt) {
+    public MoviesDataModel(List<Movie> movies, int pageNumber, boolean isLastPage, Date expiredAt) {
         this.movies = movies;
         this.pageNumber = pageNumber;
         this.isLastPage = isLastPage;
         this.expiredAt = expiredAt;
     }
 
-    public MoviesPage() {
+    public MoviesDataModel() {
     }
 
     // endregion
