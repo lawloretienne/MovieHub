@@ -7,13 +7,13 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 /**
- * Created by etiennelawlor on 5/14/17.
+ * Created by etiennelawlor on 2/20/17.
  */
 
-public class RealmMoviesPage extends RealmObject {
+public class PersonsRealmModel extends RealmObject {
 
-    // region Fields
-    private RealmList<RealmMovie> movies;
+    // region Member Variables
+    private RealmList<PersonRealmModel> persons;
     @PrimaryKey
     private int pageNumber;
     private boolean isLastPage;
@@ -22,8 +22,8 @@ public class RealmMoviesPage extends RealmObject {
 
     // region Getters
 
-    public RealmList<RealmMovie> getMovies() {
-        return movies;
+    public RealmList<PersonRealmModel> getPersons() {
+        return persons;
     }
 
     public int getPageNumber() {
@@ -42,8 +42,8 @@ public class RealmMoviesPage extends RealmObject {
 
     // region Setters
 
-    public void setMovies(RealmList<RealmMovie> movies) {
-        this.movies = movies;
+    public void setPersons(RealmList<PersonRealmModel> persons) {
+        this.persons = persons;
     }
 
     public void setPageNumber(int pageNumber) {
@@ -59,5 +59,4 @@ public class RealmMoviesPage extends RealmObject {
     }
 
     // endregion
-
 }

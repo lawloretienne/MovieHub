@@ -7,16 +7,16 @@ import io.realm.RealmObject;
  * Created by etiennelawlor on 2/14/17.
  */
 
-public class RealmImages extends RealmObject {
+public class ImagesRealmModel extends RealmObject {
 
     // region Fields
     public String baseUrl;
     public String secureBaseUrl;
-    public RealmList<RealmString> backdropSizes = null;
-    public RealmList<RealmString> logoSizes = null;
-    public RealmList<RealmString> posterSizes = null;
-    public RealmList<RealmString> profileSizes = null;
-    public RealmList<RealmString> stillSizes = null;
+    public RealmList<StringRealmModel> backdropSizes = null;
+    public RealmList<StringRealmModel> logoSizes = null;
+    public RealmList<StringRealmModel> posterSizes = null;
+    public RealmList<StringRealmModel> profileSizes = null;
+    public RealmList<StringRealmModel> stillSizes = null;
     // endregion
 
     // region Getters
@@ -29,23 +29,23 @@ public class RealmImages extends RealmObject {
         return secureBaseUrl;
     }
 
-    public RealmList<RealmString> getBackdropSizes() {
+    public RealmList<StringRealmModel> getBackdropSizes() {
         return backdropSizes;
     }
 
-    public RealmList<RealmString> getLogoSizes() {
+    public RealmList<StringRealmModel> getLogoSizes() {
         return logoSizes;
     }
 
-    public RealmList<RealmString> getPosterSizes() {
+    public RealmList<StringRealmModel> getPosterSizes() {
         return posterSizes;
     }
 
-    public RealmList<RealmString> getProfileSizes() {
+    public RealmList<StringRealmModel> getProfileSizes() {
         return profileSizes;
     }
 
-    public RealmList<RealmString> getStillSizes() {
+    public RealmList<StringRealmModel> getStillSizes() {
         return stillSizes;
     }
 
@@ -61,23 +61,23 @@ public class RealmImages extends RealmObject {
         this.secureBaseUrl = secureBaseUrl;
     }
 
-    public void setBackdropSizes(RealmList<RealmString> backdropSizes) {
+    public void setBackdropSizes(RealmList<StringRealmModel> backdropSizes) {
         this.backdropSizes = backdropSizes;
     }
 
-    public void setLogoSizes(RealmList<RealmString> logoSizes) {
+    public void setLogoSizes(RealmList<StringRealmModel> logoSizes) {
         this.logoSizes = logoSizes;
     }
 
-    public void setPosterSizes(RealmList<RealmString> posterSizes) {
+    public void setPosterSizes(RealmList<StringRealmModel> posterSizes) {
         this.posterSizes = posterSizes;
     }
 
-    public void setProfileSizes(RealmList<RealmString> profileSizes) {
+    public void setProfileSizes(RealmList<StringRealmModel> profileSizes) {
         this.profileSizes = profileSizes;
     }
 
-    public void setStillSizes(RealmList<RealmString> stillSizes) {
+    public void setStillSizes(RealmList<StringRealmModel> stillSizes) {
         this.stillSizes = stillSizes;
     }
 

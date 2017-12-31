@@ -10,10 +10,10 @@ import io.realm.annotations.PrimaryKey;
  * Created by etiennelawlor on 5/14/17.
  */
 
-public class RealmTelevisionShowsPage extends RealmObject {
+public class TelevisionShowsRealmModel extends RealmObject {
 
     // region Fields
-    private RealmList<RealmTelevisionShow> televisionShows;
+    private RealmList<TelevisionShowRealmModel> televisionShows;
     @PrimaryKey
     private int pageNumber;
     private boolean isLastPage;
@@ -22,7 +22,7 @@ public class RealmTelevisionShowsPage extends RealmObject {
 
     // region Getters
 
-    public RealmList<RealmTelevisionShow> getTelevisionShows() {
+    public RealmList<TelevisionShowRealmModel> getTelevisionShows() {
         return televisionShows;
     }
 
@@ -42,7 +42,7 @@ public class RealmTelevisionShowsPage extends RealmObject {
 
     // region Setters
 
-    public void setTelevisionShows(RealmList<RealmTelevisionShow> televisionShows) {
+    public void setTelevisionShows(RealmList<TelevisionShowRealmModel> televisionShows) {
         this.televisionShows = televisionShows;
     }
 

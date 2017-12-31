@@ -6,7 +6,7 @@ import io.realm.RealmObject;
  * Created by etiennelawlor on 12/16/16.
  */
 
-public class RealmProfileImage extends RealmObject {
+public class ProfileImageRealmModel extends RealmObject {
 
     // region Fields
     public float aspectRatio;

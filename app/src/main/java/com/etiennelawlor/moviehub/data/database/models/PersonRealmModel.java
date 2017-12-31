@@ -6,7 +6,7 @@ import io.realm.RealmObject;
  * Created by etiennelawlor on 12/16/16.
  */
 
-public class RealmPerson extends RealmObject {
+public class PersonRealmModel extends RealmObject {
 
     // region Fields
     public String biography;
@@ -17,7 +17,7 @@ public class RealmPerson extends RealmObject {
     public String name;
     public String placeOfBirth;
     public String profilePath;
-    public RealmProfileImages images;
+    public ProfileImagesRealmModel images;
     // endregion
 
     // region Getters
@@ -54,7 +54,7 @@ public class RealmPerson extends RealmObject {
         return profilePath;
     }
 
-    public RealmProfileImages getImages() {
+    public ProfileImagesRealmModel getImages() {
         return images;
     }
 
@@ -94,7 +94,7 @@ public class RealmPerson extends RealmObject {
         this.profilePath = profilePath;
     }
 
-    public void setImages(RealmProfileImages images) {
+    public void setImages(ProfileImagesRealmModel images) {
         this.images = images;
     }
 

@@ -7,23 +7,23 @@ import io.realm.RealmObject;
  * Created by etiennelawlor on 12/16/16.
  */
 
-public class RealmTelevisionShow extends RealmObject {
+public class TelevisionShowRealmModel extends RealmObject {
 
     // region Fields
     public String backdropPath;
-    public RealmList<RealmInteger> episodeRunTime = null;
+    public RealmList<IntegerRealmModel> episodeRunTime = null;
     public String firstAirDate;
-    public RealmList<RealmGenre> genres = null;
+    public RealmList<GenreRealmModel> genres = null;
     public String homepage;
     public int id;
     public boolean inProduction;
-    public RealmList<RealmString> languages = null;
+    public RealmList<StringRealmModel> languages = null;
     public String lastAirDate;
     public String name;
-    public RealmList<RealmNetwork> networks = null;
+    public RealmList<NetworkRealmModel> networks = null;
     public int numberOfEpisodes;
     public int numberOfSeasons;
-    public RealmList<RealmString> originCountry = null;
+    public RealmList<StringRealmModel> originCountry = null;
     public String originalLanguage;
     public String originalName;
     public String overview;
@@ -41,7 +41,7 @@ public class RealmTelevisionShow extends RealmObject {
         return backdropPath;
     }
 
-    public RealmList<RealmInteger> getEpisodeRunTime() {
+    public RealmList<IntegerRealmModel> getEpisodeRunTime() {
         return episodeRunTime;
     }
 
@@ -49,7 +49,7 @@ public class RealmTelevisionShow extends RealmObject {
         return firstAirDate;
     }
 
-    public RealmList<RealmGenre> getGenres() {
+    public RealmList<GenreRealmModel> getGenres() {
         return genres;
     }
 
@@ -65,7 +65,7 @@ public class RealmTelevisionShow extends RealmObject {
         return inProduction;
     }
 
-    public RealmList<RealmString> getLanguages() {
+    public RealmList<StringRealmModel> getLanguages() {
         return languages;
     }
 
@@ -77,7 +77,7 @@ public class RealmTelevisionShow extends RealmObject {
         return name;
     }
 
-    public RealmList<RealmNetwork> getNetworks() {
+    public RealmList<NetworkRealmModel> getNetworks() {
         return networks;
     }
 
@@ -89,7 +89,7 @@ public class RealmTelevisionShow extends RealmObject {
         return numberOfSeasons;
     }
 
-    public RealmList<RealmString> getOriginCountry() {
+    public RealmList<StringRealmModel> getOriginCountry() {
         return originCountry;
     }
 
@@ -137,7 +137,7 @@ public class RealmTelevisionShow extends RealmObject {
         this.backdropPath = backdropPath;
     }
 
-    public void setEpisodeRunTime(RealmList<RealmInteger> episodeRunTime) {
+    public void setEpisodeRunTime(RealmList<IntegerRealmModel> episodeRunTime) {
         this.episodeRunTime = episodeRunTime;
     }
 
@@ -145,7 +145,7 @@ public class RealmTelevisionShow extends RealmObject {
         this.firstAirDate = firstAirDate;
     }
 
-    public void setGenres(RealmList<RealmGenre> genres) {
+    public void setGenres(RealmList<GenreRealmModel> genres) {
         this.genres = genres;
     }
 
@@ -161,7 +161,7 @@ public class RealmTelevisionShow extends RealmObject {
         this.inProduction = inProduction;
     }
 
-    public void setLanguages(RealmList<RealmString> languages) {
+    public void setLanguages(RealmList<StringRealmModel> languages) {
         this.languages = languages;
     }
 
@@ -173,7 +173,7 @@ public class RealmTelevisionShow extends RealmObject {
         this.name = name;
     }
 
-    public void setNetworks(RealmList<RealmNetwork> networks) {
+    public void setNetworks(RealmList<NetworkRealmModel> networks) {
         this.networks = networks;
     }
 
@@ -185,7 +185,7 @@ public class RealmTelevisionShow extends RealmObject {
         this.numberOfSeasons = numberOfSeasons;
     }
 
-    public void setOriginCountry(RealmList<RealmString> originCountry) {
+    public void setOriginCountry(RealmList<StringRealmModel> originCountry) {
         this.originCountry = originCountry;
     }
 

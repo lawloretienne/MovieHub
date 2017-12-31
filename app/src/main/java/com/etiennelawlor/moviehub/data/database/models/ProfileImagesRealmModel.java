@@ -7,15 +7,15 @@ import io.realm.RealmObject;
  * Created by etiennelawlor on 12/16/16.
  */
 
-public class RealmProfileImages extends RealmObject {
+public class ProfileImagesRealmModel extends RealmObject {
 
     // region Fields
-    public RealmList<RealmProfileImage> profiles = null;
+    public RealmList<ProfileImageRealmModel> profiles = null;
     // endregion
 
     // region Getters
 
-    public RealmList<RealmProfileImage> getProfiles() {
+    public RealmList<ProfileImageRealmModel> getProfiles() {
         return profiles;
     }
 
@@ -23,7 +23,7 @@ public class RealmProfileImages extends RealmObject {
 
     // region Setters
 
-    public void setProfiles(RealmList<RealmProfileImage> profiles) {
+    public void setProfiles(RealmList<ProfileImageRealmModel> profiles) {
         this.profiles = profiles;
     }
 

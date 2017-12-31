@@ -7,30 +7,30 @@ import io.realm.RealmObject;
  * Created by etiennelawlor on 2/14/17.
  */
 
-public class RealmConfiguration extends RealmObject {
+public class ConfigurationRealmModel extends RealmObject {
 
     // region Fields
-    public RealmImages images;
-    public RealmList<RealmString> changeKeys = null;
+    public ImagesRealmModel images;
+    public RealmList<StringRealmModel> changeKeys = null;
     // endregion
 
     // region Getters
-    public RealmImages getImages() {
+    public ImagesRealmModel getImages() {
         return images;
     }
 
-    public RealmList<RealmString> getChangeKeys() {
+    public RealmList<StringRealmModel> getChangeKeys() {
         return changeKeys;
     }
     // endregion
 
     // region Setters
 
-    public void setImages(RealmImages images) {
+    public void setImages(ImagesRealmModel images) {
         this.images = images;
     }
 
-    public void setChangeKeys(RealmList<RealmString> changeKeys) {
+    public void setChangeKeys(RealmList<StringRealmModel> changeKeys) {
         this.changeKeys = changeKeys;
     }
     // endregion

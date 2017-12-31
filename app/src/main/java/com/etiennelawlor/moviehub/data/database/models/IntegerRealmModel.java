@@ -6,20 +6,20 @@ import io.realm.RealmObject;
  * Created by etiennelawlor on 2/14/17.
  */
 
-public class RealmString extends RealmObject {
+public class IntegerRealmModel extends RealmObject {
 
     // region Fields
-    public String value;
+    public Integer value;
     // endregion
 
     // region Getters
-    public String getValue() {
+    public Integer getValue() {
         return value;
     }
     // endregion
 
     // region Setters
-    public void setValue(String value) {
+    public void setValue(Integer value) {
         this.value = value;
     }
     // endregion

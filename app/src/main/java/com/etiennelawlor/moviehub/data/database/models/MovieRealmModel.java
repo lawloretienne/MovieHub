@@ -7,13 +7,13 @@ import io.realm.RealmObject;
  * Created by etiennelawlor on 5/14/17.
  */
 
-public class RealmMovie extends RealmObject {
+public class MovieRealmModel extends RealmObject {
 
     // region Fields
     public boolean adult;
     public String backdropPath;
     public int budget;
-    public RealmList<RealmGenre> genres = null;
+    public RealmList<GenreRealmModel> genres = null;
     public String homepage;
     public int id;
     public String imdbId;
@@ -34,7 +34,7 @@ public class RealmMovie extends RealmObject {
     // endregion
 
     // region Constructors
-    public RealmMovie() {
+    public MovieRealmModel() {
     }
     // endregion
 
@@ -52,7 +52,7 @@ public class RealmMovie extends RealmObject {
         return budget;
     }
 
-    public RealmList<RealmGenre> getGenres() {
+    public RealmList<GenreRealmModel> getGenres() {
         return genres;
     }
 
@@ -140,7 +140,7 @@ public class RealmMovie extends RealmObject {
         this.budget = budget;
     }
 
-    public void setGenres(RealmList<RealmGenre> genres) {
+    public void setGenres(RealmList<GenreRealmModel> genres) {
         this.genres = genres;
     }
 
