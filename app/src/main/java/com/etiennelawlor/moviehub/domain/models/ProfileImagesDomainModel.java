@@ -1,4 +1,4 @@
-package com.etiennelawlor.moviehub.data.repositories.models;
+package com.etiennelawlor.moviehub.domain.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -12,26 +12,26 @@ import java.util.List;
  * Created by etiennelawlor on 12/31/17.
  */
 
-public class ProfileImagesDataModel implements Parcelable {
+public class ProfileImagesDomainModel implements Parcelable {
 
     // region Fields
     @SerializedName("profiles")
-    public List<ProfileImageDataModel> profiles = null;
+    public List<ProfileImageDomainModel> profiles = null;
     // endregion
 
     // region Constructors
-    public ProfileImagesDataModel() {
+    public ProfileImagesDomainModel() {
     }
 
-    protected ProfileImagesDataModel(Parcel in) {
-        this.profiles = new ArrayList<ProfileImageDataModel>();
-        in.readList(this.profiles, ProfileImageDataModel.class.getClassLoader());
+    protected ProfileImagesDomainModel(Parcel in) {
+        this.profiles = new ArrayList<ProfileImageDomainModel>();
+        in.readList(this.profiles, ProfileImageDomainModel.class.getClassLoader());
     }
     // endregion
 
     // region Getters
 
-    public List<ProfileImageDataModel> getProfiles() {
+    public List<ProfileImageDomainModel> getProfiles() {
         return profiles;
     }
 
@@ -39,7 +39,7 @@ public class ProfileImagesDataModel implements Parcelable {
 
     // region Setters
 
-    public void setProfiles(List<ProfileImageDataModel> profiles) {
+    public void setProfiles(List<ProfileImageDomainModel> profiles) {
         this.profiles = profiles;
     }
 
@@ -57,15 +57,15 @@ public class ProfileImagesDataModel implements Parcelable {
     }
     // endregion
 
-    public static final Parcelable.Creator<ProfileImagesDataModel> CREATOR = new Parcelable.Creator<ProfileImagesDataModel>() {
+    public static final Creator<ProfileImagesDomainModel> CREATOR = new Creator<ProfileImagesDomainModel>() {
         @Override
-        public ProfileImagesDataModel createFromParcel(Parcel source) {
-            return new ProfileImagesDataModel(source);
+        public ProfileImagesDomainModel createFromParcel(Parcel source) {
+            return new ProfileImagesDomainModel(source);
         }
 
         @Override
-        public ProfileImagesDataModel[] newArray(int size) {
-            return new ProfileImagesDataModel[size];
+        public ProfileImagesDomainModel[] newArray(int size) {
+            return new ProfileImagesDomainModel[size];
         }
     };
 

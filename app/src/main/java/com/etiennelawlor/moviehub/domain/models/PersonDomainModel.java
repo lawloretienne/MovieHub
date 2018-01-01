@@ -1,4 +1,4 @@
-package com.etiennelawlor.moviehub.data.repositories.models;
+package com.etiennelawlor.moviehub.domain.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by etiennelawlor on 12/31/17.
  */
 
-public class PersonDataModel implements Parcelable {
+public class PersonDomainModel implements Parcelable {
 
     // region Constants
     public static final String SECURE_BASE_URL = "https://image.tmdb.org/t/p/";
@@ -35,16 +35,16 @@ public class PersonDataModel implements Parcelable {
     @SerializedName("profile_path")
     public String profilePath;
     @SerializedName("images")
-    public ProfileImagesDataModel images;
+    public ProfileImagesDomainModel images;
 
     private Palette profilePalette;
     // endregion
 
     // region Constructors
-    public PersonDataModel() {
+    public PersonDomainModel() {
     }
 
-    protected PersonDataModel(Parcel in) {
+    protected PersonDomainModel(Parcel in) {
         this.biography = in.readString();
         this.birthday = in.readString();
         this.deathday = in.readString();
@@ -53,7 +53,7 @@ public class PersonDataModel implements Parcelable {
         this.name = in.readString();
         this.placeOfBirth = in.readString();
         this.profilePath = in.readString();
-        this.images = in.readParcelable(ProfileImagesDataModel.class.getClassLoader());
+        this.images = in.readParcelable(ProfileImagesDomainModel.class.getClassLoader());
     }
     // endregion
 
@@ -91,7 +91,7 @@ public class PersonDataModel implements Parcelable {
         return profilePath;
     }
 
-    public ProfileImagesDataModel getImages() {
+    public ProfileImagesDomainModel getImages() {
         return images;
     }
 
@@ -139,7 +139,7 @@ public class PersonDataModel implements Parcelable {
         this.profilePath = profilePath;
     }
 
-    public void setImages(ProfileImagesDataModel images) {
+    public void setImages(ProfileImagesDomainModel images) {
         this.images = images;
     }
 
@@ -169,15 +169,15 @@ public class PersonDataModel implements Parcelable {
     }
     // endregion
 
-    public static final Parcelable.Creator<PersonDataModel> CREATOR = new Parcelable.Creator<PersonDataModel>() {
+    public static final Creator<PersonDomainModel> CREATOR = new Creator<PersonDomainModel>() {
         @Override
-        public PersonDataModel createFromParcel(Parcel source) {
-            return new PersonDataModel(source);
+        public PersonDomainModel createFromParcel(Parcel source) {
+            return new PersonDomainModel(source);
         }
 
         @Override
-        public PersonDataModel[] newArray(int size) {
-            return new PersonDataModel[size];
+        public PersonDomainModel[] newArray(int size) {
+            return new PersonDomainModel[size];
         }
     };
 

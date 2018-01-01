@@ -228,7 +228,7 @@ public class MoviesPresenterTest {
         verify(mockMoviesView).addMoviesToAdapter(moviesDataModel.getMovies());
         verify(mockMoviesView).addFooter();
         verify(mockMoviesView).setMoviesDataModel(moviesDataModel);
-//        verify(mockMoviesView, times(1)).setModel(any(MoviesDataModel.class)); // Alternative verify check
+//        verify(mockMoviesView, times(1)).setModel(any(MoviesDomainModel.class)); // Alternative verify check
     }
 
     @Test

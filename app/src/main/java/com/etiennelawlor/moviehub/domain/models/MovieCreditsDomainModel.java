@@ -1,4 +1,4 @@
-package com.etiennelawlor.moviehub.data.repositories.models;
+package com.etiennelawlor.moviehub.domain.models;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -8,24 +8,24 @@ import java.util.List;
  * Created by etiennelawlor on 12/30/17.
  */
 
-public class MovieCreditsDataModel {
+public class MovieCreditsDomainModel {
 
     // region Fields
     public int id;
-    public List<MovieCreditDataModel> cast = null;
-    public List<MovieCreditDataModel> crew = null;
+    public List<MovieCreditDomainModel> cast = null;
+    public List<MovieCreditDomainModel> crew = null;
     private Date expiredAt;
     // endregion
 
     // region Constructors
-    public MovieCreditsDataModel(int id, List<MovieCreditDataModel> cast, List<MovieCreditDataModel> crew, Date expiredAt) {
+    public MovieCreditsDomainModel(int id, List<MovieCreditDomainModel> cast, List<MovieCreditDomainModel> crew, Date expiredAt) {
         this.id = id;
         this.cast = cast;
         this.crew = crew;
         this.expiredAt = expiredAt;
     }
 
-    public MovieCreditsDataModel() {
+    public MovieCreditsDomainModel() {
     }
     // endregion
 
@@ -35,11 +35,11 @@ public class MovieCreditsDataModel {
         return id;
     }
 
-    public List<MovieCreditDataModel> getCast() {
+    public List<MovieCreditDomainModel> getCast() {
         return cast;
     }
 
-    public List<MovieCreditDataModel> getCrew() {
+    public List<MovieCreditDomainModel> getCrew() {
         return crew;
     }
 
@@ -55,11 +55,11 @@ public class MovieCreditsDataModel {
         this.id = id;
     }
 
-    public void setCast(List<MovieCreditDataModel> cast) {
+    public void setCast(List<MovieCreditDomainModel> cast) {
         this.cast = cast;
     }
 
-    public void setCrew(List<MovieCreditDataModel> crew) {
+    public void setCrew(List<MovieCreditDomainModel> crew) {
         this.crew = crew;
     }
 

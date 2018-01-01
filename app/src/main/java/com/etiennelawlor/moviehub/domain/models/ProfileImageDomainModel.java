@@ -1,4 +1,4 @@
-package com.etiennelawlor.moviehub.data.repositories.models;
+package com.etiennelawlor.moviehub.domain.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by etiennelawlor on 12/31/17.
  */
 
-public class ProfileImageDataModel implements Parcelable {
+public class ProfileImageDomainModel implements Parcelable {
 
     // region Fields
     @SerializedName("aspect_ratio")
@@ -27,10 +27,10 @@ public class ProfileImageDataModel implements Parcelable {
     // endregion
 
     // region Constructors
-    public ProfileImageDataModel() {
+    public ProfileImageDomainModel() {
     }
 
-    protected ProfileImageDataModel(Parcel in) {
+    protected ProfileImageDomainModel(Parcel in) {
         this.aspectRatio = in.readFloat();
         this.filePath = in.readString();
         this.height = in.readInt();
@@ -113,15 +113,15 @@ public class ProfileImageDataModel implements Parcelable {
     }
     // endregion
 
-    public static final Parcelable.Creator<ProfileImageDataModel> CREATOR = new Parcelable.Creator<ProfileImageDataModel>() {
+    public static final Creator<ProfileImageDomainModel> CREATOR = new Creator<ProfileImageDomainModel>() {
         @Override
-        public ProfileImageDataModel createFromParcel(Parcel source) {
-            return new ProfileImageDataModel(source);
+        public ProfileImageDomainModel createFromParcel(Parcel source) {
+            return new ProfileImageDomainModel(source);
         }
 
         @Override
-        public ProfileImageDataModel[] newArray(int size) {
-            return new ProfileImageDataModel[size];
+        public ProfileImageDomainModel[] newArray(int size) {
+            return new ProfileImageDomainModel[size];
         }
     };
 

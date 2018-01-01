@@ -1,4 +1,4 @@
-package com.etiennelawlor.moviehub.data.repositories.models;
+package com.etiennelawlor.moviehub.domain.models;
 
 import java.util.Date;
 import java.util.List;
@@ -7,11 +7,11 @@ import java.util.List;
  * Created by etiennelawlor on 12/30/17.
  */
 
-public class MovieReleaseDatesDataModel {
+public class MovieReleaseDatesDomainModel {
 
     // region Fields
     public int id;
-    public List<MovieReleaseDateDataModel> movieReleaseDates = null;
+    public List<MovieReleaseDateDomainModel> movieReleaseDates = null;
     private Date expiredAt;
     // endregion
 
@@ -21,7 +21,7 @@ public class MovieReleaseDatesDataModel {
         return id;
     }
 
-    public List<MovieReleaseDateDataModel> getMovieReleaseDates() {
+    public List<MovieReleaseDateDomainModel> getMovieReleaseDates() {
         return movieReleaseDates;
     }
 
@@ -37,7 +37,7 @@ public class MovieReleaseDatesDataModel {
         this.id = id;
     }
 
-    public void setMovieReleaseDates(List<MovieReleaseDateDataModel> movieReleaseDates) {
+    public void setMovieReleaseDates(List<MovieReleaseDateDomainModel> movieReleaseDates) {
         this.movieReleaseDates = movieReleaseDates;
     }
 

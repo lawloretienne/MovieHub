@@ -1,4 +1,4 @@
-package com.etiennelawlor.moviehub.data.repositories.models;
+package com.etiennelawlor.moviehub.domain.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -15,7 +15,7 @@ import java.util.List;
  * Created by etiennelawlor on 12/31/17.
  */
 
-public class TelevisionShowDataModel implements Parcelable {
+public class TelevisionShowDomainModel implements Parcelable {
 
     // region Constants
     public static final String PATTERN = "yyyy-MM-dd";
@@ -27,14 +27,14 @@ public class TelevisionShowDataModel implements Parcelable {
     public String backdropPath;
     public List<Integer> episodeRunTime = null;
     public String firstAirDate;
-    public List<GenreDataModel> genres = null;
+    public List<GenreDomainModel> genres = null;
     public String homepage;
     public int id;
     public boolean inProduction;
     public List<String> languages = null;
     public String lastAirDate;
     public String name;
-    public List<NetworkDataModel> networks = null;
+    public List<NetworkDomainModel> networks = null;
     public int numberOfEpisodes;
     public int numberOfSeasons;
     public List<String> originCountry = null;
@@ -52,22 +52,22 @@ public class TelevisionShowDataModel implements Parcelable {
     // endregion
 
     // region Constructors
-    public TelevisionShowDataModel() {
+    public TelevisionShowDomainModel() {
     }
 
-    protected TelevisionShowDataModel(Parcel in) {
+    protected TelevisionShowDomainModel(Parcel in) {
         this.backdropPath = in.readString();
         this.episodeRunTime = new ArrayList<Integer>();
         in.readList(this.episodeRunTime, Integer.class.getClassLoader());
         this.firstAirDate = in.readString();
-        this.genres = in.createTypedArrayList(GenreDataModel.CREATOR);
+        this.genres = in.createTypedArrayList(GenreDomainModel.CREATOR);
         this.homepage = in.readString();
         this.id = in.readInt();
         this.inProduction = in.readByte() != 0;
         this.languages = in.createStringArrayList();
         this.lastAirDate = in.readString();
         this.name = in.readString();
-        this.networks = in.createTypedArrayList(NetworkDataModel.CREATOR);
+        this.networks = in.createTypedArrayList(NetworkDomainModel.CREATOR);
         this.numberOfEpisodes = in.readInt();
         this.numberOfSeasons = in.readInt();
         this.originCountry = in.createStringArrayList();
@@ -97,7 +97,7 @@ public class TelevisionShowDataModel implements Parcelable {
         return firstAirDate;
     }
 
-    public List<GenreDataModel> getGenres() {
+    public List<GenreDomainModel> getGenres() {
         return genres;
     }
 
@@ -125,7 +125,7 @@ public class TelevisionShowDataModel implements Parcelable {
         return name;
     }
 
-    public List<NetworkDataModel> getNetworks() {
+    public List<NetworkDomainModel> getNetworks() {
         return networks;
     }
 
@@ -208,7 +208,7 @@ public class TelevisionShowDataModel implements Parcelable {
         String formattedNetwork =  "";
         if(networks != null && networks.size()>0){
 
-            NetworkDataModel network = networks.get(0);
+            NetworkDomainModel network = networks.get(0);
             formattedNetwork = network.getName();
 
             if(formattedNetwork.equals("Fox Broadcasting Company") || formattedNetwork.equals("Fox")){
@@ -269,7 +269,7 @@ public class TelevisionShowDataModel implements Parcelable {
         this.firstAirDate = firstAirDate;
     }
 
-    public void setGenres(List<GenreDataModel> genres) {
+    public void setGenres(List<GenreDomainModel> genres) {
         this.genres = genres;
     }
 
@@ -297,7 +297,7 @@ public class TelevisionShowDataModel implements Parcelable {
         this.name = name;
     }
 
-    public void setNetworks(List<NetworkDataModel> networks) {
+    public void setNetworks(List<NetworkDomainModel> networks) {
         this.networks = networks;
     }
 
@@ -389,15 +389,15 @@ public class TelevisionShowDataModel implements Parcelable {
     }
     // endregion
 
-    public static final Parcelable.Creator<TelevisionShowDataModel> CREATOR = new Parcelable.Creator<TelevisionShowDataModel>() {
+    public static final Creator<TelevisionShowDomainModel> CREATOR = new Creator<TelevisionShowDomainModel>() {
         @Override
-        public TelevisionShowDataModel createFromParcel(Parcel source) {
-            return new TelevisionShowDataModel(source);
+        public TelevisionShowDomainModel createFromParcel(Parcel source) {
+            return new TelevisionShowDomainModel(source);
         }
 
         @Override
-        public TelevisionShowDataModel[] newArray(int size) {
-            return new TelevisionShowDataModel[size];
+        public TelevisionShowDomainModel[] newArray(int size) {
+            return new TelevisionShowDomainModel[size];
         }
     };
 

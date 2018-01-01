@@ -1,4 +1,4 @@
-package com.etiennelawlor.moviehub.data.repositories.models;
+package com.etiennelawlor.moviehub.domain.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -14,7 +14,7 @@ import java.util.List;
  * Created by etiennelawlor on 12/31/17.
  */
 
-public class MovieDataModel implements Parcelable {
+public class MovieDomainModel implements Parcelable {
 
     // region Constants
     public static final String PATTERN = "yyyy-MM-dd";
@@ -26,7 +26,7 @@ public class MovieDataModel implements Parcelable {
     public boolean adult;
     public String backdropPath;
     public int budget;
-    public List<GenreDataModel> genres = null;
+    public List<GenreDomainModel> genres = null;
     public String homepage;
     public int id;
     public String imdbId;
@@ -49,14 +49,14 @@ public class MovieDataModel implements Parcelable {
     // endregion
 
     // region Constructors
-    public MovieDataModel() {
+    public MovieDomainModel() {
     }
 
-    protected MovieDataModel(Parcel in) {
+    protected MovieDomainModel(Parcel in) {
         this.adult = in.readByte() != 0;
         this.backdropPath = in.readString();
         this.budget = in.readInt();
-        this.genres = in.createTypedArrayList(GenreDataModel.CREATOR);
+        this.genres = in.createTypedArrayList(GenreDomainModel.CREATOR);
         this.homepage = in.readString();
         this.id = in.readInt();
         this.imdbId = in.readString();
@@ -91,7 +91,7 @@ public class MovieDataModel implements Parcelable {
         return budget;
     }
 
-    public List<GenreDataModel> getGenres() {
+    public List<GenreDomainModel> getGenres() {
         return genres;
     }
 
@@ -206,7 +206,7 @@ public class MovieDataModel implements Parcelable {
         this.budget = budget;
     }
 
-    public void setGenres(List<GenreDataModel> genres) {
+    public void setGenres(List<GenreDomainModel> genres) {
         this.genres = genres;
     }
 
@@ -316,15 +316,15 @@ public class MovieDataModel implements Parcelable {
     }
     // endregion
 
-    public static final Parcelable.Creator<MovieDataModel> CREATOR = new Parcelable.Creator<MovieDataModel>() {
+    public static final Creator<MovieDomainModel> CREATOR = new Creator<MovieDomainModel>() {
         @Override
-        public MovieDataModel createFromParcel(Parcel source) {
-            return new MovieDataModel(source);
+        public MovieDomainModel createFromParcel(Parcel source) {
+            return new MovieDomainModel(source);
         }
 
         @Override
-        public MovieDataModel[] newArray(int size) {
-            return new MovieDataModel[size];
+        public MovieDomainModel[] newArray(int size) {
+            return new MovieDomainModel[size];
         }
     };
 
