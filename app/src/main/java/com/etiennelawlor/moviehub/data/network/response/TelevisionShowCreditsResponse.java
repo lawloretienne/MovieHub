@@ -14,9 +14,9 @@ public class TelevisionShowCreditsResponse {
     @SerializedName("id")
     public int id;
     @SerializedName("cast")
-    public List<TelevisionShowCredit> cast = null;
+    public List<TelevisionShowCreditResponse> cast = null;
     @SerializedName("crew")
-    public List<TelevisionShowCredit> crew = null;
+    public List<TelevisionShowCreditResponse> crew = null;
     // endregion
 
     // region Getters
@@ -25,11 +25,11 @@ public class TelevisionShowCreditsResponse {
         return id;
     }
 
-    public List<TelevisionShowCredit> getCast() {
+    public List<TelevisionShowCreditResponse> getCast() {
         return cast;
     }
 
-    public List<TelevisionShowCredit> getCrew() {
+    public List<TelevisionShowCreditResponse> getCrew() {
         return crew;
     }
 
@@ -41,11 +41,11 @@ public class TelevisionShowCreditsResponse {
         this.id = id;
     }
 
-    public void setCast(List<TelevisionShowCredit> cast) {
+    public void setCast(List<TelevisionShowCreditResponse> cast) {
         this.cast = cast;
     }
 
-    public void setCrew(List<TelevisionShowCredit> crew) {
+    public void setCrew(List<TelevisionShowCreditResponse> crew) {
         this.crew = crew;
     }
 

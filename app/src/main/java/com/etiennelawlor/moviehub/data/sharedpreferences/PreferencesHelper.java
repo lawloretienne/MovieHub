@@ -3,7 +3,7 @@ package com.etiennelawlor.moviehub.data.sharedpreferences;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.etiennelawlor.moviehub.data.network.response.Configuration;
+import com.etiennelawlor.moviehub.data.network.response.ConfigurationResponse;
 import com.google.gson.Gson;
 
 /**
@@ -24,17 +24,17 @@ public class PreferencesHelper {
     // endregion
 
     // region Getters
-    public static Configuration getConfiguration(Context context){
+    public static ConfigurationResponse getConfiguration(Context context){
         SharedPreferences preferences = getSharedPreferences(context);
         Gson gson = new Gson();
         String json = preferences.getString(KEY_CONFIGURATION, "");
-        Configuration configuration = gson.fromJson(json, Configuration.class);
+        ConfigurationResponse configuration = gson.fromJson(json, ConfigurationResponse.class);
         return configuration;
     }
     // endregion
 
     // region Setters
-    public static void setConfiguration(Context context, Configuration configuration) {
+    public static void setConfiguration(Context context, ConfigurationResponse configuration) {
         SharedPreferences.Editor editor = getEditor(context);
         Gson gson = new Gson();
         String json = gson.toJson(configuration);

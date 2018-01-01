@@ -3,8 +3,8 @@ package com.etiennelawlor.moviehub.domain;
 import android.text.TextUtils;
 
 import com.etiennelawlor.moviehub.data.network.response.Movie;
-import com.etiennelawlor.moviehub.data.network.response.MovieCredit;
-import com.etiennelawlor.moviehub.data.network.response.ReleaseDate;
+import com.etiennelawlor.moviehub.data.network.response.MovieCreditResponse;
+import com.etiennelawlor.moviehub.data.network.response.ReleaseDateResponse;
 import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDateResponse;
 import com.etiennelawlor.moviehub.data.repositories.movie.MovieDataSourceContract;
 import com.etiennelawlor.moviehub.domain.models.MovieDetailsDomainModel;
@@ -43,8 +43,8 @@ public class MovieDetailsUseCase implements MovieDetailsDomainContract.UseCase {
                 movieRepository.getSimilarMovies(movieId),
                 movieRepository.getMovieReleaseDates(movieId),
                 (movie, movieCreditsDataModel, moviesDataModel, movieReleaseDatesDataModel) -> {
-                    List<MovieCredit> cast = new ArrayList<>();
-                    List<MovieCredit> crew = new ArrayList<>();
+                    List<MovieCreditResponse> cast = new ArrayList<>();
+                    List<MovieCreditResponse> crew = new ArrayList<>();
                     List<Movie> similarMovies = new ArrayList<>();
                     String rating = "";
 
@@ -67,9 +67,9 @@ public class MovieDetailsUseCase implements MovieDetailsDomainContract.UseCase {
                                 if (movieReleaseDateResponse != null) {
                                     String iso31661 = movieReleaseDateResponse.getIso31661();
                                     if (iso31661.equals(ISO_31661)) {
-                                        List<ReleaseDate> releaseDates = movieReleaseDateResponse.getReleaseDates();
+                                        List<ReleaseDateResponse> releaseDates = movieReleaseDateResponse.getReleaseDates();
                                         if (releaseDates != null && releaseDates.size() > 0) {
-                                            for (ReleaseDate releaseDate : releaseDates) {
+                                            for (ReleaseDateResponse releaseDate : releaseDates) {
                                                 if (!TextUtils.isEmpty(releaseDate.getCertification())) {
                                                     rating = releaseDate.getCertification();
                                                     break;

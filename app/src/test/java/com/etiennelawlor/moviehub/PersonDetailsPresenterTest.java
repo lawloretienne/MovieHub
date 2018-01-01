@@ -2,7 +2,7 @@ package com.etiennelawlor.moviehub;
 
 import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.Person;
-import com.etiennelawlor.moviehub.data.network.response.PersonCredit;
+import com.etiennelawlor.moviehub.data.network.response.PersonCreditResponse;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 import com.etiennelawlor.moviehub.domain.PersonDetailsDomainContract;
 import com.etiennelawlor.moviehub.domain.models.PersonDetailsDomainModel;
@@ -66,8 +66,8 @@ public class PersonDetailsPresenterTest {
         // 1. (Given) Set up conditions required for the test
         Person person = new Person();
         person.setId(1);
-        List<PersonCredit> cast = new ArrayList<>();
-        List<PersonCredit> crew = new ArrayList<>();
+        List<PersonCreditResponse> cast = new ArrayList<>();
+        List<PersonCreditResponse> crew = new ArrayList<>();
         personDetailsDomainModel = new PersonDetailsDomainModel(person, cast, crew);
 
         // 2. (When) Then perform one or more actions
@@ -86,8 +86,8 @@ public class PersonDetailsPresenterTest {
         // 1. (Given) Set up conditions required for the test
         Person person = new Person();
         person.setId(1);
-        List<PersonCredit> cast = new ArrayList<>();
-        List<PersonCredit> crew = new ArrayList<>();
+        List<PersonCreditResponse> cast = new ArrayList<>();
+        List<PersonCreditResponse> crew = new ArrayList<>();
         personDetailsDomainModel = new PersonDetailsDomainModel(person, cast, crew);
 
         // 2. (When) Then perform one or more actions

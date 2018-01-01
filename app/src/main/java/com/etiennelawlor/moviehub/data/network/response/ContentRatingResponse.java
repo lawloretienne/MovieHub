@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by etiennelawlor on 12/16/16.
  */
 
-public class ContentRating {
+public class ContentRatingResponse {
 
     // region Fields
     @SerializedName("iso_3166_1")
@@ -41,7 +41,7 @@ public class ContentRating {
 
     @Override
     public String toString() {
-        return "ContentRating{" +
+        return "ContentRatingResponse{" +
                 "iso31661='" + iso31661 + '\'' +
                 ", rating='" + rating + '\'' +
                 '}';

@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by etiennelawlor on 12/16/16.
  */
 
-public class Credit {
+public class CreditResponse {
 
     // region Fields
     @SerializedName("id")
@@ -41,7 +41,7 @@ public class Credit {
 
     @Override
     public String toString() {
-        return "Credit{" +
+        return "CreditResponse{" +
                 "id=" + id +
                 ", creditId='" + creditId + '\'' +
                 '}';

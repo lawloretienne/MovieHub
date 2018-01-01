@@ -1,8 +1,8 @@
 package com.etiennelawlor.moviehub.domain;
 
-import com.etiennelawlor.moviehub.data.network.response.ContentRating;
+import com.etiennelawlor.moviehub.data.network.response.ContentRatingResponse;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCredit;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCreditResponse;
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowDataSourceContract;
 import com.etiennelawlor.moviehub.domain.models.TelevisionShowDetailsDomainModel;
 
@@ -40,8 +40,8 @@ public class TelevisionShowDetailsUseCase implements TelevisionShowDetailsDomain
                 televisionShowRepository.getSimilarTelevisionShows(televisionShowId),
                 televisionShowRepository.getTelevisionShowContentRatings(televisionShowId),
                 (televisionShow, televisionShowCreditsEnvelope, televisionShowsEnvelope, televisionShowContentRatingsEnvelope) -> {
-                    List<TelevisionShowCredit> cast = new ArrayList<>();
-                    List<TelevisionShowCredit> crew = new ArrayList<>();
+                    List<TelevisionShowCreditResponse> cast = new ArrayList<>();
+                    List<TelevisionShowCreditResponse> crew = new ArrayList<>();
                     List<TelevisionShow> similarTelevisionShows = new ArrayList<>();
                     String rating = "";
 
@@ -58,9 +58,9 @@ public class TelevisionShowDetailsUseCase implements TelevisionShowDetailsDomain
                     }
 
                     if(televisionShowContentRatingsEnvelope!=null){
-                        List<ContentRating> contentRatings = televisionShowContentRatingsEnvelope.getContentRatings();
+                        List<ContentRatingResponse> contentRatings = televisionShowContentRatingsEnvelope.getContentRatings();
                         if(contentRatings != null && contentRatings.size() > 0){
-                            for(ContentRating contentRating : contentRatings){
+                            for(ContentRatingResponse contentRating : contentRatings){
                                 String iso31661 = contentRating.getIso31661();
                                 if(iso31661.equals(ISO_31661)){
                                     rating = contentRating.getRating();

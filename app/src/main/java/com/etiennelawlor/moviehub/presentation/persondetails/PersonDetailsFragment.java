@@ -49,7 +49,7 @@ import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.Person;
-import com.etiennelawlor.moviehub.data.network.response.PersonCredit;
+import com.etiennelawlor.moviehub.data.network.response.PersonCreditResponse;
 import com.etiennelawlor.moviehub.data.network.response.ProfileImage;
 import com.etiennelawlor.moviehub.data.network.response.ProfileImages;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
@@ -181,7 +181,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
         public void onItemClick(int position, View view) {
             selectedView = view;
 
-            PersonCredit personCredit = castAdapter.getItem(position);
+            PersonCreditResponse personCredit = castAdapter.getItem(position);
             if(personCredit != null){
                 String mediaType = personCredit.getMediaType();
                 switch (mediaType){
@@ -217,7 +217,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
         public void onItemClick(int position, View view) {
             selectedView = view;
 
-            PersonCredit personCredit = crewAdapter.getItem(position);
+            PersonCreditResponse personCredit = crewAdapter.getItem(position);
             if(personCredit != null){
 
                 String mediaType = personCredit.getMediaType();
@@ -685,7 +685,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     }
 
     private void setUpCast(){
-        List<PersonCredit> cast = personDetailsDomainModel.getCast();
+        List<PersonCreditResponse> cast = personDetailsDomainModel.getCast();
         if(cast != null && cast.size()>0){
             View castView = castViewStub.inflate();
 
@@ -699,9 +699,9 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
             SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
             snapHelper.attachToRecyclerView(castRecyclerView);
 
-            Collections.sort(cast, new Comparator<PersonCredit>() {
+            Collections.sort(cast, new Comparator<PersonCreditResponse>() {
                 @Override
-                public int compare(PersonCredit pc1, PersonCredit pc2) {
+                public int compare(PersonCreditResponse pc1, PersonCreditResponse pc2) {
                     int year1 = -1;
                     if(pc1.getFirstAirYear() != -1){
                         year1 = pc1.getFirstAirYear();
@@ -730,7 +730,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     }
 
     private void setUpCrew(){
-        List<PersonCredit> crew = personDetailsDomainModel.getCrew();
+        List<PersonCreditResponse> crew = personDetailsDomainModel.getCrew();
         if(crew != null && crew.size()>0){
             View crewView = crewViewStub.inflate();
 
@@ -744,9 +744,9 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
             SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
             snapHelper.attachToRecyclerView(crewRecyclerView);
 
-            Collections.sort(crew, new Comparator<PersonCredit>() {
+            Collections.sort(crew, new Comparator<PersonCreditResponse>() {
                 @Override
-                public int compare(PersonCredit pc1, PersonCredit pc2) {
+                public int compare(PersonCreditResponse pc1, PersonCreditResponse pc2) {
                     int year1 = -1;
                     if(pc1.getFirstAirYear() != -1){
                         year1 = pc1.getFirstAirYear();

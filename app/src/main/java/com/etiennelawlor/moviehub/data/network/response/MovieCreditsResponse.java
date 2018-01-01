@@ -14,9 +14,9 @@ public class MovieCreditsResponse {
     @SerializedName("id")
     public int id;
     @SerializedName("cast")
-    public List<MovieCredit> cast = null;
+    public List<MovieCreditResponse> cast = null;
     @SerializedName("crew")
-    public List<MovieCredit> crew = null;
+    public List<MovieCreditResponse> crew = null;
     // endregion
 
     // region Getters
@@ -25,11 +25,11 @@ public class MovieCreditsResponse {
         return id;
     }
 
-    public List<MovieCredit> getCast() {
+    public List<MovieCreditResponse> getCast() {
         return cast;
     }
 
-    public List<MovieCredit> getCrew() {
+    public List<MovieCreditResponse> getCrew() {
         return crew;
     }
 
@@ -41,11 +41,11 @@ public class MovieCreditsResponse {
         this.id = id;
     }
 
-    public void setCast(List<MovieCredit> cast) {
+    public void setCast(List<MovieCreditResponse> cast) {
         this.cast = cast;
     }
 
-    public void setCrew(List<MovieCredit> crew) {
+    public void setCrew(List<MovieCreditResponse> crew) {
         this.crew = crew;
     }
 

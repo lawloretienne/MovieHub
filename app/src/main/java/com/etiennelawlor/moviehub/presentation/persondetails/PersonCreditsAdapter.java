@@ -18,7 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.network.response.PersonCredit;
+import com.etiennelawlor.moviehub.data.network.response.PersonCreditResponse;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.common.widget.DynamicHeightImageView;
 import com.etiennelawlor.moviehub.util.AnimationUtility;
@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
  * Created by etiennelawlor on 12/17/16.
  */
 
-public class PersonCreditsAdapter extends BaseAdapter<PersonCredit> {
+public class PersonCreditsAdapter extends BaseAdapter<PersonCreditResponse> {
 
     // region Constants
     // endregion
@@ -117,7 +117,7 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCredit> {
     protected void bindItemViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         final PersonCreditViewHolder holder = (PersonCreditViewHolder) viewHolder;
 
-        final PersonCredit personCredit = getItem(position);
+        final PersonCreditResponse personCredit = getItem(position);
         if (personCredit != null) {
             holder.bind(personCredit);
         }
@@ -153,7 +153,7 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCredit> {
     @Override
     public void addFooter() {
         isFooterAdded = true;
-        add(new PersonCredit());
+        add(new PersonCreditResponse());
     }
 
     // region Inner Classes
@@ -189,7 +189,7 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCredit> {
         // endregion
 
         // region Helper Methods
-        private void bind(PersonCredit personCredit){
+        private void bind(PersonCreditResponse personCredit){
             resetInfoBackgroundColor(infoLinearLayout);
             resetTitleTextColor(titleTextView);
             resetSubtitleTextColor(subtitleTextView);
@@ -201,7 +201,7 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCredit> {
             setUpCaption(captionTextView, personCredit);
         }
 
-        private void setUpThumbnail(final PersonCreditViewHolder vh, final PersonCredit personCredit){
+        private void setUpThumbnail(final PersonCreditViewHolder vh, final PersonCreditResponse personCredit){
             final DynamicHeightImageView iv = vh.thumbnailImageView;
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) iv.getLayoutParams();
             layoutParams.width = ivWidth;
@@ -263,7 +263,7 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCredit> {
             }
         }
 
-        private void setUpTitle(TextView tv, PersonCredit personCredit){
+        private void setUpTitle(TextView tv, PersonCreditResponse personCredit){
             String title = personCredit.getTitle();
             String name = personCredit.getName();
             if (!TextUtils.isEmpty(title)) {
@@ -289,7 +289,7 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCredit> {
             }
         }
 
-        private void setUpSubtitle(TextView tv, PersonCredit personCredit){
+        private void setUpSubtitle(TextView tv, PersonCreditResponse personCredit){
             String job = personCredit.getJob();
             String character = personCredit.getCharacter();
             if (!TextUtils.isEmpty(job)) {
@@ -301,7 +301,7 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCredit> {
             }
         }
 
-        private void setUpCaption(TextView tv, PersonCredit personCredit){
+        private void setUpCaption(TextView tv, PersonCreditResponse personCredit){
             int firstAirYear = personCredit.getFirstAirYear();
             int releaseYear = personCredit.getReleaseYear();
             if(firstAirYear != -1){

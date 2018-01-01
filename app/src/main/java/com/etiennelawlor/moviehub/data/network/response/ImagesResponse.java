@@ -8,7 +8,7 @@ import java.util.List;
  * Created by etiennelawlor on 12/17/16.
  */
 
-public class Images {
+public class ImagesResponse {
 
     // region Fields
     @SerializedName("base_url")
@@ -93,7 +93,7 @@ public class Images {
 
     @Override
     public String toString() {
-        return "Images{" +
+        return "ImagesResponse{" +
                 "baseUrl='" + baseUrl + '\'' +
                 ", secureBaseUrl='" + secureBaseUrl + '\'' +
                 ", backdropSizes=" + backdropSizes +

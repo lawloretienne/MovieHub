@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.domain.models;
 
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCredit;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCreditResponse;
 
 import java.util.List;
 
@@ -13,15 +13,15 @@ public class TelevisionShowDetailsDomainModel {
 
     // region Member Variables
     private TelevisionShow televisionShow;
-    private List<TelevisionShowCredit> cast;
-    private List<TelevisionShowCredit> crew;
+    private List<TelevisionShowCreditResponse> cast;
+    private List<TelevisionShowCreditResponse> crew;
     private List<TelevisionShow> similarTelevisionShows;
     private String rating;
     // endregion
 
     // region Constructors
 
-    public TelevisionShowDetailsDomainModel(TelevisionShow televisionShow, List<TelevisionShowCredit> cast, List<TelevisionShowCredit> crew, List<TelevisionShow> similarTelevisionShows, String rating) {
+    public TelevisionShowDetailsDomainModel(TelevisionShow televisionShow, List<TelevisionShowCreditResponse> cast, List<TelevisionShowCreditResponse> crew, List<TelevisionShow> similarTelevisionShows, String rating) {
         this.televisionShow = televisionShow;
         this.cast = cast;
         this.crew = crew;
@@ -38,11 +38,11 @@ public class TelevisionShowDetailsDomainModel {
         return televisionShow;
     }
 
-    public List<TelevisionShowCredit> getCast() {
+    public List<TelevisionShowCreditResponse> getCast() {
         return cast;
     }
 
-    public List<TelevisionShowCredit> getCrew() {
+    public List<TelevisionShowCreditResponse> getCrew() {
         return crew;
     }
 
@@ -63,11 +63,11 @@ public class TelevisionShowDetailsDomainModel {
         this.televisionShow = televisionShow;
     }
 
-    public void setCast(List<TelevisionShowCredit> cast) {
+    public void setCast(List<TelevisionShowCreditResponse> cast) {
         this.cast = cast;
     }
 
-    public void setCrew(List<TelevisionShowCredit> crew) {
+    public void setCrew(List<TelevisionShowCreditResponse> crew) {
         this.crew = crew;
     }
 

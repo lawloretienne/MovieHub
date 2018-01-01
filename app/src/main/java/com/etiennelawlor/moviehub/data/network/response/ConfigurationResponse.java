@@ -8,18 +8,18 @@ import java.util.List;
  * Created by etiennelawlor on 12/16/16.
  */
 
-public class Configuration {
+public class ConfigurationResponse {
 
     // region Fields
     @SerializedName("images")
-    public Images images;
+    public ImagesResponse images;
     @SerializedName("change_keys")
     public List<String> changeKeys = null;
     // endregion
 
     // region Getters
 
-    public Images getImages() {
+    public ImagesResponse getImages() {
         return images;
     }
 
@@ -31,7 +31,7 @@ public class Configuration {
 
     // region Setters
 
-    public void setImages(Images images) {
+    public void setImages(ImagesResponse images) {
         this.images = images;
     }
 
@@ -43,7 +43,7 @@ public class Configuration {
 
     @Override
     public String toString() {
-        return "Configuration{" +
+        return "ConfigurationResponse{" +
                 "images=" + images +
                 ", changeKeys=" + changeKeys +
                 '}';

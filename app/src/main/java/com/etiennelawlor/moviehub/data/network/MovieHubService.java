@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.data.network;
 
-import com.etiennelawlor.moviehub.data.network.response.Configuration;
+import com.etiennelawlor.moviehub.data.network.response.ConfigurationResponse;
 import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.MovieCreditsResponse;
 import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDatesResponse;
@@ -65,7 +65,7 @@ public interface MovieHubService {
     Single<PersonCreditsResponse> getPersonCredits(@Path("personId") long personId);
 
     @GET("configuration")
-    Single<Configuration> getConfiguration();
+    Single<ConfigurationResponse> getConfiguration();
 
     @GET("search/movie")
     Single<MoviesResponse> getMovieSearchResults(@Query("query") String query, @Query("page") int page);

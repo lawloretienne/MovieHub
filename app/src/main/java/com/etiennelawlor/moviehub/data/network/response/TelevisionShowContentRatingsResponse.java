@@ -14,7 +14,7 @@ public class TelevisionShowContentRatingsResponse {
     @SerializedName("id")
     public int id;
     @SerializedName("results")
-    public List<ContentRating> contentRatings = null;
+    public List<ContentRatingResponse> contentRatings = null;
     // endregion
 
     // region Getters
@@ -23,7 +23,7 @@ public class TelevisionShowContentRatingsResponse {
         return id;
     }
 
-    public List<ContentRating> getContentRatings() {
+    public List<ContentRatingResponse> getContentRatings() {
         return contentRatings;
     }
 
@@ -35,7 +35,7 @@ public class TelevisionShowContentRatingsResponse {
         this.id = id;
     }
 
-    public void setContentRatings(List<ContentRating> contentRatings) {
+    public void setContentRatings(List<ContentRatingResponse> contentRatings) {
         this.contentRatings = contentRatings;
     }
 

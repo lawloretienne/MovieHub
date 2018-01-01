@@ -49,7 +49,7 @@ import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.data.network.response.Genre;
 import com.etiennelawlor.moviehub.data.network.response.Movie;
-import com.etiennelawlor.moviehub.data.network.response.MovieCredit;
+import com.etiennelawlor.moviehub.data.network.response.MovieCreditResponse;
 import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.di.component.MovieDetailsComponent;
 import com.etiennelawlor.moviehub.di.module.MovieDetailsModule;
@@ -238,7 +238,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
         @Override
         public void onItemClick(int position, View view) {
             selectedPersonView = view;
-            MovieCredit movieCredit = castAdapter.getItem(position);
+            MovieCreditResponse movieCredit = castAdapter.getItem(position);
             if(movieCredit != null){
                 Person person = new Person();
 
@@ -255,7 +255,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
         @Override
         public void onItemClick(int position, View view) {
             selectedPersonView = view;
-            MovieCredit movieCredit = crewAdapter.getItem(position);
+            MovieCreditResponse movieCredit = crewAdapter.getItem(position);
             if(movieCredit != null){
                 Person person = new Person();
 
@@ -657,7 +657,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
     }
 
     private void setUpCast(){
-        List<MovieCredit> cast = movieDetailsDomainModel.getCast();
+        List<MovieCreditResponse> cast = movieDetailsDomainModel.getCast();
         if(cast != null && cast.size()>0){
             View castView = castViewStub.inflate();
 
@@ -676,7 +676,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
     }
 
     private void setUpCrew(){
-        List<MovieCredit> crew = movieDetailsDomainModel.getCrew();
+        List<MovieCreditResponse> crew = movieDetailsDomainModel.getCrew();
         if(crew != null && crew.size()>0){
             View crewView = crewViewStub.inflate();
 

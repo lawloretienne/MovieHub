@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by etiennelawlor on 12/16/16.
  */
 
-public class MovieCredit extends Credit {
+public class TelevisionShowCreditResponse extends CreditResponse {
 
     // region Constants
     public static final String SECURE_BASE_URL = "https://image.tmdb.org/t/p/";
@@ -93,7 +93,7 @@ public class MovieCredit extends Credit {
 
     @Override
     public String toString() {
-        return "MovieCredit{" +
+        return "TelevisionShowCreditResponse{" +
                 "job='" + job + '\'' +
                 ", character='" + character + '\'' +
                 ", name='" + name + '\'' +

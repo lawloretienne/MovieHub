@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.domain.models;
 
 import com.etiennelawlor.moviehub.data.network.response.Person;
-import com.etiennelawlor.moviehub.data.network.response.PersonCredit;
+import com.etiennelawlor.moviehub.data.network.response.PersonCreditResponse;
 
 import java.util.List;
 
@@ -13,13 +13,13 @@ public class PersonDetailsDomainModel {
 
     // region Member Variables
     private Person person;
-    private List<PersonCredit> cast;
-    private List<PersonCredit> crew;
+    private List<PersonCreditResponse> cast;
+    private List<PersonCreditResponse> crew;
     // endregion
 
     // region Constructors
 
-    public PersonDetailsDomainModel(Person person, List<PersonCredit> cast, List<PersonCredit> crew) {
+    public PersonDetailsDomainModel(Person person, List<PersonCreditResponse> cast, List<PersonCreditResponse> crew) {
         this.person = person;
         this.cast = cast;
         this.crew = crew;
@@ -33,11 +33,11 @@ public class PersonDetailsDomainModel {
         return person;
     }
 
-    public List<PersonCredit> getCast() {
+    public List<PersonCreditResponse> getCast() {
         return cast;
     }
 
-    public List<PersonCredit> getCrew() {
+    public List<PersonCreditResponse> getCrew() {
         return crew;
     }
 
@@ -49,11 +49,11 @@ public class PersonDetailsDomainModel {
         this.person = person;
     }
 
-    public void setCast(List<PersonCredit> cast) {
+    public void setCast(List<PersonCreditResponse> cast) {
         this.cast = cast;
     }
 
-    public void setCrew(List<PersonCredit> crew) {
+    public void setCrew(List<PersonCreditResponse> crew) {
         this.crew = crew;
     }
 

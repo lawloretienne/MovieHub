@@ -12,7 +12,7 @@ import java.util.Calendar;
  * Created by etiennelawlor on 12/16/16.
  */
 
-public class PersonCredit extends Credit {
+public class PersonCreditResponse extends CreditResponse {
 
     // region Constants
     public static final String PATTERN = "yyyy-MM-dd";
@@ -155,7 +155,7 @@ public class PersonCredit extends Credit {
 
     @Override
     public String toString() {
-        return "PersonCredit{" +
+        return "PersonCreditResponse{" +
                 "job='" + job + '\'' +
                 ", character='" + character + '\'' +
                 ", title='" + title + '\'' +

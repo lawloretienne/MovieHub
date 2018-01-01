@@ -2,7 +2,7 @@ package com.etiennelawlor.moviehub;
 
 import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCredit;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCreditResponse;
 import com.etiennelawlor.moviehub.domain.TelevisionShowDetailsDomainContract;
 import com.etiennelawlor.moviehub.domain.models.TelevisionShowDetailsDomainModel;
 import com.etiennelawlor.moviehub.presentation.televisionshowdetails.TelevisionShowDetailsPresenter;
@@ -64,8 +64,8 @@ public class TelevisionShowDetailsPresenterTest {
         // 1. (Given) Set up conditions required for the test
         TelevisionShow televisionShow = new TelevisionShow();
         televisionShow.setId(1);
-        List<TelevisionShowCredit> cast = new ArrayList<>();
-        List<TelevisionShowCredit> crew = new ArrayList<>();
+        List<TelevisionShowCreditResponse> cast = new ArrayList<>();
+        List<TelevisionShowCreditResponse> crew = new ArrayList<>();
         List<TelevisionShow> similarTelevisionShows = new ArrayList<>();
         String rating = "";
         televisionShowDetailsDomainModel = new TelevisionShowDetailsDomainModel(televisionShow, cast, crew, similarTelevisionShows, rating);
@@ -86,8 +86,8 @@ public class TelevisionShowDetailsPresenterTest {
         // 1. (Given) Set up conditions required for the test
         TelevisionShow televisionShow = new TelevisionShow();
         televisionShow.setId(1);
-        List<TelevisionShowCredit> cast = new ArrayList<>();
-        List<TelevisionShowCredit> crew = new ArrayList<>();
+        List<TelevisionShowCreditResponse> cast = new ArrayList<>();
+        List<TelevisionShowCreditResponse> crew = new ArrayList<>();
         List<TelevisionShow> similarTelevisionShows = new ArrayList<>();
         String rating = "";
         televisionShowDetailsDomainModel = new TelevisionShowDetailsDomainModel(televisionShow, cast, crew, similarTelevisionShows, rating);

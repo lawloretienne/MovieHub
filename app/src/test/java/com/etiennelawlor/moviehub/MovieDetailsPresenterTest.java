@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub;
 
 import com.etiennelawlor.moviehub.data.network.response.Movie;
-import com.etiennelawlor.moviehub.data.network.response.MovieCredit;
+import com.etiennelawlor.moviehub.data.network.response.MovieCreditResponse;
 import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.domain.MovieDetailsDomainContract;
 import com.etiennelawlor.moviehub.domain.models.MovieDetailsDomainModel;
@@ -64,8 +64,8 @@ public class MovieDetailsPresenterTest {
         // 1. (Given) Set up conditions required for the test
         Movie movie = new Movie();
         movie.setId(1);
-        List<MovieCredit> cast = new ArrayList<>();
-        List<MovieCredit> crew = new ArrayList<>();
+        List<MovieCreditResponse> cast = new ArrayList<>();
+        List<MovieCreditResponse> crew = new ArrayList<>();
         List<Movie> similarMovies = new ArrayList<>();
         String rating = "";
         movieDetailsDomainModel = new MovieDetailsDomainModel(movie, cast, crew, similarMovies, rating);
@@ -86,8 +86,8 @@ public class MovieDetailsPresenterTest {
         // 1. (Given) Set up conditions required for the test
         Movie movie = new Movie();
         movie.setId(1);
-        List<MovieCredit> cast = new ArrayList<>();
-        List<MovieCredit> crew = new ArrayList<>();
+        List<MovieCreditResponse> cast = new ArrayList<>();
+        List<MovieCreditResponse> crew = new ArrayList<>();
         List<Movie> similarMovies = new ArrayList<>();
         String rating = "";
         movieDetailsDomainModel = new MovieDetailsDomainModel(movie, cast, crew, similarMovies, rating);
