@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.data.repositories.movie;
 
-import com.etiennelawlor.moviehub.data.network.response.Movie;
+import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
 import com.etiennelawlor.moviehub.data.network.response.MovieCreditsResponse;
 import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDatesResponse;
 import com.etiennelawlor.moviehub.data.network.response.MoviesResponse;
@@ -20,7 +20,7 @@ public interface MovieDataSourceContract {
     interface Repository {
 //        Restful VERB is the first part of method name GET , POST , DELETE, PUT
         Single<MoviesDataModel> getPopularMovies(int currentPage);
-        Single<Movie> getMovie(int movieId);
+        Single<MovieResponse> getMovie(int movieId);
         Single<MovieCreditsDataModel> getMovieCredits(int movieId);
         Single<MoviesDataModel> getSimilarMovies(int movieId);
         Single<MovieReleaseDatesDataModel> getMovieReleaseDates(int movieId);
@@ -30,8 +30,8 @@ public interface MovieDataSourceContract {
         Maybe<MoviesDataModel> getPopularMovies(int currentPage);
         void savePopularMovies(MoviesDataModel moviesDataModel);
 
-        Maybe<Movie> getMovie(int movieId);
-        void saveMovie(Movie movie);
+        Maybe<MovieResponse> getMovie(int movieId);
+        void saveMovie(MovieResponse movie);
 
         Maybe<MovieCreditsDataModel> getMovieCredits(int movieId);
         void saveMovieCredits(MovieCreditsDataModel movieCreditsDataModel);
@@ -45,7 +45,7 @@ public interface MovieDataSourceContract {
 
     interface RemoteDateSource {
         Single<MoviesResponse> getPopularMovies(int currentPage);
-        Single<Movie> getMovie(int movieId);
+        Single<MovieResponse> getMovie(int movieId);
         Single<MovieCreditsResponse> getMovieCredits(int movieId);
         Single<MoviesResponse> getSimilarMovies(int movieId);
         Single<MovieReleaseDatesResponse> getMovieReleaseDates(int movieId);

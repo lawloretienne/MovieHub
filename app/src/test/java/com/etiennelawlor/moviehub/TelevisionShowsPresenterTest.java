@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub;
 
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowsDataModel;
 import com.etiennelawlor.moviehub.domain.TelevisionShowsDomainContract;
 import com.etiennelawlor.moviehub.presentation.televisionshows.TelevisionShowsPresenter;
@@ -232,7 +232,7 @@ public class TelevisionShowsPresenterTest {
     @Test
     public void onTelevisionShowClick_shouldOpenTelevisionShowDetails() {
         // 1. (Given) Set up conditions required for the test
-        TelevisionShow televisionShow = new TelevisionShow();
+        TelevisionShowResponse televisionShow = new TelevisionShowResponse();
 
         // 2. (When) Then perform one or more actions
         televisionShowsPresenter.onTelevisionShowClick(televisionShow);
@@ -270,10 +270,10 @@ public class TelevisionShowsPresenterTest {
     // endregion
 
     // region Helper Methods
-    private List<TelevisionShow> getListOfTelevisionShows(int numOfTelevisionShows){
-        List<TelevisionShow> televisionShows = new ArrayList<>();
+    private List<TelevisionShowResponse> getListOfTelevisionShows(int numOfTelevisionShows){
+        List<TelevisionShowResponse> televisionShows = new ArrayList<>();
         for(int i=0; i<numOfTelevisionShows; i++){
-            TelevisionShow televisionShow = new TelevisionShow();
+            TelevisionShowResponse televisionShow = new TelevisionShowResponse();
             televisionShows.add(televisionShow);
         }
         return televisionShows;

@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.data.repositories.movie;
 
 import com.etiennelawlor.moviehub.data.database.RealmUtility;
-import com.etiennelawlor.moviehub.data.network.response.Movie;
+import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.MovieCreditsDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.MovieReleaseDatesDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.MoviesDataModel;
@@ -35,13 +35,13 @@ public class MovieLocalDataSource implements MovieDataSourceContract.LocalDateSo
     }
 
     @Override
-    public Maybe<Movie> getMovie(int movieId) {
+    public Maybe<MovieResponse> getMovie(int movieId) {
         //        Use mapper to convert from realm objects to POJOs
         return Maybe.empty();
     }
 
     @Override
-    public void saveMovie(Movie movie) {
+    public void saveMovie(MovieResponse movie) {
 //        Use mapper to convert from POJOs to realm objects
     }
 

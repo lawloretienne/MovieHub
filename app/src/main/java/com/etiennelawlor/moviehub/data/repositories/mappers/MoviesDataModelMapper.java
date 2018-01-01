@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.data.repositories.mappers;
 
-import com.etiennelawlor.moviehub.data.network.response.Movie;
+import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
 import com.etiennelawlor.moviehub.data.network.response.MoviesResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.MoviesDataModel;
 
@@ -22,7 +22,7 @@ public class MoviesDataModelMapper implements DataModelMapper<MoviesResponse, Mo
     public MoviesDataModel mapToDataModel(MoviesResponse moviesResponse) {
         MoviesDataModel moviesDataModel = new MoviesDataModel();
 
-        List<Movie> movies = moviesResponse.getMovies();
+        List<MovieResponse> movies = moviesResponse.getMovies();
         moviesDataModel.setLastPage(movies.size() < PAGE_SIZE ? true : false);
         moviesDataModel.setPageNumber(moviesResponse.getPage());
         moviesDataModel.setMovies(movies);

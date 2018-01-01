@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by etiennelawlor on 12/16/16.
  */
 
-public class Genre implements Parcelable {
+public class GenreResponse implements Parcelable {
 
     // region Fields
     @SerializedName("id")
@@ -19,10 +19,10 @@ public class Genre implements Parcelable {
     // endregion
 
     // region Constructors
-    public Genre() {
+    public GenreResponse() {
     }
 
-    protected Genre(Parcel in) {
+    protected GenreResponse(Parcel in) {
         this.id = in.readInt();
         this.name = in.readString();
     }
@@ -65,21 +65,21 @@ public class Genre implements Parcelable {
     }
     // endregion
 
-    public static final Parcelable.Creator<Genre> CREATOR = new Parcelable.Creator<Genre>() {
+    public static final Parcelable.Creator<GenreResponse> CREATOR = new Parcelable.Creator<GenreResponse>() {
         @Override
-        public Genre createFromParcel(Parcel source) {
-            return new Genre(source);
+        public GenreResponse createFromParcel(Parcel source) {
+            return new GenreResponse(source);
         }
 
         @Override
-        public Genre[] newArray(int size) {
-            return new Genre[size];
+        public GenreResponse[] newArray(int size) {
+            return new GenreResponse[size];
         }
     };
 
     @Override
     public String toString() {
-        return "Genre{" +
+        return "GenreResponse{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';

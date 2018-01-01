@@ -1,8 +1,8 @@
 package com.etiennelawlor.moviehub.presentation.search;
 
-import com.etiennelawlor.moviehub.data.network.response.Movie;
-import com.etiennelawlor.moviehub.data.network.response.Person;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
+import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
+import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.domain.SearchDomainContract;
 import com.etiennelawlor.moviehub.domain.models.SearchDomainModel;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
@@ -151,17 +151,17 @@ public class SearchPresenter implements SearchUiContract.Presenter {
     }
 
     @Override
-    public void onMovieClick(Movie movie) {
+    public void onMovieClick(MovieResponse movie) {
         searchView.openMovieDetails(movie);
     }
 
     @Override
-    public void onTelevisionShowClick(TelevisionShow televisionShow) {
+    public void onTelevisionShowClick(TelevisionShowResponse televisionShow) {
         searchView.openTelevisionShowDetails(televisionShow);
     }
 
     @Override
-    public void onPersonClick(Person person) {
+    public void onPersonClick(PersonResponse person) {
         searchView.openPersonDetails(person);
     }
 

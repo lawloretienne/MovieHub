@@ -47,12 +47,12 @@ import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.network.response.Movie;
-import com.etiennelawlor.moviehub.data.network.response.Person;
+import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
+import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
 import com.etiennelawlor.moviehub.data.network.response.PersonCreditResponse;
-import com.etiennelawlor.moviehub.data.network.response.ProfileImage;
-import com.etiennelawlor.moviehub.data.network.response.ProfileImages;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
+import com.etiennelawlor.moviehub.data.network.response.ProfileImageResponse;
+import com.etiennelawlor.moviehub.data.network.response.ProfileImagesResponse;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.di.component.PersonDetailsComponent;
 import com.etiennelawlor.moviehub.di.module.PersonDetailsModule;
 import com.etiennelawlor.moviehub.domain.models.PersonDetailsDomainModel;
@@ -145,7 +145,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     // endregion
 
     // region Member Variables
-    private Person person;
+    private PersonResponse person;
     private Unbinder unbinder;
     private Typeface font;
     private int personPosterHeight;
@@ -186,7 +186,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
                 String mediaType = personCredit.getMediaType();
                 switch (mediaType){
                     case "movie":
-                        Movie movie = new Movie();
+                        MovieResponse movie = new MovieResponse();
 
                         movie.setTitle(personCredit.getTitle());
                         movie.setId(personCredit.getId());
@@ -196,7 +196,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
                         personDetailsPresenter.onMovieClick(movie);
                         break;
                     case "tv":
-                        TelevisionShow televisionShow = new TelevisionShow();
+                        TelevisionShowResponse televisionShow = new TelevisionShowResponse();
 
                         televisionShow.setName(personCredit.getName());
                         televisionShow.setId(personCredit.getId());
@@ -223,7 +223,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
                 String mediaType = personCredit.getMediaType();
                 switch (mediaType){
                     case "movie":
-                        Movie movie = new Movie();
+                        MovieResponse movie = new MovieResponse();
 
                         movie.setTitle(personCredit.getTitle());
                         movie.setId(personCredit.getId());
@@ -233,7 +233,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
                         personDetailsPresenter.onMovieClick(movie);
                         break;
                     case "tv":
-                        TelevisionShow televisionShow = new TelevisionShow();
+                        TelevisionShowResponse televisionShow = new TelevisionShowResponse();
 
                         televisionShow.setName(personCredit.getName());
                         televisionShow.setId(personCredit.getId());
@@ -554,7 +554,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     @Override
     public void showErrorView() {
         Snackbar snackbar = Snackbar.make(ButterKnife.findById(getActivity(), R.id.main_content),
-                TrestleUtility.getFormattedText("Network connection is unavailable.", font, 16),
+                TrestleUtility.getFormattedText("NetworkResponse connection is unavailable.", font, 16),
                 Snackbar.LENGTH_INDEFINITE);
         snackbar.setAction("RETRY", new View.OnClickListener() {
             @Override
@@ -573,7 +573,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     }
 
     @Override
-    public void openMovieDetails(Movie movie) {
+    public void openMovieDetails(MovieResponse movie) {
         Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_MOVIE, movie);
@@ -591,7 +591,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     }
 
     @Override
-    public void openTelevisionShowDetails(TelevisionShow televisionShow) {
+    public void openTelevisionShowDetails(TelevisionShowResponse televisionShow) {
         Intent intent = new Intent(getActivity(), TelevisionShowDetailsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_TELEVISION_SHOW, televisionShow);
@@ -645,20 +645,20 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
         }
     }
 
-    private String getProfileUrl(Person person){
+    private String getProfileUrl(PersonResponse person){
         String profilePath = person.getProfilePath();
         String profileUrl = String.format("%s%s%s", SECURE_BASE_URL, POSTER_SIZE, profilePath);
         return profileUrl;
     }
 
-    private String getBackdropUrl(Person person){
+    private String getBackdropUrl(PersonResponse person){
         String backdropUrl = "";
 
-        ProfileImages profileImages = person.getImages();
+        ProfileImagesResponse profileImages = person.getImages();
         if(profileImages != null){
-            List<ProfileImage> profileImagesList = profileImages.getProfiles();
+            List<ProfileImageResponse> profileImagesList = profileImages.getProfiles();
             if(profileImagesList != null && profileImagesList.size()>0){
-                ProfileImage profileImage = profileImagesList.get(profileImagesList.size()-1);
+                ProfileImageResponse profileImage = profileImagesList.get(profileImagesList.size()-1);
                 if(profileImage != null){
                     String filePath = profileImage.getFilePath();
 

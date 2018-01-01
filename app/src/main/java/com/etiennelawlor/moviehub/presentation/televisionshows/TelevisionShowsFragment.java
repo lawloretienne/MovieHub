@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowsDataModel;
 import com.etiennelawlor.moviehub.di.component.TelevisionShowsComponent;
 import com.etiennelawlor.moviehub.di.module.TelevisionShowsModule;
@@ -186,7 +186,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
     public void onItemClick(int position, View view) {
         selectedTelevisionShowView = view;
 
-        TelevisionShow televisionShow = televisionShowsAdapter.getItem(position);
+        TelevisionShowResponse televisionShow = televisionShowsAdapter.getItem(position);
         if(televisionShow != null){
             televisionShowsPresenter.onTelevisionShowClick(televisionShow);
         }
@@ -267,7 +267,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
     }
 
     @Override
-    public void addTelevisionShowsToAdapter(List<TelevisionShow> televisionShows) {
+    public void addTelevisionShowsToAdapter(List<TelevisionShowResponse> televisionShows) {
         televisionShowsAdapter.addAll(televisionShows);
     }
 
@@ -283,7 +283,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
     }
 
     @Override
-    public void openTelevisionShowDetails(TelevisionShow televisionShow) {
+    public void openTelevisionShowDetails(TelevisionShowResponse televisionShow) {
         Intent intent = new Intent(getActivity(), TelevisionShowDetailsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_TELEVISION_SHOW, televisionShow);

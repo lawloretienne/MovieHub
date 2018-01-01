@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by etiennelawlor on 12/16/16.
  */
 
-public class Person implements Parcelable {
+public class PersonResponse implements Parcelable {
 
     // region Constants
     public static final String SECURE_BASE_URL = "https://image.tmdb.org/t/p/";
@@ -35,16 +35,16 @@ public class Person implements Parcelable {
     @SerializedName("profile_path")
     public String profilePath;
     @SerializedName("images")
-    public ProfileImages images;
+    public ProfileImagesResponse images;
 
     private Palette profilePalette;
     // endregion
 
     // region Constructors
-    public Person() {
+    public PersonResponse() {
     }
 
-    protected Person(Parcel in) {
+    protected PersonResponse(Parcel in) {
         this.biography = in.readString();
         this.birthday = in.readString();
         this.deathday = in.readString();
@@ -53,7 +53,7 @@ public class Person implements Parcelable {
         this.name = in.readString();
         this.placeOfBirth = in.readString();
         this.profilePath = in.readString();
-        this.images = in.readParcelable(ProfileImages.class.getClassLoader());
+        this.images = in.readParcelable(ProfileImagesResponse.class.getClassLoader());
     }
     // endregion
 
@@ -91,7 +91,7 @@ public class Person implements Parcelable {
         return profilePath;
     }
 
-    public ProfileImages getImages() {
+    public ProfileImagesResponse getImages() {
         return images;
     }
 
@@ -139,7 +139,7 @@ public class Person implements Parcelable {
         this.profilePath = profilePath;
     }
 
-    public void setImages(ProfileImages images) {
+    public void setImages(ProfileImagesResponse images) {
         this.images = images;
     }
 
@@ -169,21 +169,21 @@ public class Person implements Parcelable {
     }
     // endregion
 
-    public static final Parcelable.Creator<Person> CREATOR = new Parcelable.Creator<Person>() {
+    public static final Parcelable.Creator<PersonResponse> CREATOR = new Parcelable.Creator<PersonResponse>() {
         @Override
-        public Person createFromParcel(Parcel source) {
-            return new Person(source);
+        public PersonResponse createFromParcel(Parcel source) {
+            return new PersonResponse(source);
         }
 
         @Override
-        public Person[] newArray(int size) {
-            return new Person[size];
+        public PersonResponse[] newArray(int size) {
+            return new PersonResponse[size];
         }
     };
 
     @Override
     public String toString() {
-        return "Person{" +
+        return "PersonResponse{" +
                 "biography='" + biography + '\'' +
                 ", birthday='" + birthday + '\'' +
                 ", deathday='" + deathday + '\'' +

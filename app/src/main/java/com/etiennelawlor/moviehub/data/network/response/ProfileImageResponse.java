@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by etiennelawlor on 12/16/16.
  */
 
-public class ProfileImage implements Parcelable {
+public class ProfileImageResponse implements Parcelable {
 
     // region Fields
     @SerializedName("aspect_ratio")
@@ -27,10 +27,10 @@ public class ProfileImage implements Parcelable {
     // endregion
 
     // region Constructors
-    public ProfileImage() {
+    public ProfileImageResponse() {
     }
 
-    protected ProfileImage(Parcel in) {
+    protected ProfileImageResponse(Parcel in) {
         this.aspectRatio = in.readFloat();
         this.filePath = in.readString();
         this.height = in.readInt();
@@ -113,21 +113,21 @@ public class ProfileImage implements Parcelable {
     }
     // endregion
 
-    public static final Parcelable.Creator<ProfileImage> CREATOR = new Parcelable.Creator<ProfileImage>() {
+    public static final Parcelable.Creator<ProfileImageResponse> CREATOR = new Parcelable.Creator<ProfileImageResponse>() {
         @Override
-        public ProfileImage createFromParcel(Parcel source) {
-            return new ProfileImage(source);
+        public ProfileImageResponse createFromParcel(Parcel source) {
+            return new ProfileImageResponse(source);
         }
 
         @Override
-        public ProfileImage[] newArray(int size) {
-            return new ProfileImage[size];
+        public ProfileImageResponse[] newArray(int size) {
+            return new ProfileImageResponse[size];
         }
     };
 
     @Override
     public String toString() {
-        return "ProfileImage{" +
+        return "ProfileImageResponse{" +
                 "aspectRatio=" + aspectRatio +
                 ", filePath='" + filePath + '\'' +
                 ", height=" + height +

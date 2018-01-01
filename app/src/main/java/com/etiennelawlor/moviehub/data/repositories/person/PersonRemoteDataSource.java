@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.data.repositories.person;
 
 import com.etiennelawlor.moviehub.data.network.MovieHubService;
-import com.etiennelawlor.moviehub.data.network.response.Person;
+import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
 import com.etiennelawlor.moviehub.data.network.response.PersonCreditsResponse;
 import com.etiennelawlor.moviehub.data.network.response.PersonsResponse;
 
@@ -34,7 +34,7 @@ public class PersonRemoteDataSource implements PersonDataSourceContract.RemoteDa
     }
 
     @Override
-    public Single<Person> getPerson(int personId) {
+    public Single<PersonResponse> getPerson(int personId) {
         return movieHubService.getPerson(personId);
     }
 

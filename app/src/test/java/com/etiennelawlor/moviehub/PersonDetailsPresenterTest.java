@@ -1,9 +1,9 @@
 package com.etiennelawlor.moviehub;
 
-import com.etiennelawlor.moviehub.data.network.response.Movie;
-import com.etiennelawlor.moviehub.data.network.response.Person;
+import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
+import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
 import com.etiennelawlor.moviehub.data.network.response.PersonCreditResponse;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.domain.PersonDetailsDomainContract;
 import com.etiennelawlor.moviehub.domain.models.PersonDetailsDomainModel;
 import com.etiennelawlor.moviehub.presentation.persondetails.PersonDetailsPresenter;
@@ -64,7 +64,7 @@ public class PersonDetailsPresenterTest {
     @Test
     public void onLoadTelevisionShowDetails_shouldShowError_whenRequestFailed() {
         // 1. (Given) Set up conditions required for the test
-        Person person = new Person();
+        PersonResponse person = new PersonResponse();
         person.setId(1);
         List<PersonCreditResponse> cast = new ArrayList<>();
         List<PersonCreditResponse> crew = new ArrayList<>();
@@ -84,7 +84,7 @@ public class PersonDetailsPresenterTest {
     @Test
     public void onLoadTelevisionShowDetails_shouldShowTelevisionShowDetails_whenRequestSucceeded() {
         // 1. (Given) Set up conditions required for the test
-        Person person = new Person();
+        PersonResponse person = new PersonResponse();
         person.setId(1);
         List<PersonCreditResponse> cast = new ArrayList<>();
         List<PersonCreditResponse> crew = new ArrayList<>();
@@ -104,7 +104,7 @@ public class PersonDetailsPresenterTest {
     @Test
     public void onMovieClick_shouldOpenMovieDetails() {
         // 1. (Given) Set up conditions required for the test
-        Movie movie = new Movie();
+        MovieResponse movie = new MovieResponse();
 
         // 2. (When) Then perform one or more actions
         personDetailsPresenter.onMovieClick(movie);
@@ -118,7 +118,7 @@ public class PersonDetailsPresenterTest {
     @Test
     public void onTelevisionShowClick_shouldOpenTelevisionShowDetails() {
         // 1. (Given) Set up conditions required for the test
-        TelevisionShow televisionShow = new TelevisionShow();
+        TelevisionShowResponse televisionShow = new TelevisionShowResponse();
 
         // 2. (When) Then perform one or more actions
         personDetailsPresenter.onTelevisionShowClick(televisionShow);

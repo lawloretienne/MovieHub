@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.data.repositories.movie;
 
-import com.etiennelawlor.moviehub.data.network.response.Movie;
+import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
 import com.etiennelawlor.moviehub.data.repositories.mappers.MovieCreditsDataModelMapper;
 import com.etiennelawlor.moviehub.data.repositories.mappers.MovieReleaseDatesDataModelMapper;
 import com.etiennelawlor.moviehub.data.repositories.mappers.MoviesDataModelMapper;
@@ -46,9 +46,9 @@ public class MovieRepository implements MovieDataSourceContract.Repository {
     }
 
     @Override
-    public Single<Movie> getMovie(int movieId) {
-        Maybe<Movie> local = movieLocalDataSource.getMovie(movieId);
-        Single<Movie> remote =
+    public Single<MovieResponse> getMovie(int movieId) {
+        Maybe<MovieResponse> local = movieLocalDataSource.getMovie(movieId);
+        Single<MovieResponse> remote =
                 movieRemoteDataSource.getMovie(movieId)
                         .doOnSuccess(movie -> movieLocalDataSource.saveMovie(movie));
 

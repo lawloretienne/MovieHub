@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.presentation.televisionshowdetails;
 
-import com.etiennelawlor.moviehub.data.network.response.Person;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
+import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.domain.TelevisionShowDetailsDomainContract;
 import com.etiennelawlor.moviehub.domain.models.TelevisionShowDetailsDomainModel;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
@@ -69,12 +69,12 @@ public class TelevisionShowDetailsPresenter implements TelevisionShowDetailsUiCo
     }
 
     @Override
-    public void onPersonClick(Person person) {
+    public void onPersonClick(PersonResponse person) {
         televisionShowDetailsView.openPersonDetails(person);
     }
 
     @Override
-    public void onTelevisionShowClick(TelevisionShow televisionShow) {
+    public void onTelevisionShowClick(TelevisionShowResponse televisionShow) {
         televisionShowDetailsView.openTelevisionShowDetails(televisionShow);
     }
 

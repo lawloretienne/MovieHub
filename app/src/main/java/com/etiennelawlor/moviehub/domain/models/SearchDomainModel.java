@@ -1,8 +1,8 @@
 package com.etiennelawlor.moviehub.domain.models;
 
-import com.etiennelawlor.moviehub.data.network.response.Movie;
-import com.etiennelawlor.moviehub.data.network.response.Person;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
+import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
+import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 
 import java.util.List;
 
@@ -14,14 +14,14 @@ public class SearchDomainModel {
 
     // region Member Variables
     private String query;
-    private List<Movie> movies;
-    private List<TelevisionShow> televisionShows;
-    private List<Person> persons;
+    private List<MovieResponse> movies;
+    private List<TelevisionShowResponse> televisionShows;
+    private List<PersonResponse> persons;
     // endregion
 
     // region Constructors
 
-    public SearchDomainModel(String query, List<Movie> movies, List<TelevisionShow> televisionShows, List<Person> persons) {
+    public SearchDomainModel(String query, List<MovieResponse> movies, List<TelevisionShowResponse> televisionShows, List<PersonResponse> persons) {
         this.query = query;
         this.movies = movies;
         this.televisionShows = televisionShows;
@@ -36,15 +36,15 @@ public class SearchDomainModel {
         return query;
     }
 
-    public List<Movie> getMovies() {
+    public List<MovieResponse> getMovies() {
         return movies;
     }
 
-    public List<TelevisionShow> getTelevisionShows() {
+    public List<TelevisionShowResponse> getTelevisionShows() {
         return televisionShows;
     }
 
-    public List<Person> getPersons() {
+    public List<PersonResponse> getPersons() {
         return persons;
     }
 
@@ -56,15 +56,15 @@ public class SearchDomainModel {
         this.query = query;
     }
 
-    public void setMovies(List<Movie> movies) {
+    public void setMovies(List<MovieResponse> movies) {
         this.movies = movies;
     }
 
-    public void setTelevisionShows(List<TelevisionShow> televisionShows) {
+    public void setTelevisionShows(List<TelevisionShowResponse> televisionShows) {
         this.televisionShows = televisionShows;
     }
 
-    public void setPersons(List<Person> persons) {
+    public void setPersons(List<PersonResponse> persons) {
         this.persons = persons;
     }
 

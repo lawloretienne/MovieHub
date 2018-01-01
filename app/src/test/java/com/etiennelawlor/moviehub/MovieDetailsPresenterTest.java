@@ -1,8 +1,8 @@
 package com.etiennelawlor.moviehub;
 
-import com.etiennelawlor.moviehub.data.network.response.Movie;
+import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
 import com.etiennelawlor.moviehub.data.network.response.MovieCreditResponse;
-import com.etiennelawlor.moviehub.data.network.response.Person;
+import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
 import com.etiennelawlor.moviehub.domain.MovieDetailsDomainContract;
 import com.etiennelawlor.moviehub.domain.models.MovieDetailsDomainModel;
 import com.etiennelawlor.moviehub.presentation.moviedetails.MovieDetailsPresenter;
@@ -62,11 +62,11 @@ public class MovieDetailsPresenterTest {
     @Test
     public void onLoadMovieDetails_shouldShowError_whenRequestFailed() {
         // 1. (Given) Set up conditions required for the test
-        Movie movie = new Movie();
+        MovieResponse movie = new MovieResponse();
         movie.setId(1);
         List<MovieCreditResponse> cast = new ArrayList<>();
         List<MovieCreditResponse> crew = new ArrayList<>();
-        List<Movie> similarMovies = new ArrayList<>();
+        List<MovieResponse> similarMovies = new ArrayList<>();
         String rating = "";
         movieDetailsDomainModel = new MovieDetailsDomainModel(movie, cast, crew, similarMovies, rating);
 
@@ -84,11 +84,11 @@ public class MovieDetailsPresenterTest {
     @Test
     public void onLoadMovieDetails_shouldShowMovieDetails_whenRequestSucceeded() {
         // 1. (Given) Set up conditions required for the test
-        Movie movie = new Movie();
+        MovieResponse movie = new MovieResponse();
         movie.setId(1);
         List<MovieCreditResponse> cast = new ArrayList<>();
         List<MovieCreditResponse> crew = new ArrayList<>();
-        List<Movie> similarMovies = new ArrayList<>();
+        List<MovieResponse> similarMovies = new ArrayList<>();
         String rating = "";
         movieDetailsDomainModel = new MovieDetailsDomainModel(movie, cast, crew, similarMovies, rating);
 
@@ -106,7 +106,7 @@ public class MovieDetailsPresenterTest {
     @Test
     public void onPersonClick_shouldOpenPersonDetails() {
         // 1. (Given) Set up conditions required for the test
-        Person person = new Person();
+        PersonResponse person = new PersonResponse();
 
         // 2. (When) Then perform one or more actions
         movieDetailsPresenter.onPersonClick(person);
@@ -120,7 +120,7 @@ public class MovieDetailsPresenterTest {
     @Test
     public void onMovieClick_shouldOpenMovieDetails() {
         // 1. (Given) Set up conditions required for the test
-        Movie movie = new Movie();
+        MovieResponse movie = new MovieResponse();
 
         // 2. (When) Then perform one or more actions
         movieDetailsPresenter.onMovieClick(movie);

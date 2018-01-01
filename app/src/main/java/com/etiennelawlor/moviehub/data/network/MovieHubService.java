@@ -1,14 +1,14 @@
 package com.etiennelawlor.moviehub.data.network;
 
 import com.etiennelawlor.moviehub.data.network.response.ConfigurationResponse;
-import com.etiennelawlor.moviehub.data.network.response.Movie;
+import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
 import com.etiennelawlor.moviehub.data.network.response.MovieCreditsResponse;
 import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDatesResponse;
 import com.etiennelawlor.moviehub.data.network.response.MoviesResponse;
-import com.etiennelawlor.moviehub.data.network.response.Person;
+import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
 import com.etiennelawlor.moviehub.data.network.response.PersonCreditsResponse;
 import com.etiennelawlor.moviehub.data.network.response.PersonsResponse;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowContentRatingsResponse;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCreditsResponse;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowsResponse;
@@ -29,7 +29,7 @@ public interface MovieHubService {
     Single<MoviesResponse> getPopularMovies(@Query("page") int page);
 
     @GET("movie/{movieId}")
-    Single<Movie> getMovie(@Path("movieId") long movieId);
+    Single<MovieResponse> getMovie(@Path("movieId") long movieId);
 
     @GET("movie/{movieId}/credits")
     Single<MovieCreditsResponse> getMovieCredits(@Path("movieId") long movieId);
@@ -44,7 +44,7 @@ public interface MovieHubService {
     Single<TelevisionShowsResponse> getPopularTelevisionShows(@Query("page") int page);
 
     @GET("tv/{tvId}")
-    Single<TelevisionShow> getTelevisionShow(@Path("tvId") long tvId);
+    Single<TelevisionShowResponse> getTelevisionShow(@Path("tvId") long tvId);
 
     @GET("tv/{tvId}/credits")
     Single<TelevisionShowCreditsResponse> getTelevisionShowCredits(@Path("tvId") long tvId);
@@ -59,7 +59,7 @@ public interface MovieHubService {
     Single<PersonsResponse> getPopularPersons(@Query("page") int page);
 
     @GET("person/{personId}?append_to_response=images")
-    Single<Person> getPerson(@Path("personId") long personId);
+    Single<PersonResponse> getPerson(@Path("personId") long personId);
 
     @GET("person/{personId}/combined_credits")
     Single<PersonCreditsResponse> getPersonCredits(@Path("personId") long personId);

@@ -14,7 +14,7 @@ public class PersonsResponse {
     @SerializedName("page")
     public int page;
     @SerializedName("results")
-    public List<Person> persons = null;
+    public List<PersonResponse> persons = null;
     @SerializedName("total_results")
     public int totalResults;
     @SerializedName("total_pages")
@@ -27,7 +27,7 @@ public class PersonsResponse {
         return page;
     }
 
-    public List<Person> getPersons() {
+    public List<PersonResponse> getPersons() {
         return persons;
     }
 
@@ -47,7 +47,7 @@ public class PersonsResponse {
         this.page = page;
     }
 
-    public void setPersons(List<Person> persons) {
+    public void setPersons(List<PersonResponse> persons) {
         this.persons = persons;
     }
 

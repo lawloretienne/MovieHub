@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.data.repositories.mappers;
 
-import com.etiennelawlor.moviehub.data.network.response.Person;
+import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
 import com.etiennelawlor.moviehub.data.network.response.PersonsResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.PersonsDataModel;
 
@@ -22,7 +22,7 @@ public class PersonsDataModelMapper implements DataModelMapper<PersonsResponse, 
     public PersonsDataModel mapToDataModel(PersonsResponse personsResponse) {
         PersonsDataModel personsDataModel = new PersonsDataModel();
 
-        List<Person> persons = personsResponse.getPersons();
+        List<PersonResponse> persons = personsResponse.getPersons();
         personsDataModel.setLastPage(persons.size() < PAGE_SIZE ? true : false);
         personsDataModel.setPageNumber(personsResponse.getPage());
         personsDataModel.setPersons(persons);

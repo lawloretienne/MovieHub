@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.data.repositories.tv;
 
 import com.etiennelawlor.moviehub.data.network.MovieHubService;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowContentRatingsResponse;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCreditsResponse;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowsResponse;
@@ -34,7 +34,7 @@ public class TelevisionShowRemoteDataSource implements TelevisionShowDataSourceC
     }
 
     @Override
-    public Single<TelevisionShow> getTelevisionShow(int tvId) {
+    public Single<TelevisionShowResponse> getTelevisionShow(int tvId) {
         return movieHubService.getTelevisionShow(tvId);
     }
 

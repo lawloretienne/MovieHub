@@ -1,8 +1,8 @@
 package com.etiennelawlor.moviehub;
 
-import com.etiennelawlor.moviehub.data.network.response.Movie;
-import com.etiennelawlor.moviehub.data.network.response.Person;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
+import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
+import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.domain.SearchDomainContract;
 import com.etiennelawlor.moviehub.domain.models.SearchDomainModel;
 import com.etiennelawlor.moviehub.presentation.search.SearchPresenter;
@@ -68,9 +68,9 @@ public class SearchPresenterTest {
     public void onLoadSearch_shouldShowError_whenRequestFailed() {
         // 1. (Given) Set up conditions required for the test
         String query = "";
-        List<Movie> movies = getListOfMovies(0);
-        List<TelevisionShow> televisionShows = getListOfTelevisionShows(0);
-        List<Person> persons = getListOfPersons(0);
+        List<MovieResponse> movies = getListOfMovies(0);
+        List<TelevisionShowResponse> televisionShows = getListOfTelevisionShows(0);
+        List<PersonResponse> persons = getListOfPersons(0);
         searchDomainModel = new SearchDomainModel(query, movies, televisionShows, persons);
 
         CharSequence[] queries = {"J", "Je", "Jen", "Jenn", "Jenni", "Jennif", "Jennife", "Jennifer"};
@@ -94,9 +94,9 @@ public class SearchPresenterTest {
     public void onLoadSearch_shouldShowTelevisionShowDetails_whenRequestSucceeded() {
         // 1. (Given) Set up conditions required for the test
         String query = "";
-        List<Movie> movies = getListOfMovies(0);
-        List<TelevisionShow> televisionShows = getListOfTelevisionShows(0);
-        List<Person> persons = getListOfPersons(0);
+        List<MovieResponse> movies = getListOfMovies(0);
+        List<TelevisionShowResponse> televisionShows = getListOfTelevisionShows(0);
+        List<PersonResponse> persons = getListOfPersons(0);
         searchDomainModel = new SearchDomainModel(query, movies, televisionShows, persons);
 
         CharSequence[] queries = {"J", "Je", "Jen", "Jenn", "Jenni", "Jennif", "Jennife", "Jennifer"};
@@ -120,7 +120,7 @@ public class SearchPresenterTest {
     @Test
     public void onMovieClick_shouldOpenMovieDetails() {
         // 1. (Given) Set up conditions required for the test
-        Movie movie = new Movie();
+        MovieResponse movie = new MovieResponse();
 
         // 2. (When) Then perform one or more actions
         searchPresenter.onMovieClick(movie);
@@ -134,7 +134,7 @@ public class SearchPresenterTest {
     @Test
     public void onTelevisionShowClick_shouldOpenTelevisionShowDetails() {
         // 1. (Given) Set up conditions required for the test
-        TelevisionShow televisionShow = new TelevisionShow();
+        TelevisionShowResponse televisionShow = new TelevisionShowResponse();
 
         // 2. (When) Then perform one or more actions
         searchPresenter.onTelevisionShowClick(televisionShow);
@@ -148,7 +148,7 @@ public class SearchPresenterTest {
     @Test
     public void onPersonClick_shouldOpenPersonDetails() {
         // 1. (Given) Set up conditions required for the test
-        Person person = new Person();
+        PersonResponse person = new PersonResponse();
 
         // 2. (When) Then perform one or more actions
         searchPresenter.onPersonClick(person);
@@ -173,28 +173,28 @@ public class SearchPresenterTest {
     // endregion
 
     // region Helper Methods
-    private List<Movie> getListOfMovies(int numOfMovies){
-        List<Movie> movies = new ArrayList<>();
+    private List<MovieResponse> getListOfMovies(int numOfMovies){
+        List<MovieResponse> movies = new ArrayList<>();
         for(int i=0; i<numOfMovies; i++){
-            Movie movie = new Movie();
+            MovieResponse movie = new MovieResponse();
             movies.add(movie);
         }
         return movies;
     }
 
-    private List<TelevisionShow> getListOfTelevisionShows(int numOfTelevisionShows){
-        List<TelevisionShow> televisionShows = new ArrayList<>();
+    private List<TelevisionShowResponse> getListOfTelevisionShows(int numOfTelevisionShows){
+        List<TelevisionShowResponse> televisionShows = new ArrayList<>();
         for(int i=0; i<numOfTelevisionShows; i++){
-            TelevisionShow televisionShow = new TelevisionShow();
+            TelevisionShowResponse televisionShow = new TelevisionShowResponse();
             televisionShows.add(televisionShow);
         }
         return televisionShows;
     }
 
-    private List<Person> getListOfPersons(int numOfPersons){
-        List<Person> persons = new ArrayList<>();
+    private List<PersonResponse> getListOfPersons(int numOfPersons){
+        List<PersonResponse> persons = new ArrayList<>();
         for(int i=0; i<numOfPersons; i++){
-            Person person = new Person();
+            PersonResponse person = new PersonResponse();
             persons.add(person);
         }
         return persons;

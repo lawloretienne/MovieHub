@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.data.database.mappers;
 
 import com.etiennelawlor.moviehub.data.database.models.ProfileImageRealmModel;
-import com.etiennelawlor.moviehub.data.network.response.ProfileImage;
+import com.etiennelawlor.moviehub.data.network.response.ProfileImageResponse;
 
 import io.realm.Realm;
 
@@ -9,10 +9,10 @@ import io.realm.Realm;
  * Created by etiennelawlor on 5/14/17.
  */
 
-public class ProfileImageRealmModelMapper implements RealmModelMapper<ProfileImage, ProfileImageRealmModel> {
+public class ProfileImageRealmModelMapper implements RealmModelMapper<ProfileImageResponse, ProfileImageRealmModel> {
 
     @Override
-    public ProfileImageRealmModel mapToRealmModel(ProfileImage profileImage) {
+    public ProfileImageRealmModel mapToRealmModel(ProfileImageResponse profileImage) {
         ProfileImageRealmModel realmProfileImage = Realm.getDefaultInstance().createObject(ProfileImageRealmModel.class);
 
         realmProfileImage.setAspectRatio(profileImage.getAspectRatio());
@@ -26,8 +26,8 @@ public class ProfileImageRealmModelMapper implements RealmModelMapper<ProfileIma
     }
 
     @Override
-    public ProfileImage mapFromRealmModel(ProfileImageRealmModel profileImageRealmModel) {
-        ProfileImage profileImage = new ProfileImage();
+    public ProfileImageResponse mapFromRealmModel(ProfileImageRealmModel profileImageRealmModel) {
+        ProfileImageResponse profileImage = new ProfileImageResponse();
         profileImage.setAspectRatio(profileImageRealmModel.getAspectRatio());
         profileImage.setFilePath(profileImageRealmModel.getFilePath());
         profileImage.setHeight(profileImageRealmModel.getHeight());

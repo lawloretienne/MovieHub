@@ -1,8 +1,8 @@
 package com.etiennelawlor.moviehub.domain;
 
-import com.etiennelawlor.moviehub.data.network.response.Movie;
-import com.etiennelawlor.moviehub.data.network.response.Person;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
+import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
+import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.data.repositories.search.SearchDataSourceContract;
 import com.etiennelawlor.moviehub.domain.models.SearchDomainModel;
 
@@ -35,9 +35,9 @@ public class SearchUseCase implements SearchDomainContract.UseCase {
                 searchRepository.getTelevisionShowSearchResults(query, 1),
                 searchRepository.getPersonSearchResults(query, 1),
                 (moviesEnvelope, televisionShowsEnvelope, peopleEnvelope) -> {
-                    List<Movie> movies = new ArrayList<>();
-                    List<TelevisionShow> televisionShows = new ArrayList<>();
-                    List<Person> persons = new ArrayList<>();
+                    List<MovieResponse> movies = new ArrayList<>();
+                    List<TelevisionShowResponse> televisionShows = new ArrayList<>();
+                    List<PersonResponse> persons = new ArrayList<>();
 
                     if (moviesEnvelope != null) {
                         movies = moviesEnvelope.getMovies();

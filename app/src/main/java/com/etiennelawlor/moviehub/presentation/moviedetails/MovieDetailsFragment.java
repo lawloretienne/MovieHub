@@ -47,10 +47,10 @@ import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.network.response.Genre;
-import com.etiennelawlor.moviehub.data.network.response.Movie;
+import com.etiennelawlor.moviehub.data.network.response.GenreResponse;
+import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
 import com.etiennelawlor.moviehub.data.network.response.MovieCreditResponse;
-import com.etiennelawlor.moviehub.data.network.response.Person;
+import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
 import com.etiennelawlor.moviehub.di.component.MovieDetailsComponent;
 import com.etiennelawlor.moviehub.di.module.MovieDetailsModule;
 import com.etiennelawlor.moviehub.domain.models.MovieDetailsDomainModel;
@@ -152,7 +152,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
     // endregion
 
     // region Member Variables
-    private Movie movie;
+    private MovieResponse movie;
     private Unbinder unbinder;
     private Typeface font;
     private int moviePosterHeight;
@@ -188,7 +188,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
         @Override
         public void onItemClick(int position, View view) {
             selectedMovieView = view;
-            Movie movie = similarMoviesAdapter.getItem(position);
+            MovieResponse movie = similarMoviesAdapter.getItem(position);
             if(movie != null){
                 movieDetailsPresenter.onMovieClick(movie);
             }
@@ -240,7 +240,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
             selectedPersonView = view;
             MovieCreditResponse movieCredit = castAdapter.getItem(position);
             if(movieCredit != null){
-                Person person = new Person();
+                PersonResponse person = new PersonResponse();
 
                 person.setName(movieCredit.getName());
                 person.setId(movieCredit.getId());
@@ -257,7 +257,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
             selectedPersonView = view;
             MovieCreditResponse movieCredit = crewAdapter.getItem(position);
             if(movieCredit != null){
-                Person person = new Person();
+                PersonResponse person = new PersonResponse();
 
                 person.setName(movieCredit.getName());
                 person.setId(movieCredit.getId());
@@ -534,7 +534,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
     @Override
     public void showErrorView() {
         Snackbar snackbar = Snackbar.make(ButterKnife.findById(getActivity(), R.id.main_content),
-                TrestleUtility.getFormattedText("Network connection is unavailable.", font, 16),
+                TrestleUtility.getFormattedText("NetworkResponse connection is unavailable.", font, 16),
                 Snackbar.LENGTH_INDEFINITE);
         snackbar.setAction("RETRY", new View.OnClickListener() {
             @Override
@@ -553,7 +553,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
     }
 
     @Override
-    public void openPersonDetails(Person person) {
+    public void openPersonDetails(PersonResponse person) {
         Intent intent = new Intent(getActivity(), PersonDetailsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_PERSON, person);
@@ -572,7 +572,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
     }
 
     @Override
-    public void openMovieDetails(Movie movie) {
+    public void openMovieDetails(MovieResponse movie) {
         Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_MOVIE, movie);
@@ -631,13 +631,13 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
         }
     }
 
-    private String getPosterUrl(Movie movie){
+    private String getPosterUrl(MovieResponse movie){
         String posterPath = movie.getPosterPath();
         String posterUrl = String.format("%s%s%s", SECURE_BASE_URL, POSTER_SIZE, posterPath);
         return posterUrl;
     }
 
-    private String getBackdropUrl(Movie movie){
+    private String getBackdropUrl(MovieResponse movie){
         String backdropPath = movie.getBackdropPath();
         String backdropUrl = String.format("%s%s%s", SECURE_BASE_URL, BACKDROP_SIZE, backdropPath);
         return backdropUrl;
@@ -695,7 +695,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
     }
 
     private void setUpSimilarMovies(){
-        List<Movie> similarMovies = movieDetailsDomainModel.getSimilarMovies();
+        List<MovieResponse> similarMovies = movieDetailsDomainModel.getSimilarMovies();
         if(similarMovies != null && similarMovies.size()>0){
             View similarMoviesView = similarMoviesViewStub.inflate();
 
@@ -709,9 +709,9 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
             SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
             snapHelper.attachToRecyclerView(similarMoviesRecyclerView);
 
-            Collections.sort(similarMovies, new Comparator<Movie>() {
+            Collections.sort(similarMovies, new Comparator<MovieResponse>() {
                 @Override
-                public int compare(Movie m1, Movie m2) {
+                public int compare(MovieResponse m1, MovieResponse m2) {
                     int year1 = -1;
                     if(m1.getReleaseDateYear() != -1){
                         year1 = m1.getReleaseDateYear();
@@ -793,12 +793,12 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
     }
 
     private void setUpGenres(){
-        List<Genre> genres = movie.getGenres();
+        List<GenreResponse> genres = movie.getGenres();
         if(genres != null && genres.size()>0){
             StringBuilder stringBuilder = new StringBuilder("");
 
             for(int i=0; i<genres.size(); i++){
-                Genre genre = genres.get(i);
+                GenreResponse genre = genres.get(i);
                 stringBuilder.append(genre.getName());
                 if(i!=genres.size()-1){
                     stringBuilder.append(" | ");

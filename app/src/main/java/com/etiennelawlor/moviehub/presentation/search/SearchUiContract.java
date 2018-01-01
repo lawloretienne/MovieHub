@@ -1,8 +1,8 @@
 package com.etiennelawlor.moviehub.presentation.search;
 
-import com.etiennelawlor.moviehub.data.network.response.Movie;
-import com.etiennelawlor.moviehub.data.network.response.Person;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
+import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
+import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.presentation.base.BasePresenter;
 
 import java.util.List;
@@ -22,29 +22,29 @@ public interface SearchUiContract {
         void showLoadingView();
         void hideLoadingView();
         void showErrorView();
-        void addMoviesToAdapter(List<Movie> movies);
+        void addMoviesToAdapter(List<MovieResponse> movies);
         void clearMoviesAdapter();
         void hideMoviesView();
         void showMoviesView();
-        void addTelevisionShowsToAdapter(List<TelevisionShow> televisionShows);
+        void addTelevisionShowsToAdapter(List<TelevisionShowResponse> televisionShows);
         void clearTelevisionShowsAdapter();
         void hideTelevisionShowsView();
         void showTelevisionShowsView();
-        void addPersonsToAdapter(List<Person> persons);
+        void addPersonsToAdapter(List<PersonResponse> persons);
         void clearPersonsAdapter();
         void hidePersonsView();
         void showPersonsView();
 
         // Navigation methods
-        void openMovieDetails(Movie movie);
-        void openTelevisionShowDetails(TelevisionShow televisionShow);
-        void openPersonDetails(Person person);
+        void openMovieDetails(MovieResponse movie);
+        void openTelevisionShowDetails(TelevisionShowResponse televisionShow);
+        void openPersonDetails(PersonResponse person);
     }
 
     interface Presenter extends BasePresenter {
         void onLoadSearch(Observable<CharSequence> searchQueryChangeObservable);
-        void onMovieClick(Movie movie);
-        void onTelevisionShowClick(TelevisionShow televisionShow);
-        void onPersonClick(Person person);
+        void onMovieClick(MovieResponse movie);
+        void onTelevisionShowClick(TelevisionShowResponse televisionShow);
+        void onPersonClick(PersonResponse person);
     }
 }

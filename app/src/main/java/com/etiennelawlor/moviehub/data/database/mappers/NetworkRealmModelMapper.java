@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.data.database.mappers;
 
 import com.etiennelawlor.moviehub.data.database.models.NetworkRealmModel;
-import com.etiennelawlor.moviehub.data.network.response.Network;
+import com.etiennelawlor.moviehub.data.network.response.NetworkResponse;
 
 import io.realm.Realm;
 
@@ -9,10 +9,10 @@ import io.realm.Realm;
  * Created by etiennelawlor on 5/14/17.
  */
 
-public class NetworkRealmModelMapper implements RealmModelMapper<Network, NetworkRealmModel> {
+public class NetworkRealmModelMapper implements RealmModelMapper<NetworkResponse, NetworkRealmModel> {
 
     @Override
-    public NetworkRealmModel mapToRealmModel(Network network) {
+    public NetworkRealmModel mapToRealmModel(NetworkResponse network) {
         NetworkRealmModel realmNetwork = Realm.getDefaultInstance().createObject(NetworkRealmModel.class);
 
         realmNetwork.setId(network.getId());
@@ -22,8 +22,8 @@ public class NetworkRealmModelMapper implements RealmModelMapper<Network, Networ
     }
 
     @Override
-    public Network mapFromRealmModel(NetworkRealmModel networkRealmModel) {
-        Network network = new Network();
+    public NetworkResponse mapFromRealmModel(NetworkRealmModel networkRealmModel) {
+        NetworkResponse network = new NetworkResponse();
         network.setId(networkRealmModel.getId());
         network.setName(networkRealmModel.getName());
 

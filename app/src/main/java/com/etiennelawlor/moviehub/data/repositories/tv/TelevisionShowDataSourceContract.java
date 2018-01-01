@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.data.repositories.tv;
 
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowContentRatingsResponse;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCreditsResponse;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowsResponse;
@@ -17,7 +17,7 @@ public interface TelevisionShowDataSourceContract {
 
     interface Repository {
         Single<TelevisionShowsDataModel> getPopularTelevisionShows(int currentPage);
-        Single<TelevisionShow> getTelevisionShow(int tvId);
+        Single<TelevisionShowResponse> getTelevisionShow(int tvId);
         Single<TelevisionShowCreditsResponse> getTelevisionShowCredits(int tvId);
         Single<TelevisionShowsDataModel> getSimilarTelevisionShows(int tvId);
         Single<TelevisionShowContentRatingsResponse> getTelevisionShowContentRatings(int tvId);
@@ -27,8 +27,8 @@ public interface TelevisionShowDataSourceContract {
         Maybe<TelevisionShowsDataModel> getPopularTelevisionShows(int currentPage);
         void savePopularTelevisionShows(TelevisionShowsDataModel televisionShowsDataModel);
 
-        Maybe<TelevisionShow> getTelevisionShow(int tvId);
-        void saveTelevisionShow(TelevisionShow televisionShow);
+        Maybe<TelevisionShowResponse> getTelevisionShow(int tvId);
+        void saveTelevisionShow(TelevisionShowResponse televisionShow);
 
         Maybe<TelevisionShowCreditsResponse> getTelevisionShowCredits(int tvId);
         void saveTelevisionShowCredits(TelevisionShowCreditsResponse televisionShowCreditsResponse);
@@ -42,7 +42,7 @@ public interface TelevisionShowDataSourceContract {
 
     interface RemoteDateSource {
         Single<TelevisionShowsResponse> getPopularTelevisionShows(int currentPage);
-        Single<TelevisionShow> getTelevisionShow(int tvId);
+        Single<TelevisionShowResponse> getTelevisionShow(int tvId);
         Single<TelevisionShowCreditsResponse> getTelevisionShowCredits(int tvId);
         Single<TelevisionShowsResponse> getSimilarTelevisionShows(int tvId);
         Single<TelevisionShowContentRatingsResponse> getTelevisionShowContentRatings(int tvId);

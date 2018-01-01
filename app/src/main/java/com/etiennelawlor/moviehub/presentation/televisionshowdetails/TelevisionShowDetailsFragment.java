@@ -47,9 +47,9 @@ import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.network.response.Genre;
-import com.etiennelawlor.moviehub.data.network.response.Person;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
+import com.etiennelawlor.moviehub.data.network.response.GenreResponse;
+import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCreditResponse;
 import com.etiennelawlor.moviehub.di.component.TelevisionShowDetailsComponent;
 import com.etiennelawlor.moviehub.di.module.TelevisionShowDetailsModule;
@@ -149,7 +149,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     // endregion
 
     // region Member Variables
-    private TelevisionShow televisionShow;
+    private TelevisionShowResponse televisionShow;
     private Unbinder unbinder;
     private Typeface font;
     private int televisionShowPosterHeight;
@@ -188,7 +188,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
 
             TelevisionShowCreditResponse televisionShowCredit = castAdapter.getItem(position);
             if(televisionShowCredit != null){
-                Person person = new Person();
+                PersonResponse person = new PersonResponse();
 
                 person.setName(televisionShowCredit.getName());
                 person.setId(televisionShowCredit.getId());
@@ -206,7 +206,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
 
             TelevisionShowCreditResponse televisionShowCredit = crewAdapter.getItem(position);
             if(televisionShowCredit != null){
-                Person person = new Person();
+                PersonResponse person = new PersonResponse();
 
                 person.setName(televisionShowCredit.getName());
                 person.setId(televisionShowCredit.getId());
@@ -222,7 +222,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
         public void onItemClick(int position, View view) {
             selectedTelevisionView = view;
 
-            TelevisionShow televisionShow = similarTelevisionShowsAdapter.getItem(position);
+            TelevisionShowResponse televisionShow = similarTelevisionShowsAdapter.getItem(position);
             if(televisionShow != null){
                 televisionShowDetailsPresenter.onTelevisionShowClick(televisionShow);
             }
@@ -537,7 +537,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     @Override
     public void showErrorView() {
         Snackbar snackbar = Snackbar.make(ButterKnife.findById(getActivity(), R.id.main_content),
-                TrestleUtility.getFormattedText("Network connection is unavailable.", font, 16),
+                TrestleUtility.getFormattedText("NetworkResponse connection is unavailable.", font, 16),
                 Snackbar.LENGTH_INDEFINITE);
         snackbar.setAction("RETRY", new View.OnClickListener() {
             @Override
@@ -556,7 +556,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     }
 
     @Override
-    public void openPersonDetails(Person person) {
+    public void openPersonDetails(PersonResponse person) {
         Intent intent = new Intent(getActivity(), PersonDetailsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_PERSON, person);
@@ -575,7 +575,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     }
 
     @Override
-    public void openTelevisionShowDetails(TelevisionShow televisionShow) {
+    public void openTelevisionShowDetails(TelevisionShowResponse televisionShow) {
         Intent intent = new Intent(getActivity(), TelevisionShowDetailsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_TELEVISION_SHOW, televisionShow);
@@ -633,13 +633,13 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
         }
     }
 
-    private String getPosterUrl(TelevisionShow televisionShow){
+    private String getPosterUrl(TelevisionShowResponse televisionShow){
         String posterPath = televisionShow.getPosterPath();
         String posterUrl = String.format("%s%s%s", SECURE_BASE_URL, POSTER_SIZE, posterPath);
         return posterUrl;
     }
 
-    private String getBackdropUrl(TelevisionShow televisionShow){
+    private String getBackdropUrl(TelevisionShowResponse televisionShow){
         String backdropPath = televisionShow.getBackdropPath();
         String backdropUrl = String.format("%s%s%s", SECURE_BASE_URL, BACKDROP_SIZE, backdropPath);
         return backdropUrl;
@@ -697,7 +697,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     }
 
     private void setUpSimilarTelevisionShows(){
-        List<TelevisionShow> similarTelevisionShows = televisionShowDetailsDomainModel.getSimilarTelevisionShows();
+        List<TelevisionShowResponse> similarTelevisionShows = televisionShowDetailsDomainModel.getSimilarTelevisionShows();
         if(similarTelevisionShows != null && similarTelevisionShows.size()>0){
             View similarTelevisionShowsView = similarTelevisionShowsViewStub.inflate();
 
@@ -711,9 +711,9 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
             SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
             snapHelper.attachToRecyclerView(similarTelevisionShowsRecyclerView);
 
-            Collections.sort(similarTelevisionShows, new Comparator<TelevisionShow>() {
+            Collections.sort(similarTelevisionShows, new Comparator<TelevisionShowResponse>() {
                 @Override
-                public int compare(TelevisionShow t1, TelevisionShow t2) {
+                public int compare(TelevisionShowResponse t1, TelevisionShowResponse t2) {
                     int year1 = -1;
                     if(t1.getFirstAirDateYear() != -1){
                         year1 = t1.getFirstAirDateYear();
@@ -782,12 +782,12 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     }
 
     private void setUpGenres(){
-        List<Genre> genres = televisionShow.getGenres();
+        List<GenreResponse> genres = televisionShow.getGenres();
         if(genres != null && genres.size()>0){
             StringBuilder stringBuilder = new StringBuilder("");
 
             for(int i=0; i<genres.size(); i++){
-                Genre genre = genres.get(i);
+                GenreResponse genre = genres.get(i);
                 stringBuilder.append(genre.getName());
                 if(i!=genres.size()-1){
                     stringBuilder.append(" | ");

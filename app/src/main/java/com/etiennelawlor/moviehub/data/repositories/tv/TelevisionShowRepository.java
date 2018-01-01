@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.data.repositories.tv;
 
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowContentRatingsResponse;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCreditsResponse;
 import com.etiennelawlor.moviehub.data.repositories.mappers.TelevisionShowsDataModelMapper;
@@ -42,9 +42,9 @@ public class TelevisionShowRepository implements TelevisionShowDataSourceContrac
     }
 
     @Override
-    public Single<TelevisionShow> getTelevisionShow(int tvId) {
-        Maybe<TelevisionShow> local = televisionShowLocalDataSource.getTelevisionShow(tvId);
-        Single<TelevisionShow> remote =
+    public Single<TelevisionShowResponse> getTelevisionShow(int tvId) {
+        Maybe<TelevisionShowResponse> local = televisionShowLocalDataSource.getTelevisionShow(tvId);
+        Single<TelevisionShowResponse> remote =
                 televisionShowRemoteDataSource.getTelevisionShow(tvId)
                         .doOnSuccess(televisionShow -> televisionShowLocalDataSource.saveTelevisionShow(televisionShow));
 

@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub;
 
-import com.etiennelawlor.moviehub.data.network.response.Person;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
+import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCreditResponse;
 import com.etiennelawlor.moviehub.domain.TelevisionShowDetailsDomainContract;
 import com.etiennelawlor.moviehub.domain.models.TelevisionShowDetailsDomainModel;
@@ -62,11 +62,11 @@ public class TelevisionShowDetailsPresenterTest {
     @Test
     public void onLoadTelevisionShowDetails_shouldShowError_whenRequestFailed() {
         // 1. (Given) Set up conditions required for the test
-        TelevisionShow televisionShow = new TelevisionShow();
+        TelevisionShowResponse televisionShow = new TelevisionShowResponse();
         televisionShow.setId(1);
         List<TelevisionShowCreditResponse> cast = new ArrayList<>();
         List<TelevisionShowCreditResponse> crew = new ArrayList<>();
-        List<TelevisionShow> similarTelevisionShows = new ArrayList<>();
+        List<TelevisionShowResponse> similarTelevisionShows = new ArrayList<>();
         String rating = "";
         televisionShowDetailsDomainModel = new TelevisionShowDetailsDomainModel(televisionShow, cast, crew, similarTelevisionShows, rating);
 
@@ -84,11 +84,11 @@ public class TelevisionShowDetailsPresenterTest {
     @Test
     public void onLoadTelevisionShowDetails_shouldShowTelevisionShowDetails_whenRequestSucceeded() {
         // 1. (Given) Set up conditions required for the test
-        TelevisionShow televisionShow = new TelevisionShow();
+        TelevisionShowResponse televisionShow = new TelevisionShowResponse();
         televisionShow.setId(1);
         List<TelevisionShowCreditResponse> cast = new ArrayList<>();
         List<TelevisionShowCreditResponse> crew = new ArrayList<>();
-        List<TelevisionShow> similarTelevisionShows = new ArrayList<>();
+        List<TelevisionShowResponse> similarTelevisionShows = new ArrayList<>();
         String rating = "";
         televisionShowDetailsDomainModel = new TelevisionShowDetailsDomainModel(televisionShow, cast, crew, similarTelevisionShows, rating);
 
@@ -106,7 +106,7 @@ public class TelevisionShowDetailsPresenterTest {
     @Test
     public void onPersonClick_shouldOpenPersonDetails() {
         // 1. (Given) Set up conditions required for the test
-        Person person = new Person();
+        PersonResponse person = new PersonResponse();
 
         // 2. (When) Then perform one or more actions
         televisionShowDetailsPresenter.onPersonClick(person);
@@ -120,7 +120,7 @@ public class TelevisionShowDetailsPresenterTest {
     @Test
     public void onTelevisionShowClick_shouldOpenTelevisionShowDetails() {
         // 1. (Given) Set up conditions required for the test
-        TelevisionShow televisionShow = new TelevisionShow();
+        TelevisionShowResponse televisionShow = new TelevisionShowResponse();
 
         // 2. (When) Then perform one or more actions
         televisionShowDetailsPresenter.onTelevisionShowClick(televisionShow);

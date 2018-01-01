@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.domain.models;
 
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCreditResponse;
 
 import java.util.List;
@@ -12,16 +12,16 @@ import java.util.List;
 public class TelevisionShowDetailsDomainModel {
 
     // region Member Variables
-    private TelevisionShow televisionShow;
+    private TelevisionShowResponse televisionShow;
     private List<TelevisionShowCreditResponse> cast;
     private List<TelevisionShowCreditResponse> crew;
-    private List<TelevisionShow> similarTelevisionShows;
+    private List<TelevisionShowResponse> similarTelevisionShows;
     private String rating;
     // endregion
 
     // region Constructors
 
-    public TelevisionShowDetailsDomainModel(TelevisionShow televisionShow, List<TelevisionShowCreditResponse> cast, List<TelevisionShowCreditResponse> crew, List<TelevisionShow> similarTelevisionShows, String rating) {
+    public TelevisionShowDetailsDomainModel(TelevisionShowResponse televisionShow, List<TelevisionShowCreditResponse> cast, List<TelevisionShowCreditResponse> crew, List<TelevisionShowResponse> similarTelevisionShows, String rating) {
         this.televisionShow = televisionShow;
         this.cast = cast;
         this.crew = crew;
@@ -34,7 +34,7 @@ public class TelevisionShowDetailsDomainModel {
     // region Getters
 
 
-    public TelevisionShow getTelevisionShow() {
+    public TelevisionShowResponse getTelevisionShow() {
         return televisionShow;
     }
 
@@ -46,7 +46,7 @@ public class TelevisionShowDetailsDomainModel {
         return crew;
     }
 
-    public List<TelevisionShow> getSimilarTelevisionShows() {
+    public List<TelevisionShowResponse> getSimilarTelevisionShows() {
         return similarTelevisionShows;
     }
 
@@ -59,7 +59,7 @@ public class TelevisionShowDetailsDomainModel {
     // region Setters
 
 
-    public void setTelevisionShow(TelevisionShow televisionShow) {
+    public void setTelevisionShow(TelevisionShowResponse televisionShow) {
         this.televisionShow = televisionShow;
     }
 
@@ -71,7 +71,7 @@ public class TelevisionShowDetailsDomainModel {
         this.crew = crew;
     }
 
-    public void setSimilarTelevisionShows(List<TelevisionShow> similarTelevisionShows) {
+    public void setSimilarTelevisionShows(List<TelevisionShowResponse> similarTelevisionShows) {
         this.similarTelevisionShows = similarTelevisionShows;
     }
 

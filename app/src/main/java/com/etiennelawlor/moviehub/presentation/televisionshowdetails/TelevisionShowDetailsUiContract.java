@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.presentation.televisionshowdetails;
 
-import com.etiennelawlor.moviehub.data.network.response.Person;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
+import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.domain.models.TelevisionShowDetailsDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BasePresenter;
 
@@ -18,14 +18,14 @@ public interface TelevisionShowDetailsUiContract {
         void showErrorView();
 
         // Navigation methods
-        void openPersonDetails(Person person);
-        void openTelevisionShowDetails(TelevisionShow televisionShow);
+        void openPersonDetails(PersonResponse person);
+        void openTelevisionShowDetails(TelevisionShowResponse televisionShow);
     }
 
     interface Presenter extends BasePresenter {
         void onLoadTelevisionShowDetails(int televisionShowId);
-        void onPersonClick(Person person);
-        void onTelevisionShowClick(TelevisionShow televisionShow);
+        void onPersonClick(PersonResponse person);
+        void onTelevisionShowClick(TelevisionShowResponse televisionShow);
         void onScrollChange(boolean isScrolledPastThreshold);
     }
 }

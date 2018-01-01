@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub;
 
-import com.etiennelawlor.moviehub.data.network.response.Person;
+import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.PersonsDataModel;
 import com.etiennelawlor.moviehub.domain.PersonsDomainContract;
 import com.etiennelawlor.moviehub.presentation.persons.PersonsPresenter;
@@ -232,7 +232,7 @@ public class PersonsPresenterTest {
     @Test
     public void onPersonClick_shouldOpenPersonDetails() {
         // 1. (Given) Set up conditions required for the test
-        Person person = new Person();
+        PersonResponse person = new PersonResponse();
 
         // 2. (When) Then perform one or more actions
         personsPresenter.onPersonClick(person);
@@ -270,10 +270,10 @@ public class PersonsPresenterTest {
     // endregion
 
     // region Helper Methods
-    private List<Person> getListOfPersons(int numOfPersons){
-        List<Person> persons = new ArrayList<>();
+    private List<PersonResponse> getListOfPersons(int numOfPersons){
+        List<PersonResponse> persons = new ArrayList<>();
         for(int i=0; i<numOfPersons; i++){
-            Person person = new Person();
+            PersonResponse person = new PersonResponse();
             persons.add(person);
         }
         return persons;

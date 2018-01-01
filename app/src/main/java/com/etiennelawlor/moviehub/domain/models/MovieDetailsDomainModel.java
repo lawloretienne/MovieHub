@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.domain.models;
 
-import com.etiennelawlor.moviehub.data.network.response.Movie;
+import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
 import com.etiennelawlor.moviehub.data.network.response.MovieCreditResponse;
 
 import java.util.List;
@@ -12,16 +12,16 @@ import java.util.List;
 public class MovieDetailsDomainModel {
 
     // region Member Variables
-    private Movie movie;
+    private MovieResponse movie;
     private List<MovieCreditResponse> cast;
     private List<MovieCreditResponse> crew;
-    private List<Movie> similarMovies;
+    private List<MovieResponse> similarMovies;
     private String rating;
     // endregion
 
     // region Constructors
 
-    public MovieDetailsDomainModel(Movie movie, List<MovieCreditResponse> cast, List<MovieCreditResponse> crew, List<Movie> similarMovies, String rating) {
+    public MovieDetailsDomainModel(MovieResponse movie, List<MovieCreditResponse> cast, List<MovieCreditResponse> crew, List<MovieResponse> similarMovies, String rating) {
         this.movie = movie;
         this.cast = cast;
         this.crew = crew;
@@ -33,7 +33,7 @@ public class MovieDetailsDomainModel {
 
     // region Getters
 
-    public Movie getMovie() {
+    public MovieResponse getMovie() {
         return movie;
     }
 
@@ -45,7 +45,7 @@ public class MovieDetailsDomainModel {
         return crew;
     }
 
-    public List<Movie> getSimilarMovies() {
+    public List<MovieResponse> getSimilarMovies() {
         return similarMovies;
     }
 
@@ -57,7 +57,7 @@ public class MovieDetailsDomainModel {
 
     // region Setters
 
-    public void setMovie(Movie movie) {
+    public void setMovie(MovieResponse movie) {
         this.movie = movie;
     }
 
@@ -69,7 +69,7 @@ public class MovieDetailsDomainModel {
         this.crew = crew;
     }
 
-    public void setSimilarMovies(List<Movie> similarMovies) {
+    public void setSimilarMovies(List<MovieResponse> similarMovies) {
         this.similarMovies = similarMovies;
     }
 

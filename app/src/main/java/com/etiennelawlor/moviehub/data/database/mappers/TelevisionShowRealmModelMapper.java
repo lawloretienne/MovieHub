@@ -5,9 +5,9 @@ import com.etiennelawlor.moviehub.data.database.models.IntegerRealmModel;
 import com.etiennelawlor.moviehub.data.database.models.NetworkRealmModel;
 import com.etiennelawlor.moviehub.data.database.models.StringRealmModel;
 import com.etiennelawlor.moviehub.data.database.models.TelevisionShowRealmModel;
-import com.etiennelawlor.moviehub.data.network.response.Genre;
-import com.etiennelawlor.moviehub.data.network.response.Network;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
+import com.etiennelawlor.moviehub.data.network.response.GenreResponse;
+import com.etiennelawlor.moviehub.data.network.response.NetworkResponse;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ import io.realm.RealmList;
  * Created by etiennelawlor on 5/14/17.
  */
 
-public class TelevisionShowRealmModelMapper implements RealmModelMapper<TelevisionShow, TelevisionShowRealmModel> {
+public class TelevisionShowRealmModelMapper implements RealmModelMapper<TelevisionShowResponse, TelevisionShowRealmModel> {
 
     private GenreRealmModelMapper genreRealmMapper = new GenreRealmModelMapper();
     private NetworkRealmModelMapper networkRealmMapper = new NetworkRealmModelMapper();
@@ -27,7 +27,7 @@ public class TelevisionShowRealmModelMapper implements RealmModelMapper<Televisi
     private IntegerRealmModelMapper integerRealmMapper = new IntegerRealmModelMapper();
 
     @Override
-    public TelevisionShowRealmModel mapToRealmModel(TelevisionShow televisionShow) {
+    public TelevisionShowRealmModel mapToRealmModel(TelevisionShowResponse televisionShow) {
         TelevisionShowRealmModel realmTelevisionShow = Realm.getDefaultInstance().createObject(TelevisionShowRealmModel.class);
 
         realmTelevisionShow.setBackdropPath(televisionShow.getBackdropPath());
@@ -43,10 +43,10 @@ public class TelevisionShowRealmModelMapper implements RealmModelMapper<Televisi
 
         realmTelevisionShow.setFirstAirDate(televisionShow.getFirstAirDate());
 
-        List<Genre> genres = televisionShow.getGenres();
+        List<GenreResponse> genres = televisionShow.getGenres();
         RealmList<GenreRealmModel> realmGenres = new RealmList<>();
         if(genres != null && genres.size()>0) {
-            for (Genre genre : genres) {
+            for (GenreResponse genre : genres) {
                 realmGenres.add(genreRealmMapper.mapToRealmModel(genre));
             }
         }
@@ -69,10 +69,10 @@ public class TelevisionShowRealmModelMapper implements RealmModelMapper<Televisi
         realmTelevisionShow.setName(televisionShow.getName());
 
 
-        List<Network> networks = televisionShow.getNetworks();
+        List<NetworkResponse> networks = televisionShow.getNetworks();
         RealmList<NetworkRealmModel> realmNetworks = new RealmList<>();
         if(networks != null && networks.size()>0) {
-            for (Network network : networks) {
+            for (NetworkResponse network : networks) {
                 realmNetworks.add(networkRealmMapper.mapToRealmModel(network));
             }
         }
@@ -104,8 +104,8 @@ public class TelevisionShowRealmModelMapper implements RealmModelMapper<Televisi
     }
 
     @Override
-    public TelevisionShow mapFromRealmModel(TelevisionShowRealmModel televisionShowRealmModel) {
-        TelevisionShow televisionShow = new TelevisionShow();
+    public TelevisionShowResponse mapFromRealmModel(TelevisionShowRealmModel televisionShowRealmModel) {
+        TelevisionShowResponse televisionShow = new TelevisionShowResponse();
 
         televisionShow.setBackdropPath(televisionShowRealmModel.getBackdropPath());
 
@@ -119,7 +119,7 @@ public class TelevisionShowRealmModelMapper implements RealmModelMapper<Televisi
         televisionShow.setFirstAirDate(televisionShowRealmModel.getFirstAirDate());
 
         RealmList<GenreRealmModel> realmGenres = televisionShowRealmModel.getGenres();
-        List<Genre> genres = new ArrayList<>();
+        List<GenreResponse> genres = new ArrayList<>();
         for(GenreRealmModel realmGenre : realmGenres){
             genres.add(genreRealmMapper.mapFromRealmModel(realmGenre));
         }
@@ -140,7 +140,7 @@ public class TelevisionShowRealmModelMapper implements RealmModelMapper<Televisi
         televisionShow.setName(televisionShowRealmModel.getName());
 
         RealmList<NetworkRealmModel> realmNetworks = televisionShowRealmModel.getNetworks();
-        List<Network> networks = new ArrayList<>();
+        List<NetworkResponse> networks = new ArrayList<>();
         for(NetworkRealmModel realmNetwork : realmNetworks){
             networks.add(networkRealmMapper.mapFromRealmModel(realmNetwork));
         }

@@ -14,7 +14,7 @@ public class TelevisionShowsResponse {
     @SerializedName("page")
     public int page;
     @SerializedName("results")
-    public List<TelevisionShow> televisionShows = null;
+    public List<TelevisionShowResponse> televisionShows = null;
     @SerializedName("total_results")
     public int totalResults;
     @SerializedName("total_pages")
@@ -27,7 +27,7 @@ public class TelevisionShowsResponse {
         return page;
     }
 
-    public List<TelevisionShow> getTelevisionShows() {
+    public List<TelevisionShowResponse> getTelevisionShows() {
         return televisionShows;
     }
 
@@ -47,7 +47,7 @@ public class TelevisionShowsResponse {
         this.page = page;
     }
 
-    public void setTelevisionShows(List<TelevisionShow> televisionShows) {
+    public void setTelevisionShows(List<TelevisionShowResponse> televisionShows) {
         this.televisionShows = televisionShows;
     }
 

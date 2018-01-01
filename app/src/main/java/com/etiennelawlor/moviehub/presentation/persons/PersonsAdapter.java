@@ -18,7 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.network.response.Person;
+import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.common.widget.DynamicHeightImageView;
 import com.etiennelawlor.moviehub.util.AnimationUtility;
@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
  * Created by etiennelawlor on 12/17/16.
  */
 
-public class PersonsAdapter extends BaseAdapter<Person> {
+public class PersonsAdapter extends BaseAdapter<PersonResponse> {
 
     // region Constants
     // endregion
@@ -125,7 +125,7 @@ public class PersonsAdapter extends BaseAdapter<Person> {
     protected void bindItemViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         final PersonViewHolder holder = (PersonViewHolder) viewHolder;
 
-        final Person person = getItem(position);
+        final PersonResponse person = getItem(position);
         if (person != null) {
             holder.bind(person);
         }
@@ -155,13 +155,13 @@ public class PersonsAdapter extends BaseAdapter<Person> {
 
     @Override
     public void addHeader() {
-        add(new Person());
+        add(new PersonResponse());
     }
 
     @Override
     public void addFooter() {
         isFooterAdded = true;
-        add(new Person());
+        add(new PersonResponse());
     }
 
     // region Inner Classes
@@ -195,7 +195,7 @@ public class PersonsAdapter extends BaseAdapter<Person> {
         // endregion
 
         // region Helper Methods
-        private void bind(Person person){
+        private void bind(PersonResponse person){
             resetInfoBackgroundColor(infoLinearLayout);
             resetTitleTextColor(titleTextView);
 
@@ -203,7 +203,7 @@ public class PersonsAdapter extends BaseAdapter<Person> {
             setUpTitle(titleTextView, person);
         }
 
-        private void setUpThumbnail(final PersonViewHolder vh, final Person person){
+        private void setUpThumbnail(final PersonViewHolder vh, final PersonResponse person){
             final DynamicHeightImageView iv = vh.thumbnailImageView;
 
             double heightRatio = 3.0D/2.0D;
@@ -259,7 +259,7 @@ public class PersonsAdapter extends BaseAdapter<Person> {
             }
         }
 
-        private void setUpTitle(TextView tv, Person person){
+        private void setUpTitle(TextView tv, PersonResponse person){
             String name = person.getName();
             if (!TextUtils.isEmpty(name)) {
                 tv.setText(name);

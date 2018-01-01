@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub;
 
-import com.etiennelawlor.moviehub.data.network.response.Movie;
+import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.MoviesDataModel;
 import com.etiennelawlor.moviehub.domain.MoviesDomainContract;
 import com.etiennelawlor.moviehub.presentation.movies.MoviesPresenter;
@@ -234,7 +234,7 @@ public class MoviesPresenterTest {
     @Test
     public void onMovieClick_shouldOpenMovieDetails() {
         // 1. (Given) Set up conditions required for the test
-        Movie movie = new Movie();
+        MovieResponse movie = new MovieResponse();
 
         // 2. (When) Then perform one or more actions
         moviesPresenter.onMovieClick(movie);
@@ -272,10 +272,10 @@ public class MoviesPresenterTest {
     // endregion
 
     // region Helper Methods
-    private List<Movie> getListOfMovies(int numOfMovies){
-        List<Movie> movies = new ArrayList<>();
+    private List<MovieResponse> getListOfMovies(int numOfMovies){
+        List<MovieResponse> movies = new ArrayList<>();
         for(int i=0; i<numOfMovies; i++){
-            Movie movie = new Movie();
+            MovieResponse movie = new MovieResponse();
             movies.add(movie);
         }
         return movies;

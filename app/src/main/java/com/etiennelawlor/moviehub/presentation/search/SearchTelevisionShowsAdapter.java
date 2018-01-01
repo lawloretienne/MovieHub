@@ -18,7 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.common.widget.DynamicHeightImageView;
 import com.etiennelawlor.moviehub.util.AnimationUtility;
@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
  * Created by etiennelawlor on 12/17/16.
  */
 
-public class SearchTelevisionShowsAdapter extends BaseAdapter<TelevisionShow> {
+public class SearchTelevisionShowsAdapter extends BaseAdapter<TelevisionShowResponse> {
 
     // region Constants
     // endregion
@@ -117,7 +117,7 @@ public class SearchTelevisionShowsAdapter extends BaseAdapter<TelevisionShow> {
     protected void bindItemViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         final TelevisionShowViewHolder holder = (TelevisionShowViewHolder) viewHolder;
 
-        final TelevisionShow televisionShow = getItem(position);
+        final TelevisionShowResponse televisionShow = getItem(position);
         if (televisionShow != null) {
             holder.bind(televisionShow);
         }
@@ -153,7 +153,7 @@ public class SearchTelevisionShowsAdapter extends BaseAdapter<TelevisionShow> {
     @Override
     public void addFooter() {
         isFooterAdded = true;
-        add(new TelevisionShow());
+        add(new TelevisionShowResponse());
     }
 
     // region Inner Classes
@@ -187,7 +187,7 @@ public class SearchTelevisionShowsAdapter extends BaseAdapter<TelevisionShow> {
         // endregion
 
         // region Helper Methods
-        private void bind(TelevisionShow televisionShow){
+        private void bind(TelevisionShowResponse televisionShow){
             resetInfoBackgroundColor(infoLinearLayout);
             resetTitleTextColor(titleTextView);
             resetSubtitleTextColor(subtitleTextView);
@@ -197,7 +197,7 @@ public class SearchTelevisionShowsAdapter extends BaseAdapter<TelevisionShow> {
             setUpSubtitle(subtitleTextView, televisionShow);
         }
 
-        private void setUpThumbnail(final TelevisionShowViewHolder vh, final TelevisionShow televisionShow){
+        private void setUpThumbnail(final TelevisionShowViewHolder vh, final TelevisionShowResponse televisionShow){
             final DynamicHeightImageView iv = vh.thumbnailImageView;
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) iv.getLayoutParams();
             layoutParams.width = ivWidth;
@@ -257,7 +257,7 @@ public class SearchTelevisionShowsAdapter extends BaseAdapter<TelevisionShow> {
             }
         }
 
-        private void setUpTitle(TextView tv, TelevisionShow televisionShow){
+        private void setUpTitle(TextView tv, TelevisionShowResponse televisionShow){
             String title = televisionShow.getName();
             if (!TextUtils.isEmpty(title)) {
                 tv.setText(title);
@@ -278,7 +278,7 @@ public class SearchTelevisionShowsAdapter extends BaseAdapter<TelevisionShow> {
             }
         }
 
-        private void setUpSubtitle(TextView tv, TelevisionShow televisionShow){
+        private void setUpSubtitle(TextView tv, TelevisionShowResponse televisionShow){
             String firstAirYear = televisionShow.getFirstAirYear();
             if (!TextUtils.isEmpty(firstAirYear)) {
                 tv.setText(firstAirYear);

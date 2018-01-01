@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.data.repositories.mappers;
 
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowsResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowsDataModel;
 
@@ -22,7 +22,7 @@ public class TelevisionShowsDataModelMapper implements DataModelMapper<Televisio
     public TelevisionShowsDataModel mapToDataModel(TelevisionShowsResponse televisionShowsResponse) {
         TelevisionShowsDataModel televisionShowsDataModel = new TelevisionShowsDataModel();
 
-        List<TelevisionShow> televisionShows = televisionShowsResponse.getTelevisionShows();
+        List<TelevisionShowResponse> televisionShows = televisionShowsResponse.getTelevisionShows();
         televisionShowsDataModel.setLastPage(televisionShows.size() < PAGE_SIZE ? true : false);
         televisionShowsDataModel.setPageNumber(televisionShowsResponse.getPage());
         televisionShowsDataModel.setTelevisionShows(televisionShows);

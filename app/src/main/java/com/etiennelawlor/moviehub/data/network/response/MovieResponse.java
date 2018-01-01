@@ -15,7 +15,7 @@ import java.util.List;
  * Created by etiennelawlor on 12/16/16.
  */
 
-public class Movie implements Parcelable {
+public class MovieResponse implements Parcelable {
 
     // region Constants
     public static final String PATTERN = "yyyy-MM-dd";
@@ -31,7 +31,7 @@ public class Movie implements Parcelable {
     @SerializedName("budget")
     public int budget;
     @SerializedName("genres")
-    public List<Genre> genres = null;
+    public List<GenreResponse> genres = null;
     @SerializedName("homepage")
     public String homepage;
     @SerializedName("id")
@@ -71,14 +71,14 @@ public class Movie implements Parcelable {
     // endregion
 
     // region Constructors
-    public Movie() {
+    public MovieResponse() {
     }
 
-    protected Movie(Parcel in) {
+    protected MovieResponse(Parcel in) {
         this.adult = in.readByte() != 0;
         this.backdropPath = in.readString();
         this.budget = in.readInt();
-        this.genres = in.createTypedArrayList(Genre.CREATOR);
+        this.genres = in.createTypedArrayList(GenreResponse.CREATOR);
         this.homepage = in.readString();
         this.id = in.readInt();
         this.imdbId = in.readString();
@@ -113,7 +113,7 @@ public class Movie implements Parcelable {
         return budget;
     }
 
-    public List<Genre> getGenres() {
+    public List<GenreResponse> getGenres() {
         return genres;
     }
 
@@ -228,7 +228,7 @@ public class Movie implements Parcelable {
         this.budget = budget;
     }
 
-    public void setGenres(List<Genre> genres) {
+    public void setGenres(List<GenreResponse> genres) {
         this.genres = genres;
     }
 
@@ -338,21 +338,21 @@ public class Movie implements Parcelable {
     }
     // endregion
 
-    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
+    public static final Parcelable.Creator<MovieResponse> CREATOR = new Parcelable.Creator<MovieResponse>() {
         @Override
-        public Movie createFromParcel(Parcel source) {
-            return new Movie(source);
+        public MovieResponse createFromParcel(Parcel source) {
+            return new MovieResponse(source);
         }
 
         @Override
-        public Movie[] newArray(int size) {
-            return new Movie[size];
+        public MovieResponse[] newArray(int size) {
+            return new MovieResponse[size];
         }
     };
 
     @Override
     public String toString() {
-        return "Movie{" +
+        return "MovieResponse{" +
                 "adult=" + adult +
                 ", backdropPath='" + backdropPath + '\'' +
                 ", budget=" + budget +

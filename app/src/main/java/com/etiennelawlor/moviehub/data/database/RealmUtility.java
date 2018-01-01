@@ -9,9 +9,9 @@ import com.etiennelawlor.moviehub.data.database.models.PersonRealmModel;
 import com.etiennelawlor.moviehub.data.database.models.PersonsRealmModel;
 import com.etiennelawlor.moviehub.data.database.models.TelevisionShowRealmModel;
 import com.etiennelawlor.moviehub.data.database.models.TelevisionShowsRealmModel;
-import com.etiennelawlor.moviehub.data.network.response.Movie;
-import com.etiennelawlor.moviehub.data.network.response.Person;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
+import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
+import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.MoviesDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.PersonsDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowsDataModel;
@@ -50,7 +50,7 @@ public class RealmUtility {
 
                 RealmList<MovieRealmModel> movieRealmModels = moviesRealmModel.getMovies();
 
-                List<Movie> movies = new ArrayList<>();
+                List<MovieResponse> movies = new ArrayList<>();
                 for(MovieRealmModel movieRealmModel : movieRealmModels){
                     movies.add(movieRealmModelMapper.mapFromRealmModel(movieRealmModel));
                 }
@@ -72,7 +72,7 @@ public class RealmUtility {
     public static void saveMoviesDataModel(MoviesDataModel moviesDataModel){
         Realm realm = Realm.getDefaultInstance();
         try {
-            List<Movie> movies = moviesDataModel.getMovies();
+            List<MovieResponse> movies = moviesDataModel.getMovies();
             int pageNumber = moviesDataModel.getPageNumber();
             boolean isLastPage = moviesDataModel.isLastPage();
             Date expiredAt = moviesDataModel.getExpiredAt();
@@ -83,7 +83,7 @@ public class RealmUtility {
                     MoviesRealmModel moviesRealmModel = new MoviesRealmModel();
 
                     RealmList<MovieRealmModel> movieRealmModels = new RealmList<>();
-                    for(Movie movie : movies){
+                    for(MovieResponse movie : movies){
                         movieRealmModels.add(movieRealmModelMapper.mapToRealmModel(movie));
                     }
 
@@ -118,7 +118,7 @@ public class RealmUtility {
 
                 RealmList<TelevisionShowRealmModel> televisionShowRealmModels = televisionShowsRealmModel.getTelevisionShows();
 
-                List<TelevisionShow> televisionShows = new ArrayList<>();
+                List<TelevisionShowResponse> televisionShows = new ArrayList<>();
                 for(TelevisionShowRealmModel televisionShowRealmModel : televisionShowRealmModels){
                     televisionShows.add(televisionShowRealmModelMapper.mapFromRealmModel(televisionShowRealmModel));
                 }
@@ -140,7 +140,7 @@ public class RealmUtility {
     public static void saveTelevisionShowsDataModel(TelevisionShowsDataModel televisionShowsDataModel){
         Realm realm = Realm.getDefaultInstance();
         try {
-            List<TelevisionShow> televisionShows = televisionShowsDataModel.getTelevisionShows();
+            List<TelevisionShowResponse> televisionShows = televisionShowsDataModel.getTelevisionShows();
             int pageNumber = televisionShowsDataModel.getPageNumber();
             boolean isLastPage = televisionShowsDataModel.isLastPage();
             Date expiredAt = televisionShowsDataModel.getExpiredAt();
@@ -151,7 +151,7 @@ public class RealmUtility {
                     TelevisionShowsRealmModel televisionShowsRealmModel = new TelevisionShowsRealmModel();
 
                     RealmList<TelevisionShowRealmModel> televisionShowRealmModels = new RealmList<>();
-                    for(TelevisionShow televisionShow : televisionShows){
+                    for(TelevisionShowResponse televisionShow : televisionShows){
                         televisionShowRealmModels.add(televisionShowRealmModelMapper.mapToRealmModel(televisionShow));
                     }
 
@@ -186,7 +186,7 @@ public class RealmUtility {
 
                 RealmList<PersonRealmModel> personRealmModels = personsRealmModel.getPersons();
 
-                List<Person> persons = new ArrayList<>();
+                List<PersonResponse> persons = new ArrayList<>();
                 for(PersonRealmModel personRealmModel : personRealmModels){
                     persons.add(personRealmModelMapper.mapFromRealmModel(personRealmModel));
                 }
@@ -208,7 +208,7 @@ public class RealmUtility {
     public static void savePersonsDataModel(PersonsDataModel personsDataModel){
         Realm realm = Realm.getDefaultInstance();
         try {
-            List<Person> persons = personsDataModel.getPersons();
+            List<PersonResponse> persons = personsDataModel.getPersons();
             int pageNumber = personsDataModel.getPageNumber();
             boolean isLastPage = personsDataModel.isLastPage();
             Date expiredAt = personsDataModel.getExpiredAt();
@@ -219,7 +219,7 @@ public class RealmUtility {
                     PersonsRealmModel personsRealmModel = new PersonsRealmModel();
 
                     RealmList<PersonRealmModel> personRealmModels = new RealmList<>();
-                    for(Person person : persons){
+                    for(PersonResponse person : persons){
                         personRealmModels.add(personRealmModelMapper.mapToRealmModel(person));
                     }
 

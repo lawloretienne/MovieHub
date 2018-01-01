@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.data.repositories.movie;
 
 import com.etiennelawlor.moviehub.data.network.MovieHubService;
-import com.etiennelawlor.moviehub.data.network.response.Movie;
+import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
 import com.etiennelawlor.moviehub.data.network.response.MovieCreditsResponse;
 import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDatesResponse;
 import com.etiennelawlor.moviehub.data.network.response.MoviesResponse;
@@ -34,7 +34,7 @@ public class MovieRemoteDataSource implements MovieDataSourceContract.RemoteDate
     }
 
     @Override
-    public Single<Movie> getMovie(int movieId) {
+    public Single<MovieResponse> getMovie(int movieId) {
         return movieHubService.getMovie(movieId);
     }
 

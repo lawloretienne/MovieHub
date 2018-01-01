@@ -14,7 +14,7 @@ public class MoviesResponse {
     @SerializedName("page")
     public int page;
     @SerializedName("results")
-    public List<Movie> movies = null;
+    public List<MovieResponse> movies = null;
     @SerializedName("total_results")
     public int totalResults;
     @SerializedName("total_pages")
@@ -27,7 +27,7 @@ public class MoviesResponse {
         return page;
     }
 
-    public List<Movie> getMovies() {
+    public List<MovieResponse> getMovies() {
         return movies;
     }
 
@@ -47,7 +47,7 @@ public class MoviesResponse {
         this.page = page;
     }
 
-    public void setMovies(List<Movie> movies) {
+    public void setMovies(List<MovieResponse> movies) {
         this.movies = movies;
     }
 

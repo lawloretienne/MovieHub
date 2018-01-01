@@ -16,7 +16,7 @@ import java.util.List;
  * Created by etiennelawlor on 12/16/16.
  */
 
-public class TelevisionShow implements Parcelable {
+public class TelevisionShowResponse implements Parcelable {
 
     // region Constants
     public static final String PATTERN = "yyyy-MM-dd";
@@ -32,7 +32,7 @@ public class TelevisionShow implements Parcelable {
     @SerializedName("first_air_date")
     public String firstAirDate;
     @SerializedName("genres")
-    public List<Genre> genres = null;
+    public List<GenreResponse> genres = null;
     @SerializedName("homepage")
     public String homepage;
     @SerializedName("id")
@@ -46,7 +46,7 @@ public class TelevisionShow implements Parcelable {
     @SerializedName("name")
     public String name;
     @SerializedName("networks")
-    public List<Network> networks = null;
+    public List<NetworkResponse> networks = null;
     @SerializedName("number_of_episodes")
     public int numberOfEpisodes;
     @SerializedName("number_of_seasons")
@@ -76,22 +76,22 @@ public class TelevisionShow implements Parcelable {
     // endregion
 
     // region Constructors
-    public TelevisionShow() {
+    public TelevisionShowResponse() {
     }
 
-    protected TelevisionShow(Parcel in) {
+    protected TelevisionShowResponse(Parcel in) {
         this.backdropPath = in.readString();
         this.episodeRunTime = new ArrayList<Integer>();
         in.readList(this.episodeRunTime, Integer.class.getClassLoader());
         this.firstAirDate = in.readString();
-        this.genres = in.createTypedArrayList(Genre.CREATOR);
+        this.genres = in.createTypedArrayList(GenreResponse.CREATOR);
         this.homepage = in.readString();
         this.id = in.readInt();
         this.inProduction = in.readByte() != 0;
         this.languages = in.createStringArrayList();
         this.lastAirDate = in.readString();
         this.name = in.readString();
-        this.networks = in.createTypedArrayList(Network.CREATOR);
+        this.networks = in.createTypedArrayList(NetworkResponse.CREATOR);
         this.numberOfEpisodes = in.readInt();
         this.numberOfSeasons = in.readInt();
         this.originCountry = in.createStringArrayList();
@@ -121,7 +121,7 @@ public class TelevisionShow implements Parcelable {
         return firstAirDate;
     }
 
-    public List<Genre> getGenres() {
+    public List<GenreResponse> getGenres() {
         return genres;
     }
 
@@ -149,7 +149,7 @@ public class TelevisionShow implements Parcelable {
         return name;
     }
 
-    public List<Network> getNetworks() {
+    public List<NetworkResponse> getNetworks() {
         return networks;
     }
 
@@ -232,14 +232,14 @@ public class TelevisionShow implements Parcelable {
         String formattedNetwork =  "";
         if(networks != null && networks.size()>0){
 
-            Network network = networks.get(0);
+            NetworkResponse network = networks.get(0);
             formattedNetwork = network.getName();
 
             if(formattedNetwork.equals("Fox Broadcasting Company") || formattedNetwork.equals("Fox")){
                 formattedNetwork = "FOX";
             } else if(formattedNetwork.equals("American Broadcasting Company")){
                 formattedNetwork = "ABC";
-            } else if(formattedNetwork.equals("The WB Television Network")){
+            } else if(formattedNetwork.equals("The WB Television NetworkResponse")){
                 formattedNetwork = "The WB";
             } else if(formattedNetwork.equals("National Educational Television")){
                 formattedNetwork = "NET";
@@ -251,17 +251,17 @@ public class TelevisionShow implements Parcelable {
                 formattedNetwork = "Lifetime";
             } else if(formattedNetwork.equals("Public Broadcasting Service")){
                 formattedNetwork = "PBS";
-            } else if(formattedNetwork.equals("Oprah Winfrey Network")){
+            } else if(formattedNetwork.equals("Oprah Winfrey NetworkResponse")){
                 formattedNetwork = "OWN";
             } else if(formattedNetwork.equals("The History Channel")){
                 formattedNetwork = "History";
-            } else if(formattedNetwork.equals("Orion Cinema Network")){
+            } else if(formattedNetwork.equals("Orion Cinema NetworkResponse")){
                 formattedNetwork = "OCN";
             } else if(formattedNetwork.equals("National Geographic Channel")){
                 formattedNetwork = "National Geographic";
             } else if(formattedNetwork.equals("Seoul Broadcasting System")){
                 formattedNetwork = "SBS";
-            } else if(formattedNetwork.equals("Total Variety Network")){
+            } else if(formattedNetwork.equals("Total Variety NetworkResponse")){
                 formattedNetwork = "TVN";
             } else if(formattedNetwork.equals("Canal de las Estrellas")){
                 formattedNetwork = "Las Estrellas";
@@ -293,7 +293,7 @@ public class TelevisionShow implements Parcelable {
         this.firstAirDate = firstAirDate;
     }
 
-    public void setGenres(List<Genre> genres) {
+    public void setGenres(List<GenreResponse> genres) {
         this.genres = genres;
     }
 
@@ -321,7 +321,7 @@ public class TelevisionShow implements Parcelable {
         this.name = name;
     }
 
-    public void setNetworks(List<Network> networks) {
+    public void setNetworks(List<NetworkResponse> networks) {
         this.networks = networks;
     }
 
@@ -413,21 +413,21 @@ public class TelevisionShow implements Parcelable {
     }
     // endregion
 
-    public static final Parcelable.Creator<TelevisionShow> CREATOR = new Parcelable.Creator<TelevisionShow>() {
+    public static final Parcelable.Creator<TelevisionShowResponse> CREATOR = new Parcelable.Creator<TelevisionShowResponse>() {
         @Override
-        public TelevisionShow createFromParcel(Parcel source) {
-            return new TelevisionShow(source);
+        public TelevisionShowResponse createFromParcel(Parcel source) {
+            return new TelevisionShowResponse(source);
         }
 
         @Override
-        public TelevisionShow[] newArray(int size) {
-            return new TelevisionShow[size];
+        public TelevisionShowResponse[] newArray(int size) {
+            return new TelevisionShowResponse[size];
         }
     };
 
     @Override
     public String toString() {
-        return "TelevisionShow{" +
+        return "TelevisionShowResponse{" +
                 "backdropPath='" + backdropPath + '\'' +
                 ", episodeRunTime=" + episodeRunTime +
                 ", firstAirDate='" + firstAirDate + '\'' +

@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.presentation.persondetails;
 
-import com.etiennelawlor.moviehub.data.network.response.Movie;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
+import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.domain.PersonDetailsDomainContract;
 import com.etiennelawlor.moviehub.domain.models.PersonDetailsDomainModel;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
@@ -69,12 +69,12 @@ public class PersonDetailsPresenter implements PersonDetailsUiContract.Presenter
     }
 
     @Override
-    public void onMovieClick(Movie movie) {
+    public void onMovieClick(MovieResponse movie) {
         personDetailsView.openMovieDetails(movie);
     }
 
     @Override
-    public void onTelevisionShowClick(TelevisionShow televisionShow) {
+    public void onTelevisionShowClick(TelevisionShowResponse televisionShow) {
         personDetailsView.openTelevisionShowDetails(televisionShow);
     }
 

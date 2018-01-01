@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.presentation.televisionshows;
 
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowsDataModel;
 import com.etiennelawlor.moviehub.domain.TelevisionShowsDomainContract;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
@@ -56,7 +56,7 @@ public class TelevisionShowsPresenter implements TelevisionShowsUiContract.Prese
                     @Override
                     public void onSuccess(TelevisionShowsDataModel televisionShowsDataModel) {
                         if(televisionShowsDataModel != null){
-                            List<TelevisionShow> televisionShows = televisionShowsDataModel.getTelevisionShows();
+                            List<TelevisionShowResponse> televisionShows = televisionShowsDataModel.getTelevisionShows();
                             int currentPage = televisionShowsDataModel.getPageNumber();
                             boolean isLastPage = televisionShowsDataModel.isLastPage();
                             boolean hasTelevisionShows = televisionShowsDataModel.hasTelevisionShows();
@@ -110,7 +110,7 @@ public class TelevisionShowsPresenter implements TelevisionShowsUiContract.Prese
     }
 
     @Override
-    public void onTelevisionShowClick(TelevisionShow televisionShow) {
+    public void onTelevisionShowClick(TelevisionShowResponse televisionShow) {
         televisionShowsView.openTelevisionShowDetails(televisionShow);
     }
 

@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.domain;
 
 import com.etiennelawlor.moviehub.data.network.response.ContentRatingResponse;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCreditResponse;
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowDataSourceContract;
 import com.etiennelawlor.moviehub.domain.models.TelevisionShowDetailsDomainModel;
@@ -42,7 +42,7 @@ public class TelevisionShowDetailsUseCase implements TelevisionShowDetailsDomain
                 (televisionShow, televisionShowCreditsEnvelope, televisionShowsEnvelope, televisionShowContentRatingsEnvelope) -> {
                     List<TelevisionShowCreditResponse> cast = new ArrayList<>();
                     List<TelevisionShowCreditResponse> crew = new ArrayList<>();
-                    List<TelevisionShow> similarTelevisionShows = new ArrayList<>();
+                    List<TelevisionShowResponse> similarTelevisionShows = new ArrayList<>();
                     String rating = "";
 
                     if(televisionShowCreditsEnvelope!=null){

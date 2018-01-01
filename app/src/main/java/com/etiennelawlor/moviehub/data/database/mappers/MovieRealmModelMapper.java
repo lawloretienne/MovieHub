@@ -2,8 +2,8 @@ package com.etiennelawlor.moviehub.data.database.mappers;
 
 import com.etiennelawlor.moviehub.data.database.models.GenreRealmModel;
 import com.etiennelawlor.moviehub.data.database.models.MovieRealmModel;
-import com.etiennelawlor.moviehub.data.network.response.Genre;
-import com.etiennelawlor.moviehub.data.network.response.Movie;
+import com.etiennelawlor.moviehub.data.network.response.GenreResponse;
+import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,22 +15,22 @@ import io.realm.RealmList;
  * Created by etiennelawlor on 5/14/17.
  */
 
-public class MovieRealmModelMapper implements RealmModelMapper<Movie, MovieRealmModel> {
+public class MovieRealmModelMapper implements RealmModelMapper<MovieResponse, MovieRealmModel> {
 
     private GenreRealmModelMapper genreRealmMapper = new GenreRealmModelMapper();
 
     @Override
-    public MovieRealmModel mapToRealmModel(Movie movie) {
+    public MovieRealmModel mapToRealmModel(MovieResponse movie) {
         MovieRealmModel realmMovie = Realm.getDefaultInstance().createObject(MovieRealmModel.class);
 
         realmMovie.setAdult(movie.isAdult());
         realmMovie.setBackdropPath(movie.getBackdropPath());
         realmMovie.setBudget(movie.getBudget());
 
-        List<Genre> genres = movie.getGenres();
+        List<GenreResponse> genres = movie.getGenres();
         RealmList<GenreRealmModel> realmGenres = new RealmList<>();
         if(genres != null && genres.size()>0) {
-            for (Genre genre : genres) {
+            for (GenreResponse genre : genres) {
                 realmGenres.add(genreRealmMapper.mapToRealmModel(genre));
             }
         }
@@ -59,14 +59,14 @@ public class MovieRealmModelMapper implements RealmModelMapper<Movie, MovieRealm
     }
 
     @Override
-    public Movie mapFromRealmModel(MovieRealmModel movieRealmModel) {
-        Movie movie = new Movie();
+    public MovieResponse mapFromRealmModel(MovieRealmModel movieRealmModel) {
+        MovieResponse movie = new MovieResponse();
         movie.setAdult(movieRealmModel.isAdult());
         movie.setBackdropPath(movieRealmModel.getBackdropPath());
         movie.setBudget(movieRealmModel.getBudget());
 
         RealmList<GenreRealmModel> realmGenres = movieRealmModel.getGenres();
-        List<Genre> genres = new ArrayList<>();
+        List<GenreResponse> genres = new ArrayList<>();
         for(GenreRealmModel realmGenre : realmGenres){
             genres.add(genreRealmMapper.mapFromRealmModel(realmGenre));
         }

@@ -2,7 +2,7 @@ package com.etiennelawlor.moviehub.domain;
 
 import android.text.TextUtils;
 
-import com.etiennelawlor.moviehub.data.network.response.Movie;
+import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
 import com.etiennelawlor.moviehub.data.network.response.MovieCreditResponse;
 import com.etiennelawlor.moviehub.data.network.response.ReleaseDateResponse;
 import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDateResponse;
@@ -45,7 +45,7 @@ public class MovieDetailsUseCase implements MovieDetailsDomainContract.UseCase {
                 (movie, movieCreditsDataModel, moviesDataModel, movieReleaseDatesDataModel) -> {
                     List<MovieCreditResponse> cast = new ArrayList<>();
                     List<MovieCreditResponse> crew = new ArrayList<>();
-                    List<Movie> similarMovies = new ArrayList<>();
+                    List<MovieResponse> similarMovies = new ArrayList<>();
                     String rating = "";
 
                     if (movieCreditsDataModel != null) {

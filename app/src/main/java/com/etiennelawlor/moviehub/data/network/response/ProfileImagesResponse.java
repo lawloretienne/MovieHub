@@ -12,26 +12,26 @@ import java.util.List;
  * Created by etiennelawlor on 12/16/16.
  */
 
-public class ProfileImages implements Parcelable {
+public class ProfileImagesResponse implements Parcelable {
 
     // region Fields
     @SerializedName("profiles")
-    public List<ProfileImage> profiles = null;
+    public List<ProfileImageResponse> profiles = null;
     // endregion
 
     // region Constructors
-    public ProfileImages() {
+    public ProfileImagesResponse() {
     }
 
-    protected ProfileImages(Parcel in) {
-        this.profiles = new ArrayList<ProfileImage>();
-        in.readList(this.profiles, ProfileImage.class.getClassLoader());
+    protected ProfileImagesResponse(Parcel in) {
+        this.profiles = new ArrayList<ProfileImageResponse>();
+        in.readList(this.profiles, ProfileImageResponse.class.getClassLoader());
     }
     // endregion
 
     // region Getters
 
-    public List<ProfileImage> getProfiles() {
+    public List<ProfileImageResponse> getProfiles() {
         return profiles;
     }
 
@@ -39,7 +39,7 @@ public class ProfileImages implements Parcelable {
 
     // region Setters
 
-    public void setProfiles(List<ProfileImage> profiles) {
+    public void setProfiles(List<ProfileImageResponse> profiles) {
         this.profiles = profiles;
     }
 
@@ -57,21 +57,21 @@ public class ProfileImages implements Parcelable {
     }
     // endregion
 
-    public static final Parcelable.Creator<ProfileImages> CREATOR = new Parcelable.Creator<ProfileImages>() {
+    public static final Parcelable.Creator<ProfileImagesResponse> CREATOR = new Parcelable.Creator<ProfileImagesResponse>() {
         @Override
-        public ProfileImages createFromParcel(Parcel source) {
-            return new ProfileImages(source);
+        public ProfileImagesResponse createFromParcel(Parcel source) {
+            return new ProfileImagesResponse(source);
         }
 
         @Override
-        public ProfileImages[] newArray(int size) {
-            return new ProfileImages[size];
+        public ProfileImagesResponse[] newArray(int size) {
+            return new ProfileImagesResponse[size];
         }
     };
 
     @Override
     public String toString() {
-        return "ProfileImages{" +
+        return "ProfileImagesResponse{" +
                 "profiles=" + profiles +
                 '}';
     }

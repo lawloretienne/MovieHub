@@ -1,10 +1,9 @@
 package com.etiennelawlor.moviehub.data.repositories.tv;
 
 import com.etiennelawlor.moviehub.data.database.RealmUtility;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowContentRatingsResponse;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCreditsResponse;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowsResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowsDataModel;
 
 import io.reactivex.Maybe;
@@ -37,13 +36,13 @@ public class TelevisionShowLocalDataSource implements TelevisionShowDataSourceCo
     }
 
     @Override
-    public Maybe<TelevisionShow> getTelevisionShow(int tvId) {
+    public Maybe<TelevisionShowResponse> getTelevisionShow(int tvId) {
         //        Use mapper to convert from realm objects to POJOs
         return Maybe.empty();
     }
 
     @Override
-    public void saveTelevisionShow(TelevisionShow televisionShow) {
+    public void saveTelevisionShow(TelevisionShowResponse televisionShow) {
 //        Use mapper to convert from POJOs to realm objects
     }
 

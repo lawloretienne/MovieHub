@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.data.database.mappers;
 
 import com.etiennelawlor.moviehub.data.database.models.PersonRealmModel;
-import com.etiennelawlor.moviehub.data.network.response.Person;
+import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
 
 import io.realm.Realm;
 
@@ -9,12 +9,12 @@ import io.realm.Realm;
  * Created by etiennelawlor on 5/14/17.
  */
 
-public class PersonRealmModelMapper implements RealmModelMapper<Person, PersonRealmModel> {
+public class PersonRealmModelMapper implements RealmModelMapper<PersonResponse, PersonRealmModel> {
 
     private ProfileImagesRealmModelMapper profileImagesRealmMapper = new ProfileImagesRealmModelMapper();
 
     @Override
-    public PersonRealmModel mapToRealmModel(Person person) {
+    public PersonRealmModel mapToRealmModel(PersonResponse person) {
         PersonRealmModel realmPerson = Realm.getDefaultInstance().createObject(PersonRealmModel.class);
 
         realmPerson.setBiography(person.getBiography());
@@ -31,8 +31,8 @@ public class PersonRealmModelMapper implements RealmModelMapper<Person, PersonRe
     }
 
     @Override
-    public Person mapFromRealmModel(PersonRealmModel personRealmModel) {
-        Person person = new Person();
+    public PersonResponse mapFromRealmModel(PersonRealmModel personRealmModel) {
+        PersonResponse person = new PersonResponse();
 
         person.setBiography(personRealmModel.getBiography());
         person.setBirthday(personRealmModel.getBirthday());

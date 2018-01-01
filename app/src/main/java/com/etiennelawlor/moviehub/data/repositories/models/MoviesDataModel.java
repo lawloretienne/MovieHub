@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.data.repositories.models;
 
-import com.etiennelawlor.moviehub.data.network.response.Movie;
+import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -13,7 +13,7 @@ import java.util.List;
 public class MoviesDataModel {
 
     // region Member Variables
-    private List<Movie> movies;
+    private List<MovieResponse> movies;
     private int pageNumber;
     private boolean isLastPage;
     private Date expiredAt;
@@ -21,7 +21,7 @@ public class MoviesDataModel {
 
     // region Constructors
 
-    public MoviesDataModel(List<Movie> movies, int pageNumber, boolean isLastPage, Date expiredAt) {
+    public MoviesDataModel(List<MovieResponse> movies, int pageNumber, boolean isLastPage, Date expiredAt) {
         this.movies = movies;
         this.pageNumber = pageNumber;
         this.isLastPage = isLastPage;
@@ -35,7 +35,7 @@ public class MoviesDataModel {
 
     // region Getters
 
-    public List<Movie> getMovies() {
+    public List<MovieResponse> getMovies() {
         return movies;
     }
 
@@ -55,7 +55,7 @@ public class MoviesDataModel {
 
     // region Setters
 
-    public void setMovies(List<Movie> movies) {
+    public void setMovies(List<MovieResponse> movies) {
         this.movies = movies;
     }
 
