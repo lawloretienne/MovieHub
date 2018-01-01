@@ -18,7 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.network.response.MovieCreditResponse;
+import com.etiennelawlor.moviehub.data.repositories.models.MovieCreditDataModel;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.common.widget.DynamicHeightImageView;
 import com.etiennelawlor.moviehub.util.AnimationUtility;
@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
  * Created by etiennelawlor on 12/17/16.
  */
 
-public class MovieCreditsAdapter extends BaseAdapter<MovieCreditResponse> {
+public class MovieCreditsAdapter extends BaseAdapter<MovieCreditDataModel> {
 
     // region Constants
     // endregion
@@ -117,7 +117,7 @@ public class MovieCreditsAdapter extends BaseAdapter<MovieCreditResponse> {
     protected void bindItemViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         final MovieCreditViewHolder holder = (MovieCreditViewHolder) viewHolder;
 
-        final MovieCreditResponse movieCredit = getItem(position);
+        final MovieCreditDataModel movieCredit = getItem(position);
         if (movieCredit != null) {
             holder.bind(movieCredit);
         }
@@ -153,7 +153,7 @@ public class MovieCreditsAdapter extends BaseAdapter<MovieCreditResponse> {
     @Override
     public void addFooter() {
         isFooterAdded = true;
-        add(new MovieCreditResponse());
+        add(new MovieCreditDataModel());
     }
 
     // region Inner Classes
@@ -187,7 +187,7 @@ public class MovieCreditsAdapter extends BaseAdapter<MovieCreditResponse> {
         // endregion
 
         // region Helper Methods
-        private void bind(MovieCreditResponse movieCredit){
+        private void bind(MovieCreditDataModel movieCredit){
             resetInfoBackgroundColor(infoLinearLayout);
             resetTitleTextColor(titleTextView);
             resetSubtitleTextColor(subtitleTextView);
@@ -197,7 +197,7 @@ public class MovieCreditsAdapter extends BaseAdapter<MovieCreditResponse> {
             setUpSubtitle(subtitleTextView, movieCredit);
         }
 
-        private void setUpThumbnail(final MovieCreditViewHolder vh, final MovieCreditResponse movieCredit){
+        private void setUpThumbnail(final MovieCreditViewHolder vh, final MovieCreditDataModel movieCredit){
             final DynamicHeightImageView iv = vh.thumbnailImageView;
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) iv.getLayoutParams();
             layoutParams.width = ivWidth;
@@ -257,7 +257,7 @@ public class MovieCreditsAdapter extends BaseAdapter<MovieCreditResponse> {
             }
         }
 
-        private void setUpTitle(TextView tv, MovieCreditResponse movieCredit){
+        private void setUpTitle(TextView tv, MovieCreditDataModel movieCredit){
             String name = movieCredit.getName();
             if (!TextUtils.isEmpty(name)) {
                 tv.setText(name);
@@ -278,7 +278,7 @@ public class MovieCreditsAdapter extends BaseAdapter<MovieCreditResponse> {
             }
         }
 
-        private void setUpSubtitle(TextView tv, MovieCreditResponse movieCredit){
+        private void setUpSubtitle(TextView tv, MovieCreditDataModel movieCredit){
             String job = movieCredit.getJob();
             String character = movieCredit.getCharacter();
             if (!TextUtils.isEmpty(job)) {

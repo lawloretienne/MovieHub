@@ -2,8 +2,8 @@ package com.etiennelawlor.moviehub.data.database.mappers;
 
 import com.etiennelawlor.moviehub.data.database.models.ProfileImageRealmModel;
 import com.etiennelawlor.moviehub.data.database.models.ProfileImagesRealmModel;
-import com.etiennelawlor.moviehub.data.network.response.ProfileImageResponse;
-import com.etiennelawlor.moviehub.data.network.response.ProfileImagesResponse;
+import com.etiennelawlor.moviehub.data.repositories.models.ProfileImageDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.ProfileImagesDataModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,39 +15,39 @@ import io.realm.RealmList;
  * Created by etiennelawlor on 5/14/17.
  */
 
-public class ProfileImagesRealmModelMapper implements RealmModelMapper<ProfileImagesResponse, ProfileImagesRealmModel> {
+public class ProfileImagesRealmModelMapper implements RealmModelMapper<ProfileImagesDataModel, ProfileImagesRealmModel> {
 
     private ProfileImageRealmModelMapper profileImageRealmMapper = new ProfileImageRealmModelMapper();
 
     @Override
-    public ProfileImagesRealmModel mapToRealmModel(ProfileImagesResponse profileImages) {
+    public ProfileImagesRealmModel mapToRealmModel(ProfileImagesDataModel profileImagesDataModel) {
         ProfileImagesRealmModel realmProfileImages = Realm.getDefaultInstance().createObject(ProfileImagesRealmModel.class);
 
-        if(profileImages != null){
-            List<ProfileImageResponse> profileImages1 = profileImages.getProfiles();
-            RealmList<ProfileImageRealmModel> realmProfileImages1 = new RealmList<>();
-            if(profileImages1 != null && profileImages1.size()>0) {
-                for (ProfileImageResponse profileImage : profileImages1) {
-                    realmProfileImages1.add(profileImageRealmMapper.mapToRealmModel(profileImage));
+        if(profileImagesDataModel != null){
+            List<ProfileImageDataModel> profileImageDataModels = profileImagesDataModel.getProfiles();
+            RealmList<ProfileImageRealmModel> profileImageRealmModels = new RealmList<>();
+            if(profileImageDataModels != null && profileImageDataModels.size()>0) {
+                for (ProfileImageDataModel profileImageDataModel : profileImageDataModels) {
+                    profileImageRealmModels.add(profileImageRealmMapper.mapToRealmModel(profileImageDataModel));
                 }
             }
-            realmProfileImages.setProfiles(realmProfileImages1);
+            realmProfileImages.setProfiles(profileImageRealmModels);
         }
 
         return realmProfileImages;
     }
 
     @Override
-    public ProfileImagesResponse mapFromRealmModel(ProfileImagesRealmModel profileImagesRealmModel) {
-        ProfileImagesResponse profileImages = new ProfileImagesResponse();
+    public ProfileImagesDataModel mapFromRealmModel(ProfileImagesRealmModel profileImagesRealmModel) {
+        ProfileImagesDataModel profileImagesDataModel = new ProfileImagesDataModel();
 
-        RealmList<ProfileImageRealmModel> realmProfileImages1 = profileImagesRealmModel.getProfiles();
-        List<ProfileImageResponse> profileImages1 = new ArrayList<>();
-        for(ProfileImageRealmModel realmProfileImage : realmProfileImages1){
-            profileImages1.add(profileImageRealmMapper.mapFromRealmModel(realmProfileImage));
+        RealmList<ProfileImageRealmModel> profileImageRealmModels = profileImagesRealmModel.getProfiles();
+        List<ProfileImageDataModel> profileImageDataModels = new ArrayList<>();
+        for(ProfileImageRealmModel profileImageRealmModel : profileImageRealmModels){
+            profileImageDataModels.add(profileImageRealmMapper.mapFromRealmModel(profileImageRealmModel));
         }
-        profileImages.setProfiles(profileImages1);
+        profileImagesDataModel.setProfiles(profileImageDataModels);
 
-        return profileImages;
+        return profileImagesDataModel;
     }
 }

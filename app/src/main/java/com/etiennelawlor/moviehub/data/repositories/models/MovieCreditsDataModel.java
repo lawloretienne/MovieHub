@@ -1,7 +1,5 @@
 package com.etiennelawlor.moviehub.data.repositories.models;
 
-import com.etiennelawlor.moviehub.data.network.response.MovieCreditResponse;
-
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -14,13 +12,13 @@ public class MovieCreditsDataModel {
 
     // region Fields
     public int id;
-    public List<MovieCreditResponse> cast = null;
-    public List<MovieCreditResponse> crew = null;
+    public List<MovieCreditDataModel> cast = null;
+    public List<MovieCreditDataModel> crew = null;
     private Date expiredAt;
     // endregion
 
     // region Constructors
-    public MovieCreditsDataModel(int id, List<MovieCreditResponse> cast, List<MovieCreditResponse> crew, Date expiredAt) {
+    public MovieCreditsDataModel(int id, List<MovieCreditDataModel> cast, List<MovieCreditDataModel> crew, Date expiredAt) {
         this.id = id;
         this.cast = cast;
         this.crew = crew;
@@ -37,11 +35,11 @@ public class MovieCreditsDataModel {
         return id;
     }
 
-    public List<MovieCreditResponse> getCast() {
+    public List<MovieCreditDataModel> getCast() {
         return cast;
     }
 
-    public List<MovieCreditResponse> getCrew() {
+    public List<MovieCreditDataModel> getCrew() {
         return crew;
     }
 
@@ -57,11 +55,11 @@ public class MovieCreditsDataModel {
         this.id = id;
     }
 
-    public void setCast(List<MovieCreditResponse> cast) {
+    public void setCast(List<MovieCreditDataModel> cast) {
         this.cast = cast;
     }
 
-    public void setCrew(List<MovieCreditResponse> crew) {
+    public void setCrew(List<MovieCreditDataModel> crew) {
         this.crew = crew;
     }
 

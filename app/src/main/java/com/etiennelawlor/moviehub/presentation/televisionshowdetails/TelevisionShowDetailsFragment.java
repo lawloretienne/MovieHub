@@ -47,8 +47,8 @@ import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.GenreDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.PersonDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowCreditDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
 import com.etiennelawlor.moviehub.di.component.TelevisionShowDetailsComponent;
@@ -188,7 +188,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
 
             TelevisionShowCreditDataModel televisionShowCredit = castAdapter.getItem(position);
             if(televisionShowCredit != null){
-                PersonResponse person = new PersonResponse();
+                PersonDataModel person = new PersonDataModel();
 
                 person.setName(televisionShowCredit.getName());
                 person.setId(televisionShowCredit.getId());
@@ -206,7 +206,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
 
             TelevisionShowCreditDataModel televisionShowCredit = crewAdapter.getItem(position);
             if(televisionShowCredit != null){
-                PersonResponse person = new PersonResponse();
+                PersonDataModel person = new PersonDataModel();
 
                 person.setName(televisionShowCredit.getName());
                 person.setId(televisionShowCredit.getId());
@@ -556,7 +556,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     }
 
     @Override
-    public void openPersonDetails(PersonResponse person) {
+    public void openPersonDetails(PersonDataModel person) {
         Intent intent = new Intent(getActivity(), PersonDetailsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_PERSON, person);

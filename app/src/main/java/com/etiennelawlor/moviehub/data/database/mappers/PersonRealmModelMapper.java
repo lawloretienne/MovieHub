@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.data.database.mappers;
 
 import com.etiennelawlor.moviehub.data.database.models.PersonRealmModel;
-import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
+import com.etiennelawlor.moviehub.data.repositories.models.PersonDataModel;
 
 import io.realm.Realm;
 
@@ -9,41 +9,41 @@ import io.realm.Realm;
  * Created by etiennelawlor on 5/14/17.
  */
 
-public class PersonRealmModelMapper implements RealmModelMapper<PersonResponse, PersonRealmModel> {
+public class PersonRealmModelMapper implements RealmModelMapper<PersonDataModel, PersonRealmModel> {
 
     private ProfileImagesRealmModelMapper profileImagesRealmMapper = new ProfileImagesRealmModelMapper();
 
     @Override
-    public PersonRealmModel mapToRealmModel(PersonResponse person) {
+    public PersonRealmModel mapToRealmModel(PersonDataModel personDataModel) {
         PersonRealmModel realmPerson = Realm.getDefaultInstance().createObject(PersonRealmModel.class);
 
-        realmPerson.setBiography(person.getBiography());
-        realmPerson.setBirthday(person.getBirthday());
-        realmPerson.setDeathday(person.getDeathday());
-        realmPerson.setId(person.getId());
-        realmPerson.setImdbId(person.getImdbId());
-        realmPerson.setName(person.getName());
-        realmPerson.setPlaceOfBirth(person.getPlaceOfBirth());
-        realmPerson.setProfilePath(person.getProfilePath());
-        realmPerson.setImages(profileImagesRealmMapper.mapToRealmModel(person.getImages()));
+        realmPerson.setBiography(personDataModel.getBiography());
+        realmPerson.setBirthday(personDataModel.getBirthday());
+        realmPerson.setDeathday(personDataModel.getDeathday());
+        realmPerson.setId(personDataModel.getId());
+        realmPerson.setImdbId(personDataModel.getImdbId());
+        realmPerson.setName(personDataModel.getName());
+        realmPerson.setPlaceOfBirth(personDataModel.getPlaceOfBirth());
+        realmPerson.setProfilePath(personDataModel.getProfilePath());
+        realmPerson.setImages(profileImagesRealmMapper.mapToRealmModel(personDataModel.getImages()));
 
         return realmPerson;
     }
 
     @Override
-    public PersonResponse mapFromRealmModel(PersonRealmModel personRealmModel) {
-        PersonResponse person = new PersonResponse();
+    public PersonDataModel mapFromRealmModel(PersonRealmModel personRealmModel) {
+        PersonDataModel personDataModel = new PersonDataModel();
 
-        person.setBiography(personRealmModel.getBiography());
-        person.setBirthday(personRealmModel.getBirthday());
-        person.setDeathday(personRealmModel.getDeathday());
-        person.setId(personRealmModel.getId());
-        person.setImdbId(personRealmModel.getImdbId());
-        person.setName(personRealmModel.getName());
-        person.setPlaceOfBirth(personRealmModel.getPlaceOfBirth());
-        person.setProfilePath(personRealmModel.getProfilePath());
-        person.setImages(profileImagesRealmMapper.mapFromRealmModel(personRealmModel.getImages()));
+        personDataModel.setBiography(personRealmModel.getBiography());
+        personDataModel.setBirthday(personRealmModel.getBirthday());
+        personDataModel.setDeathday(personRealmModel.getDeathday());
+        personDataModel.setId(personRealmModel.getId());
+        personDataModel.setImdbId(personRealmModel.getImdbId());
+        personDataModel.setName(personRealmModel.getName());
+        personDataModel.setPlaceOfBirth(personRealmModel.getPlaceOfBirth());
+        personDataModel.setProfilePath(personRealmModel.getProfilePath());
+        personDataModel.setImages(profileImagesRealmMapper.mapFromRealmModel(personRealmModel.getImages()));
 
-        return person;
+        return personDataModel;
     }
 }

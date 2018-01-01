@@ -5,8 +5,8 @@ import com.etiennelawlor.moviehub.data.database.models.IntegerRealmModel;
 import com.etiennelawlor.moviehub.data.database.models.NetworkRealmModel;
 import com.etiennelawlor.moviehub.data.database.models.StringRealmModel;
 import com.etiennelawlor.moviehub.data.database.models.TelevisionShowRealmModel;
-import com.etiennelawlor.moviehub.data.network.response.NetworkResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.GenreDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.NetworkDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
 
 import java.util.ArrayList;
@@ -69,14 +69,14 @@ public class TelevisionShowRealmModelMapper implements RealmModelMapper<Televisi
         realmTelevisionShow.setName(televisionShowDataModel.getName());
 
 
-        List<NetworkResponse> networks = televisionShowDataModel.getNetworks();
-        RealmList<NetworkRealmModel> realmNetworks = new RealmList<>();
-        if(networks != null && networks.size()>0) {
-            for (NetworkResponse network : networks) {
-                realmNetworks.add(networkRealmMapper.mapToRealmModel(network));
+        List<NetworkDataModel> networkDataModels = televisionShowDataModel.getNetworks();
+        RealmList<NetworkRealmModel> networkRealmModels = new RealmList<>();
+        if(networkDataModels != null && networkDataModels.size()>0) {
+            for (NetworkDataModel networkDataModel : networkDataModels) {
+                networkRealmModels.add(networkRealmMapper.mapToRealmModel(networkDataModel));
             }
         }
-        realmTelevisionShow.setNetworks(realmNetworks);
+        realmTelevisionShow.setNetworks(networkRealmModels);
 
         realmTelevisionShow.setNumberOfEpisodes(televisionShowDataModel.getNumberOfEpisodes());
         realmTelevisionShow.setNumberOfSeasons(televisionShowDataModel.getNumberOfSeasons());
@@ -139,12 +139,12 @@ public class TelevisionShowRealmModelMapper implements RealmModelMapper<Televisi
         televisionShowDataModel.setLastAirDate(televisionShowRealmModel.getLastAirDate());
         televisionShowDataModel.setName(televisionShowRealmModel.getName());
 
-        RealmList<NetworkRealmModel> realmNetworks = televisionShowRealmModel.getNetworks();
-        List<NetworkResponse> networks = new ArrayList<>();
-        for(NetworkRealmModel realmNetwork : realmNetworks){
-            networks.add(networkRealmMapper.mapFromRealmModel(realmNetwork));
+        RealmList<NetworkRealmModel> networkRealmModels = televisionShowRealmModel.getNetworks();
+        List<NetworkDataModel> networkDataModels = new ArrayList<>();
+        for(NetworkRealmModel networkRealmModel : networkRealmModels){
+            networkDataModels.add(networkRealmMapper.mapFromRealmModel(networkRealmModel));
         }
-        televisionShowDataModel.setNetworks(networks);
+        televisionShowDataModel.setNetworks(networkDataModels);
 
         televisionShowDataModel.setNumberOfEpisodes(televisionShowRealmModel.getNumberOfEpisodes());
         televisionShowDataModel.setNumberOfSeasons(televisionShowRealmModel.getNumberOfSeasons());

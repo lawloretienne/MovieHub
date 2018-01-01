@@ -1,8 +1,10 @@
 package com.etiennelawlor.moviehub.data.repositories.mappers;
 
 import com.etiennelawlor.moviehub.data.network.response.GenreResponse;
+import com.etiennelawlor.moviehub.data.network.response.NetworkResponse;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.GenreDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.NetworkDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
 
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ public class TelevisionShowDataModelMapper implements DataModelMapper<Television
 
     // region Member Variables
     private GenreDataModelMapper genreDataModelMapper = new GenreDataModelMapper();
+    private NetworkDataModelMapper networkDataModelMapper = new NetworkDataModelMapper();
     // endregion
 
     @Override
@@ -38,7 +41,16 @@ public class TelevisionShowDataModelMapper implements DataModelMapper<Television
         televisionShowDataModel.setLanguages(televisionShowResponse.getLanguages());
         televisionShowDataModel.setLastAirDate(televisionShowResponse.getLastAirDate());
         televisionShowDataModel.setName(televisionShowResponse.getName());
-        televisionShowDataModel.setNetworks(televisionShowResponse.getNetworks());
+
+
+        List<NetworkResponse> networkResponses = televisionShowResponse.getNetworks();
+        List<NetworkDataModel> networkDataModels = new ArrayList<>();
+        if(networkResponses != null && networkResponses.size()>0) {
+            for (NetworkResponse networkResponse : networkResponses) {
+                networkDataModels.add(networkDataModelMapper.mapToDataModel(networkResponse));
+            }
+        }
+        televisionShowDataModel.setNetworks(networkDataModels);
         televisionShowDataModel.setNumberOfEpisodes(televisionShowResponse.getNumberOfEpisodes());
         televisionShowDataModel.setNumberOfSeasons(televisionShowResponse.getNumberOfSeasons());
         televisionShowDataModel.setOriginalLanguage(televisionShowResponse.getOriginalLanguage());

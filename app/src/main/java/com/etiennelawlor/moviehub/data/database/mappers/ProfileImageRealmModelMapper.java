@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.data.database.mappers;
 
 import com.etiennelawlor.moviehub.data.database.models.ProfileImageRealmModel;
-import com.etiennelawlor.moviehub.data.network.response.ProfileImageResponse;
+import com.etiennelawlor.moviehub.data.repositories.models.ProfileImageDataModel;
 
 import io.realm.Realm;
 
@@ -9,32 +9,32 @@ import io.realm.Realm;
  * Created by etiennelawlor on 5/14/17.
  */
 
-public class ProfileImageRealmModelMapper implements RealmModelMapper<ProfileImageResponse, ProfileImageRealmModel> {
+public class ProfileImageRealmModelMapper implements RealmModelMapper<ProfileImageDataModel, ProfileImageRealmModel> {
 
     @Override
-    public ProfileImageRealmModel mapToRealmModel(ProfileImageResponse profileImage) {
+    public ProfileImageRealmModel mapToRealmModel(ProfileImageDataModel profileImageDataModel) {
         ProfileImageRealmModel realmProfileImage = Realm.getDefaultInstance().createObject(ProfileImageRealmModel.class);
 
-        realmProfileImage.setAspectRatio(profileImage.getAspectRatio());
-        realmProfileImage.setFilePath(profileImage.getFilePath());
-        realmProfileImage.setHeight(profileImage.getHeight());
-        realmProfileImage.setVoteAverage(profileImage.getVoteAverage());
-        realmProfileImage.setVoteCount(profileImage.getVoteCount());
-        realmProfileImage.setWidth(profileImage.getWidth());
+        realmProfileImage.setAspectRatio(profileImageDataModel.getAspectRatio());
+        realmProfileImage.setFilePath(profileImageDataModel.getFilePath());
+        realmProfileImage.setHeight(profileImageDataModel.getHeight());
+        realmProfileImage.setVoteAverage(profileImageDataModel.getVoteAverage());
+        realmProfileImage.setVoteCount(profileImageDataModel.getVoteCount());
+        realmProfileImage.setWidth(profileImageDataModel.getWidth());
 
         return realmProfileImage;
     }
 
     @Override
-    public ProfileImageResponse mapFromRealmModel(ProfileImageRealmModel profileImageRealmModel) {
-        ProfileImageResponse profileImage = new ProfileImageResponse();
-        profileImage.setAspectRatio(profileImageRealmModel.getAspectRatio());
-        profileImage.setFilePath(profileImageRealmModel.getFilePath());
-        profileImage.setHeight(profileImageRealmModel.getHeight());
-        profileImage.setVoteAverage(profileImageRealmModel.getVoteAverage());
-        profileImage.setVoteCount(profileImageRealmModel.getVoteCount());
-        profileImage.setWidth(profileImageRealmModel.getWidth());
+    public ProfileImageDataModel mapFromRealmModel(ProfileImageRealmModel profileImageRealmModel) {
+        ProfileImageDataModel profileImageDataModel = new ProfileImageDataModel();
+        profileImageDataModel.setAspectRatio(profileImageRealmModel.getAspectRatio());
+        profileImageDataModel.setFilePath(profileImageRealmModel.getFilePath());
+        profileImageDataModel.setHeight(profileImageRealmModel.getHeight());
+        profileImageDataModel.setVoteAverage(profileImageRealmModel.getVoteAverage());
+        profileImageDataModel.setVoteCount(profileImageRealmModel.getVoteCount());
+        profileImageDataModel.setWidth(profileImageRealmModel.getWidth());
 
-        return profileImage;
+        return profileImageDataModel;
     }
 }

@@ -47,10 +47,10 @@ import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.network.response.MovieCreditResponse;
-import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.GenreDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.MovieCreditDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.MovieDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.PersonDataModel;
 import com.etiennelawlor.moviehub.di.component.MovieDetailsComponent;
 import com.etiennelawlor.moviehub.di.module.MovieDetailsModule;
 import com.etiennelawlor.moviehub.domain.models.MovieDetailsDomainModel;
@@ -238,9 +238,9 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
         @Override
         public void onItemClick(int position, View view) {
             selectedPersonView = view;
-            MovieCreditResponse movieCredit = castAdapter.getItem(position);
+            MovieCreditDataModel movieCredit = castAdapter.getItem(position);
             if(movieCredit != null){
-                PersonResponse person = new PersonResponse();
+                PersonDataModel person = new PersonDataModel();
 
                 person.setName(movieCredit.getName());
                 person.setId(movieCredit.getId());
@@ -255,9 +255,9 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
         @Override
         public void onItemClick(int position, View view) {
             selectedPersonView = view;
-            MovieCreditResponse movieCredit = crewAdapter.getItem(position);
+            MovieCreditDataModel movieCredit = crewAdapter.getItem(position);
             if(movieCredit != null){
-                PersonResponse person = new PersonResponse();
+                PersonDataModel person = new PersonDataModel();
 
                 person.setName(movieCredit.getName());
                 person.setId(movieCredit.getId());
@@ -553,7 +553,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
     }
 
     @Override
-    public void openPersonDetails(PersonResponse person) {
+    public void openPersonDetails(PersonDataModel person) {
         Intent intent = new Intent(getActivity(), PersonDetailsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_PERSON, person);
@@ -657,7 +657,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
     }
 
     private void setUpCast(){
-        List<MovieCreditResponse> cast = movieDetailsDomainModel.getCast();
+        List<MovieCreditDataModel> cast = movieDetailsDomainModel.getCast();
         if(cast != null && cast.size()>0){
             View castView = castViewStub.inflate();
 
@@ -676,7 +676,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
     }
 
     private void setUpCrew(){
-        List<MovieCreditResponse> crew = movieDetailsDomainModel.getCrew();
+        List<MovieCreditDataModel> crew = movieDetailsDomainModel.getCrew();
         if(crew != null && crew.size()>0){
             View crewView = crewViewStub.inflate();
 

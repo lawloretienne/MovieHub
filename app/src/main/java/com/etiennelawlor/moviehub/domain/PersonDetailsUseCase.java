@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.domain;
 
-import com.etiennelawlor.moviehub.data.network.response.PersonCreditResponse;
+import com.etiennelawlor.moviehub.data.repositories.models.PersonCreditDataModel;
 import com.etiennelawlor.moviehub.data.repositories.person.PersonDataSourceContract;
 import com.etiennelawlor.moviehub.domain.models.PersonDetailsDomainModel;
 
@@ -31,19 +31,19 @@ public class PersonDetailsUseCase implements PersonDetailsDomainContract.UseCase
         return Single.zip(
                 personRepository.getPerson(personId),
                 personRepository.getPersonCredits(personId),
-                (person, personCreditsEnvelope) -> {
-                    List<PersonCreditResponse> cast = new ArrayList<>();
-                    List<PersonCreditResponse> crew = new ArrayList<>();
+                (personDataModel, personCreditsDataModel) -> {
+                    List<PersonCreditDataModel> cast = new ArrayList<>();
+                    List<PersonCreditDataModel> crew = new ArrayList<>();
 
-                    if(personCreditsEnvelope!=null){
-                        cast = personCreditsEnvelope.getCast();
+                    if(personCreditsDataModel!=null){
+                        cast = personCreditsDataModel.getCast();
                     }
 
-                    if(personCreditsEnvelope!=null){
-                        crew = personCreditsEnvelope.getCrew();
+                    if(personCreditsDataModel!=null){
+                        crew = personCreditsDataModel.getCrew();
                     }
 
-                    return new PersonDetailsDomainModel(person, cast, crew);
+                    return new PersonDetailsDomainModel(personDataModel, cast, crew);
                 });
     }
     // endregion

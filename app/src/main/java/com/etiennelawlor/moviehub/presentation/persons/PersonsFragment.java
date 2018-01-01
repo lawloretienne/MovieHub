@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
+import com.etiennelawlor.moviehub.data.repositories.models.PersonDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.PersonsDataModel;
 import com.etiennelawlor.moviehub.di.component.PersonsComponent;
 import com.etiennelawlor.moviehub.di.module.PersonsModule;
@@ -185,7 +185,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     @Override
     public void onItemClick(int position, View view) {
         selectedPersonView = view;
-        PersonResponse person = personsAdapter.getItem(position);
+        PersonDataModel person = personsAdapter.getItem(position);
         if(person != null){
             personsPresenter.onPersonClick(person);
         }
@@ -266,7 +266,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     }
 
     @Override
-    public void addPersonsToAdapter(List<PersonResponse> persons) {
+    public void addPersonsToAdapter(List<PersonDataModel> persons) {
         personsAdapter.addAll(persons);
     }
 
@@ -282,7 +282,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     }
 
     @Override
-    public void openPersonDetails(PersonResponse person) {
+    public void openPersonDetails(PersonDataModel person) {
         Intent intent = new Intent(getActivity(), PersonDetailsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_PERSON, person);

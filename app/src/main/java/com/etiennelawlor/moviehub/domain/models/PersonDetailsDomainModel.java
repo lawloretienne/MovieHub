@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.domain.models;
 
-import com.etiennelawlor.moviehub.data.network.response.PersonCreditResponse;
-import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
+import com.etiennelawlor.moviehub.data.repositories.models.PersonCreditDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.PersonDataModel;
 
 import java.util.List;
 
@@ -12,14 +12,14 @@ import java.util.List;
 public class PersonDetailsDomainModel {
 
     // region Member Variables
-    private PersonResponse person;
-    private List<PersonCreditResponse> cast;
-    private List<PersonCreditResponse> crew;
+    private PersonDataModel person;
+    private List<PersonCreditDataModel> cast;
+    private List<PersonCreditDataModel> crew;
     // endregion
 
     // region Constructors
 
-    public PersonDetailsDomainModel(PersonResponse person, List<PersonCreditResponse> cast, List<PersonCreditResponse> crew) {
+    public PersonDetailsDomainModel(PersonDataModel person, List<PersonCreditDataModel> cast, List<PersonCreditDataModel> crew) {
         this.person = person;
         this.cast = cast;
         this.crew = crew;
@@ -29,15 +29,15 @@ public class PersonDetailsDomainModel {
 
     // region Getters
 
-    public PersonResponse getPerson() {
+    public PersonDataModel getPerson() {
         return person;
     }
 
-    public List<PersonCreditResponse> getCast() {
+    public List<PersonCreditDataModel> getCast() {
         return cast;
     }
 
-    public List<PersonCreditResponse> getCrew() {
+    public List<PersonCreditDataModel> getCrew() {
         return crew;
     }
 
@@ -45,15 +45,15 @@ public class PersonDetailsDomainModel {
 
     // region Setters
 
-    public void setPerson(PersonResponse person) {
+    public void setPerson(PersonDataModel person) {
         this.person = person;
     }
 
-    public void setCast(List<PersonCreditResponse> cast) {
+    public void setCast(List<PersonCreditDataModel> cast) {
         this.cast = cast;
     }
 
-    public void setCrew(List<PersonCreditResponse> crew) {
+    public void setCrew(List<PersonCreditDataModel> crew) {
         this.crew = crew;
     }
 

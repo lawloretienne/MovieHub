@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.presentation.televisionshowdetails;
 
-import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
+import com.etiennelawlor.moviehub.data.repositories.models.PersonDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
 import com.etiennelawlor.moviehub.domain.TelevisionShowDetailsDomainContract;
 import com.etiennelawlor.moviehub.domain.models.TelevisionShowDetailsDomainModel;
@@ -69,7 +69,7 @@ public class TelevisionShowDetailsPresenter implements TelevisionShowDetailsUiCo
     }
 
     @Override
-    public void onPersonClick(PersonResponse person) {
+    public void onPersonClick(PersonDataModel person) {
         televisionShowDetailsView.openPersonDetails(person);
     }
 

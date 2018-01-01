@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.presentation.search;
 
-import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.MovieDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.PersonDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
 import com.etiennelawlor.moviehub.presentation.base.BasePresenter;
 
@@ -30,7 +30,7 @@ public interface SearchUiContract {
         void clearTelevisionShowsAdapter();
         void hideTelevisionShowsView();
         void showTelevisionShowsView();
-        void addPersonsToAdapter(List<PersonResponse> persons);
+        void addPersonsToAdapter(List<PersonDataModel> persons);
         void clearPersonsAdapter();
         void hidePersonsView();
         void showPersonsView();
@@ -38,13 +38,13 @@ public interface SearchUiContract {
         // Navigation methods
         void openMovieDetails(MovieDataModel movie);
         void openTelevisionShowDetails(TelevisionShowDataModel televisionShow);
-        void openPersonDetails(PersonResponse person);
+        void openPersonDetails(PersonDataModel person);
     }
 
     interface Presenter extends BasePresenter {
         void onLoadSearch(Observable<CharSequence> searchQueryChangeObservable);
         void onMovieClick(MovieDataModel movie);
         void onTelevisionShowClick(TelevisionShowDataModel televisionShow);
-        void onPersonClick(PersonResponse person);
+        void onPersonClick(PersonDataModel person);
     }
 }

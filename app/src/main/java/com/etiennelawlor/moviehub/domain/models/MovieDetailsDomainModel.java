@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.domain.models;
 
-import com.etiennelawlor.moviehub.data.network.response.MovieCreditResponse;
+import com.etiennelawlor.moviehub.data.repositories.models.MovieCreditDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.MovieDataModel;
 
 import java.util.List;
@@ -13,15 +13,15 @@ public class MovieDetailsDomainModel {
 
     // region Member Variables
     private MovieDataModel movie;
-    private List<MovieCreditResponse> cast;
-    private List<MovieCreditResponse> crew;
+    private List<MovieCreditDataModel> cast;
+    private List<MovieCreditDataModel> crew;
     private List<MovieDataModel> similarMovies;
     private String rating;
     // endregion
 
     // region Constructors
 
-    public MovieDetailsDomainModel(MovieDataModel movie, List<MovieCreditResponse> cast, List<MovieCreditResponse> crew, List<MovieDataModel> similarMovies, String rating) {
+    public MovieDetailsDomainModel(MovieDataModel movie, List<MovieCreditDataModel> cast, List<MovieCreditDataModel> crew, List<MovieDataModel> similarMovies, String rating) {
         this.movie = movie;
         this.cast = cast;
         this.crew = crew;
@@ -37,11 +37,11 @@ public class MovieDetailsDomainModel {
         return movie;
     }
 
-    public List<MovieCreditResponse> getCast() {
+    public List<MovieCreditDataModel> getCast() {
         return cast;
     }
 
-    public List<MovieCreditResponse> getCrew() {
+    public List<MovieCreditDataModel> getCrew() {
         return crew;
     }
 
@@ -61,11 +61,11 @@ public class MovieDetailsDomainModel {
         this.movie = movie;
     }
 
-    public void setCast(List<MovieCreditResponse> cast) {
+    public void setCast(List<MovieCreditDataModel> cast) {
         this.cast = cast;
     }
 
-    public void setCrew(List<MovieCreditResponse> crew) {
+    public void setCrew(List<MovieCreditDataModel> crew) {
         this.crew = crew;
     }
 

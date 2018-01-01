@@ -5,7 +5,6 @@ import android.os.Parcelable;
 import android.support.v7.graphics.Palette;
 import android.text.TextUtils;
 
-import com.etiennelawlor.moviehub.data.network.response.NetworkResponse;
 import com.etiennelawlor.moviehub.util.DateUtility;
 
 import java.util.ArrayList;
@@ -35,7 +34,7 @@ public class TelevisionShowDataModel implements Parcelable {
     public List<String> languages = null;
     public String lastAirDate;
     public String name;
-    public List<NetworkResponse> networks = null;
+    public List<NetworkDataModel> networks = null;
     public int numberOfEpisodes;
     public int numberOfSeasons;
     public List<String> originCountry = null;
@@ -68,7 +67,7 @@ public class TelevisionShowDataModel implements Parcelable {
         this.languages = in.createStringArrayList();
         this.lastAirDate = in.readString();
         this.name = in.readString();
-        this.networks = in.createTypedArrayList(NetworkResponse.CREATOR);
+        this.networks = in.createTypedArrayList(NetworkDataModel.CREATOR);
         this.numberOfEpisodes = in.readInt();
         this.numberOfSeasons = in.readInt();
         this.originCountry = in.createStringArrayList();
@@ -126,7 +125,7 @@ public class TelevisionShowDataModel implements Parcelable {
         return name;
     }
 
-    public List<NetworkResponse> getNetworks() {
+    public List<NetworkDataModel> getNetworks() {
         return networks;
     }
 
@@ -209,7 +208,7 @@ public class TelevisionShowDataModel implements Parcelable {
         String formattedNetwork =  "";
         if(networks != null && networks.size()>0){
 
-            NetworkResponse network = networks.get(0);
+            NetworkDataModel network = networks.get(0);
             formattedNetwork = network.getName();
 
             if(formattedNetwork.equals("Fox Broadcasting Company") || formattedNetwork.equals("Fox")){
@@ -298,7 +297,7 @@ public class TelevisionShowDataModel implements Parcelable {
         this.name = name;
     }
 
-    public void setNetworks(List<NetworkResponse> networks) {
+    public void setNetworks(List<NetworkDataModel> networks) {
         this.networks = networks;
     }
 

@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.presentation.search;
 
-import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.MovieDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.PersonDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
 import com.etiennelawlor.moviehub.domain.SearchDomainContract;
 import com.etiennelawlor.moviehub.domain.models.SearchDomainModel;
@@ -161,7 +161,7 @@ public class SearchPresenter implements SearchUiContract.Presenter {
     }
 
     @Override
-    public void onPersonClick(PersonResponse person) {
+    public void onPersonClick(PersonDataModel person) {
         searchView.openPersonDetails(person);
     }
 

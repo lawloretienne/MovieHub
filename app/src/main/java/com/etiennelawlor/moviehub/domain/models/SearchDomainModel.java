@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.domain.models;
 
-import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.MovieDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.PersonDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
 
 import java.util.List;
@@ -16,12 +16,12 @@ public class SearchDomainModel {
     private String query;
     private List<MovieDataModel> movies;
     private List<TelevisionShowDataModel> televisionShows;
-    private List<PersonResponse> persons;
+    private List<PersonDataModel> persons;
     // endregion
 
     // region Constructors
 
-    public SearchDomainModel(String query, List<MovieDataModel> movies, List<TelevisionShowDataModel> televisionShows, List<PersonResponse> persons) {
+    public SearchDomainModel(String query, List<MovieDataModel> movies, List<TelevisionShowDataModel> televisionShows, List<PersonDataModel> persons) {
         this.query = query;
         this.movies = movies;
         this.televisionShows = televisionShows;
@@ -44,7 +44,7 @@ public class SearchDomainModel {
         return televisionShows;
     }
 
-    public List<PersonResponse> getPersons() {
+    public List<PersonDataModel> getPersons() {
         return persons;
     }
 
@@ -64,7 +64,7 @@ public class SearchDomainModel {
         this.televisionShows = televisionShows;
     }
 
-    public void setPersons(List<PersonResponse> persons) {
+    public void setPersons(List<PersonDataModel> persons) {
         this.persons = persons;
     }
 

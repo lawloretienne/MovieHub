@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.presentation.persons;
 
-import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
+import com.etiennelawlor.moviehub.data.repositories.models.PersonDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.PersonsDataModel;
 import com.etiennelawlor.moviehub.domain.PersonsDomainContract;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
@@ -55,7 +55,7 @@ public class PersonsPresenter implements PersonsUiContract.Presenter {
                     @Override
                     public void onSuccess(PersonsDataModel personsDataModel) {
                         if(personsDataModel != null){
-                            List<PersonResponse> persons = personsDataModel.getPersons();
+                            List<PersonDataModel> persons = personsDataModel.getPersons();
                             int currentPage = personsDataModel.getPageNumber();
                             boolean isLastPage = personsDataModel.isLastPage();
                             boolean hasMovies = personsDataModel.hasPersons();
@@ -110,7 +110,7 @@ public class PersonsPresenter implements PersonsUiContract.Presenter {
     }
 
     @Override
-    public void onPersonClick(PersonResponse person) {
+    public void onPersonClick(PersonDataModel person) {
         personsView.openPersonDetails(person);
     }
 

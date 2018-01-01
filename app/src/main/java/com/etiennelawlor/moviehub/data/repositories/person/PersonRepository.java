@@ -1,8 +1,10 @@
 package com.etiennelawlor.moviehub.data.repositories.person;
 
-import com.etiennelawlor.moviehub.data.network.response.PersonCreditsResponse;
-import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
+import com.etiennelawlor.moviehub.data.repositories.mappers.PersonCreditsDataModelMapper;
+import com.etiennelawlor.moviehub.data.repositories.mappers.PersonDataModelMapper;
 import com.etiennelawlor.moviehub.data.repositories.mappers.PersonsDataModelMapper;
+import com.etiennelawlor.moviehub.data.repositories.models.PersonCreditsDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.PersonDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.PersonsDataModel;
 
 import io.reactivex.Maybe;
@@ -18,6 +20,8 @@ public class PersonRepository implements PersonDataSourceContract.Repository {
     private PersonDataSourceContract.LocalDateSource personLocalDataSource;
     private PersonDataSourceContract.RemoteDateSource personRemoteDataSource;
     private PersonsDataModelMapper personsDataModelMapper = new PersonsDataModelMapper();
+    private PersonDataModelMapper personDataModelMapper = new PersonDataModelMapper();
+    private PersonCreditsDataModelMapper personCreditsDataModelMapper = new PersonCreditsDataModelMapper();
     // endregion
 
     // region Constructors
@@ -41,21 +45,23 @@ public class PersonRepository implements PersonDataSourceContract.Repository {
     }
 
     @Override
-    public Single<PersonResponse> getPerson(int personId) {
-        Maybe<PersonResponse> local = personLocalDataSource.getPerson(personId);
-        Single<PersonResponse> remote =
+    public Single<PersonDataModel> getPerson(int personId) {
+        Maybe<PersonDataModel> local = personLocalDataSource.getPerson(personId);
+        Single<PersonDataModel> remote =
                 personRemoteDataSource.getPerson(personId)
-                        .doOnSuccess(person -> personLocalDataSource.savePerson(person));
+                        .map(personResponse -> personDataModelMapper.mapToDataModel(personResponse))
+                        .doOnSuccess(personDataModel -> personLocalDataSource.savePerson(personDataModel));
 
         return local.switchIfEmpty(remote);
     }
 
     @Override
-    public Single<PersonCreditsResponse> getPersonCredits(int personId) {
-        Maybe<PersonCreditsResponse> local = personLocalDataSource.getPersonCredits(personId);
-        Single<PersonCreditsResponse> remote =
+    public Single<PersonCreditsDataModel> getPersonCredits(int personId) {
+        Maybe<PersonCreditsDataModel> local = personLocalDataSource.getPersonCredits(personId);
+        Single<PersonCreditsDataModel> remote =
                 personRemoteDataSource.getPersonCredits(personId)
-                        .doOnSuccess(personCreditsEnvelope -> personLocalDataSource.savePersonCredits(personCreditsEnvelope));
+                        .map(personCreditsResponse -> personCreditsDataModelMapper.mapToDataModel(personCreditsResponse))
+                        .doOnSuccess(personCreditsDataModel -> personLocalDataSource.savePersonCredits(personCreditsDataModel));
 
         return local.switchIfEmpty(remote);
     }

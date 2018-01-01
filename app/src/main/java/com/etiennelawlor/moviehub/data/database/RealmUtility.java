@@ -9,9 +9,9 @@ import com.etiennelawlor.moviehub.data.database.models.PersonRealmModel;
 import com.etiennelawlor.moviehub.data.database.models.PersonsRealmModel;
 import com.etiennelawlor.moviehub.data.database.models.TelevisionShowRealmModel;
 import com.etiennelawlor.moviehub.data.database.models.TelevisionShowsRealmModel;
-import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.MovieDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.MoviesDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.PersonDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.PersonsDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowsDataModel;
@@ -186,7 +186,7 @@ public class RealmUtility {
 
                 RealmList<PersonRealmModel> personRealmModels = personsRealmModel.getPersons();
 
-                List<PersonResponse> persons = new ArrayList<>();
+                List<PersonDataModel> persons = new ArrayList<>();
                 for(PersonRealmModel personRealmModel : personRealmModels){
                     persons.add(personRealmModelMapper.mapFromRealmModel(personRealmModel));
                 }
@@ -208,7 +208,7 @@ public class RealmUtility {
     public static void savePersonsDataModel(PersonsDataModel personsDataModel){
         Realm realm = Realm.getDefaultInstance();
         try {
-            List<PersonResponse> persons = personsDataModel.getPersons();
+            List<PersonDataModel> persons = personsDataModel.getPersons();
             int pageNumber = personsDataModel.getPageNumber();
             boolean isLastPage = personsDataModel.isLastPage();
             Date expiredAt = personsDataModel.getExpiredAt();
@@ -219,7 +219,7 @@ public class RealmUtility {
                     PersonsRealmModel personsRealmModel = new PersonsRealmModel();
 
                     RealmList<PersonRealmModel> personRealmModels = new RealmList<>();
-                    for(PersonResponse person : persons){
+                    for(PersonDataModel person : persons){
                         personRealmModels.add(personRealmModelMapper.mapToRealmModel(person));
                     }
 

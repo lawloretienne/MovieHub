@@ -30,8 +30,8 @@ import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.MovieDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.PersonDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
 import com.etiennelawlor.moviehub.di.component.SearchComponent;
 import com.etiennelawlor.moviehub.di.module.SearchModule;
@@ -199,7 +199,7 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
         public void onItemClick(int position, View view) {
             selectedPersonView = view;
 
-            PersonResponse person = searchPersonsAdapter.getItem(position);
+            PersonDataModel person = searchPersonsAdapter.getItem(position);
             if(person != null){
                 searchPresenter.onPersonClick(person);
             }
@@ -395,7 +395,7 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
     }
 
     @Override
-    public void addPersonsToAdapter(List<PersonResponse> persons) {
+    public void addPersonsToAdapter(List<PersonDataModel> persons) {
         searchPersonsAdapter.addAll(persons);
     }
 
@@ -454,7 +454,7 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
     }
 
     @Override
-    public void openPersonDetails(PersonResponse person) {
+    public void openPersonDetails(PersonDataModel person) {
         Intent intent = new Intent(getActivity(), PersonDetailsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_PERSON, person);

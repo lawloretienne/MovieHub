@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.data.database.mappers;
 
 import com.etiennelawlor.moviehub.data.database.models.NetworkRealmModel;
-import com.etiennelawlor.moviehub.data.network.response.NetworkResponse;
+import com.etiennelawlor.moviehub.data.repositories.models.NetworkDataModel;
 
 import io.realm.Realm;
 
@@ -9,24 +9,24 @@ import io.realm.Realm;
  * Created by etiennelawlor on 5/14/17.
  */
 
-public class NetworkRealmModelMapper implements RealmModelMapper<NetworkResponse, NetworkRealmModel> {
+public class NetworkRealmModelMapper implements RealmModelMapper<NetworkDataModel, NetworkRealmModel> {
 
     @Override
-    public NetworkRealmModel mapToRealmModel(NetworkResponse network) {
+    public NetworkRealmModel mapToRealmModel(NetworkDataModel networkDataModel) {
         NetworkRealmModel realmNetwork = Realm.getDefaultInstance().createObject(NetworkRealmModel.class);
 
-        realmNetwork.setId(network.getId());
-        realmNetwork.setName(network.getName());
+        realmNetwork.setId(networkDataModel.getId());
+        realmNetwork.setName(networkDataModel.getName());
 
         return realmNetwork;
     }
 
     @Override
-    public NetworkResponse mapFromRealmModel(NetworkRealmModel networkRealmModel) {
-        NetworkResponse network = new NetworkResponse();
-        network.setId(networkRealmModel.getId());
-        network.setName(networkRealmModel.getName());
+    public NetworkDataModel mapFromRealmModel(NetworkRealmModel networkRealmModel) {
+        NetworkDataModel networkDataModel = new NetworkDataModel();
+        networkDataModel.setId(networkRealmModel.getId());
+        networkDataModel.setName(networkRealmModel.getName());
 
-        return network;
+        return networkDataModel;
     }
 }

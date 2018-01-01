@@ -18,7 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
+import com.etiennelawlor.moviehub.data.repositories.models.PersonDataModel;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.common.widget.DynamicHeightImageView;
 import com.etiennelawlor.moviehub.util.AnimationUtility;
@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
  * Created by etiennelawlor on 12/17/16.
  */
 
-public class SearchPersonsAdapter extends BaseAdapter<PersonResponse> {
+public class SearchPersonsAdapter extends BaseAdapter<PersonDataModel> {
 
     // region Constants
     // endregion
@@ -117,7 +117,7 @@ public class SearchPersonsAdapter extends BaseAdapter<PersonResponse> {
     protected void bindItemViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         final PersonViewHolder holder = (PersonViewHolder) viewHolder;
 
-        final PersonResponse person = getItem(position);
+        final PersonDataModel person = getItem(position);
         if (person != null) {
             holder.bind(person);
         }
@@ -153,7 +153,7 @@ public class SearchPersonsAdapter extends BaseAdapter<PersonResponse> {
     @Override
     public void addFooter() {
         isFooterAdded = true;
-        add(new PersonResponse());
+        add(new PersonDataModel());
     }
 
     // region Inner Classes
@@ -187,7 +187,7 @@ public class SearchPersonsAdapter extends BaseAdapter<PersonResponse> {
         // endregion
 
         // region Helper Methods
-        private void bind(PersonResponse person){
+        private void bind(PersonDataModel person){
             resetInfoBackgroundColor(infoLinearLayout);
             resetTitleTextColor(titleTextView);
 
@@ -195,7 +195,7 @@ public class SearchPersonsAdapter extends BaseAdapter<PersonResponse> {
             setUpTitle(titleTextView, person);
         }
 
-        private void setUpThumbnail(final PersonViewHolder vh, final PersonResponse person){
+        private void setUpThumbnail(final PersonViewHolder vh, final PersonDataModel person){
             final DynamicHeightImageView iv = vh.thumbnailImageView;
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) iv.getLayoutParams();
             layoutParams.width = ivWidth;
@@ -254,7 +254,7 @@ public class SearchPersonsAdapter extends BaseAdapter<PersonResponse> {
             }
         }
 
-        private void setUpTitle(TextView tv, PersonResponse person){
+        private void setUpTitle(TextView tv, PersonDataModel person){
             String name = person.getName();
             if (!TextUtils.isEmpty(name)) {
                 tv.setText(name);
