@@ -16,7 +16,6 @@ public class MovieCreditDataModelMapper implements DataModelMapper<MovieCreditRe
         movieCreditDataModel.setDepartment(movieCreditResponse.getDepartment());
         movieCreditDataModel.setJob(movieCreditResponse.getJob());
         movieCreditDataModel.setName(movieCreditResponse.getName());
-        movieCreditDataModel.setProfilePalette(movieCreditResponse.getProfilePalette());
         movieCreditDataModel.setProfilePath(movieCreditResponse.getProfilePath());
         movieCreditDataModel.setCreditId(movieCreditResponse.getCreditId());
         movieCreditDataModel.setId(movieCreditResponse.getId());

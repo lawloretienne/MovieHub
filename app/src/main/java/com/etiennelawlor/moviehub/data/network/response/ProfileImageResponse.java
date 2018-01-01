@@ -1,15 +1,12 @@
 package com.etiennelawlor.moviehub.data.network.response;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by etiennelawlor on 12/16/16.
  */
 
-public class ProfileImageResponse implements Parcelable {
+public class ProfileImageResponse {
 
     // region Fields
     @SerializedName("aspect_ratio")
@@ -24,20 +21,6 @@ public class ProfileImageResponse implements Parcelable {
     public int voteCount;
     @SerializedName("width")
     public int width;
-    // endregion
-
-    // region Constructors
-    public ProfileImageResponse() {
-    }
-
-    protected ProfileImageResponse(Parcel in) {
-        this.aspectRatio = in.readFloat();
-        this.filePath = in.readString();
-        this.height = in.readInt();
-        this.voteAverage = in.readFloat();
-        this.voteCount = in.readInt();
-        this.width = in.readInt();
-    }
     // endregion
 
     // region Getters
@@ -95,35 +78,6 @@ public class ProfileImageResponse implements Parcelable {
     }
 
     // endregion
-
-    // region Parcelable Methods
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeFloat(this.aspectRatio);
-        dest.writeString(this.filePath);
-        dest.writeInt(this.height);
-        dest.writeFloat(this.voteAverage);
-        dest.writeInt(this.voteCount);
-        dest.writeInt(this.width);
-    }
-    // endregion
-
-    public static final Parcelable.Creator<ProfileImageResponse> CREATOR = new Parcelable.Creator<ProfileImageResponse>() {
-        @Override
-        public ProfileImageResponse createFromParcel(Parcel source) {
-            return new ProfileImageResponse(source);
-        }
-
-        @Override
-        public ProfileImageResponse[] newArray(int size) {
-            return new ProfileImageResponse[size];
-        }
-    };
 
     @Override
     public String toString() {

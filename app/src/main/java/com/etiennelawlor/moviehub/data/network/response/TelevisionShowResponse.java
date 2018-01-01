@@ -1,28 +1,14 @@
 package com.etiennelawlor.moviehub.data.network.response;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.support.v7.graphics.Palette;
-import android.text.TextUtils;
-
-import com.etiennelawlor.moviehub.util.DateUtility;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 /**
  * Created by etiennelawlor on 12/16/16.
  */
 
-public class TelevisionShowResponse implements Parcelable {
-
-    // region Constants
-    public static final String PATTERN = "yyyy-MM-dd";
-    public static final String SECURE_BASE_URL = "https://image.tmdb.org/t/p/";
-    public static final String POSTER_SIZE = "w500";
-    // endregion
+public class TelevisionShowResponse {
 
     // region Fields
     @SerializedName("backdrop_path")
@@ -71,40 +57,6 @@ public class TelevisionShowResponse implements Parcelable {
     public float voteAverage;
     @SerializedName("vote_count")
     public int voteCount;
-
-    private Palette posterPalette;
-    // endregion
-
-    // region Constructors
-    public TelevisionShowResponse() {
-    }
-
-    protected TelevisionShowResponse(Parcel in) {
-        this.backdropPath = in.readString();
-        this.episodeRunTime = new ArrayList<Integer>();
-        in.readList(this.episodeRunTime, Integer.class.getClassLoader());
-        this.firstAirDate = in.readString();
-        this.genres = in.createTypedArrayList(GenreResponse.CREATOR);
-        this.homepage = in.readString();
-        this.id = in.readInt();
-        this.inProduction = in.readByte() != 0;
-        this.languages = in.createStringArrayList();
-        this.lastAirDate = in.readString();
-        this.name = in.readString();
-        this.networks = in.createTypedArrayList(NetworkResponse.CREATOR);
-        this.numberOfEpisodes = in.readInt();
-        this.numberOfSeasons = in.readInt();
-        this.originCountry = in.createStringArrayList();
-        this.originalLanguage = in.readString();
-        this.originalName = in.readString();
-        this.overview = in.readString();
-        this.popularity = in.readFloat();
-        this.posterPath = in.readString();
-        this.status = in.readString();
-        this.type = in.readString();
-        this.voteAverage = in.readFloat();
-        this.voteCount = in.readInt();
-    }
     // endregion
 
     // region Getters
@@ -201,82 +153,6 @@ public class TelevisionShowResponse implements Parcelable {
         return voteCount;
     }
 
-    public Palette getPosterPalette() {
-        return posterPalette;
-    }
-
-    public String getFirstAirYear(){
-        String firstAirYear = "";
-        if (!TextUtils.isEmpty(firstAirDate)) {
-            Calendar calendar = DateUtility.getCalendar(firstAirDate, PATTERN);
-            firstAirYear = String.format("%d", calendar.get(Calendar.YEAR));
-        }
-        return firstAirYear;
-    }
-
-    public int getFirstAirDateYear(){
-        int firstAirDateYear = -1;
-        if (!TextUtils.isEmpty(firstAirDate)) {
-            Calendar calendar = DateUtility.getCalendar(firstAirDate, PATTERN);
-            firstAirDateYear = calendar.get(Calendar.YEAR);
-        }
-        return firstAirDateYear;
-    }
-
-    public String getPosterUrl(){
-        String profileUrl = String.format("%s%s%s", SECURE_BASE_URL, POSTER_SIZE, posterPath);
-        return profileUrl;
-    }
-
-    public String getFormattedNetwork(){
-        String formattedNetwork =  "";
-        if(networks != null && networks.size()>0){
-
-            NetworkResponse network = networks.get(0);
-            formattedNetwork = network.getName();
-
-            if(formattedNetwork.equals("Fox Broadcasting Company") || formattedNetwork.equals("Fox")){
-                formattedNetwork = "FOX";
-            } else if(formattedNetwork.equals("American Broadcasting Company")){
-                formattedNetwork = "ABC";
-            } else if(formattedNetwork.equals("The WB Television NetworkResponse")){
-                formattedNetwork = "The WB";
-            } else if(formattedNetwork.equals("National Educational Television")){
-                formattedNetwork = "NET";
-            } else if(formattedNetwork.equals("CBC Television")){
-                formattedNetwork = "CBC";
-            } else if(formattedNetwork.equals("British Broadcasting Corporation")){
-                formattedNetwork = "BBC";
-            } else if(formattedNetwork.equals("Lifetime Television")){
-                formattedNetwork = "Lifetime";
-            } else if(formattedNetwork.equals("Public Broadcasting Service")){
-                formattedNetwork = "PBS";
-            } else if(formattedNetwork.equals("Oprah Winfrey NetworkResponse")){
-                formattedNetwork = "OWN";
-            } else if(formattedNetwork.equals("The History Channel")){
-                formattedNetwork = "History";
-            } else if(formattedNetwork.equals("Orion Cinema NetworkResponse")){
-                formattedNetwork = "OCN";
-            } else if(formattedNetwork.equals("National Geographic Channel")){
-                formattedNetwork = "National Geographic";
-            } else if(formattedNetwork.equals("Seoul Broadcasting System")){
-                formattedNetwork = "SBS";
-            } else if(formattedNetwork.equals("Total Variety NetworkResponse")){
-                formattedNetwork = "TVN";
-            } else if(formattedNetwork.equals("Canal de las Estrellas")){
-                formattedNetwork = "Las Estrellas";
-            } else if(formattedNetwork.equals("Black Entertainment Television")){
-                formattedNetwork = "BET";
-            } else if(formattedNetwork.equals("RTL Television")){
-                formattedNetwork = "RTL";
-            } else if(formattedNetwork.equals("Munhwa Broadcasting Corporation")){
-                formattedNetwork = "MBC";
-            } else if(formattedNetwork.equals("Mainichi Broadcasting System")){
-                formattedNetwork = "MBS";
-            }
-        }
-        return formattedNetwork;
-    }
     // endregion
 
     // region Setters
@@ -373,57 +249,7 @@ public class TelevisionShowResponse implements Parcelable {
         this.voteCount = voteCount;
     }
 
-    public void setPosterPalette(Palette posterPalette) {
-        this.posterPalette = posterPalette;
-    }
-
     // endregion
-
-    // region Parcelable Methods
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.backdropPath);
-        dest.writeList(this.episodeRunTime);
-        dest.writeString(this.firstAirDate);
-        dest.writeTypedList(this.genres);
-        dest.writeString(this.homepage);
-        dest.writeInt(this.id);
-        dest.writeByte(this.inProduction ? (byte) 1 : (byte) 0);
-        dest.writeStringList(this.languages);
-        dest.writeString(this.lastAirDate);
-        dest.writeString(this.name);
-        dest.writeTypedList(this.networks);
-        dest.writeInt(this.numberOfEpisodes);
-        dest.writeInt(this.numberOfSeasons);
-        dest.writeStringList(this.originCountry);
-        dest.writeString(this.originalLanguage);
-        dest.writeString(this.originalName);
-        dest.writeString(this.overview);
-        dest.writeFloat(this.popularity);
-        dest.writeString(this.posterPath);
-        dest.writeString(this.status);
-        dest.writeString(this.type);
-        dest.writeFloat(this.voteAverage);
-        dest.writeInt(this.voteCount);
-    }
-    // endregion
-
-    public static final Parcelable.Creator<TelevisionShowResponse> CREATOR = new Parcelable.Creator<TelevisionShowResponse>() {
-        @Override
-        public TelevisionShowResponse createFromParcel(Parcel source) {
-            return new TelevisionShowResponse(source);
-        }
-
-        @Override
-        public TelevisionShowResponse[] newArray(int size) {
-            return new TelevisionShowResponse[size];
-        }
-    };
 
     @Override
     public String toString() {
@@ -451,7 +277,6 @@ public class TelevisionShowResponse implements Parcelable {
                 ", type='" + type + '\'' +
                 ", voteAverage=" + voteAverage +
                 ", voteCount=" + voteCount +
-                ", posterPalette=" + posterPalette +
                 '}';
     }
 }

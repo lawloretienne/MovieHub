@@ -24,7 +24,6 @@ public class PersonDataModelMapper implements DataModelMapper<PersonResponse, Pe
         personDataModel.setImdbId(personResponse.getImdbId());
         personDataModel.setName(personResponse.getName());
         personDataModel.setPlaceOfBirth(personResponse.getPlaceOfBirth());
-        personDataModel.setProfilePalette(personResponse.getProfilePalette());
         personDataModel.setProfilePath(personResponse.getProfilePath());
 
         return personDataModel;

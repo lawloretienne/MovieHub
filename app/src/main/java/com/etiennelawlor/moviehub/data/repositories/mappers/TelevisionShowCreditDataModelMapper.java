@@ -16,7 +16,6 @@ public class TelevisionShowCreditDataModelMapper implements DataModelMapper<Tele
         televisionShowCreditDataModel.setDepartment(televisionShowCreditResponse.getDepartment());
         televisionShowCreditDataModel.setJob(televisionShowCreditResponse.getJob());
         televisionShowCreditDataModel.setName(televisionShowCreditResponse.getName());
-        televisionShowCreditDataModel.setProfilePalette(televisionShowCreditResponse.getProfilePalette());
         televisionShowCreditDataModel.setProfilePath(televisionShowCreditResponse.getProfilePath());
         televisionShowCreditDataModel.setCreditId(televisionShowCreditResponse.getCreditId());
         televisionShowCreditDataModel.setId(televisionShowCreditResponse.getId());

@@ -1,27 +1,14 @@
 package com.etiennelawlor.moviehub.data.network.response;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.support.v7.graphics.Palette;
-import android.text.TextUtils;
-
-import com.etiennelawlor.moviehub.util.DateUtility;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Calendar;
 import java.util.List;
 
 /**
  * Created by etiennelawlor on 12/16/16.
  */
 
-public class MovieResponse implements Parcelable {
-
-    // region Constants
-    public static final String PATTERN = "yyyy-MM-dd";
-    public static final String SECURE_BASE_URL = "https://image.tmdb.org/t/p/";
-    public static final String POSTER_SIZE = "w500";
-    // endregion
+public class MovieResponse {
 
     // region Fields
     @SerializedName("adult")
@@ -66,37 +53,6 @@ public class MovieResponse implements Parcelable {
     public float voteAverage;
     @SerializedName("vote_count")
     public int voteCount;
-
-    private Palette posterPalette;
-    // endregion
-
-    // region Constructors
-    public MovieResponse() {
-    }
-
-    protected MovieResponse(Parcel in) {
-        this.adult = in.readByte() != 0;
-        this.backdropPath = in.readString();
-        this.budget = in.readInt();
-        this.genres = in.createTypedArrayList(GenreResponse.CREATOR);
-        this.homepage = in.readString();
-        this.id = in.readInt();
-        this.imdbId = in.readString();
-        this.originalLanguage = in.readString();
-        this.originalTitle = in.readString();
-        this.overview = in.readString();
-        this.popularity = in.readFloat();
-        this.posterPath = in.readString();
-        this.releaseDate = in.readString();
-        this.revenue = in.readLong();
-        this.runtime = in.readInt();
-        this.status = in.readString();
-        this.tagline = in.readString();
-        this.title = in.readString();
-        this.video = in.readByte() != 0;
-        this.voteAverage = in.readFloat();
-        this.voteCount = in.readInt();
-    }
     // endregion
 
     // region Getters
@@ -183,33 +139,6 @@ public class MovieResponse implements Parcelable {
 
     public int getVoteCount() {
         return voteCount;
-    }
-
-    public Palette getPosterPalette() {
-        return posterPalette;
-    }
-
-    public String getReleaseYear(){
-        String releaseYear = "";
-        if (!TextUtils.isEmpty(releaseDate)) {
-            Calendar calendar = DateUtility.getCalendar(releaseDate, PATTERN);
-            releaseYear = String.format("%d", calendar.get(Calendar.YEAR));
-        }
-        return releaseYear;
-    }
-
-    public int getReleaseDateYear(){
-        int releaseDateYear = -1;
-        if (!TextUtils.isEmpty(releaseDate)) {
-            Calendar calendar = DateUtility.getCalendar(releaseDate, PATTERN);
-            releaseDateYear = calendar.get(Calendar.YEAR);
-        }
-        return releaseDateYear;
-    }
-
-    public String getPosterUrl(){
-        String profileUrl = String.format("%s%s%s", SECURE_BASE_URL, POSTER_SIZE, posterPath);
-        return profileUrl;
     }
 
     // endregion
@@ -300,55 +229,7 @@ public class MovieResponse implements Parcelable {
         this.voteCount = voteCount;
     }
 
-    public void setPosterPalette(Palette posterPalette) {
-        this.posterPalette = posterPalette;
-    }
-
     // endregion
-
-    // region Parcelable Methods
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeByte(this.adult ? (byte) 1 : (byte) 0);
-        dest.writeString(this.backdropPath);
-        dest.writeInt(this.budget);
-        dest.writeTypedList(this.genres);
-        dest.writeString(this.homepage);
-        dest.writeInt(this.id);
-        dest.writeString(this.imdbId);
-        dest.writeString(this.originalLanguage);
-        dest.writeString(this.originalTitle);
-        dest.writeString(this.overview);
-        dest.writeFloat(this.popularity);
-        dest.writeString(this.posterPath);
-        dest.writeString(this.releaseDate);
-        dest.writeLong(this.revenue);
-        dest.writeInt(this.runtime);
-        dest.writeString(this.status);
-        dest.writeString(this.tagline);
-        dest.writeString(this.title);
-        dest.writeByte(this.video ? (byte) 1 : (byte) 0);
-        dest.writeFloat(this.voteAverage);
-        dest.writeInt(this.voteCount);
-    }
-    // endregion
-
-    public static final Parcelable.Creator<MovieResponse> CREATOR = new Parcelable.Creator<MovieResponse>() {
-        @Override
-        public MovieResponse createFromParcel(Parcel source) {
-            return new MovieResponse(source);
-        }
-
-        @Override
-        public MovieResponse[] newArray(int size) {
-            return new MovieResponse[size];
-        }
-    };
 
     @Override
     public String toString() {
@@ -374,7 +255,6 @@ public class MovieResponse implements Parcelable {
                 ", video=" + video +
                 ", voteAverage=" + voteAverage +
                 ", voteCount=" + voteCount +
-                ", posterPalette=" + posterPalette +
                 '}';
     }
 }

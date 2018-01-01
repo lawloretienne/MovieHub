@@ -18,7 +18,6 @@ public class PersonCreditDataModelMapper implements DataModelMapper<PersonCredit
         personCreditDataModel.setJob(personCreditResponse.getJob());
         personCreditDataModel.setMediaType(personCreditResponse.getMediaType());
         personCreditDataModel.setName(personCreditResponse.getName());
-        personCreditDataModel.setPosterPalette(personCreditResponse.getPosterPalette());
         personCreditDataModel.setPosterPath(personCreditResponse.getPosterPath());
         personCreditDataModel.setReleaseDate(personCreditResponse.getReleaseDate());
         personCreditDataModel.setTitle(personCreditResponse.getTitle());

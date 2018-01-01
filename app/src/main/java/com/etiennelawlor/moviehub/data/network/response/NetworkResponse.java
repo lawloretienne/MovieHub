@@ -1,31 +1,18 @@
 package com.etiennelawlor.moviehub.data.network.response;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by etiennelawlor on 12/16/16.
  */
 
-public class NetworkResponse implements Parcelable {
+public class NetworkResponse {
 
     // region Fields
     @SerializedName("id")
     public int id;
     @SerializedName("name")
     public String name;
-    // endregion
-
-    // region Constructors
-    public NetworkResponse() {
-    }
-
-    protected NetworkResponse(Parcel in) {
-        this.id = in.readInt();
-        this.name = in.readString();
-    }
     // endregion
 
     // region Getters
@@ -51,31 +38,6 @@ public class NetworkResponse implements Parcelable {
     }
 
     // endregion
-
-    // region Parcelable Methods
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.id);
-        dest.writeString(this.name);
-    }
-    // endregion
-
-    public static final Parcelable.Creator<NetworkResponse> CREATOR = new Parcelable.Creator<NetworkResponse>() {
-        @Override
-        public NetworkResponse createFromParcel(Parcel source) {
-            return new NetworkResponse(source);
-        }
-
-        @Override
-        public NetworkResponse[] newArray(int size) {
-            return new NetworkResponse[size];
-        }
-    };
 
     @Override
     public String toString() {

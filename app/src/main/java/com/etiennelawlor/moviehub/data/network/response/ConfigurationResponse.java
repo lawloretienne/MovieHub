@@ -41,6 +41,7 @@ public class ConfigurationResponse {
 
     // endregion
 
+
     @Override
     public String toString() {
         return "ConfigurationResponse{" +

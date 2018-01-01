@@ -1,24 +1,12 @@
 package com.etiennelawlor.moviehub.data.network.response;
 
-import android.support.v7.graphics.Palette;
-import android.text.TextUtils;
-
-import com.etiennelawlor.moviehub.util.DateUtility;
 import com.google.gson.annotations.SerializedName;
-
-import java.util.Calendar;
 
 /**
  * Created by etiennelawlor on 12/16/16.
  */
 
 public class PersonCreditResponse extends CreditResponse {
-
-    // region Constants
-    public static final String PATTERN = "yyyy-MM-dd";
-    public static final String SECURE_BASE_URL = "https://image.tmdb.org/t/p/";
-    public static final String POSTER_SIZE = "w780";
-    // endregion
 
     // region Fields
     @SerializedName("job")
@@ -39,8 +27,6 @@ public class PersonCreditResponse extends CreditResponse {
     public String releaseDate;
     @SerializedName("media_type")
     public String mediaType;
-
-    private Palette posterPalette;
     // endregion
 
     // region Getters
@@ -81,32 +67,6 @@ public class PersonCreditResponse extends CreditResponse {
         return mediaType;
     }
 
-    public Palette getPosterPalette() {
-        return posterPalette;
-    }
-
-    public String getPosterUrl(){
-        String profileUrl = String.format("%s%s%s", SECURE_BASE_URL, POSTER_SIZE, posterPath);
-        return profileUrl;
-    }
-
-    public int getFirstAirYear(){
-        int firstAirYear = -1;
-        if (!TextUtils.isEmpty(firstAirDate)) {
-            Calendar calendar = DateUtility.getCalendar(firstAirDate, PATTERN);
-            firstAirYear = calendar.get(Calendar.YEAR);
-        }
-        return firstAirYear;
-    }
-
-    public int getReleaseYear(){
-        int releaseYear = -1;
-        if (!TextUtils.isEmpty(releaseDate)) {
-            Calendar calendar = DateUtility.getCalendar(releaseDate, PATTERN);
-            releaseYear = calendar.get(Calendar.YEAR);
-        }
-        return releaseYear;
-    }
     // endregion
 
     // region Setters
@@ -147,10 +107,6 @@ public class PersonCreditResponse extends CreditResponse {
         this.mediaType = mediaType;
     }
 
-    public void setPosterPalette(Palette posterPalette) {
-        this.posterPalette = posterPalette;
-    }
-
     // endregion
 
     @Override
@@ -165,7 +121,6 @@ public class PersonCreditResponse extends CreditResponse {
                 ", firstAirDate='" + firstAirDate + '\'' +
                 ", releaseDate='" + releaseDate + '\'' +
                 ", mediaType='" + mediaType + '\'' +
-                ", posterPalette=" + posterPalette +
                 '}';
     }
 }

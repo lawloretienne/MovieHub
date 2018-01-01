@@ -41,7 +41,6 @@ public class MovieReleaseDateResponse {
 
     // endregion
 
-
     @Override
     public String toString() {
         return "MovieReleaseDateResponse{" +
