@@ -16,7 +16,7 @@ import java.util.List;
 public class MovieCreditsDataModelMapper implements DataModelMapper<MovieCreditsResponse, MovieCreditsDataModel> {
 
     // region Constants
-    private static final int SEVEN_DAYS = 30;
+    private static final int THIRTY_DAYS = 30;
     // endregion
 
     // region Member Variables
@@ -46,7 +46,7 @@ public class MovieCreditsDataModelMapper implements DataModelMapper<MovieCredits
         movieCreditsDataModel.setCrew(crewMovieCreditDataModels);
 
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DATE, SEVEN_DAYS);
+        calendar.add(Calendar.DATE, THIRTY_DAYS);
         movieCreditsDataModel.setExpiredAt(calendar.getTime());
         movieCreditsDataModel.setId(movieCreditsResponse.getId());
 

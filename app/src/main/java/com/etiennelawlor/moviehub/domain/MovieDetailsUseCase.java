@@ -2,10 +2,10 @@ package com.etiennelawlor.moviehub.domain;
 
 import android.text.TextUtils;
 
-import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDateResponse;
-import com.etiennelawlor.moviehub.data.network.response.ReleaseDateResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.MovieCreditDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.MovieDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.MovieReleaseDateDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.ReleaseDateDataModel;
 import com.etiennelawlor.moviehub.data.repositories.movie.MovieDataSourceContract;
 import com.etiennelawlor.moviehub.domain.models.MovieDetailsDomainModel;
 
@@ -61,17 +61,17 @@ public class MovieDetailsUseCase implements MovieDetailsDomainContract.UseCase {
                     }
 
                     if (movieReleaseDatesDataModel != null) {
-                        List<MovieReleaseDateResponse> movieReleaseDateResponses = movieReleaseDatesDataModel.getMovieReleaseDateResponses();
-                        if (movieReleaseDateResponses != null && movieReleaseDateResponses.size() > 0) {
-                            for (MovieReleaseDateResponse movieReleaseDateResponse : movieReleaseDateResponses) {
-                                if (movieReleaseDateResponse != null) {
-                                    String iso31661 = movieReleaseDateResponse.getIso31661();
+                        List<MovieReleaseDateDataModel> movieReleaseDateDataModels = movieReleaseDatesDataModel.getMovieReleaseDates();
+                        if (movieReleaseDateDataModels != null && movieReleaseDateDataModels.size() > 0) {
+                            for (MovieReleaseDateDataModel movieReleaseDateDataModel : movieReleaseDateDataModels) {
+                                if (movieReleaseDateDataModel != null) {
+                                    String iso31661 = movieReleaseDateDataModel.getIso31661();
                                     if (iso31661.equals(ISO_31661)) {
-                                        List<ReleaseDateResponse> releaseDates = movieReleaseDateResponse.getReleaseDates();
-                                        if (releaseDates != null && releaseDates.size() > 0) {
-                                            for (ReleaseDateResponse releaseDate : releaseDates) {
-                                                if (!TextUtils.isEmpty(releaseDate.getCertification())) {
-                                                    rating = releaseDate.getCertification();
+                                        List<ReleaseDateDataModel> releaseDateDataModels = movieReleaseDateDataModel.getReleaseDates();
+                                        if (releaseDateDataModels != null && releaseDateDataModels.size() > 0) {
+                                            for (ReleaseDateDataModel releaseDateDataModel : releaseDateDataModels) {
+                                                if (!TextUtils.isEmpty(releaseDateDataModel.getCertification())) {
+                                                    rating = releaseDateDataModel.getCertification();
                                                     break;
                                                 }
                                             }

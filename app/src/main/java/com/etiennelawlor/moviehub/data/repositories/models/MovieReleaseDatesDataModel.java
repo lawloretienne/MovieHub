@@ -1,7 +1,5 @@
 package com.etiennelawlor.moviehub.data.repositories.models;
 
-import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDateResponse;
-
 import java.util.Date;
 import java.util.List;
 
@@ -13,7 +11,7 @@ public class MovieReleaseDatesDataModel {
 
     // region Fields
     public int id;
-    public List<MovieReleaseDateResponse> movieReleaseDateResponses = null;
+    public List<MovieReleaseDateDataModel> movieReleaseDates = null;
     private Date expiredAt;
     // endregion
 
@@ -23,8 +21,8 @@ public class MovieReleaseDatesDataModel {
         return id;
     }
 
-    public List<MovieReleaseDateResponse> getMovieReleaseDateResponses() {
-        return movieReleaseDateResponses;
+    public List<MovieReleaseDateDataModel> getMovieReleaseDates() {
+        return movieReleaseDates;
     }
 
     public Date getExpiredAt() {
@@ -39,8 +37,8 @@ public class MovieReleaseDatesDataModel {
         this.id = id;
     }
 
-    public void setMovieReleaseDateResponses(List<MovieReleaseDateResponse> movieReleaseDateResponses) {
-        this.movieReleaseDateResponses = movieReleaseDateResponses;
+    public void setMovieReleaseDates(List<MovieReleaseDateDataModel> movieReleaseDates) {
+        this.movieReleaseDates = movieReleaseDates;
     }
 
     public void setExpiredAt(Date expiredAt) {
@@ -53,7 +51,7 @@ public class MovieReleaseDatesDataModel {
     public String toString() {
         return "MovieReleaseDatesDataModel{" +
                 "id=" + id +
-                ", movieReleaseDates=" + movieReleaseDateResponses +
+                ", movieReleaseDates=" + movieReleaseDates +
                 ", expiredAt=" + expiredAt +
                 '}';
     }
