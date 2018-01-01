@@ -47,11 +47,9 @@ import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.network.response.GenreResponse;
 import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCreditResponse;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.GenreDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowCreditDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
 import com.etiennelawlor.moviehub.di.component.TelevisionShowDetailsComponent;
 import com.etiennelawlor.moviehub.di.module.TelevisionShowDetailsModule;
@@ -188,7 +186,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
         public void onItemClick(int position, View view) {
             selectedPersonView = view;
 
-            TelevisionShowCreditResponse televisionShowCredit = castAdapter.getItem(position);
+            TelevisionShowCreditDataModel televisionShowCredit = castAdapter.getItem(position);
             if(televisionShowCredit != null){
                 PersonResponse person = new PersonResponse();
 
@@ -206,7 +204,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
         public void onItemClick(int position, View view) {
             selectedPersonView = view;
 
-            TelevisionShowCreditResponse televisionShowCredit = crewAdapter.getItem(position);
+            TelevisionShowCreditDataModel televisionShowCredit = crewAdapter.getItem(position);
             if(televisionShowCredit != null){
                 PersonResponse person = new PersonResponse();
 
@@ -661,7 +659,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     }
 
     private void setUpCast(){
-        List<TelevisionShowCreditResponse> cast = televisionShowDetailsDomainModel.getCast();
+        List<TelevisionShowCreditDataModel> cast = televisionShowDetailsDomainModel.getCast();
         if(cast != null && cast.size()>0){
             View castView = castViewStub.inflate();
 
@@ -680,7 +678,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     }
 
     private void setUpCrew(){
-        List<TelevisionShowCreditResponse> crew = televisionShowDetailsDomainModel.getCrew();
+        List<TelevisionShowCreditDataModel> crew = televisionShowDetailsDomainModel.getCrew();
         if(crew != null && crew.size()>0){
             View crewView = crewViewStub.inflate();
 

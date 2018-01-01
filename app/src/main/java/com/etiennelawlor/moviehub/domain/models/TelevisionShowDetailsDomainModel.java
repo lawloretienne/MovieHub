@@ -1,7 +1,6 @@
 package com.etiennelawlor.moviehub.domain.models;
 
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCreditResponse;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
+import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowCreditDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
 
 import java.util.List;
@@ -14,15 +13,15 @@ public class TelevisionShowDetailsDomainModel {
 
     // region Member Variables
     private TelevisionShowDataModel televisionShow;
-    private List<TelevisionShowCreditResponse> cast;
-    private List<TelevisionShowCreditResponse> crew;
+    private List<TelevisionShowCreditDataModel> cast;
+    private List<TelevisionShowCreditDataModel> crew;
     private List<TelevisionShowDataModel> similarTelevisionShows;
     private String rating;
     // endregion
 
     // region Constructors
 
-    public TelevisionShowDetailsDomainModel(TelevisionShowDataModel televisionShow, List<TelevisionShowCreditResponse> cast, List<TelevisionShowCreditResponse> crew, List<TelevisionShowDataModel> similarTelevisionShows, String rating) {
+    public TelevisionShowDetailsDomainModel(TelevisionShowDataModel televisionShow, List<TelevisionShowCreditDataModel> cast, List<TelevisionShowCreditDataModel> crew, List<TelevisionShowDataModel> similarTelevisionShows, String rating) {
         this.televisionShow = televisionShow;
         this.cast = cast;
         this.crew = crew;
@@ -39,11 +38,11 @@ public class TelevisionShowDetailsDomainModel {
         return televisionShow;
     }
 
-    public List<TelevisionShowCreditResponse> getCast() {
+    public List<TelevisionShowCreditDataModel> getCast() {
         return cast;
     }
 
-    public List<TelevisionShowCreditResponse> getCrew() {
+    public List<TelevisionShowCreditDataModel> getCrew() {
         return crew;
     }
 
@@ -64,11 +63,11 @@ public class TelevisionShowDetailsDomainModel {
         this.televisionShow = televisionShow;
     }
 
-    public void setCast(List<TelevisionShowCreditResponse> cast) {
+    public void setCast(List<TelevisionShowCreditDataModel> cast) {
         this.cast = cast;
     }
 
-    public void setCrew(List<TelevisionShowCreditResponse> crew) {
+    public void setCrew(List<TelevisionShowCreditDataModel> crew) {
         this.crew = crew;
     }
 

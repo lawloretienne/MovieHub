@@ -1,20 +1,26 @@
 package com.etiennelawlor.moviehub.data.repositories.mappers;
 
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCreditsResponse;
-import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowCreditsDataModel;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCreditResponse;
+import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowCreditDataModel;
 
 /**
  * Created by etiennelawlor on 12/31/17.
  */
 
-public class TelevisionShowCreditsDataModelMapper implements DataModelMapper<TelevisionShowCreditsResponse, TelevisionShowCreditsDataModel> {
+public class TelevisionShowCreditDataModelMapper implements DataModelMapper<TelevisionShowCreditResponse, TelevisionShowCreditDataModel> {
 
     @Override
-    public TelevisionShowCreditsDataModel mapToDataModel(TelevisionShowCreditsResponse televisionShowCreditsResponse) {
-        TelevisionShowCreditsDataModel televisionShowCreditsDataModel = new TelevisionShowCreditsDataModel();
-        televisionShowCreditsDataModel.setId(televisionShowCreditsResponse.getId());
-        televisionShowCreditsDataModel.setCast(televisionShowCreditsResponse.getCast());
-        televisionShowCreditsDataModel.setCrew(televisionShowCreditsResponse.getCrew());
-        return null;
+    public TelevisionShowCreditDataModel mapToDataModel(TelevisionShowCreditResponse televisionShowCreditResponse) {
+        TelevisionShowCreditDataModel televisionShowCreditDataModel = new TelevisionShowCreditDataModel();
+        televisionShowCreditDataModel.setCharacter(televisionShowCreditResponse.getCharacter());
+        televisionShowCreditDataModel.setDepartment(televisionShowCreditResponse.getDepartment());
+        televisionShowCreditDataModel.setJob(televisionShowCreditResponse.getJob());
+        televisionShowCreditDataModel.setName(televisionShowCreditResponse.getName());
+        televisionShowCreditDataModel.setProfilePalette(televisionShowCreditResponse.getProfilePalette());
+        televisionShowCreditDataModel.setProfilePath(televisionShowCreditResponse.getProfilePath());
+        televisionShowCreditDataModel.setCreditId(televisionShowCreditResponse.getCreditId());
+        televisionShowCreditDataModel.setId(televisionShowCreditResponse.getId());
+
+        return televisionShowCreditDataModel;
     }
 }

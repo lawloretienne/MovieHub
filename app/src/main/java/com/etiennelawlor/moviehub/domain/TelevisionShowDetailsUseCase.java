@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.domain;
 
 import com.etiennelawlor.moviehub.data.network.response.ContentRatingResponse;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCreditResponse;
+import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowCreditDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowDataSourceContract;
 import com.etiennelawlor.moviehub.domain.models.TelevisionShowDetailsDomainModel;
@@ -39,18 +39,18 @@ public class TelevisionShowDetailsUseCase implements TelevisionShowDetailsDomain
                 televisionShowRepository.getTelevisionShowCredits(televisionShowId),
                 televisionShowRepository.getSimilarTelevisionShows(televisionShowId),
                 televisionShowRepository.getTelevisionShowContentRatings(televisionShowId),
-                (televisionShowDataModel, televisionShowCreditsResponse, televisionShowsDataModel, televisionShowContentRatingsResponse) -> {
-                    List<TelevisionShowCreditResponse> cast = new ArrayList<>();
-                    List<TelevisionShowCreditResponse> crew = new ArrayList<>();
+                (televisionShowDataModel, televisionShowCreditsDataModel, televisionShowsDataModel, televisionShowContentRatingsResponse) -> {
+                    List<TelevisionShowCreditDataModel> cast = new ArrayList<>();
+                    List<TelevisionShowCreditDataModel> crew = new ArrayList<>();
                     List<TelevisionShowDataModel> similarTelevisionShows = new ArrayList<>();
                     String rating = "";
 
-                    if(televisionShowCreditsResponse!=null){
-                        cast = televisionShowCreditsResponse.getCast();
+                    if(televisionShowCreditsDataModel!=null){
+                        cast = televisionShowCreditsDataModel.getCast();
                     }
 
-                    if(televisionShowCreditsResponse!=null){
-                        crew = televisionShowCreditsResponse.getCrew();
+                    if(televisionShowCreditsDataModel!=null){
+                        crew = televisionShowCreditsDataModel.getCrew();
                     }
 
                     if(televisionShowsDataModel!=null){

@@ -1,10 +1,10 @@
 package com.etiennelawlor.moviehub.data.repositories.tv;
 
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowContentRatingsResponse;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCreditsResponse;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
+import com.etiennelawlor.moviehub.data.repositories.mappers.TelevisionShowCreditsDataModelMapper;
 import com.etiennelawlor.moviehub.data.repositories.mappers.TelevisionShowDataModelMapper;
 import com.etiennelawlor.moviehub.data.repositories.mappers.TelevisionShowsDataModelMapper;
+import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowCreditsDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowsDataModel;
 
@@ -22,6 +22,7 @@ public class TelevisionShowRepository implements TelevisionShowDataSourceContrac
     private TelevisionShowDataSourceContract.RemoteDateSource televisionShowRemoteDataSource;
     private TelevisionShowsDataModelMapper televisionShowsDataModelMapper = new TelevisionShowsDataModelMapper();
     private TelevisionShowDataModelMapper televisionShowDataModelMapper = new TelevisionShowDataModelMapper();
+    private TelevisionShowCreditsDataModelMapper televisionShowCreditsDataModelMapper = new TelevisionShowCreditsDataModelMapper();
     // endregion
 
     // region Constructors
@@ -56,11 +57,12 @@ public class TelevisionShowRepository implements TelevisionShowDataSourceContrac
     }
 
     @Override
-    public Single<TelevisionShowCreditsResponse> getTelevisionShowCredits(int tvId) {
-        Maybe<TelevisionShowCreditsResponse> local = televisionShowLocalDataSource.getTelevisionShowCredits(tvId);
-        Single<TelevisionShowCreditsResponse> remote =
+    public Single<TelevisionShowCreditsDataModel> getTelevisionShowCredits(int tvId) {
+        Maybe<TelevisionShowCreditsDataModel> local = televisionShowLocalDataSource.getTelevisionShowCredits(tvId);
+        Single<TelevisionShowCreditsDataModel> remote =
                 televisionShowRemoteDataSource.getTelevisionShowCredits(tvId)
-                        .doOnSuccess(televisionShowCreditsEnvelope -> televisionShowLocalDataSource.saveTelevisionShowCredits(televisionShowCreditsEnvelope));
+                        .map(televisionShowCreditsResponse -> televisionShowCreditsDataModelMapper.mapToDataModel(televisionShowCreditsResponse))
+                        .doOnSuccess(televisionShowCreditsDataModel -> televisionShowLocalDataSource.saveTelevisionShowCredits(televisionShowCreditsDataModel));
 
         return local.switchIfEmpty(remote);
     }

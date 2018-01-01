@@ -1,7 +1,5 @@
 package com.etiennelawlor.moviehub.data.repositories.models;
 
-import com.google.gson.annotations.SerializedName;
-
 /**
  * Created by etiennelawlor on 12/31/17.
  */
