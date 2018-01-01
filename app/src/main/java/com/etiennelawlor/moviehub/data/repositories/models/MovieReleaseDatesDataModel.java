@@ -53,7 +53,7 @@ public class MovieReleaseDatesDataModel {
     public String toString() {
         return "MovieReleaseDatesDataModel{" +
                 "id=" + id +
-                ", movieReleaseDateResponses=" + movieReleaseDateResponses +
+                ", movieReleaseDates=" + movieReleaseDateResponses +
                 ", expiredAt=" + expiredAt +
                 '}';
     }

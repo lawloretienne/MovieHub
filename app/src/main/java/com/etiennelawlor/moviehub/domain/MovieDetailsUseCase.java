@@ -4,7 +4,7 @@ import android.text.TextUtils;
 
 import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.data.network.response.MovieCredit;
-import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDate;
+import com.etiennelawlor.moviehub.data.network.response.ReleaseDate;
 import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDateResponse;
 import com.etiennelawlor.moviehub.data.repositories.movie.MovieDataSourceContract;
 import com.etiennelawlor.moviehub.domain.models.MovieDetailsDomainModel;
@@ -67,11 +67,11 @@ public class MovieDetailsUseCase implements MovieDetailsDomainContract.UseCase {
                                 if (movieReleaseDateResponse != null) {
                                     String iso31661 = movieReleaseDateResponse.getIso31661();
                                     if (iso31661.equals(ISO_31661)) {
-                                        List<MovieReleaseDate> movieReleaseDates = movieReleaseDateResponse.getMovieReleaseDates();
-                                        if (movieReleaseDates != null && movieReleaseDates.size() > 0) {
-                                            for (MovieReleaseDate movieReleaseDate : movieReleaseDates) {
-                                                if (!TextUtils.isEmpty(movieReleaseDate.getCertification())) {
-                                                    rating = movieReleaseDate.getCertification();
+                                        List<ReleaseDate> releaseDates = movieReleaseDateResponse.getReleaseDates();
+                                        if (releaseDates != null && releaseDates.size() > 0) {
+                                            for (ReleaseDate releaseDate : releaseDates) {
+                                                if (!TextUtils.isEmpty(releaseDate.getCertification())) {
+                                                    rating = releaseDate.getCertification();
                                                     break;
                                                 }
                                             }

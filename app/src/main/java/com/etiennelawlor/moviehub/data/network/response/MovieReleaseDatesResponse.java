@@ -14,7 +14,7 @@ public class MovieReleaseDatesResponse {
     @SerializedName("id")
     public int id;
     @SerializedName("results")
-    public List<MovieReleaseDateResponse> movieReleaseDateResponses = null;
+    public List<MovieReleaseDateResponse> movieReleaseDates = null;
     // endregion
 
     // region Getters
@@ -23,8 +23,8 @@ public class MovieReleaseDatesResponse {
         return id;
     }
 
-    public List<MovieReleaseDateResponse> getMovieReleaseDateResponses() {
-        return movieReleaseDateResponses;
+    public List<MovieReleaseDateResponse> getMovieReleaseDates() {
+        return movieReleaseDates;
     }
 
     // endregion
@@ -35,8 +35,8 @@ public class MovieReleaseDatesResponse {
         this.id = id;
     }
 
-    public void setMovieReleaseDateResponses(List<MovieReleaseDateResponse> movieReleaseDateResponses) {
-        this.movieReleaseDateResponses = movieReleaseDateResponses;
+    public void setMovieReleaseDates(List<MovieReleaseDateResponse> movieReleaseDates) {
+        this.movieReleaseDates = movieReleaseDates;
     }
 
     // endregion
@@ -45,7 +45,7 @@ public class MovieReleaseDatesResponse {
     public String toString() {
         return "MovieReleaseDatesResponse{" +
                 "id=" + id +
-                ", movieReleaseDateResponses=" + movieReleaseDateResponses +
+                ", movieReleaseDates=" + movieReleaseDates +
                 '}';
     }
 }

@@ -20,7 +20,7 @@ public class MovieReleaseDatesDataModelMapper implements DataModelMapper<MovieRe
         MovieReleaseDatesDataModel movieReleaseDatesDataModel = new MovieReleaseDatesDataModel();
 
         movieReleaseDatesDataModel.setId(movieReleaseDatesResponse.getId());
-        movieReleaseDatesDataModel.setMovieReleaseDateResponses(movieReleaseDatesResponse.getMovieReleaseDateResponses());
+        movieReleaseDatesDataModel.setMovieReleaseDateResponses(movieReleaseDatesResponse.getMovieReleaseDates());
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, SEVEN_DAYS);
         movieReleaseDatesDataModel.setExpiredAt(calendar.getTime());

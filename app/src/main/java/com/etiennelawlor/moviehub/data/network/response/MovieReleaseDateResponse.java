@@ -14,7 +14,7 @@ public class MovieReleaseDateResponse {
     @SerializedName("iso_3166_1")
     public String iso31661;
     @SerializedName("release_dates")
-    public List<MovieReleaseDate> movieReleaseDates = null;
+    public List<ReleaseDate> releaseDates = null;
     // endregion
 
     // region Getters
@@ -23,8 +23,8 @@ public class MovieReleaseDateResponse {
         return iso31661;
     }
 
-    public List<MovieReleaseDate> getMovieReleaseDates() {
-        return movieReleaseDates;
+    public List<ReleaseDate> getReleaseDates() {
+        return releaseDates;
     }
 
     // endregion
@@ -35,17 +35,18 @@ public class MovieReleaseDateResponse {
         this.iso31661 = iso31661;
     }
 
-    public void setMovieReleaseDates(List<MovieReleaseDate> movieReleaseDates) {
-        this.movieReleaseDates = movieReleaseDates;
+    public void setReleaseDates(List<ReleaseDate> releaseDates) {
+        this.releaseDates = releaseDates;
     }
 
     // endregion
+
 
     @Override
     public String toString() {
         return "MovieReleaseDateResponse{" +
                 "iso31661='" + iso31661 + '\'' +
-                ", movieReleaseDates=" + movieReleaseDates +
+                ", releaseDates=" + releaseDates +
                 '}';
     }
 }

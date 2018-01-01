@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by etiennelawlor on 12/16/16.
  */
 
-public class MovieReleaseDate {
+public class ReleaseDate {
 
     // region Fields
     @SerializedName("certification")
@@ -71,7 +71,7 @@ public class MovieReleaseDate {
 
     @Override
     public String toString() {
-        return "MovieReleaseDate{" +
+        return "ReleaseDate{" +
                 "certification='" + certification + '\'' +
                 ", iso6391='" + iso6391 + '\'' +
                 ", note='" + note + '\'' +
