@@ -1,8 +1,8 @@
 package com.etiennelawlor.moviehub.data.repositories.person;
 
 import com.etiennelawlor.moviehub.data.network.MovieHubService;
-import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
 import com.etiennelawlor.moviehub.data.network.response.PersonCreditsResponse;
+import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
 import com.etiennelawlor.moviehub.data.network.response.PersonsResponse;
 
 import javax.inject.Inject;

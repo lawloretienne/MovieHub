@@ -18,7 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
+import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.common.widget.DynamicHeightImageView;
 import com.etiennelawlor.moviehub.presentation.movies.MoviesAdapter;
@@ -35,7 +35,7 @@ import butterknife.ButterKnife;
  * Created by etiennelawlor on 12/17/16.
  */
 
-public class TelevisionShowsAdapter extends BaseAdapter<TelevisionShowResponse> {
+public class TelevisionShowsAdapter extends BaseAdapter<TelevisionShowDataModel> {
 
     // region Constants
     // endregion
@@ -126,7 +126,7 @@ public class TelevisionShowsAdapter extends BaseAdapter<TelevisionShowResponse> 
     protected void bindItemViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         final TelevisionShowViewHolder holder = (TelevisionShowViewHolder) viewHolder;
 
-        final TelevisionShowResponse televisionShow = getItem(position);
+        final TelevisionShowDataModel televisionShow = getItem(position);
         if (televisionShow != null) {
             holder.bind(televisionShow);
         }
@@ -156,13 +156,13 @@ public class TelevisionShowsAdapter extends BaseAdapter<TelevisionShowResponse> 
 
     @Override
     public void addHeader() {
-        add(new TelevisionShowResponse());
+        add(new TelevisionShowDataModel());
     }
 
     @Override
     public void addFooter() {
         isFooterAdded = true;
-        add(new TelevisionShowResponse());
+        add(new TelevisionShowDataModel());
     }
 
     // region Inner Classes
@@ -195,7 +195,7 @@ public class TelevisionShowsAdapter extends BaseAdapter<TelevisionShowResponse> 
         }
         // endregion
 
-        private void bind(TelevisionShowResponse televisionShow){
+        private void bind(TelevisionShowDataModel televisionShow){
             resetInfoBackgroundColor(infoLinearLayout);
             resetTitleTextColor(titleTextView);
             resetSubtitleTextColor(subtitleTextView);
@@ -205,7 +205,7 @@ public class TelevisionShowsAdapter extends BaseAdapter<TelevisionShowResponse> 
             setUpSubtitle(subtitleTextView, televisionShow);
         }
 
-        private void setUpThumbnail(final TelevisionShowViewHolder vh, final TelevisionShowResponse televisionShow){
+        private void setUpThumbnail(final TelevisionShowViewHolder vh, final TelevisionShowDataModel televisionShow){
             final DynamicHeightImageView iv = vh.thumbnailImageView;
 
             double heightRatio = 3.0D/2.0D;
@@ -261,7 +261,7 @@ public class TelevisionShowsAdapter extends BaseAdapter<TelevisionShowResponse> 
             }
         }
 
-        private void setUpTitle(TextView tv, TelevisionShowResponse televisionShow){
+        private void setUpTitle(TextView tv, TelevisionShowDataModel televisionShow){
             String name = televisionShow.getName();
             if (!TextUtils.isEmpty(name)) {
                 tv.setText(name);
@@ -282,7 +282,7 @@ public class TelevisionShowsAdapter extends BaseAdapter<TelevisionShowResponse> 
             }
         }
 
-        private void setUpSubtitle(TextView tv, TelevisionShowResponse televisionShow){
+        private void setUpSubtitle(TextView tv, TelevisionShowDataModel televisionShow){
             String firstAirYear = televisionShow.getFirstAirYear();
             if (!TextUtils.isEmpty(firstAirYear)) {
                 tv.setText(firstAirYear);

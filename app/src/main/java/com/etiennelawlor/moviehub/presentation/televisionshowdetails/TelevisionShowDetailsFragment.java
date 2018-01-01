@@ -49,8 +49,10 @@ import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.data.network.response.GenreResponse;
 import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCreditResponse;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
+import com.etiennelawlor.moviehub.data.repositories.models.GenreDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
 import com.etiennelawlor.moviehub.di.component.TelevisionShowDetailsComponent;
 import com.etiennelawlor.moviehub.di.module.TelevisionShowDetailsModule;
 import com.etiennelawlor.moviehub.domain.models.TelevisionShowDetailsDomainModel;
@@ -149,7 +151,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     // endregion
 
     // region Member Variables
-    private TelevisionShowResponse televisionShow;
+    private TelevisionShowDataModel televisionShow;
     private Unbinder unbinder;
     private Typeface font;
     private int televisionShowPosterHeight;
@@ -222,7 +224,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
         public void onItemClick(int position, View view) {
             selectedTelevisionView = view;
 
-            TelevisionShowResponse televisionShow = similarTelevisionShowsAdapter.getItem(position);
+            TelevisionShowDataModel televisionShow = similarTelevisionShowsAdapter.getItem(position);
             if(televisionShow != null){
                 televisionShowDetailsPresenter.onTelevisionShowClick(televisionShow);
             }
@@ -575,7 +577,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     }
 
     @Override
-    public void openTelevisionShowDetails(TelevisionShowResponse televisionShow) {
+    public void openTelevisionShowDetails(TelevisionShowDataModel televisionShow) {
         Intent intent = new Intent(getActivity(), TelevisionShowDetailsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_TELEVISION_SHOW, televisionShow);
@@ -633,13 +635,13 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
         }
     }
 
-    private String getPosterUrl(TelevisionShowResponse televisionShow){
+    private String getPosterUrl(TelevisionShowDataModel televisionShow){
         String posterPath = televisionShow.getPosterPath();
         String posterUrl = String.format("%s%s%s", SECURE_BASE_URL, POSTER_SIZE, posterPath);
         return posterUrl;
     }
 
-    private String getBackdropUrl(TelevisionShowResponse televisionShow){
+    private String getBackdropUrl(TelevisionShowDataModel televisionShow){
         String backdropPath = televisionShow.getBackdropPath();
         String backdropUrl = String.format("%s%s%s", SECURE_BASE_URL, BACKDROP_SIZE, backdropPath);
         return backdropUrl;
@@ -697,7 +699,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     }
 
     private void setUpSimilarTelevisionShows(){
-        List<TelevisionShowResponse> similarTelevisionShows = televisionShowDetailsDomainModel.getSimilarTelevisionShows();
+        List<TelevisionShowDataModel> similarTelevisionShows = televisionShowDetailsDomainModel.getSimilarTelevisionShows();
         if(similarTelevisionShows != null && similarTelevisionShows.size()>0){
             View similarTelevisionShowsView = similarTelevisionShowsViewStub.inflate();
 
@@ -711,9 +713,9 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
             SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
             snapHelper.attachToRecyclerView(similarTelevisionShowsRecyclerView);
 
-            Collections.sort(similarTelevisionShows, new Comparator<TelevisionShowResponse>() {
+            Collections.sort(similarTelevisionShows, new Comparator<TelevisionShowDataModel>() {
                 @Override
-                public int compare(TelevisionShowResponse t1, TelevisionShowResponse t2) {
+                public int compare(TelevisionShowDataModel t1, TelevisionShowDataModel t2) {
                     int year1 = -1;
                     if(t1.getFirstAirDateYear() != -1){
                         year1 = t1.getFirstAirDateYear();
@@ -782,12 +784,12 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     }
 
     private void setUpGenres(){
-        List<GenreResponse> genres = televisionShow.getGenres();
+        List<GenreDataModel> genres = televisionShow.getGenres();
         if(genres != null && genres.size()>0){
             StringBuilder stringBuilder = new StringBuilder("");
 
             for(int i=0; i<genres.size(); i++){
-                GenreResponse genre = genres.get(i);
+                GenreDataModel genre = genres.get(i);
                 stringBuilder.append(genre.getName());
                 if(i!=genres.size()-1){
                     stringBuilder.append(" | ");

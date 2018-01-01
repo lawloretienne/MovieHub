@@ -2,8 +2,8 @@ package com.etiennelawlor.moviehub.data.database.mappers;
 
 import com.etiennelawlor.moviehub.data.database.models.GenreRealmModel;
 import com.etiennelawlor.moviehub.data.database.models.MovieRealmModel;
-import com.etiennelawlor.moviehub.data.network.response.GenreResponse;
-import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
+import com.etiennelawlor.moviehub.data.repositories.models.GenreDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.MovieDataModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,81 +15,81 @@ import io.realm.RealmList;
  * Created by etiennelawlor on 5/14/17.
  */
 
-public class MovieRealmModelMapper implements RealmModelMapper<MovieResponse, MovieRealmModel> {
+public class MovieRealmModelMapper implements RealmModelMapper<MovieDataModel, MovieRealmModel> {
 
     private GenreRealmModelMapper genreRealmMapper = new GenreRealmModelMapper();
 
     @Override
-    public MovieRealmModel mapToRealmModel(MovieResponse movie) {
+    public MovieRealmModel mapToRealmModel(MovieDataModel movieDataModel) {
         MovieRealmModel realmMovie = Realm.getDefaultInstance().createObject(MovieRealmModel.class);
 
-        realmMovie.setAdult(movie.isAdult());
-        realmMovie.setBackdropPath(movie.getBackdropPath());
-        realmMovie.setBudget(movie.getBudget());
+        realmMovie.setAdult(movieDataModel.isAdult());
+        realmMovie.setBackdropPath(movieDataModel.getBackdropPath());
+        realmMovie.setBudget(movieDataModel.getBudget());
 
-        List<GenreResponse> genres = movie.getGenres();
+        List<GenreDataModel> genreDataModels = movieDataModel.getGenres();
         RealmList<GenreRealmModel> realmGenres = new RealmList<>();
-        if(genres != null && genres.size()>0) {
-            for (GenreResponse genre : genres) {
-                realmGenres.add(genreRealmMapper.mapToRealmModel(genre));
+        if(genreDataModels != null && genreDataModels.size()>0) {
+            for (GenreDataModel genreDataModel : genreDataModels) {
+                realmGenres.add(genreRealmMapper.mapToRealmModel(genreDataModel));
             }
         }
         realmMovie.setGenres(realmGenres);
 
-        realmMovie.setHomepage(movie.getHomepage());
-        realmMovie.setId(movie.getId());
-        realmMovie.setImdbId(movie.getImdbId());
-        realmMovie.setOriginalLanguage(movie.getOriginalLanguage());
-        realmMovie.setOriginalTitle(movie.getOriginalTitle());
-        realmMovie.setOverview(movie.getOverview());
-        realmMovie.setPopularity(movie.getPopularity());
+        realmMovie.setHomepage(movieDataModel.getHomepage());
+        realmMovie.setId(movieDataModel.getId());
+        realmMovie.setImdbId(movieDataModel.getImdbId());
+        realmMovie.setOriginalLanguage(movieDataModel.getOriginalLanguage());
+        realmMovie.setOriginalTitle(movieDataModel.getOriginalTitle());
+        realmMovie.setOverview(movieDataModel.getOverview());
+        realmMovie.setPopularity(movieDataModel.getPopularity());
 //        realmMovie.setPosterPalette(movie.getPosterPalette());
-        realmMovie.setPosterPath(movie.getPosterPath());
-        realmMovie.setReleaseDate(movie.getReleaseDate());
-        realmMovie.setRevenue(movie.getRevenue());
-        realmMovie.setRuntime(movie.getRuntime());
-        realmMovie.setStatus(movie.getStatus());
-        realmMovie.setTagline(movie.getTagline());
-        realmMovie.setTitle(movie.getTitle());
-        realmMovie.setVideo(movie.isVideo());
-        realmMovie.setVoteAverage(movie.getVoteAverage());
-        realmMovie.setVoteCount(movie.getVoteCount());
+        realmMovie.setPosterPath(movieDataModel.getPosterPath());
+        realmMovie.setReleaseDate(movieDataModel.getReleaseDate());
+        realmMovie.setRevenue(movieDataModel.getRevenue());
+        realmMovie.setRuntime(movieDataModel.getRuntime());
+        realmMovie.setStatus(movieDataModel.getStatus());
+        realmMovie.setTagline(movieDataModel.getTagline());
+        realmMovie.setTitle(movieDataModel.getTitle());
+        realmMovie.setVideo(movieDataModel.isVideo());
+        realmMovie.setVoteAverage(movieDataModel.getVoteAverage());
+        realmMovie.setVoteCount(movieDataModel.getVoteCount());
 
         return realmMovie;
     }
 
     @Override
-    public MovieResponse mapFromRealmModel(MovieRealmModel movieRealmModel) {
-        MovieResponse movie = new MovieResponse();
-        movie.setAdult(movieRealmModel.isAdult());
-        movie.setBackdropPath(movieRealmModel.getBackdropPath());
-        movie.setBudget(movieRealmModel.getBudget());
+    public MovieDataModel mapFromRealmModel(MovieRealmModel movieRealmModel) {
+        MovieDataModel movieDataModel = new MovieDataModel();
+        movieDataModel.setAdult(movieRealmModel.isAdult());
+        movieDataModel.setBackdropPath(movieRealmModel.getBackdropPath());
+        movieDataModel.setBudget(movieRealmModel.getBudget());
 
         RealmList<GenreRealmModel> realmGenres = movieRealmModel.getGenres();
-        List<GenreResponse> genres = new ArrayList<>();
+        List<GenreDataModel> genreDataModels = new ArrayList<>();
         for(GenreRealmModel realmGenre : realmGenres){
-            genres.add(genreRealmMapper.mapFromRealmModel(realmGenre));
+            genreDataModels.add(genreRealmMapper.mapFromRealmModel(realmGenre));
         }
-        movie.setGenres(genres);
-        movie.setHomepage(movieRealmModel.getHomepage());
-        movie.setId(movieRealmModel.getId());
-        movie.setImdbId(movieRealmModel.getImdbId());
-        movie.setOriginalLanguage(movieRealmModel.getOriginalLanguage());
-        movie.setOriginalTitle(movieRealmModel.getOriginalTitle());
-        movie.setOverview(movieRealmModel.getOverview());
-        movie.setPopularity(movieRealmModel.getPopularity());
+        movieDataModel.setGenres(genreDataModels);
+        movieDataModel.setHomepage(movieRealmModel.getHomepage());
+        movieDataModel.setId(movieRealmModel.getId());
+        movieDataModel.setImdbId(movieRealmModel.getImdbId());
+        movieDataModel.setOriginalLanguage(movieRealmModel.getOriginalLanguage());
+        movieDataModel.setOriginalTitle(movieRealmModel.getOriginalTitle());
+        movieDataModel.setOverview(movieRealmModel.getOverview());
+        movieDataModel.setPopularity(movieRealmModel.getPopularity());
 //        movie.setPosterPalette(realmMovie.getPosterPalette());
-        movie.setPosterPath(movieRealmModel.getPosterPath());
-        movie.setReleaseDate(movieRealmModel.getReleaseDate());
-        movie.setRevenue(movieRealmModel.getRevenue());
-        movie.setRuntime(movieRealmModel.getRuntime());
-        movie.setStatus(movieRealmModel.getStatus());
-        movie.setTagline(movieRealmModel.getTagline());
-        movie.setTitle(movieRealmModel.getTitle());
-        movie.setVideo(movieRealmModel.isVideo());
-        movie.setVoteAverage(movieRealmModel.getVoteAverage());
-        movie.setVoteCount(movieRealmModel.getVoteCount());
+        movieDataModel.setPosterPath(movieRealmModel.getPosterPath());
+        movieDataModel.setReleaseDate(movieRealmModel.getReleaseDate());
+        movieDataModel.setRevenue(movieRealmModel.getRevenue());
+        movieDataModel.setRuntime(movieRealmModel.getRuntime());
+        movieDataModel.setStatus(movieRealmModel.getStatus());
+        movieDataModel.setTagline(movieRealmModel.getTagline());
+        movieDataModel.setTitle(movieRealmModel.getTitle());
+        movieDataModel.setVideo(movieRealmModel.isVideo());
+        movieDataModel.setVoteAverage(movieRealmModel.getVoteAverage());
+        movieDataModel.setVoteCount(movieRealmModel.getVoteCount());
 
-        return movie;
+        return movieDataModel;
     }
 }

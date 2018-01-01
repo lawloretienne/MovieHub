@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
+import com.etiennelawlor.moviehub.data.repositories.models.MovieDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.MoviesDataModel;
 import com.etiennelawlor.moviehub.di.component.MoviesComponent;
 import com.etiennelawlor.moviehub.di.module.MoviesModule;
@@ -185,7 +185,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     @Override
     public void onItemClick(int position, View view) {
         selectedMovieView = view;
-        MovieResponse movie = moviesAdapter.getItem(position);
+        MovieDataModel movie = moviesAdapter.getItem(position);
         if(movie != null){
             moviesPresenter.onMovieClick(movie);
         }
@@ -266,7 +266,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     }
 
     @Override
-    public void addMoviesToAdapter(List<MovieResponse> movies) {
+    public void addMoviesToAdapter(List<MovieDataModel> movies) {
         moviesAdapter.addAll(movies);
     }
 
@@ -282,7 +282,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     }
 
     @Override
-    public void openMovieDetails(MovieResponse movie) {
+    public void openMovieDetails(MovieDataModel movie) {
         Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_MOVIE, movie);

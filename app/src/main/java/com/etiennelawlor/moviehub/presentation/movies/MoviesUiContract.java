@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.presentation.movies;
 
-import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
+import com.etiennelawlor.moviehub.data.repositories.models.MovieDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.MoviesDataModel;
 import com.etiennelawlor.moviehub.presentation.base.BasePresenter;
 
@@ -25,17 +25,17 @@ public interface MoviesUiContract {
         void removeFooter();
         void showErrorFooter();
         void showLoadingFooter();
-        void addMoviesToAdapter(List<MovieResponse> movies);
+        void addMoviesToAdapter(List<MovieDataModel> movies);
         void loadMoreItems();
         void setMoviesDataModel(MoviesDataModel moviesDataModel);
 
         // Navigation methods
-        void openMovieDetails(MovieResponse movie);
+        void openMovieDetails(MovieDataModel movie);
     }
 
     interface Presenter extends BasePresenter {
         void onLoadPopularMovies(int currentPage);
-        void onMovieClick(MovieResponse movie);
+        void onMovieClick(MovieDataModel movie);
         void onScrollToEndOfList();
     }
 }

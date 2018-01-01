@@ -18,7 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
+import com.etiennelawlor.moviehub.data.repositories.models.MovieDataModel;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.common.widget.DynamicHeightImageView;
 import com.etiennelawlor.moviehub.util.AnimationUtility;
@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
  * Created by etiennelawlor on 12/17/16.
  */
 
-public class SimilarMoviesAdapter extends BaseAdapter<MovieResponse> {
+public class SimilarMoviesAdapter extends BaseAdapter<MovieDataModel> {
 
     // region Constants
     // endregion
@@ -117,7 +117,7 @@ public class SimilarMoviesAdapter extends BaseAdapter<MovieResponse> {
     protected void bindItemViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         final MovieViewHolder holder = (MovieViewHolder) viewHolder;
 
-        final MovieResponse movie = getItem(position);
+        final MovieDataModel movie = getItem(position);
         if (movie != null) {
             holder.bind(movie);
         }
@@ -153,7 +153,7 @@ public class SimilarMoviesAdapter extends BaseAdapter<MovieResponse> {
     @Override
     public void addFooter() {
         isFooterAdded = true;
-        add(new MovieResponse());
+        add(new MovieDataModel());
     }
 
     // region Inner Classes
@@ -187,7 +187,7 @@ public class SimilarMoviesAdapter extends BaseAdapter<MovieResponse> {
         // endregion
 
         // region Helper Methods
-        private void bind(MovieResponse movie){
+        private void bind(MovieDataModel movie){
             resetInfoBackgroundColor(infoLinearLayout);
             resetTitleTextColor(titleTextView);
             resetSubtitleTextColor(subtitleTextView);
@@ -197,7 +197,7 @@ public class SimilarMoviesAdapter extends BaseAdapter<MovieResponse> {
             setUpSubtitle(subtitleTextView, movie);
         }
 
-        private void setUpThumbnail(final MovieViewHolder vh, final MovieResponse movie){
+        private void setUpThumbnail(final MovieViewHolder vh, final MovieDataModel movie){
             final DynamicHeightImageView iv = vh.thumbnailImageView;
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) iv.getLayoutParams();
             layoutParams.width = ivWidth;
@@ -257,7 +257,7 @@ public class SimilarMoviesAdapter extends BaseAdapter<MovieResponse> {
             }
         }
 
-        private void setUpTitle(TextView tv, MovieResponse movie){
+        private void setUpTitle(TextView tv, MovieDataModel movie){
             String title = movie.getTitle();
             if (!TextUtils.isEmpty(title)) {
                 tv.setText(title);
@@ -278,7 +278,7 @@ public class SimilarMoviesAdapter extends BaseAdapter<MovieResponse> {
             }
         }
 
-        private void setUpSubtitle(TextView tv, MovieResponse movie){
+        private void setUpSubtitle(TextView tv, MovieDataModel movie){
             String releaseYear = movie.getReleaseYear();
             if (!TextUtils.isEmpty(releaseYear)) {
                 tv.setText(releaseYear);

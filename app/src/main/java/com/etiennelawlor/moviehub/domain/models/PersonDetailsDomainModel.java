@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.domain.models;
 
-import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
 import com.etiennelawlor.moviehub.data.network.response.PersonCreditResponse;
+import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
 
 import java.util.List;
 

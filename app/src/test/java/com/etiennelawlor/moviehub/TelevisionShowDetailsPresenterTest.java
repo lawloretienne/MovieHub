@@ -1,8 +1,8 @@
 package com.etiennelawlor.moviehub;
 
 import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCreditResponse;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.domain.TelevisionShowDetailsDomainContract;
 import com.etiennelawlor.moviehub.domain.models.TelevisionShowDetailsDomainModel;
 import com.etiennelawlor.moviehub.presentation.televisionshowdetails.TelevisionShowDetailsPresenter;

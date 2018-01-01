@@ -1,8 +1,8 @@
 package com.etiennelawlor.moviehub.domain.models;
 
-import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
 import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
+import com.etiennelawlor.moviehub.data.repositories.models.MovieDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
 
 import java.util.List;
 
@@ -14,14 +14,14 @@ public class SearchDomainModel {
 
     // region Member Variables
     private String query;
-    private List<MovieResponse> movies;
-    private List<TelevisionShowResponse> televisionShows;
+    private List<MovieDataModel> movies;
+    private List<TelevisionShowDataModel> televisionShows;
     private List<PersonResponse> persons;
     // endregion
 
     // region Constructors
 
-    public SearchDomainModel(String query, List<MovieResponse> movies, List<TelevisionShowResponse> televisionShows, List<PersonResponse> persons) {
+    public SearchDomainModel(String query, List<MovieDataModel> movies, List<TelevisionShowDataModel> televisionShows, List<PersonResponse> persons) {
         this.query = query;
         this.movies = movies;
         this.televisionShows = televisionShows;
@@ -36,11 +36,11 @@ public class SearchDomainModel {
         return query;
     }
 
-    public List<MovieResponse> getMovies() {
+    public List<MovieDataModel> getMovies() {
         return movies;
     }
 
-    public List<TelevisionShowResponse> getTelevisionShows() {
+    public List<TelevisionShowDataModel> getTelevisionShows() {
         return televisionShows;
     }
 
@@ -56,11 +56,11 @@ public class SearchDomainModel {
         this.query = query;
     }
 
-    public void setMovies(List<MovieResponse> movies) {
+    public void setMovies(List<MovieDataModel> movies) {
         this.movies = movies;
     }
 
-    public void setTelevisionShows(List<TelevisionShowResponse> televisionShows) {
+    public void setTelevisionShows(List<TelevisionShowDataModel> televisionShows) {
         this.televisionShows = televisionShows;
     }
 

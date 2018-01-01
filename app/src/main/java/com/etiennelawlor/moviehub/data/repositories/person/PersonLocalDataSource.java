@@ -1,8 +1,8 @@
 package com.etiennelawlor.moviehub.data.repositories.person;
 
 import com.etiennelawlor.moviehub.data.database.RealmUtility;
-import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
 import com.etiennelawlor.moviehub.data.network.response.PersonCreditsResponse;
+import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.PersonsDataModel;
 
 import io.reactivex.Maybe;

@@ -30,9 +30,9 @@ import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
 import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
+import com.etiennelawlor.moviehub.data.repositories.models.MovieDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
 import com.etiennelawlor.moviehub.di.component.SearchComponent;
 import com.etiennelawlor.moviehub.di.module.SearchModule;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
@@ -175,7 +175,7 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
         public void onItemClick(int position, View view) {
             selectedMovieView = view;
 
-            MovieResponse movie = searchMoviesAdapter.getItem(position);
+            MovieDataModel movie = searchMoviesAdapter.getItem(position);
             if(movie != null){
                 searchPresenter.onMovieClick(movie);
             }
@@ -187,7 +187,7 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
         public void onItemClick(int position, View view) {
             selectedTelevisionShowView = view;
 
-            TelevisionShowResponse televisionShow = searchTelevisionShowsAdapter.getItem(position);
+            TelevisionShowDataModel televisionShow = searchTelevisionShowsAdapter.getItem(position);
             if(televisionShow != null){
                 searchPresenter.onTelevisionShowClick(televisionShow);
             }
@@ -355,7 +355,7 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
     }
 
     @Override
-    public void addMoviesToAdapter(List<MovieResponse> movies) {
+    public void addMoviesToAdapter(List<MovieDataModel> movies) {
         searchMoviesAdapter.addAll(movies);
     }
 
@@ -375,7 +375,7 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
     }
 
     @Override
-    public void addTelevisionShowsToAdapter(List<TelevisionShowResponse> televisionShows) {
+    public void addTelevisionShowsToAdapter(List<TelevisionShowDataModel> televisionShows) {
         searchTelevisionShowsAdapter.addAll(televisionShows);
     }
 
@@ -415,7 +415,7 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
     }
 
     @Override
-    public void openMovieDetails(MovieResponse movie) {
+    public void openMovieDetails(MovieDataModel movie) {
         Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_MOVIE, movie);
@@ -435,7 +435,7 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
     }
 
     @Override
-    public void openTelevisionShowDetails(TelevisionShowResponse televisionShow) {
+    public void openTelevisionShowDetails(TelevisionShowDataModel televisionShow) {
         Intent intent = new Intent(getActivity(), TelevisionShowDetailsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_TELEVISION_SHOW, televisionShow);

@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub;
 
-import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
 import com.etiennelawlor.moviehub.data.network.response.MovieCreditResponse;
+import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
 import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
 import com.etiennelawlor.moviehub.domain.MovieDetailsDomainContract;
 import com.etiennelawlor.moviehub.domain.models.MovieDetailsDomainModel;

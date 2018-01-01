@@ -1,9 +1,11 @@
 package com.etiennelawlor.moviehub.data.repositories.tv;
 
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowContentRatingsResponse;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCreditsResponse;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
+import com.etiennelawlor.moviehub.data.repositories.mappers.TelevisionShowDataModelMapper;
 import com.etiennelawlor.moviehub.data.repositories.mappers.TelevisionShowsDataModelMapper;
+import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowsDataModel;
 
 import io.reactivex.Maybe;
@@ -19,6 +21,7 @@ public class TelevisionShowRepository implements TelevisionShowDataSourceContrac
     private TelevisionShowDataSourceContract.LocalDateSource televisionShowLocalDataSource;
     private TelevisionShowDataSourceContract.RemoteDateSource televisionShowRemoteDataSource;
     private TelevisionShowsDataModelMapper televisionShowsDataModelMapper = new TelevisionShowsDataModelMapper();
+    private TelevisionShowDataModelMapper televisionShowDataModelMapper = new TelevisionShowDataModelMapper();
     // endregion
 
     // region Constructors
@@ -42,11 +45,12 @@ public class TelevisionShowRepository implements TelevisionShowDataSourceContrac
     }
 
     @Override
-    public Single<TelevisionShowResponse> getTelevisionShow(int tvId) {
-        Maybe<TelevisionShowResponse> local = televisionShowLocalDataSource.getTelevisionShow(tvId);
-        Single<TelevisionShowResponse> remote =
+    public Single<TelevisionShowDataModel> getTelevisionShow(int tvId) {
+        Maybe<TelevisionShowDataModel> local = televisionShowLocalDataSource.getTelevisionShow(tvId);
+        Single<TelevisionShowDataModel> remote =
                 televisionShowRemoteDataSource.getTelevisionShow(tvId)
-                        .doOnSuccess(televisionShow -> televisionShowLocalDataSource.saveTelevisionShow(televisionShow));
+                        .map(televisionShowResponse -> televisionShowDataModelMapper.mapToDataModel(televisionShowResponse))
+                        .doOnSuccess(televisionShowDataModel -> televisionShowLocalDataSource.saveTelevisionShow(televisionShowDataModel));
 
         return local.switchIfEmpty(remote);
     }

@@ -1,8 +1,8 @@
 package com.etiennelawlor.moviehub.domain;
 
-import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
 import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
+import com.etiennelawlor.moviehub.data.repositories.models.MovieDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
 import com.etiennelawlor.moviehub.data.repositories.search.SearchDataSourceContract;
 import com.etiennelawlor.moviehub.domain.models.SearchDomainModel;
 
@@ -34,21 +34,21 @@ public class SearchUseCase implements SearchDomainContract.UseCase {
                 searchRepository.getMovieSearchResults(query, 1),
                 searchRepository.getTelevisionShowSearchResults(query, 1),
                 searchRepository.getPersonSearchResults(query, 1),
-                (moviesEnvelope, televisionShowsEnvelope, peopleEnvelope) -> {
-                    List<MovieResponse> movies = new ArrayList<>();
-                    List<TelevisionShowResponse> televisionShows = new ArrayList<>();
+                (moviesDataModel, televisionShowsDataModel, personsDataModel) -> {
+                    List<MovieDataModel> movies = new ArrayList<>();
+                    List<TelevisionShowDataModel> televisionShows = new ArrayList<>();
                     List<PersonResponse> persons = new ArrayList<>();
 
-                    if (moviesEnvelope != null) {
-                        movies = moviesEnvelope.getMovies();
+                    if (moviesDataModel != null) {
+                        movies = moviesDataModel.getMovies();
                     }
 
-                    if (televisionShowsEnvelope != null) {
-                        televisionShows = televisionShowsEnvelope.getTelevisionShows();
+                    if (televisionShowsDataModel != null) {
+                        televisionShows = televisionShowsDataModel.getTelevisionShows();
                     }
 
-                    if (peopleEnvelope != null) {
-                        persons = peopleEnvelope.getPersons();
+                    if (personsDataModel != null) {
+                        persons = personsDataModel.getPersons();
                     }
 
                     return new SearchDomainModel(query, movies, televisionShows, persons);

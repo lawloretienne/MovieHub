@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.presentation.moviedetails;
 
-import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
 import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
+import com.etiennelawlor.moviehub.data.repositories.models.MovieDataModel;
 import com.etiennelawlor.moviehub.domain.MovieDetailsDomainContract;
 import com.etiennelawlor.moviehub.domain.models.MovieDetailsDomainModel;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
@@ -71,7 +71,7 @@ public class MovieDetailsPresenter implements MovieDetailsUiContract.Presenter {
     }
 
     @Override
-    public void onMovieClick(MovieResponse movie) {
+    public void onMovieClick(MovieDataModel movie) {
         movieDetailsView.openMovieDetails(movie);
     }
 

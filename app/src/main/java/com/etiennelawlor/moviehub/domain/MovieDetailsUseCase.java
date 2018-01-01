@@ -2,10 +2,10 @@ package com.etiennelawlor.moviehub.domain;
 
 import android.text.TextUtils;
 
-import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
 import com.etiennelawlor.moviehub.data.network.response.MovieCreditResponse;
-import com.etiennelawlor.moviehub.data.network.response.ReleaseDateResponse;
 import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDateResponse;
+import com.etiennelawlor.moviehub.data.network.response.ReleaseDateResponse;
+import com.etiennelawlor.moviehub.data.repositories.models.MovieDataModel;
 import com.etiennelawlor.moviehub.data.repositories.movie.MovieDataSourceContract;
 import com.etiennelawlor.moviehub.domain.models.MovieDetailsDomainModel;
 
@@ -42,10 +42,10 @@ public class MovieDetailsUseCase implements MovieDetailsDomainContract.UseCase {
                 movieRepository.getMovieCredits(movieId),
                 movieRepository.getSimilarMovies(movieId),
                 movieRepository.getMovieReleaseDates(movieId),
-                (movie, movieCreditsDataModel, moviesDataModel, movieReleaseDatesDataModel) -> {
+                (movieDataModel, movieCreditsDataModel, moviesDataModel, movieReleaseDatesDataModel) -> {
                     List<MovieCreditResponse> cast = new ArrayList<>();
                     List<MovieCreditResponse> crew = new ArrayList<>();
-                    List<MovieResponse> similarMovies = new ArrayList<>();
+                    List<MovieDataModel> similarMovies = new ArrayList<>();
                     String rating = "";
 
                     if (movieCreditsDataModel != null) {
@@ -82,7 +82,7 @@ public class MovieDetailsUseCase implements MovieDetailsDomainContract.UseCase {
                         }
                     }
 
-                    return new MovieDetailsDomainModel(movie, cast, crew, similarMovies, rating);
+                    return new MovieDetailsDomainModel(movieDataModel, cast, crew, similarMovies, rating);
                 });
     }
     // endregion

@@ -1,9 +1,10 @@
 package com.etiennelawlor.moviehub.data.repositories.tv;
 
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowContentRatingsResponse;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCreditsResponse;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowsResponse;
+import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowsDataModel;
 
 import io.reactivex.Maybe;
@@ -17,7 +18,7 @@ public interface TelevisionShowDataSourceContract {
 
     interface Repository {
         Single<TelevisionShowsDataModel> getPopularTelevisionShows(int currentPage);
-        Single<TelevisionShowResponse> getTelevisionShow(int tvId);
+        Single<TelevisionShowDataModel> getTelevisionShow(int tvId);
         Single<TelevisionShowCreditsResponse> getTelevisionShowCredits(int tvId);
         Single<TelevisionShowsDataModel> getSimilarTelevisionShows(int tvId);
         Single<TelevisionShowContentRatingsResponse> getTelevisionShowContentRatings(int tvId);
@@ -27,8 +28,8 @@ public interface TelevisionShowDataSourceContract {
         Maybe<TelevisionShowsDataModel> getPopularTelevisionShows(int currentPage);
         void savePopularTelevisionShows(TelevisionShowsDataModel televisionShowsDataModel);
 
-        Maybe<TelevisionShowResponse> getTelevisionShow(int tvId);
-        void saveTelevisionShow(TelevisionShowResponse televisionShow);
+        Maybe<TelevisionShowDataModel> getTelevisionShow(int tvId);
+        void saveTelevisionShow(TelevisionShowDataModel televisionShowDataModel);
 
         Maybe<TelevisionShowCreditsResponse> getTelevisionShowCredits(int tvId);
         void saveTelevisionShowCredits(TelevisionShowCreditsResponse televisionShowCreditsResponse);

@@ -47,10 +47,10 @@ import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.network.response.GenreResponse;
-import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
 import com.etiennelawlor.moviehub.data.network.response.MovieCreditResponse;
 import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
+import com.etiennelawlor.moviehub.data.repositories.models.GenreDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.MovieDataModel;
 import com.etiennelawlor.moviehub.di.component.MovieDetailsComponent;
 import com.etiennelawlor.moviehub.di.module.MovieDetailsModule;
 import com.etiennelawlor.moviehub.domain.models.MovieDetailsDomainModel;
@@ -152,7 +152,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
     // endregion
 
     // region Member Variables
-    private MovieResponse movie;
+    private MovieDataModel movie;
     private Unbinder unbinder;
     private Typeface font;
     private int moviePosterHeight;
@@ -188,7 +188,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
         @Override
         public void onItemClick(int position, View view) {
             selectedMovieView = view;
-            MovieResponse movie = similarMoviesAdapter.getItem(position);
+            MovieDataModel movie = similarMoviesAdapter.getItem(position);
             if(movie != null){
                 movieDetailsPresenter.onMovieClick(movie);
             }
@@ -572,7 +572,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
     }
 
     @Override
-    public void openMovieDetails(MovieResponse movie) {
+    public void openMovieDetails(MovieDataModel movie) {
         Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_MOVIE, movie);
@@ -631,13 +631,13 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
         }
     }
 
-    private String getPosterUrl(MovieResponse movie){
+    private String getPosterUrl(MovieDataModel movie){
         String posterPath = movie.getPosterPath();
         String posterUrl = String.format("%s%s%s", SECURE_BASE_URL, POSTER_SIZE, posterPath);
         return posterUrl;
     }
 
-    private String getBackdropUrl(MovieResponse movie){
+    private String getBackdropUrl(MovieDataModel movie){
         String backdropPath = movie.getBackdropPath();
         String backdropUrl = String.format("%s%s%s", SECURE_BASE_URL, BACKDROP_SIZE, backdropPath);
         return backdropUrl;
@@ -695,7 +695,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
     }
 
     private void setUpSimilarMovies(){
-        List<MovieResponse> similarMovies = movieDetailsDomainModel.getSimilarMovies();
+        List<MovieDataModel> similarMovies = movieDetailsDomainModel.getSimilarMovies();
         if(similarMovies != null && similarMovies.size()>0){
             View similarMoviesView = similarMoviesViewStub.inflate();
 
@@ -709,9 +709,9 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
             SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
             snapHelper.attachToRecyclerView(similarMoviesRecyclerView);
 
-            Collections.sort(similarMovies, new Comparator<MovieResponse>() {
+            Collections.sort(similarMovies, new Comparator<MovieDataModel>() {
                 @Override
-                public int compare(MovieResponse m1, MovieResponse m2) {
+                public int compare(MovieDataModel m1, MovieDataModel m2) {
                     int year1 = -1;
                     if(m1.getReleaseDateYear() != -1){
                         year1 = m1.getReleaseDateYear();
@@ -793,14 +793,14 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
     }
 
     private void setUpGenres(){
-        List<GenreResponse> genres = movie.getGenres();
-        if(genres != null && genres.size()>0){
+        List<GenreDataModel> genreDataModels = movie.getGenres();
+        if(genreDataModels != null && genreDataModels.size()>0){
             StringBuilder stringBuilder = new StringBuilder("");
 
-            for(int i=0; i<genres.size(); i++){
-                GenreResponse genre = genres.get(i);
-                stringBuilder.append(genre.getName());
-                if(i!=genres.size()-1){
+            for(int i=0; i<genreDataModels.size(); i++){
+                GenreDataModel genreDataModel = genreDataModels.get(i);
+                stringBuilder.append(genreDataModel.getName());
+                if(i!=genreDataModels.size()-1){
                     stringBuilder.append(" | ");
                 }
             }

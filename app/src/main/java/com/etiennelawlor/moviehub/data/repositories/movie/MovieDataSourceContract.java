@@ -1,10 +1,11 @@
 package com.etiennelawlor.moviehub.data.repositories.movie;
 
-import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
 import com.etiennelawlor.moviehub.data.network.response.MovieCreditsResponse;
 import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDatesResponse;
+import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
 import com.etiennelawlor.moviehub.data.network.response.MoviesResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.MovieCreditsDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.MovieDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.MovieReleaseDatesDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.MoviesDataModel;
 
@@ -20,7 +21,7 @@ public interface MovieDataSourceContract {
     interface Repository {
 //        Restful VERB is the first part of method name GET , POST , DELETE, PUT
         Single<MoviesDataModel> getPopularMovies(int currentPage);
-        Single<MovieResponse> getMovie(int movieId);
+        Single<MovieDataModel> getMovie(int movieId);
         Single<MovieCreditsDataModel> getMovieCredits(int movieId);
         Single<MoviesDataModel> getSimilarMovies(int movieId);
         Single<MovieReleaseDatesDataModel> getMovieReleaseDates(int movieId);
@@ -30,8 +31,8 @@ public interface MovieDataSourceContract {
         Maybe<MoviesDataModel> getPopularMovies(int currentPage);
         void savePopularMovies(MoviesDataModel moviesDataModel);
 
-        Maybe<MovieResponse> getMovie(int movieId);
-        void saveMovie(MovieResponse movie);
+        Maybe<MovieDataModel> getMovie(int movieId);
+        void saveMovie(MovieDataModel movie);
 
         Maybe<MovieCreditsDataModel> getMovieCredits(int movieId);
         void saveMovieCredits(MovieCreditsDataModel movieCreditsDataModel);

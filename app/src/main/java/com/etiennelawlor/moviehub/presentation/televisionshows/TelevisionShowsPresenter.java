@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.presentation.televisionshows;
 
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
+import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowsDataModel;
 import com.etiennelawlor.moviehub.domain.TelevisionShowsDomainContract;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
@@ -56,7 +56,7 @@ public class TelevisionShowsPresenter implements TelevisionShowsUiContract.Prese
                     @Override
                     public void onSuccess(TelevisionShowsDataModel televisionShowsDataModel) {
                         if(televisionShowsDataModel != null){
-                            List<TelevisionShowResponse> televisionShows = televisionShowsDataModel.getTelevisionShows();
+                            List<TelevisionShowDataModel> televisionShowDataModels = televisionShowsDataModel.getTelevisionShows();
                             int currentPage = televisionShowsDataModel.getPageNumber();
                             boolean isLastPage = televisionShowsDataModel.isLastPage();
                             boolean hasTelevisionShows = televisionShowsDataModel.hasTelevisionShows();
@@ -65,7 +65,7 @@ public class TelevisionShowsPresenter implements TelevisionShowsUiContract.Prese
 
                                 if(hasTelevisionShows){
                                     televisionShowsView.addHeader();
-                                    televisionShowsView.addTelevisionShowsToAdapter(televisionShows);
+                                    televisionShowsView.addTelevisionShowsToAdapter(televisionShowDataModels);
 
                                     if(!isLastPage)
                                         televisionShowsView.addFooter();
@@ -76,7 +76,7 @@ public class TelevisionShowsPresenter implements TelevisionShowsUiContract.Prese
                                 televisionShowsView.removeFooter();
 
                                 if(hasTelevisionShows){
-                                    televisionShowsView.addTelevisionShowsToAdapter(televisionShows);
+                                    televisionShowsView.addTelevisionShowsToAdapter(televisionShowDataModels);
 
                                     if(!isLastPage)
                                         televisionShowsView.addFooter();
@@ -110,7 +110,7 @@ public class TelevisionShowsPresenter implements TelevisionShowsUiContract.Prese
     }
 
     @Override
-    public void onTelevisionShowClick(TelevisionShowResponse televisionShow) {
+    public void onTelevisionShowClick(TelevisionShowDataModel televisionShow) {
         televisionShowsView.openTelevisionShowDetails(televisionShow);
     }
 

@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.domain.models;
 
-import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
 import com.etiennelawlor.moviehub.data.network.response.MovieCreditResponse;
+import com.etiennelawlor.moviehub.data.repositories.models.MovieDataModel;
 
 import java.util.List;
 
@@ -12,16 +12,16 @@ import java.util.List;
 public class MovieDetailsDomainModel {
 
     // region Member Variables
-    private MovieResponse movie;
+    private MovieDataModel movie;
     private List<MovieCreditResponse> cast;
     private List<MovieCreditResponse> crew;
-    private List<MovieResponse> similarMovies;
+    private List<MovieDataModel> similarMovies;
     private String rating;
     // endregion
 
     // region Constructors
 
-    public MovieDetailsDomainModel(MovieResponse movie, List<MovieCreditResponse> cast, List<MovieCreditResponse> crew, List<MovieResponse> similarMovies, String rating) {
+    public MovieDetailsDomainModel(MovieDataModel movie, List<MovieCreditResponse> cast, List<MovieCreditResponse> crew, List<MovieDataModel> similarMovies, String rating) {
         this.movie = movie;
         this.cast = cast;
         this.crew = crew;
@@ -33,7 +33,7 @@ public class MovieDetailsDomainModel {
 
     // region Getters
 
-    public MovieResponse getMovie() {
+    public MovieDataModel getMovie() {
         return movie;
     }
 
@@ -45,7 +45,7 @@ public class MovieDetailsDomainModel {
         return crew;
     }
 
-    public List<MovieResponse> getSimilarMovies() {
+    public List<MovieDataModel> getSimilarMovies() {
         return similarMovies;
     }
 
@@ -57,7 +57,7 @@ public class MovieDetailsDomainModel {
 
     // region Setters
 
-    public void setMovie(MovieResponse movie) {
+    public void setMovie(MovieDataModel movie) {
         this.movie = movie;
     }
 
@@ -69,7 +69,7 @@ public class MovieDetailsDomainModel {
         this.crew = crew;
     }
 
-    public void setSimilarMovies(List<MovieResponse> similarMovies) {
+    public void setSimilarMovies(List<MovieDataModel> similarMovies) {
         this.similarMovies = similarMovies;
     }
 

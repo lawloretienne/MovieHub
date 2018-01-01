@@ -1,8 +1,8 @@
 package com.etiennelawlor.moviehub.domain;
 
 import com.etiennelawlor.moviehub.data.network.response.ContentRatingResponse;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCreditResponse;
+import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowDataSourceContract;
 import com.etiennelawlor.moviehub.domain.models.TelevisionShowDetailsDomainModel;
 
@@ -39,26 +39,26 @@ public class TelevisionShowDetailsUseCase implements TelevisionShowDetailsDomain
                 televisionShowRepository.getTelevisionShowCredits(televisionShowId),
                 televisionShowRepository.getSimilarTelevisionShows(televisionShowId),
                 televisionShowRepository.getTelevisionShowContentRatings(televisionShowId),
-                (televisionShow, televisionShowCreditsEnvelope, televisionShowsEnvelope, televisionShowContentRatingsEnvelope) -> {
+                (televisionShowDataModel, televisionShowCreditsResponse, televisionShowsDataModel, televisionShowContentRatingsResponse) -> {
                     List<TelevisionShowCreditResponse> cast = new ArrayList<>();
                     List<TelevisionShowCreditResponse> crew = new ArrayList<>();
-                    List<TelevisionShowResponse> similarTelevisionShows = new ArrayList<>();
+                    List<TelevisionShowDataModel> similarTelevisionShows = new ArrayList<>();
                     String rating = "";
 
-                    if(televisionShowCreditsEnvelope!=null){
-                        cast = televisionShowCreditsEnvelope.getCast();
+                    if(televisionShowCreditsResponse!=null){
+                        cast = televisionShowCreditsResponse.getCast();
                     }
 
-                    if(televisionShowCreditsEnvelope!=null){
-                        crew = televisionShowCreditsEnvelope.getCrew();
+                    if(televisionShowCreditsResponse!=null){
+                        crew = televisionShowCreditsResponse.getCrew();
                     }
 
-                    if(televisionShowsEnvelope!=null){
-                        similarTelevisionShows = televisionShowsEnvelope.getTelevisionShows();
+                    if(televisionShowsDataModel!=null){
+                        similarTelevisionShows = televisionShowsDataModel.getTelevisionShows();
                     }
 
-                    if(televisionShowContentRatingsEnvelope!=null){
-                        List<ContentRatingResponse> contentRatings = televisionShowContentRatingsEnvelope.getContentRatings();
+                    if(televisionShowContentRatingsResponse!=null){
+                        List<ContentRatingResponse> contentRatings = televisionShowContentRatingsResponse.getContentRatings();
                         if(contentRatings != null && contentRatings.size() > 0){
                             for(ContentRatingResponse contentRating : contentRatings){
                                 String iso31661 = contentRating.getIso31661();
@@ -70,7 +70,7 @@ public class TelevisionShowDetailsUseCase implements TelevisionShowDetailsDomain
                         }
                     }
 
-                    return new TelevisionShowDetailsDomainModel(televisionShow, cast, crew, similarTelevisionShows, rating);
+                    return new TelevisionShowDetailsDomainModel(televisionShowDataModel, cast, crew, similarTelevisionShows, rating);
                 });
     }
     // endregion

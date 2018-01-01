@@ -1,16 +1,16 @@
 package com.etiennelawlor.moviehub.data.network;
 
 import com.etiennelawlor.moviehub.data.network.response.ConfigurationResponse;
-import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
 import com.etiennelawlor.moviehub.data.network.response.MovieCreditsResponse;
 import com.etiennelawlor.moviehub.data.network.response.MovieReleaseDatesResponse;
+import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
 import com.etiennelawlor.moviehub.data.network.response.MoviesResponse;
-import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
 import com.etiennelawlor.moviehub.data.network.response.PersonCreditsResponse;
+import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
 import com.etiennelawlor.moviehub.data.network.response.PersonsResponse;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowContentRatingsResponse;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCreditsResponse;
+import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowsResponse;
 
 import io.reactivex.Single;

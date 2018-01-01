@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.presentation.movies;
 
-import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
+import com.etiennelawlor.moviehub.data.repositories.models.MovieDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.MoviesDataModel;
 import com.etiennelawlor.moviehub.domain.MoviesDomainContract;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
@@ -55,7 +55,7 @@ public class MoviesPresenter implements MoviesUiContract.Presenter {
                     @Override
                     public void onSuccess(MoviesDataModel moviesDataModel) {
                         if(moviesDataModel != null){
-                            List<MovieResponse> movies = moviesDataModel.getMovies();
+                            List<MovieDataModel> movieDataModels = moviesDataModel.getMovies();
                             int currentPage = moviesDataModel.getPageNumber();
                             boolean isLastPage = moviesDataModel.isLastPage();
                             boolean hasMovies = moviesDataModel.hasMovies();
@@ -64,7 +64,7 @@ public class MoviesPresenter implements MoviesUiContract.Presenter {
 
                                 if(hasMovies){
                                     moviesView.addHeader();
-                                    moviesView.addMoviesToAdapter(movies);
+                                    moviesView.addMoviesToAdapter(movieDataModels);
 
                                     if(!isLastPage)
                                         moviesView.addFooter();
@@ -75,7 +75,7 @@ public class MoviesPresenter implements MoviesUiContract.Presenter {
                                 moviesView.removeFooter();
 
                                 if(hasMovies){
-                                    moviesView.addMoviesToAdapter(movies);
+                                    moviesView.addMoviesToAdapter(movieDataModels);
 
                                     if(!isLastPage)
                                         moviesView.addFooter();
@@ -109,7 +109,7 @@ public class MoviesPresenter implements MoviesUiContract.Presenter {
     }
 
     @Override
-    public void onMovieClick(MovieResponse movie) {
+    public void onMovieClick(MovieDataModel movie) {
         moviesView.openMovieDetails(movie);
     }
 
