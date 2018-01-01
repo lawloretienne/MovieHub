@@ -19,10 +19,10 @@ import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.repositories.models.PersonDataModel;
-import com.etiennelawlor.moviehub.data.repositories.models.PersonsDataModel;
 import com.etiennelawlor.moviehub.di.component.PersonsComponent;
 import com.etiennelawlor.moviehub.di.module.PersonsModule;
+import com.etiennelawlor.moviehub.domain.models.PersonDomainModel;
+import com.etiennelawlor.moviehub.domain.models.PersonsDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.persondetails.PersonDetailsActivity;
@@ -68,7 +68,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     private Typeface font;
     private Unbinder unbinder;
     private StaggeredGridLayoutManager layoutManager;
-    private PersonsDataModel personsDataModel;
+    private PersonsDomainModel personsDomainModel;
     private PersonsComponent personsComponent;
     private boolean isLoading = false;
     // endregion
@@ -81,7 +81,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     // region Listeners
     @OnClick(R.id.reload_btn)
     public void onReloadButtonClicked() {
-        personsPresenter.onLoadPopularPersons(personsDataModel == null ? 1 : personsDataModel.getPageNumber());
+        personsPresenter.onLoadPopularPersons(personsDomainModel == null ? 1 : personsDomainModel.getPageNumber());
     }
 
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
@@ -102,7 +102,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
             if ((visibleItemCount + firstVisibleItem) >= totalItemCount
                     && totalItemCount > 0
                     && !isLoading
-                    && !personsDataModel.isLastPage()) {
+                    && !personsDomainModel.isLastPage()) {
                 personsPresenter.onScrollToEndOfList();
             }
         }
@@ -162,7 +162,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
         // Pagination
         recyclerView.addOnScrollListener(recyclerViewOnScrollListener);
 
-        personsPresenter.onLoadPopularPersons(personsDataModel == null ? 1 : personsDataModel.getPageNumber());
+        personsPresenter.onLoadPopularPersons(personsDomainModel == null ? 1 : personsDomainModel.getPageNumber());
     }
 
     @Override
@@ -185,7 +185,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     @Override
     public void onItemClick(int position, View view) {
         selectedPersonView = view;
-        PersonDataModel person = personsAdapter.getItem(position);
+        PersonDomainModel person = personsAdapter.getItem(position);
         if(person != null){
             personsPresenter.onPersonClick(person);
         }
@@ -195,7 +195,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     // region PersonsAdapter.OnReloadClickListener Methods
     @Override
     public void onReloadClick() {
-        personsPresenter.onLoadPopularPersons(personsDataModel.getPageNumber());
+        personsPresenter.onLoadPopularPersons(personsDomainModel.getPageNumber());
     }
     // endregion
 
@@ -266,23 +266,23 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     }
 
     @Override
-    public void addPersonsToAdapter(List<PersonDataModel> persons) {
+    public void addPersonsToAdapter(List<PersonDomainModel> persons) {
         personsAdapter.addAll(persons);
     }
 
     @Override
     public void loadMoreItems() {
-        personsDataModel.incrementPageNumber();
-        personsPresenter.onLoadPopularPersons(personsDataModel.getPageNumber());
+        personsDomainModel.incrementPageNumber();
+        personsPresenter.onLoadPopularPersons(personsDomainModel.getPageNumber());
     }
 
     @Override
-    public void setPersonsDataModel(PersonsDataModel personsDataModel) {
-        this.personsDataModel = personsDataModel;
+    public void setPersonsDomainModel(PersonsDomainModel personsDomainModel) {
+        this.personsDomainModel = personsDomainModel;
     }
 
     @Override
-    public void openPersonDetails(PersonDataModel person) {
+    public void openPersonDetails(PersonDomainModel person) {
         Intent intent = new Intent(getActivity(), PersonDetailsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_PERSON, person);

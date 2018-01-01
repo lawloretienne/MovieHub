@@ -1,8 +1,8 @@
 package com.etiennelawlor.moviehub.presentation.persons;
 
-import com.etiennelawlor.moviehub.data.repositories.models.PersonDataModel;
-import com.etiennelawlor.moviehub.data.repositories.models.PersonsDataModel;
 import com.etiennelawlor.moviehub.domain.PersonsDomainContract;
+import com.etiennelawlor.moviehub.domain.models.PersonDomainModel;
+import com.etiennelawlor.moviehub.domain.models.PersonsDomainModel;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 
@@ -50,15 +50,15 @@ public class PersonsPresenter implements PersonsUiContract.Presenter {
 
         Disposable disposable = personsUseCase.getPopularPersons(currentPage)
 //                .compose(schedulerTransformer)
-                .compose(new ProductionSchedulerTransformer<PersonsDataModel>())
-                .subscribeWith(new DisposableSingleObserver<PersonsDataModel>() {
+                .compose(new ProductionSchedulerTransformer<PersonsDomainModel>())
+                .subscribeWith(new DisposableSingleObserver<PersonsDomainModel>() {
                     @Override
-                    public void onSuccess(PersonsDataModel personsDataModel) {
-                        if(personsDataModel != null){
-                            List<PersonDataModel> persons = personsDataModel.getPersons();
-                            int currentPage = personsDataModel.getPageNumber();
-                            boolean isLastPage = personsDataModel.isLastPage();
-                            boolean hasMovies = personsDataModel.hasPersons();
+                    public void onSuccess(PersonsDomainModel personsDomainModel) {
+                        if(personsDomainModel != null){
+                            List<PersonDomainModel> persons = personsDomainModel.getPersons();
+                            int currentPage = personsDomainModel.getPageNumber();
+                            boolean isLastPage = personsDomainModel.isLastPage();
+                            boolean hasMovies = personsDomainModel.hasPersons();
 
                             if(currentPage == 1){
                                 personsView.hideLoadingView();
@@ -83,7 +83,7 @@ public class PersonsPresenter implements PersonsUiContract.Presenter {
                                 }
                             }
 
-                            personsView.setPersonsDataModel(personsDataModel);
+                            personsView.setPersonsDomainModel(personsDomainModel);
                         }
                     }
 
@@ -110,7 +110,7 @@ public class PersonsPresenter implements PersonsUiContract.Presenter {
     }
 
     @Override
-    public void onPersonClick(PersonDataModel person) {
+    public void onPersonClick(PersonDomainModel person) {
         personsView.openPersonDetails(person);
     }
 

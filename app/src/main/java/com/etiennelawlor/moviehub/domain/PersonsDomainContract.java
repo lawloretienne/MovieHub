@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.domain;
 
-import com.etiennelawlor.moviehub.data.repositories.models.PersonsDataModel;
+import com.etiennelawlor.moviehub.domain.models.PersonsDomainModel;
 
 import io.reactivex.Single;
 
@@ -11,6 +11,6 @@ import io.reactivex.Single;
 public interface PersonsDomainContract {
 
     interface UseCase {
-        Single<PersonsDataModel> getPopularPersons(int currentPage);
+        Single<PersonsDomainModel> getPopularPersons(int currentPage);
     }
 }

@@ -47,13 +47,13 @@ import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.repositories.models.PersonDataModel;
 import com.etiennelawlor.moviehub.di.component.MovieDetailsComponent;
 import com.etiennelawlor.moviehub.di.module.MovieDetailsModule;
 import com.etiennelawlor.moviehub.domain.models.GenreDomainModel;
 import com.etiennelawlor.moviehub.domain.models.MovieCreditDomainModel;
 import com.etiennelawlor.moviehub.domain.models.MovieDetailsDomainModel;
 import com.etiennelawlor.moviehub.domain.models.MovieDomainModel;
+import com.etiennelawlor.moviehub.domain.models.PersonDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.common.GravitySnapHelper;
@@ -240,7 +240,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
             selectedPersonView = view;
             MovieCreditDomainModel movieCredit = castAdapter.getItem(position);
             if(movieCredit != null){
-                PersonDataModel person = new PersonDataModel();
+                PersonDomainModel person = new PersonDomainModel();
 
                 person.setName(movieCredit.getName());
                 person.setId(movieCredit.getId());
@@ -257,7 +257,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
             selectedPersonView = view;
             MovieCreditDomainModel movieCredit = crewAdapter.getItem(position);
             if(movieCredit != null){
-                PersonDataModel person = new PersonDataModel();
+                PersonDomainModel person = new PersonDomainModel();
 
                 person.setName(movieCredit.getName());
                 person.setId(movieCredit.getId());
@@ -553,7 +553,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
     }
 
     @Override
-    public void openPersonDetails(PersonDataModel person) {
+    public void openPersonDetails(PersonDomainModel person) {
         Intent intent = new Intent(getActivity(), PersonDetailsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_PERSON, person);

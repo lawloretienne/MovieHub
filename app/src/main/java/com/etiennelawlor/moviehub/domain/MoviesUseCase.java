@@ -26,7 +26,8 @@ public class MoviesUseCase implements MoviesDomainContract.UseCase {
     // region MoviesDomainContract.UseCase Methods
     @Override
     public Single<MoviesDomainModel> getPopularMovies(int currentPage) {
-        return movieRepository.getPopularMovies(currentPage).map(moviesDataModel -> moviesDomainModelMapper.mapToDomainModel(moviesDataModel));
+        return movieRepository.getPopularMovies(currentPage)
+                .map(moviesDataModel -> moviesDomainModelMapper.mapToDomainModel(moviesDataModel));
                 // Espresso should only show up in instrumented unit tests, in the androidTest/ directory
 //                .doOnSubscribe(disposable1 -> {
 //                    // The network request might be handled in a different thread so make sure Espresso knows

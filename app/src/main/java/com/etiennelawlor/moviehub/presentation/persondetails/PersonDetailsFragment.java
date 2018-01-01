@@ -47,15 +47,15 @@ import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.repositories.models.MovieDataModel;
-import com.etiennelawlor.moviehub.data.repositories.models.PersonCreditDataModel;
-import com.etiennelawlor.moviehub.data.repositories.models.PersonDataModel;
-import com.etiennelawlor.moviehub.data.repositories.models.ProfileImageDataModel;
-import com.etiennelawlor.moviehub.data.repositories.models.ProfileImagesDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
 import com.etiennelawlor.moviehub.di.component.PersonDetailsComponent;
 import com.etiennelawlor.moviehub.di.module.PersonDetailsModule;
+import com.etiennelawlor.moviehub.domain.models.MovieDomainModel;
+import com.etiennelawlor.moviehub.domain.models.PersonCreditDomainModel;
 import com.etiennelawlor.moviehub.domain.models.PersonDetailsDomainModel;
+import com.etiennelawlor.moviehub.domain.models.PersonDomainModel;
+import com.etiennelawlor.moviehub.domain.models.ProfileImageDomainModel;
+import com.etiennelawlor.moviehub.domain.models.ProfileImagesDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.common.GravitySnapHelper;
@@ -145,7 +145,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     // endregion
 
     // region Member Variables
-    private PersonDataModel person;
+    private PersonDomainModel person;
     private Unbinder unbinder;
     private Typeface font;
     private int personPosterHeight;
@@ -181,12 +181,12 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
         public void onItemClick(int position, View view) {
             selectedView = view;
 
-            PersonCreditDataModel personCredit = castAdapter.getItem(position);
+            PersonCreditDomainModel personCredit = castAdapter.getItem(position);
             if(personCredit != null){
                 String mediaType = personCredit.getMediaType();
                 switch (mediaType){
                     case "movie":
-                        MovieDataModel movie = new MovieDataModel();
+                        MovieDomainModel movie = new MovieDomainModel();
 
                         movie.setTitle(personCredit.getTitle());
                         movie.setId(personCredit.getId());
@@ -217,13 +217,13 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
         public void onItemClick(int position, View view) {
             selectedView = view;
 
-            PersonCreditDataModel personCredit = crewAdapter.getItem(position);
+            PersonCreditDomainModel personCredit = crewAdapter.getItem(position);
             if(personCredit != null){
 
                 String mediaType = personCredit.getMediaType();
                 switch (mediaType){
                     case "movie":
-                        MovieDataModel movie = new MovieDataModel();
+                        MovieDomainModel movie = new MovieDomainModel();
 
                         movie.setTitle(personCredit.getTitle());
                         movie.setId(personCredit.getId());
@@ -573,7 +573,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     }
 
     @Override
-    public void openMovieDetails(MovieDataModel movie) {
+    public void openMovieDetails(MovieDomainModel movie) {
         Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_MOVIE, movie);
@@ -645,20 +645,20 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
         }
     }
 
-    private String getProfileUrl(PersonDataModel person){
+    private String getProfileUrl(PersonDomainModel person){
         String profilePath = person.getProfilePath();
         String profileUrl = String.format("%s%s%s", SECURE_BASE_URL, POSTER_SIZE, profilePath);
         return profileUrl;
     }
 
-    private String getBackdropUrl(PersonDataModel person){
+    private String getBackdropUrl(PersonDomainModel person){
         String backdropUrl = "";
 
-        ProfileImagesDataModel profileImages = person.getImages();
+        ProfileImagesDomainModel profileImages = person.getImages();
         if(profileImages != null){
-            List<ProfileImageDataModel> profileImagesList = profileImages.getProfiles();
+            List<ProfileImageDomainModel> profileImagesList = profileImages.getProfiles();
             if(profileImagesList != null && profileImagesList.size()>0){
-                ProfileImageDataModel profileImage = profileImagesList.get(profileImagesList.size()-1);
+                ProfileImageDomainModel profileImage = profileImagesList.get(profileImagesList.size()-1);
                 if(profileImage != null){
                     String filePath = profileImage.getFilePath();
 
@@ -685,7 +685,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     }
 
     private void setUpCast(){
-        List<PersonCreditDataModel> cast = personDetailsDomainModel.getCast();
+        List<PersonCreditDomainModel> cast = personDetailsDomainModel.getCast();
         if(cast != null && cast.size()>0){
             View castView = castViewStub.inflate();
 
@@ -699,9 +699,9 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
             SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
             snapHelper.attachToRecyclerView(castRecyclerView);
 
-            Collections.sort(cast, new Comparator<PersonCreditDataModel>() {
+            Collections.sort(cast, new Comparator<PersonCreditDomainModel>() {
                 @Override
-                public int compare(PersonCreditDataModel pc1, PersonCreditDataModel pc2) {
+                public int compare(PersonCreditDomainModel pc1, PersonCreditDomainModel pc2) {
                     int year1 = -1;
                     if(pc1.getFirstAirYear() != -1){
                         year1 = pc1.getFirstAirYear();
@@ -730,7 +730,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     }
 
     private void setUpCrew(){
-        List<PersonCreditDataModel> crew = personDetailsDomainModel.getCrew();
+        List<PersonCreditDomainModel> crew = personDetailsDomainModel.getCrew();
         if(crew != null && crew.size()>0){
             View crewView = crewViewStub.inflate();
 
@@ -744,9 +744,9 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
             SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
             snapHelper.attachToRecyclerView(crewRecyclerView);
 
-            Collections.sort(crew, new Comparator<PersonCreditDataModel>() {
+            Collections.sort(crew, new Comparator<PersonCreditDomainModel>() {
                 @Override
-                public int compare(PersonCreditDataModel pc1, PersonCreditDataModel pc2) {
+                public int compare(PersonCreditDomainModel pc1, PersonCreditDomainModel pc2) {
                     int year1 = -1;
                     if(pc1.getFirstAirYear() != -1){
                         year1 = pc1.getFirstAirYear();

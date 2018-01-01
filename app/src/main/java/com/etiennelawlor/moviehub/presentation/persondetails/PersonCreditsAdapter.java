@@ -18,7 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.repositories.models.PersonCreditDataModel;
+import com.etiennelawlor.moviehub.domain.models.PersonCreditDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.common.widget.DynamicHeightImageView;
 import com.etiennelawlor.moviehub.util.AnimationUtility;
@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
  * Created by etiennelawlor on 12/17/16.
  */
 
-public class PersonCreditsAdapter extends BaseAdapter<PersonCreditDataModel> {
+public class PersonCreditsAdapter extends BaseAdapter<PersonCreditDomainModel> {
 
     // region Constants
     // endregion
@@ -117,7 +117,7 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCreditDataModel> {
     protected void bindItemViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         final PersonCreditViewHolder holder = (PersonCreditViewHolder) viewHolder;
 
-        final PersonCreditDataModel personCredit = getItem(position);
+        final PersonCreditDomainModel personCredit = getItem(position);
         if (personCredit != null) {
             holder.bind(personCredit);
         }
@@ -153,7 +153,7 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCreditDataModel> {
     @Override
     public void addFooter() {
         isFooterAdded = true;
-        add(new PersonCreditDataModel());
+        add(new PersonCreditDomainModel());
     }
 
     // region Inner Classes
@@ -189,7 +189,7 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCreditDataModel> {
         // endregion
 
         // region Helper Methods
-        private void bind(PersonCreditDataModel personCredit){
+        private void bind(PersonCreditDomainModel personCredit){
             resetInfoBackgroundColor(infoLinearLayout);
             resetTitleTextColor(titleTextView);
             resetSubtitleTextColor(subtitleTextView);
@@ -201,7 +201,7 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCreditDataModel> {
             setUpCaption(captionTextView, personCredit);
         }
 
-        private void setUpThumbnail(final PersonCreditViewHolder vh, final PersonCreditDataModel personCredit){
+        private void setUpThumbnail(final PersonCreditViewHolder vh, final PersonCreditDomainModel personCredit){
             final DynamicHeightImageView iv = vh.thumbnailImageView;
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) iv.getLayoutParams();
             layoutParams.width = ivWidth;
@@ -263,7 +263,7 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCreditDataModel> {
             }
         }
 
-        private void setUpTitle(TextView tv, PersonCreditDataModel personCredit){
+        private void setUpTitle(TextView tv, PersonCreditDomainModel personCredit){
             String title = personCredit.getTitle();
             String name = personCredit.getName();
             if (!TextUtils.isEmpty(title)) {
@@ -289,7 +289,7 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCreditDataModel> {
             }
         }
 
-        private void setUpSubtitle(TextView tv, PersonCreditDataModel personCredit){
+        private void setUpSubtitle(TextView tv, PersonCreditDomainModel personCredit){
             String job = personCredit.getJob();
             String character = personCredit.getCharacter();
             if (!TextUtils.isEmpty(job)) {
@@ -301,7 +301,7 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCreditDataModel> {
             }
         }
 
-        private void setUpCaption(TextView tv, PersonCreditDataModel personCredit){
+        private void setUpCaption(TextView tv, PersonCreditDomainModel personCredit){
             int firstAirYear = personCredit.getFirstAirYear();
             int releaseYear = personCredit.getReleaseYear();
             if(firstAirYear != -1){

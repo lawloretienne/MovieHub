@@ -1,8 +1,5 @@
 package com.etiennelawlor.moviehub.domain.models;
 
-import com.etiennelawlor.moviehub.data.repositories.models.PersonCreditDataModel;
-import com.etiennelawlor.moviehub.data.repositories.models.PersonDataModel;
-
 import java.util.List;
 
 /**
@@ -12,9 +9,9 @@ import java.util.List;
 public class PersonDetailsDomainModel {
 
     // region Member Variables
-    private PersonDataModel person;
-    private List<PersonCreditDataModel> cast;
-    private List<PersonCreditDataModel> crew;
+    private PersonDomainModel person;
+    private List<PersonCreditDomainModel> cast;
+    private List<PersonCreditDomainModel> crew;
     // endregion
 
     // region Constructors
@@ -24,15 +21,15 @@ public class PersonDetailsDomainModel {
 
     // region Getters
 
-    public PersonDataModel getPerson() {
+    public PersonDomainModel getPerson() {
         return person;
     }
 
-    public List<PersonCreditDataModel> getCast() {
+    public List<PersonCreditDomainModel> getCast() {
         return cast;
     }
 
-    public List<PersonCreditDataModel> getCrew() {
+    public List<PersonCreditDomainModel> getCrew() {
         return crew;
     }
 
@@ -40,15 +37,15 @@ public class PersonDetailsDomainModel {
 
     // region Setters
 
-    public void setPerson(PersonDataModel person) {
+    public void setPerson(PersonDomainModel person) {
         this.person = person;
     }
 
-    public void setCast(List<PersonCreditDataModel> cast) {
+    public void setCast(List<PersonCreditDomainModel> cast) {
         this.cast = cast;
     }
 
-    public void setCrew(List<PersonCreditDataModel> crew) {
+    public void setCrew(List<PersonCreditDomainModel> crew) {
         this.crew = crew;
     }
 

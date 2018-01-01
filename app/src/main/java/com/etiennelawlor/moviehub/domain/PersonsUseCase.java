@@ -1,7 +1,8 @@
 package com.etiennelawlor.moviehub.domain;
 
-import com.etiennelawlor.moviehub.data.repositories.models.PersonsDataModel;
 import com.etiennelawlor.moviehub.data.repositories.person.PersonDataSourceContract;
+import com.etiennelawlor.moviehub.domain.mappers.PersonsDomainModelMapper;
+import com.etiennelawlor.moviehub.domain.models.PersonsDomainModel;
 
 import io.reactivex.Single;
 
@@ -13,6 +14,7 @@ public class PersonsUseCase implements PersonsDomainContract.UseCase {
 
     // region Member Variables
     private final PersonDataSourceContract.Repository personRepository;
+    private PersonsDomainModelMapper personsDomainModelMapper = new PersonsDomainModelMapper();
     // endregion
 
     // region Constructors
@@ -23,8 +25,9 @@ public class PersonsUseCase implements PersonsDomainContract.UseCase {
 
     // region PersonsDomainContract.UseCase Methods
     @Override
-    public Single<PersonsDataModel> getPopularPersons(int currentPage) {
-        return personRepository.getPopularPersons(currentPage);
+    public Single<PersonsDomainModel> getPopularPersons(int currentPage) {
+        return personRepository.getPopularPersons(currentPage)
+                .map(personsDataModel -> personsDomainModelMapper.mapToDomainModel(personsDataModel));
     }
     // endregion
 

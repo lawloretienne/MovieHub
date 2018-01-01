@@ -18,7 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.repositories.models.PersonDataModel;
+import com.etiennelawlor.moviehub.domain.models.PersonDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.common.widget.DynamicHeightImageView;
 import com.etiennelawlor.moviehub.util.AnimationUtility;
@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
  * Created by etiennelawlor on 12/17/16.
  */
 
-public class PersonsAdapter extends BaseAdapter<PersonDataModel> {
+public class PersonsAdapter extends BaseAdapter<PersonDomainModel> {
 
     // region Constants
     // endregion
@@ -125,7 +125,7 @@ public class PersonsAdapter extends BaseAdapter<PersonDataModel> {
     protected void bindItemViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         final PersonViewHolder holder = (PersonViewHolder) viewHolder;
 
-        final PersonDataModel person = getItem(position);
+        final PersonDomainModel person = getItem(position);
         if (person != null) {
             holder.bind(person);
         }
@@ -155,13 +155,13 @@ public class PersonsAdapter extends BaseAdapter<PersonDataModel> {
 
     @Override
     public void addHeader() {
-        add(new PersonDataModel());
+        add(new PersonDomainModel());
     }
 
     @Override
     public void addFooter() {
         isFooterAdded = true;
-        add(new PersonDataModel());
+        add(new PersonDomainModel());
     }
 
     // region Inner Classes
@@ -195,7 +195,7 @@ public class PersonsAdapter extends BaseAdapter<PersonDataModel> {
         // endregion
 
         // region Helper Methods
-        private void bind(PersonDataModel person){
+        private void bind(PersonDomainModel person){
             resetInfoBackgroundColor(infoLinearLayout);
             resetTitleTextColor(titleTextView);
 
@@ -203,7 +203,7 @@ public class PersonsAdapter extends BaseAdapter<PersonDataModel> {
             setUpTitle(titleTextView, person);
         }
 
-        private void setUpThumbnail(final PersonViewHolder vh, final PersonDataModel person){
+        private void setUpThumbnail(final PersonViewHolder vh, final PersonDomainModel person){
             final DynamicHeightImageView iv = vh.thumbnailImageView;
 
             double heightRatio = 3.0D/2.0D;
@@ -259,7 +259,7 @@ public class PersonsAdapter extends BaseAdapter<PersonDataModel> {
             }
         }
 
-        private void setUpTitle(TextView tv, PersonDataModel person){
+        private void setUpTitle(TextView tv, PersonDomainModel person){
             String name = person.getName();
             if (!TextUtils.isEmpty(name)) {
                 tv.setText(name);
