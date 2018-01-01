@@ -1,6 +1,5 @@
 package com.etiennelawlor.moviehub.domain.mappers;
 
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCreditsResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowCreditsDataModel;
 import com.etiennelawlor.moviehub.domain.models.TelevisionShowCreditsDomainModel;
 

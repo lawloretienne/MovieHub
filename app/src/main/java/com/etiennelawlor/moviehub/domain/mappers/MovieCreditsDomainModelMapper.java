@@ -1,6 +1,5 @@
 package com.etiennelawlor.moviehub.domain.mappers;
 
-import com.etiennelawlor.moviehub.data.network.response.MovieCreditsResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.MovieCreditsDataModel;
 import com.etiennelawlor.moviehub.domain.models.MovieCreditsDomainModel;
 
@@ -24,7 +23,7 @@ public class MovieCreditsDomainModelMapper implements DomainModelMapper<MovieCre
     public MovieCreditsDomainModel mapToDomainModel(MovieCreditsDataModel movieCreditsDataModel) {
         MovieCreditsDomainModel movieCreditsDomainModel = new MovieCreditsDomainModel();
         movieCreditsDomainModel.setCast(movieCreditDomainModelMapper.mapListToDomainModelList(movieCreditsDataModel.getCast()));
-        movieCreditsDomainModel.setCast(movieCreditDomainModelMapper.mapListToDomainModelList(movieCreditsDataModel.getCrew()));
+        movieCreditsDomainModel.setCrew(movieCreditDomainModelMapper.mapListToDomainModelList(movieCreditsDataModel.getCrew()));
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, THIRTY_DAYS);
         movieCreditsDomainModel.setExpiredAt(calendar.getTime());

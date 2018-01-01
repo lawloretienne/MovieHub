@@ -1,6 +1,5 @@
 package com.etiennelawlor.moviehub.domain.mappers;
 
-import com.etiennelawlor.moviehub.data.network.response.PersonCreditResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.PersonCreditDataModel;
 import com.etiennelawlor.moviehub.domain.models.PersonCreditDomainModel;
 

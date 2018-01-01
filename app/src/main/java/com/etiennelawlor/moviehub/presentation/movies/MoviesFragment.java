@@ -19,10 +19,10 @@ import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.repositories.models.MovieDataModel;
-import com.etiennelawlor.moviehub.data.repositories.models.MoviesDataModel;
 import com.etiennelawlor.moviehub.di.component.MoviesComponent;
 import com.etiennelawlor.moviehub.di.module.MoviesModule;
+import com.etiennelawlor.moviehub.domain.models.MovieDomainModel;
+import com.etiennelawlor.moviehub.domain.models.MoviesDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.moviedetails.MovieDetailsActivity;
@@ -68,7 +68,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     private Typeface font;
     private Unbinder unbinder;
     private StaggeredGridLayoutManager layoutManager;
-    private MoviesDataModel moviesPage;
+    private MoviesDomainModel moviesDomainModel;
     private boolean isLoading = false;
     private MoviesComponent moviesComponent;
     // endregion
@@ -81,7 +81,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     // region Listeners
     @OnClick(R.id.reload_btn)
     public void onReloadButtonClicked() {
-        moviesPresenter.onLoadPopularMovies(moviesPage == null ? 1 : moviesPage.getPageNumber());
+        moviesPresenter.onLoadPopularMovies(moviesDomainModel == null ? 1 : moviesDomainModel.getPageNumber());
     }
 
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
@@ -102,7 +102,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
             if ((visibleItemCount + firstVisibleItem) >= totalItemCount
                     && totalItemCount > 0
                     && !isLoading
-                    && !moviesPage.isLastPage()) {
+                    && !moviesDomainModel.isLastPage()) {
                 moviesPresenter.onScrollToEndOfList();
             }
         }
@@ -161,7 +161,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
         // Pagination
         recyclerView.addOnScrollListener(recyclerViewOnScrollListener);
 
-        moviesPresenter.onLoadPopularMovies(moviesPage == null ? 1 : moviesPage.getPageNumber());
+        moviesPresenter.onLoadPopularMovies(moviesDomainModel == null ? 1 : moviesDomainModel.getPageNumber());
     }
 
     @Override
@@ -185,7 +185,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     @Override
     public void onItemClick(int position, View view) {
         selectedMovieView = view;
-        MovieDataModel movie = moviesAdapter.getItem(position);
+        MovieDomainModel movie = moviesAdapter.getItem(position);
         if(movie != null){
             moviesPresenter.onMovieClick(movie);
         }
@@ -195,7 +195,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     // region MoviesAdapter.OnReloadClickListener Methods
     @Override
     public void onReloadClick() {
-        moviesPresenter.onLoadPopularMovies(moviesPage.getPageNumber());
+        moviesPresenter.onLoadPopularMovies(moviesDomainModel.getPageNumber());
     }
     // endregion
 
@@ -266,23 +266,23 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     }
 
     @Override
-    public void addMoviesToAdapter(List<MovieDataModel> movies) {
+    public void addMoviesToAdapter(List<MovieDomainModel> movies) {
         moviesAdapter.addAll(movies);
     }
 
     @Override
     public void loadMoreItems() {
-        moviesPage.incrementPageNumber();
-        moviesPresenter.onLoadPopularMovies(moviesPage.getPageNumber());
+        moviesDomainModel.incrementPageNumber();
+        moviesPresenter.onLoadPopularMovies(moviesDomainModel.getPageNumber());
     }
 
     @Override
-    public void setMoviesDataModel(MoviesDataModel moviesPage) {
-        this.moviesPage = moviesPage;
+    public void setMoviesDomainModel(MoviesDomainModel moviesDomainModel) {
+        this.moviesDomainModel = moviesDomainModel;
     }
 
     @Override
-    public void openMovieDetails(MovieDataModel movie) {
+    public void openMovieDetails(MovieDomainModel movie) {
         Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_MOVIE, movie);

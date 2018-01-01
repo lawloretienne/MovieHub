@@ -23,7 +23,7 @@ public class MovieCreditsDataModelMapper implements DataModelMapper<MovieCredits
     public MovieCreditsDataModel mapToDataModel(MovieCreditsResponse movieCreditsResponse) {
         MovieCreditsDataModel movieCreditsDataModel = new MovieCreditsDataModel();
         movieCreditsDataModel.setCast(movieCreditDataModelMapper.mapListToDataModelList(movieCreditsResponse.getCast()));
-        movieCreditsDataModel.setCast(movieCreditDataModelMapper.mapListToDataModelList(movieCreditsResponse.getCrew()));
+        movieCreditsDataModel.setCrew(movieCreditDataModelMapper.mapListToDataModelList(movieCreditsResponse.getCrew()));
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, THIRTY_DAYS);
         movieCreditsDataModel.setExpiredAt(calendar.getTime());

@@ -9,6 +9,8 @@ import com.etiennelawlor.moviehub.data.repositories.models.MovieReleaseDateDataM
 import com.etiennelawlor.moviehub.data.repositories.models.MovieReleaseDatesDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.MoviesDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.ReleaseDateDataModel;
+import com.etiennelawlor.moviehub.domain.mappers.MovieCreditDomainModelMapper;
+import com.etiennelawlor.moviehub.domain.mappers.MovieDomainModelMapper;
 import com.etiennelawlor.moviehub.domain.models.MovieDetailsDomainModel;
 
 import java.util.ArrayList;
@@ -23,6 +25,9 @@ public class MovieDetailsDomainModelComposer {
     // region Constants
     private static final String ISO_31661 = "US";
     // endregion
+
+    private MovieCreditDomainModelMapper movieCreditDomainModelMapper = new MovieCreditDomainModelMapper();
+    private MovieDomainModelMapper movieDomainModelMapper = new MovieDomainModelMapper();
 
     public MovieDetailsDomainModel compose(MovieDataModel movieDataModel, MovieCreditsDataModel movieCreditsDataModel, MoviesDataModel moviesDataModel, MovieReleaseDatesDataModel movieReleaseDatesDataModel){
         MovieDetailsDomainModel movieDetailsDomainModel = new MovieDetailsDomainModel();
@@ -66,10 +71,10 @@ public class MovieDetailsDomainModelComposer {
             }
         }
 
-        movieDetailsDomainModel.setMovie(movieDataModel);
-        movieDetailsDomainModel.setCast(cast);
-        movieDetailsDomainModel.setCrew(crew);
-        movieDetailsDomainModel.setSimilarMovies(similarMovies);
+        movieDetailsDomainModel.setMovie(movieDomainModelMapper.mapToDomainModel(movieDataModel));
+        movieDetailsDomainModel.setCast(movieCreditDomainModelMapper.mapListToDomainModelList(cast));
+        movieDetailsDomainModel.setCrew(movieCreditDomainModelMapper.mapListToDomainModelList(crew));
+        movieDetailsDomainModel.setSimilarMovies(movieDomainModelMapper.mapListToDomainModelList(similarMovies));
         movieDetailsDomainModel.setRating(rating);
         return movieDetailsDomainModel;
     }

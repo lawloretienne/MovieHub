@@ -1,7 +1,8 @@
 package com.etiennelawlor.moviehub.domain;
 
-import com.etiennelawlor.moviehub.data.repositories.models.MoviesDataModel;
 import com.etiennelawlor.moviehub.data.repositories.movie.MovieDataSourceContract;
+import com.etiennelawlor.moviehub.domain.mappers.MoviesDomainModelMapper;
+import com.etiennelawlor.moviehub.domain.models.MoviesDomainModel;
 
 import io.reactivex.Single;
 
@@ -13,6 +14,7 @@ public class MoviesUseCase implements MoviesDomainContract.UseCase {
 
     // region Member Variables
     private final MovieDataSourceContract.Repository movieRepository;
+    private final MoviesDomainModelMapper moviesDomainModelMapper = new MoviesDomainModelMapper();
     // endregion
 
     // region Constructors
@@ -23,8 +25,8 @@ public class MoviesUseCase implements MoviesDomainContract.UseCase {
 
     // region MoviesDomainContract.UseCase Methods
     @Override
-    public Single<MoviesDataModel> getPopularMovies(int currentPage) {
-        return movieRepository.getPopularMovies(currentPage);
+    public Single<MoviesDomainModel> getPopularMovies(int currentPage) {
+        return movieRepository.getPopularMovies(currentPage).map(moviesDataModel -> moviesDomainModelMapper.mapToDomainModel(moviesDataModel));
                 // Espresso should only show up in instrumented unit tests, in the androidTest/ directory
 //                .doOnSubscribe(disposable1 -> {
 //                    // The network request might be handled in a different thread so make sure Espresso knows

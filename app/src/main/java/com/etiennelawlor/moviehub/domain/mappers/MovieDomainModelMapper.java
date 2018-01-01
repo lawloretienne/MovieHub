@@ -1,6 +1,5 @@
 package com.etiennelawlor.moviehub.domain.mappers;
 
-import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.MovieDataModel;
 import com.etiennelawlor.moviehub.domain.models.MovieDomainModel;
 

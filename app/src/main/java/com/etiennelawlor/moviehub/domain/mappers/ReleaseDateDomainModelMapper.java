@@ -1,6 +1,5 @@
 package com.etiennelawlor.moviehub.domain.mappers;
 
-import com.etiennelawlor.moviehub.data.network.response.ReleaseDateResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.ReleaseDateDataModel;
 import com.etiennelawlor.moviehub.domain.models.ReleaseDateDomainModel;
 

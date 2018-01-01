@@ -1,6 +1,5 @@
 package com.etiennelawlor.moviehub.domain.mappers;
 
-import com.etiennelawlor.moviehub.data.network.response.ProfileImageResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.ProfileImageDataModel;
 import com.etiennelawlor.moviehub.domain.models.ProfileImageDomainModel;
 

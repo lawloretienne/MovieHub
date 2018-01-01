@@ -1,8 +1,5 @@
 package com.etiennelawlor.moviehub.domain.models;
 
-import com.etiennelawlor.moviehub.data.repositories.models.MovieCreditDataModel;
-import com.etiennelawlor.moviehub.data.repositories.models.MovieDataModel;
-
 import java.util.List;
 
 /**
@@ -12,10 +9,10 @@ import java.util.List;
 public class MovieDetailsDomainModel {
 
     // region Member Variables
-    private MovieDataModel movie;
-    private List<MovieCreditDataModel> cast;
-    private List<MovieCreditDataModel> crew;
-    private List<MovieDataModel> similarMovies;
+    private MovieDomainModel movie;
+    private List<MovieCreditDomainModel> cast;
+    private List<MovieCreditDomainModel> crew;
+    private List<MovieDomainModel> similarMovies;
     private String rating;
     // endregion
 
@@ -26,19 +23,19 @@ public class MovieDetailsDomainModel {
 
     // region Getters
 
-    public MovieDataModel getMovie() {
+    public MovieDomainModel getMovie() {
         return movie;
     }
 
-    public List<MovieCreditDataModel> getCast() {
+    public List<MovieCreditDomainModel> getCast() {
         return cast;
     }
 
-    public List<MovieCreditDataModel> getCrew() {
+    public List<MovieCreditDomainModel> getCrew() {
         return crew;
     }
 
-    public List<MovieDataModel> getSimilarMovies() {
+    public List<MovieDomainModel> getSimilarMovies() {
         return similarMovies;
     }
 
@@ -50,19 +47,19 @@ public class MovieDetailsDomainModel {
 
     // region Setters
 
-    public void setMovie(MovieDataModel movie) {
+    public void setMovie(MovieDomainModel movie) {
         this.movie = movie;
     }
 
-    public void setCast(List<MovieCreditDataModel> cast) {
+    public void setCast(List<MovieCreditDomainModel> cast) {
         this.cast = cast;
     }
 
-    public void setCrew(List<MovieCreditDataModel> crew) {
+    public void setCrew(List<MovieCreditDomainModel> crew) {
         this.crew = crew;
     }
 
-    public void setSimilarMovies(List<MovieDataModel> similarMovies) {
+    public void setSimilarMovies(List<MovieDomainModel> similarMovies) {
         this.similarMovies = similarMovies;
     }
 

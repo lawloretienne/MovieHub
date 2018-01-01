@@ -1,6 +1,5 @@
 package com.etiennelawlor.moviehub.domain.mappers;
 
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowsResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowsDataModel;
 import com.etiennelawlor.moviehub.domain.models.TelevisionShowsDomainModel;
 

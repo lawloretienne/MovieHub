@@ -1,9 +1,9 @@
 package com.etiennelawlor.moviehub.presentation.moviedetails;
 
-import com.etiennelawlor.moviehub.data.repositories.models.MovieDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.PersonDataModel;
 import com.etiennelawlor.moviehub.domain.MovieDetailsDomainContract;
 import com.etiennelawlor.moviehub.domain.models.MovieDetailsDomainModel;
+import com.etiennelawlor.moviehub.domain.models.MovieDomainModel;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 
@@ -71,7 +71,7 @@ public class MovieDetailsPresenter implements MovieDetailsUiContract.Presenter {
     }
 
     @Override
-    public void onMovieClick(MovieDataModel movie) {
+    public void onMovieClick(MovieDomainModel movie) {
         movieDetailsView.openMovieDetails(movie);
     }
 
