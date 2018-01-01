@@ -1,8 +1,6 @@
 package com.etiennelawlor.moviehub.data.repositories.mappers;
 
-import com.etiennelawlor.moviehub.data.network.response.GenreResponse;
 import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
-import com.etiennelawlor.moviehub.data.repositories.models.GenreDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.MovieDataModel;
 
 import java.util.ArrayList;
@@ -12,7 +10,7 @@ import java.util.List;
  * Created by etiennelawlor on 12/30/17.
  */
 
-public class MovieDataModelMapper implements DataModelMapper<MovieResponse, MovieDataModel> {
+public class MovieDataModelMapper implements DataModelMapper<MovieResponse, MovieDataModel>, DataModelListMapper<MovieResponse, MovieDataModel> {
 
     // region Member Variables
     private GenreDataModelMapper genreDataModelMapper = new GenreDataModelMapper();
@@ -24,14 +22,7 @@ public class MovieDataModelMapper implements DataModelMapper<MovieResponse, Movi
         movieDataModel.setAdult(movieResponse.isAdult());
         movieDataModel.setBackdropPath(movieResponse.getBackdropPath());
         movieDataModel.setBudget(movieResponse.getBudget());
-        List<GenreResponse> genreResponses = movieResponse.getGenres();
-        List<GenreDataModel> genreDataModels = new ArrayList<>();
-        if(genreResponses != null && genreResponses.size()>0) {
-            for (GenreResponse genreResponse : genreResponses) {
-                genreDataModels.add(genreDataModelMapper.mapToDataModel(genreResponse));
-            }
-        }
-        movieDataModel.setGenres(genreDataModels);
+        movieDataModel.setGenres(genreDataModelMapper.mapListToDataModelList(movieResponse.getGenres()));
         movieDataModel.setHomepage(movieResponse.getHomepage());
         movieDataModel.setId(movieResponse.getId());
         movieDataModel.setImdbId(movieResponse.getImdbId());
@@ -50,5 +41,16 @@ public class MovieDataModelMapper implements DataModelMapper<MovieResponse, Movi
         movieDataModel.setVoteAverage(movieResponse.getVoteAverage());
         movieDataModel.setVoteCount(movieResponse.getVoteCount());
         return movieDataModel;
+    }
+
+    @Override
+    public List<MovieDataModel> mapListToDataModelList(List<MovieResponse> movieResponses) {
+        List<MovieDataModel> movieDataModels = new ArrayList<>();
+        if(movieResponses != null && movieResponses.size()>0) {
+            for (MovieResponse movieResponse : movieResponses) {
+                movieDataModels.add(mapToDataModel(movieResponse));
+            }
+        }
+        return movieDataModels;
     }
 }
