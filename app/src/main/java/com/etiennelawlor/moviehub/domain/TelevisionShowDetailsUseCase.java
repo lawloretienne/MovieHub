@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.domain;
 
-import com.etiennelawlor.moviehub.data.network.response.ContentRatingResponse;
+import com.etiennelawlor.moviehub.data.repositories.models.ContentRatingDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowCreditDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowDataSourceContract;
@@ -39,7 +39,7 @@ public class TelevisionShowDetailsUseCase implements TelevisionShowDetailsDomain
                 televisionShowRepository.getTelevisionShowCredits(televisionShowId),
                 televisionShowRepository.getSimilarTelevisionShows(televisionShowId),
                 televisionShowRepository.getTelevisionShowContentRatings(televisionShowId),
-                (televisionShowDataModel, televisionShowCreditsDataModel, televisionShowsDataModel, televisionShowContentRatingsResponse) -> {
+                (televisionShowDataModel, televisionShowCreditsDataModel, televisionShowsDataModel, televisionShowContentRatingsDataModel) -> {
                     List<TelevisionShowCreditDataModel> cast = new ArrayList<>();
                     List<TelevisionShowCreditDataModel> crew = new ArrayList<>();
                     List<TelevisionShowDataModel> similarTelevisionShows = new ArrayList<>();
@@ -57,13 +57,13 @@ public class TelevisionShowDetailsUseCase implements TelevisionShowDetailsDomain
                         similarTelevisionShows = televisionShowsDataModel.getTelevisionShows();
                     }
 
-                    if(televisionShowContentRatingsResponse!=null){
-                        List<ContentRatingResponse> contentRatings = televisionShowContentRatingsResponse.getContentRatings();
-                        if(contentRatings != null && contentRatings.size() > 0){
-                            for(ContentRatingResponse contentRating : contentRatings){
-                                String iso31661 = contentRating.getIso31661();
+                    if(televisionShowContentRatingsDataModel!=null){
+                        List<ContentRatingDataModel> contentRatingDataModels = televisionShowContentRatingsDataModel.getContentRatings();
+                        if(contentRatingDataModels != null && contentRatingDataModels.size() > 0){
+                            for(ContentRatingDataModel contentRatingDataModel : contentRatingDataModels){
+                                String iso31661 = contentRatingDataModel.getIso31661();
                                 if(iso31661.equals(ISO_31661)){
-                                    rating = contentRating.getRating();
+                                    rating = contentRatingDataModel.getRating();
                                     break;
                                 }
                             }

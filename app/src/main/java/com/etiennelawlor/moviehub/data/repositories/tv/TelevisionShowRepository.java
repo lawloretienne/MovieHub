@@ -1,9 +1,10 @@
 package com.etiennelawlor.moviehub.data.repositories.tv;
 
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowContentRatingsResponse;
+import com.etiennelawlor.moviehub.data.repositories.mappers.TelevisionShowContentRatingsDataModelMapper;
 import com.etiennelawlor.moviehub.data.repositories.mappers.TelevisionShowCreditsDataModelMapper;
 import com.etiennelawlor.moviehub.data.repositories.mappers.TelevisionShowDataModelMapper;
 import com.etiennelawlor.moviehub.data.repositories.mappers.TelevisionShowsDataModelMapper;
+import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowContentRatingsDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowCreditsDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowsDataModel;
@@ -23,6 +24,7 @@ public class TelevisionShowRepository implements TelevisionShowDataSourceContrac
     private TelevisionShowsDataModelMapper televisionShowsDataModelMapper = new TelevisionShowsDataModelMapper();
     private TelevisionShowDataModelMapper televisionShowDataModelMapper = new TelevisionShowDataModelMapper();
     private TelevisionShowCreditsDataModelMapper televisionShowCreditsDataModelMapper = new TelevisionShowCreditsDataModelMapper();
+    private TelevisionShowContentRatingsDataModelMapper televisionShowContentRatingsDataModelMapper = new TelevisionShowContentRatingsDataModelMapper();
     // endregion
 
     // region Constructors
@@ -79,11 +81,12 @@ public class TelevisionShowRepository implements TelevisionShowDataSourceContrac
     }
 
     @Override
-    public Single<TelevisionShowContentRatingsResponse> getTelevisionShowContentRatings(int tvId) {
-        Maybe<TelevisionShowContentRatingsResponse> local = televisionShowLocalDataSource.getTelevisionShowContentRatings(tvId);
-        Single<TelevisionShowContentRatingsResponse> remote =
+    public Single<TelevisionShowContentRatingsDataModel> getTelevisionShowContentRatings(int tvId) {
+        Maybe<TelevisionShowContentRatingsDataModel> local = televisionShowLocalDataSource.getTelevisionShowContentRatings(tvId);
+        Single<TelevisionShowContentRatingsDataModel> remote =
                 televisionShowRemoteDataSource.getTelevisionShowContentRatings(tvId)
-                        .doOnSuccess(televisionShowContentRatingsEnvelope -> televisionShowLocalDataSource.saveTelevisionShowContentRatings(televisionShowContentRatingsEnvelope));
+                        .map(televisionShowContentRatingsResponse -> televisionShowContentRatingsDataModelMapper.mapToDataModel(televisionShowContentRatingsResponse))
+                        .doOnSuccess(televisionShowContentRatingsDataModel -> televisionShowLocalDataSource.saveTelevisionShowContentRatings(televisionShowContentRatingsDataModel));
 
         return local.switchIfEmpty(remote);
     }

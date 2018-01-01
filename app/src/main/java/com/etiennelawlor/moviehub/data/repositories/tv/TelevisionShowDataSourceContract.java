@@ -4,6 +4,7 @@ import com.etiennelawlor.moviehub.data.network.response.TelevisionShowContentRat
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCreditsResponse;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowsResponse;
+import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowContentRatingsDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowCreditsDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowsDataModel;
@@ -22,7 +23,7 @@ public interface TelevisionShowDataSourceContract {
         Single<TelevisionShowDataModel> getTelevisionShow(int tvId);
         Single<TelevisionShowCreditsDataModel> getTelevisionShowCredits(int tvId);
         Single<TelevisionShowsDataModel> getSimilarTelevisionShows(int tvId);
-        Single<TelevisionShowContentRatingsResponse> getTelevisionShowContentRatings(int tvId);
+        Single<TelevisionShowContentRatingsDataModel> getTelevisionShowContentRatings(int tvId);
     }
 
     interface LocalDateSource {
@@ -38,8 +39,8 @@ public interface TelevisionShowDataSourceContract {
         Maybe<TelevisionShowsDataModel> getSimilarTelevisionShows(int tvId);
         void saveSimilarTelevisionShows(TelevisionShowsDataModel televisionShowsDataModel);
 
-        Maybe<TelevisionShowContentRatingsResponse> getTelevisionShowContentRatings(int tvId);
-        void saveTelevisionShowContentRatings(TelevisionShowContentRatingsResponse televisionShowContentRatingsResponse);
+        Maybe<TelevisionShowContentRatingsDataModel> getTelevisionShowContentRatings(int tvId);
+        void saveTelevisionShowContentRatings(TelevisionShowContentRatingsDataModel televisionShowContentRatingsResponse);
     }
 
     interface RemoteDateSource {
