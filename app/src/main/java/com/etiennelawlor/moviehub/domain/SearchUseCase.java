@@ -1,13 +1,8 @@
 package com.etiennelawlor.moviehub.domain;
 
-import com.etiennelawlor.moviehub.data.repositories.models.MovieDataModel;
-import com.etiennelawlor.moviehub.data.repositories.models.PersonDataModel;
-import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
 import com.etiennelawlor.moviehub.data.repositories.search.SearchDataSourceContract;
+import com.etiennelawlor.moviehub.domain.composers.SearchDomainModelComposer;
 import com.etiennelawlor.moviehub.domain.models.SearchDomainModel;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import io.reactivex.Single;
 
@@ -19,6 +14,7 @@ public class SearchUseCase implements SearchDomainContract.UseCase {
 
     // region Member Variables
     private final SearchDataSourceContract.Repository searchRepository;
+    private final SearchDomainModelComposer searchDomainModelComposer = new SearchDomainModelComposer();
     // endregion
 
     // region Constructors
@@ -34,24 +30,7 @@ public class SearchUseCase implements SearchDomainContract.UseCase {
                 searchRepository.getMovieSearchResults(query, 1),
                 searchRepository.getTelevisionShowSearchResults(query, 1),
                 searchRepository.getPersonSearchResults(query, 1),
-                (moviesDataModel, televisionShowsDataModel, personsDataModel) -> {
-                    List<MovieDataModel> movies = new ArrayList<>();
-                    List<TelevisionShowDataModel> televisionShows = new ArrayList<>();
-                    List<PersonDataModel> persons = new ArrayList<>();
-
-                    if (moviesDataModel != null) {
-                        movies = moviesDataModel.getMovies();
-                    }
-
-                    if (televisionShowsDataModel != null) {
-                        televisionShows = televisionShowsDataModel.getTelevisionShows();
-                    }
-
-                    if (personsDataModel != null) {
-                        persons = personsDataModel.getPersons();
-                    }
-
-                    return new SearchDomainModel(query, movies, televisionShows, persons);
-                });
+                (moviesDataModel, televisionShowsDataModel, personsDataModel) ->
+                    searchDomainModelComposer.compose(moviesDataModel, televisionShowsDataModel, personsDataModel, query));
     }
 }

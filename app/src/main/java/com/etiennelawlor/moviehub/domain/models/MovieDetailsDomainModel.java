@@ -20,15 +20,8 @@ public class MovieDetailsDomainModel {
     // endregion
 
     // region Constructors
-
-    public MovieDetailsDomainModel(MovieDataModel movie, List<MovieCreditDataModel> cast, List<MovieCreditDataModel> crew, List<MovieDataModel> similarMovies, String rating) {
-        this.movie = movie;
-        this.cast = cast;
-        this.crew = crew;
-        this.similarMovies = similarMovies;
-        this.rating = rating;
+    public MovieDetailsDomainModel() {
     }
-
     // endregion
 
     // region Getters

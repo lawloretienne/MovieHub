@@ -20,14 +20,8 @@ public class SearchDomainModel {
     // endregion
 
     // region Constructors
-
-    public SearchDomainModel(String query, List<MovieDataModel> movies, List<TelevisionShowDataModel> televisionShows, List<PersonDataModel> persons) {
-        this.query = query;
-        this.movies = movies;
-        this.televisionShows = televisionShows;
-        this.persons = persons;
+    public SearchDomainModel() {
     }
-
     // endregion
 
     // region Getters

@@ -21,12 +21,7 @@ public class TelevisionShowDetailsDomainModel {
 
     // region Constructors
 
-    public TelevisionShowDetailsDomainModel(TelevisionShowDataModel televisionShow, List<TelevisionShowCreditDataModel> cast, List<TelevisionShowCreditDataModel> crew, List<TelevisionShowDataModel> similarTelevisionShows, String rating) {
-        this.televisionShow = televisionShow;
-        this.cast = cast;
-        this.crew = crew;
-        this.similarTelevisionShows = similarTelevisionShows;
-        this.rating = rating;
+    public TelevisionShowDetailsDomainModel() {
     }
 
     // endregion

@@ -1,11 +1,8 @@
 package com.etiennelawlor.moviehub.domain;
 
-import com.etiennelawlor.moviehub.data.repositories.models.PersonCreditDataModel;
 import com.etiennelawlor.moviehub.data.repositories.person.PersonDataSourceContract;
+import com.etiennelawlor.moviehub.domain.composers.PersonDetailsDomainModelComposer;
 import com.etiennelawlor.moviehub.domain.models.PersonDetailsDomainModel;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import io.reactivex.Single;
 
@@ -17,6 +14,7 @@ public class PersonDetailsUseCase implements PersonDetailsDomainContract.UseCase
 
     // region Member Variables
     private final PersonDataSourceContract.Repository personRepository;
+    private final PersonDetailsDomainModelComposer personDetailsDomainModelComposer = new PersonDetailsDomainModelComposer();
     // endregion
 
     // region Constructors
@@ -31,20 +29,8 @@ public class PersonDetailsUseCase implements PersonDetailsDomainContract.UseCase
         return Single.zip(
                 personRepository.getPerson(personId),
                 personRepository.getPersonCredits(personId),
-                (personDataModel, personCreditsDataModel) -> {
-                    List<PersonCreditDataModel> cast = new ArrayList<>();
-                    List<PersonCreditDataModel> crew = new ArrayList<>();
-
-                    if(personCreditsDataModel!=null){
-                        cast = personCreditsDataModel.getCast();
-                    }
-
-                    if(personCreditsDataModel!=null){
-                        crew = personCreditsDataModel.getCrew();
-                    }
-
-                    return new PersonDetailsDomainModel(personDataModel, cast, crew);
-                });
+                (personDataModel, personCreditsDataModel) ->
+                    personDetailsDomainModelComposer.compose(personDataModel, personCreditsDataModel));
     }
     // endregion
 

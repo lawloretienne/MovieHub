@@ -18,13 +18,8 @@ public class PersonDetailsDomainModel {
     // endregion
 
     // region Constructors
-
-    public PersonDetailsDomainModel(PersonDataModel person, List<PersonCreditDataModel> cast, List<PersonCreditDataModel> crew) {
-        this.person = person;
-        this.cast = cast;
-        this.crew = crew;
+    public PersonDetailsDomainModel() {
     }
-
     // endregion
 
     // region Getters
