@@ -47,12 +47,12 @@ import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.MovieDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.PersonCreditDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.PersonDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.ProfileImageDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.ProfileImagesDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
 import com.etiennelawlor.moviehub.di.component.PersonDetailsComponent;
 import com.etiennelawlor.moviehub.di.module.PersonDetailsModule;
 import com.etiennelawlor.moviehub.domain.models.PersonDetailsDomainModel;
@@ -196,7 +196,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
                         personDetailsPresenter.onMovieClick(movie);
                         break;
                     case "tv":
-                        TelevisionShowResponse televisionShow = new TelevisionShowResponse();
+                        TelevisionShowDataModel televisionShow = new TelevisionShowDataModel();
 
                         televisionShow.setName(personCredit.getName());
                         televisionShow.setId(personCredit.getId());
@@ -233,7 +233,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
                         personDetailsPresenter.onMovieClick(movie);
                         break;
                     case "tv":
-                        TelevisionShowResponse televisionShow = new TelevisionShowResponse();
+                        TelevisionShowDataModel televisionShow = new TelevisionShowDataModel();
 
                         televisionShow.setName(personCredit.getName());
                         televisionShow.setId(personCredit.getId());
@@ -591,7 +591,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     }
 
     @Override
-    public void openTelevisionShowDetails(TelevisionShowResponse televisionShow) {
+    public void openTelevisionShowDetails(TelevisionShowDataModel televisionShow) {
         Intent intent = new Intent(getActivity(), TelevisionShowDetailsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_TELEVISION_SHOW, televisionShow);

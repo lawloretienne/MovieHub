@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v7.graphics.Palette;
 
-import com.etiennelawlor.moviehub.data.network.response.ProfileImagesResponse;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -54,7 +53,7 @@ public class PersonDataModel implements Parcelable {
         this.name = in.readString();
         this.placeOfBirth = in.readString();
         this.profilePath = in.readString();
-        this.images = in.readParcelable(ProfileImagesResponse.class.getClassLoader());
+        this.images = in.readParcelable(ProfileImagesDataModel.class.getClassLoader());
     }
     // endregion
 
