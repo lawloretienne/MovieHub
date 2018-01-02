@@ -72,10 +72,6 @@ public class TelevisionShowsDataModel {
     // endregion
 
     // Helper Methods
-    public boolean hasTelevisionShows() { return televisionShows.size() > 0;}
-
-    public void incrementPageNumber() { this.pageNumber += 1; }
-
     public boolean isExpired() {
         return Calendar.getInstance().getTime().getTime() > expiredAt.getTime();
     }

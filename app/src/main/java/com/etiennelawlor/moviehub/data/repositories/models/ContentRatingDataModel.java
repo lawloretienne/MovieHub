@@ -1,7 +1,5 @@
 package com.etiennelawlor.moviehub.data.repositories.models;
 
-import com.google.gson.annotations.SerializedName;
-
 /**
  * Created by etiennelawlor on 12/31/17.
  */
@@ -9,9 +7,7 @@ import com.google.gson.annotations.SerializedName;
 public class ContentRatingDataModel {
 
     // region Fields
-    @SerializedName("iso_3166_1")
     public String iso31661;
-    @SerializedName("rating")
     public String rating;
     // endregion
 
@@ -41,7 +37,7 @@ public class ContentRatingDataModel {
 
     @Override
     public String toString() {
-        return "ContentRatingResponse{" +
+        return "ContentRatingDataModel{" +
                 "iso31661='" + iso31661 + '\'' +
                 ", rating='" + rating + '\'' +
                 '}';

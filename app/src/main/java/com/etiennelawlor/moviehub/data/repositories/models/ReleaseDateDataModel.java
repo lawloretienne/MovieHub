@@ -1,7 +1,5 @@
 package com.etiennelawlor.moviehub.data.repositories.models;
 
-import com.google.gson.annotations.SerializedName;
-
 /**
  * Created by etiennelawlor on 1/1/18.
  */
@@ -9,15 +7,10 @@ import com.google.gson.annotations.SerializedName;
 public class ReleaseDateDataModel {
 
     // region Fields
-    @SerializedName("certification")
     public String certification;
-    @SerializedName("iso_639_1")
     public String iso6391;
-    @SerializedName("note")
     public String note;
-    @SerializedName("release_date")
     public String releaseDate;
-    @SerializedName("type")
     public int type;
     // endregion
 
@@ -71,7 +64,7 @@ public class ReleaseDateDataModel {
 
     @Override
     public String toString() {
-        return "ReleaseDateResponse{" +
+        return "ReleaseDateDataModel{" +
                 "certification='" + certification + '\'' +
                 ", iso6391='" + iso6391 + '\'' +
                 ", note='" + note + '\'' +

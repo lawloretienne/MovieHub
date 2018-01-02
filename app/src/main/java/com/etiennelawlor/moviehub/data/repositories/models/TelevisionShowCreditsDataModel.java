@@ -48,7 +48,7 @@ public class TelevisionShowCreditsDataModel {
 
     @Override
     public String toString() {
-        return "TelevisionShowCreditsResponse{" +
+        return "TelevisionShowCreditsDataModel{" +
                 "id=" + id +
                 ", cast=" + cast +
                 ", crew=" + crew +

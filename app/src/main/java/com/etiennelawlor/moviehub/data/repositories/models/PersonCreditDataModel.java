@@ -1,46 +1,21 @@
 package com.etiennelawlor.moviehub.data.repositories.models;
 
-import android.support.v7.graphics.Palette;
-import android.text.TextUtils;
-
-import com.etiennelawlor.moviehub.util.DateUtility;
-import com.google.gson.annotations.SerializedName;
-
-import java.util.Calendar;
-
 /**
  * Created by etiennelawlor on 1/1/18.
  */
 
 public class PersonCreditDataModel extends CreditDataModel {
 
-    // region Constants
-    public static final String PATTERN = "yyyy-MM-dd";
-    public static final String SECURE_BASE_URL = "https://image.tmdb.org/t/p/";
-    public static final String POSTER_SIZE = "w780";
-    // endregion
-
     // region Fields
-    @SerializedName("job")
     public String job;
-    @SerializedName("character")
     public String character;
-    @SerializedName("title")
     public String title;
-    @SerializedName("name")
     public String name;
-    @SerializedName("department")
     public String department;
-    @SerializedName("poster_path")
     public String posterPath;
-    @SerializedName("first_air_date")
     public String firstAirDate;
-    @SerializedName("release_date")
     public String releaseDate;
-    @SerializedName("media_type")
     public String mediaType;
-
-    private Palette posterPalette;
     // endregion
 
     // region Getters
@@ -81,32 +56,6 @@ public class PersonCreditDataModel extends CreditDataModel {
         return mediaType;
     }
 
-    public Palette getPosterPalette() {
-        return posterPalette;
-    }
-
-    public String getPosterUrl(){
-        String profileUrl = String.format("%s%s%s", SECURE_BASE_URL, POSTER_SIZE, posterPath);
-        return profileUrl;
-    }
-
-    public int getFirstAirYear(){
-        int firstAirYear = -1;
-        if (!TextUtils.isEmpty(firstAirDate)) {
-            Calendar calendar = DateUtility.getCalendar(firstAirDate, PATTERN);
-            firstAirYear = calendar.get(Calendar.YEAR);
-        }
-        return firstAirYear;
-    }
-
-    public int getReleaseYear(){
-        int releaseYear = -1;
-        if (!TextUtils.isEmpty(releaseDate)) {
-            Calendar calendar = DateUtility.getCalendar(releaseDate, PATTERN);
-            releaseYear = calendar.get(Calendar.YEAR);
-        }
-        return releaseYear;
-    }
     // endregion
 
     // region Setters
@@ -147,15 +96,11 @@ public class PersonCreditDataModel extends CreditDataModel {
         this.mediaType = mediaType;
     }
 
-    public void setPosterPalette(Palette posterPalette) {
-        this.posterPalette = posterPalette;
-    }
-
     // endregion
 
     @Override
     public String toString() {
-        return "PersonCreditResponse{" +
+        return "PersonCreditDataModel{" +
                 "job='" + job + '\'' +
                 ", character='" + character + '\'' +
                 ", title='" + title + '\'' +
@@ -165,7 +110,6 @@ public class PersonCreditDataModel extends CreditDataModel {
                 ", firstAirDate='" + firstAirDate + '\'' +
                 ", releaseDate='" + releaseDate + '\'' +
                 ", mediaType='" + mediaType + '\'' +
-                ", posterPalette=" + posterPalette +
                 '}';
     }
 }

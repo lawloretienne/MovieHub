@@ -49,7 +49,7 @@ public class MovieReleaseDatesDataModel {
 
     @Override
     public String toString() {
-        return "MovieReleaseDatesDomainModel{" +
+        return "MovieReleaseDatesDataModel{" +
                 "id=" + id +
                 ", movieReleaseDates=" + movieReleaseDates +
                 ", expiredAt=" + expiredAt +

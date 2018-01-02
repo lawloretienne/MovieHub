@@ -72,12 +72,19 @@ public class MoviesDataModel {
     // endregion
 
     // Helper Methods
-    public boolean hasMovies() { return movies.size() > 0;}
-
-    public void incrementPageNumber() { this.pageNumber += 1; }
 
     public boolean isExpired() {
         return Calendar.getInstance().getTime().getTime() > expiredAt.getTime();
     }
     // endregion
+
+    @Override
+    public String toString() {
+        return "MoviesDataModel{" +
+                "movies=" + movies +
+                ", pageNumber=" + pageNumber +
+                ", isLastPage=" + isLastPage +
+                ", expiredAt=" + expiredAt +
+                '}';
+    }
 }

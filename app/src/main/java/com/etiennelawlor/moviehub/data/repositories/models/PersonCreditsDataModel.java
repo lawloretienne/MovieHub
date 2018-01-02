@@ -1,7 +1,5 @@
 package com.etiennelawlor.moviehub.data.repositories.models;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 
 /**
@@ -11,11 +9,8 @@ import java.util.List;
 public class PersonCreditsDataModel {
 
     // region Fields
-    @SerializedName("id")
     public int id;
-    @SerializedName("cast")
     public List<PersonCreditDataModel> cast = null;
-    @SerializedName("crew")
     public List<PersonCreditDataModel> crew = null;
     // endregion
 
@@ -53,7 +48,7 @@ public class PersonCreditsDataModel {
 
     @Override
     public String toString() {
-        return "PersonCreditsResponse{" +
+        return "PersonCreditsDataModel{" +
                 "id=" + id +
                 ", cast=" + cast +
                 ", crew=" + crew +

@@ -72,12 +72,18 @@ public class PersonsDataModel {
     // endregion
 
     // Helper Methods
-    public boolean hasPersons() { return persons.size() > 0;}
-
-    public void incrementPageNumber() { this.pageNumber += 1; }
-
     public boolean isExpired() {
         return Calendar.getInstance().getTime().getTime() > expiredAt.getTime();
     }
     // endregion
+
+    @Override
+    public String toString() {
+        return "PersonsDataModel{" +
+                "persons=" + persons +
+                ", pageNumber=" + pageNumber +
+                ", isLastPage=" + isLastPage +
+                ", expiredAt=" + expiredAt +
+                '}';
+    }
 }

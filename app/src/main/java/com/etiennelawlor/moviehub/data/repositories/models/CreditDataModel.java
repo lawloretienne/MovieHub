@@ -37,7 +37,7 @@ public class CreditDataModel {
 
     @Override
     public String toString() {
-        return "CreditResponse{" +
+        return "CreditDataModel{" +
                 "id=" + id +
                 ", creditId='" + creditId + '\'' +
                 '}';
