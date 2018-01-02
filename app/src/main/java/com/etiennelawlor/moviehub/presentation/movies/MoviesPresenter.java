@@ -1,8 +1,8 @@
 package com.etiennelawlor.moviehub.presentation.movies;
 
-import com.etiennelawlor.moviehub.domain.usecases.MoviesDomainContract;
 import com.etiennelawlor.moviehub.domain.models.MovieDomainModel;
 import com.etiennelawlor.moviehub.domain.models.MoviesDomainModel;
+import com.etiennelawlor.moviehub.domain.usecases.MoviesDomainContract;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 

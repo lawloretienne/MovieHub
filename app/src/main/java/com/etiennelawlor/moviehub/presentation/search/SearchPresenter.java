@@ -1,10 +1,10 @@
 package com.etiennelawlor.moviehub.presentation.search;
 
-import com.etiennelawlor.moviehub.domain.usecases.SearchDomainContract;
 import com.etiennelawlor.moviehub.domain.models.MovieDomainModel;
 import com.etiennelawlor.moviehub.domain.models.PersonDomainModel;
 import com.etiennelawlor.moviehub.domain.models.SearchDomainModel;
 import com.etiennelawlor.moviehub.domain.models.TelevisionShowDomainModel;
+import com.etiennelawlor.moviehub.domain.usecases.SearchDomainContract;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 import com.etiennelawlor.moviehub.util.rxjava.SchedulerProvider;
