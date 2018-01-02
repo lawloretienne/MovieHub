@@ -5,8 +5,8 @@ import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowDataSourceC
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowLocalDataSource;
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowRemoteDataSource;
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowRepository;
-import com.etiennelawlor.moviehub.domain.TelevisionShowDetailsDomainContract;
-import com.etiennelawlor.moviehub.domain.TelevisionShowDetailsUseCase;
+import com.etiennelawlor.moviehub.domain.usecases.TelevisionShowDetailsDomainContract;
+import com.etiennelawlor.moviehub.domain.usecases.TelevisionShowDetailsUseCase;
 import com.etiennelawlor.moviehub.presentation.televisionshowdetails.TelevisionShowDetailsPresenter;
 import com.etiennelawlor.moviehub.presentation.televisionshowdetails.TelevisionShowDetailsUiContract;
 

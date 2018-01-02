@@ -5,8 +5,8 @@ import com.etiennelawlor.moviehub.data.repositories.person.PersonDataSourceContr
 import com.etiennelawlor.moviehub.data.repositories.person.PersonLocalDataSource;
 import com.etiennelawlor.moviehub.data.repositories.person.PersonRemoteDataSource;
 import com.etiennelawlor.moviehub.data.repositories.person.PersonRepository;
-import com.etiennelawlor.moviehub.domain.PersonDetailsDomainContract;
-import com.etiennelawlor.moviehub.domain.PersonDetailsUseCase;
+import com.etiennelawlor.moviehub.domain.usecases.PersonDetailsDomainContract;
+import com.etiennelawlor.moviehub.domain.usecases.PersonDetailsUseCase;
 import com.etiennelawlor.moviehub.presentation.persondetails.PersonDetailsPresenter;
 import com.etiennelawlor.moviehub.presentation.persondetails.PersonDetailsUiContract;
 

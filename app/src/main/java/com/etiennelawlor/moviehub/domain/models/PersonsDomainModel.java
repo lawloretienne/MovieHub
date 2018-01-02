@@ -80,4 +80,15 @@ public class PersonsDomainModel {
         return Calendar.getInstance().getTime().getTime() > expiredAt.getTime();
     }
     // endregion
+
+
+    @Override
+    public String toString() {
+        return "PersonsDomainModel{" +
+                "persons=" + persons +
+                ", pageNumber=" + pageNumber +
+                ", isLastPage=" + isLastPage +
+                ", expiredAt=" + expiredAt +
+                '}';
+    }
 }

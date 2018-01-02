@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.presentation.televisionshows;
 
-import com.etiennelawlor.moviehub.domain.TelevisionShowsDomainContract;
+import com.etiennelawlor.moviehub.domain.usecases.TelevisionShowsDomainContract;
 import com.etiennelawlor.moviehub.domain.models.TelevisionShowDomainModel;
 import com.etiennelawlor.moviehub.domain.models.TelevisionShowsDomainModel;
 import com.etiennelawlor.moviehub.util.NetworkUtility;

@@ -153,9 +153,10 @@ public class PersonCreditDomainModel extends CreditDomainModel {
 
     // endregion
 
+
     @Override
     public String toString() {
-        return "PersonCreditResponse{" +
+        return "PersonCreditDomainModel{" +
                 "job='" + job + '\'' +
                 ", character='" + character + '\'' +
                 ", title='" + title + '\'' +

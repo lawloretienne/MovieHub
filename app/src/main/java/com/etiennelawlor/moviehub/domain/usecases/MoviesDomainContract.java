@@ -1,4 +1,4 @@
-package com.etiennelawlor.moviehub.domain;
+package com.etiennelawlor.moviehub.domain.usecases;
 
 import com.etiennelawlor.moviehub.domain.models.MoviesDomainModel;
 

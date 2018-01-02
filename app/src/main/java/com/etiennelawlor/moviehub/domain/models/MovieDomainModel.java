@@ -352,6 +352,7 @@ public class MovieDomainModel implements Parcelable {
                 ", video=" + video +
                 ", voteAverage=" + voteAverage +
                 ", voteCount=" + voteCount +
+                ", posterPalette=" + posterPalette +
                 '}';
     }
 }

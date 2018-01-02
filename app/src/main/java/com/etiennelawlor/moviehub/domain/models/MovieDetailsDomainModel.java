@@ -68,4 +68,16 @@ public class MovieDetailsDomainModel {
     }
 
     // endregion
+
+
+    @Override
+    public String toString() {
+        return "MovieDetailsDomainModel{" +
+                "movie=" + movie +
+                ", cast=" + cast +
+                ", crew=" + crew +
+                ", similarMovies=" + similarMovies +
+                ", rating='" + rating + '\'' +
+                '}';
+    }
 }

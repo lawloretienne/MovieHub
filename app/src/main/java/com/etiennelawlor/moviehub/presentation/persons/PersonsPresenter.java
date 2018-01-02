@@ -1,6 +1,6 @@
 package com.etiennelawlor.moviehub.presentation.persons;
 
-import com.etiennelawlor.moviehub.domain.PersonsDomainContract;
+import com.etiennelawlor.moviehub.domain.usecases.PersonsDomainContract;
 import com.etiennelawlor.moviehub.domain.models.PersonDomainModel;
 import com.etiennelawlor.moviehub.domain.models.PersonsDomainModel;
 import com.etiennelawlor.moviehub.util.NetworkUtility;

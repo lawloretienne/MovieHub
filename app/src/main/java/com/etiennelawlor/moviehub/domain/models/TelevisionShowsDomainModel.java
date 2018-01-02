@@ -80,4 +80,14 @@ public class TelevisionShowsDomainModel {
         return Calendar.getInstance().getTime().getTime() > expiredAt.getTime();
     }
     // endregion
+
+    @Override
+    public String toString() {
+        return "TelevisionShowsDomainModel{" +
+                "televisionShows=" + televisionShows +
+                ", pageNumber=" + pageNumber +
+                ", isLastPage=" + isLastPage +
+                ", expiredAt=" + expiredAt +
+                '}';
+    }
 }

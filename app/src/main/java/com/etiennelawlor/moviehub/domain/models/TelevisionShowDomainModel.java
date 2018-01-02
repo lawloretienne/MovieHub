@@ -427,6 +427,7 @@ public class TelevisionShowDomainModel implements Parcelable {
                 ", type='" + type + '\'' +
                 ", voteAverage=" + voteAverage +
                 ", voteCount=" + voteCount +
+                ", posterPalette=" + posterPalette +
                 '}';
     }
 }

@@ -1,4 +1,4 @@
-package com.etiennelawlor.moviehub.domain;
+package com.etiennelawlor.moviehub.domain.usecases;
 
 import com.etiennelawlor.moviehub.data.repositories.person.PersonDataSourceContract;
 import com.etiennelawlor.moviehub.domain.mappers.PersonsDomainModelMapper;

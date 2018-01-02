@@ -86,7 +86,7 @@ public class TelevisionShowCreditDomainModel extends CreditDomainModel {
 
     @Override
     public String toString() {
-        return "TelevisionShowCreditResponse{" +
+        return "TelevisionShowCreditDomainModel{" +
                 "job='" + job + '\'' +
                 ", character='" + character + '\'' +
                 ", name='" + name + '\'' +

@@ -75,7 +75,7 @@ public class GenreDomainModel implements Parcelable {
 
     @Override
     public String toString() {
-        return "Genre{" +
+        return "GenreDomainModel{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';

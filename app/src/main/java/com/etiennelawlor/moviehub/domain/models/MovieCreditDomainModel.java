@@ -91,9 +91,10 @@ public class MovieCreditDomainModel extends CreditDomainModel {
 
     // endregion
 
+
     @Override
     public String toString() {
-        return "MovieCreditResponse{" +
+        return "MovieCreditDomainModel{" +
                 "job='" + job + '\'' +
                 ", character='" + character + '\'' +
                 ", name='" + name + '\'' +

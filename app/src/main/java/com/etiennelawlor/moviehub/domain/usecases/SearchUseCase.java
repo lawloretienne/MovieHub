@@ -1,4 +1,4 @@
-package com.etiennelawlor.moviehub.domain;
+package com.etiennelawlor.moviehub.domain.usecases;
 
 import com.etiennelawlor.moviehub.data.repositories.search.SearchDataSourceContract;
 import com.etiennelawlor.moviehub.domain.composers.SearchDomainModelComposer;

@@ -69,9 +69,10 @@ public class ReleaseDateDomainModel {
 
     // endregion
 
+
     @Override
     public String toString() {
-        return "ReleaseDateResponse{" +
+        return "ReleaseDateDomainModel{" +
                 "certification='" + certification + '\'' +
                 ", iso6391='" + iso6391 + '\'' +
                 ", note='" + note + '\'' +

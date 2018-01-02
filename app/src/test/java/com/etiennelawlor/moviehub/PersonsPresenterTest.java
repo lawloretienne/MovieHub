@@ -2,7 +2,7 @@ package com.etiennelawlor.moviehub;
 
 import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.PersonsDataModel;
-import com.etiennelawlor.moviehub.domain.PersonsDomainContract;
+import com.etiennelawlor.moviehub.domain.usecases.PersonsDomainContract;
 import com.etiennelawlor.moviehub.presentation.persons.PersonsPresenter;
 import com.etiennelawlor.moviehub.presentation.persons.PersonsUiContract;
 

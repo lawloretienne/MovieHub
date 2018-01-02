@@ -72,4 +72,16 @@ public class TelevisionShowDetailsDomainModel {
     }
 
     // endregion
+
+
+    @Override
+    public String toString() {
+        return "TelevisionShowDetailsDomainModel{" +
+                "televisionShow=" + televisionShow +
+                ", cast=" + cast +
+                ", crew=" + crew +
+                ", similarTelevisionShows=" + similarTelevisionShows +
+                ", rating='" + rating + '\'' +
+                '}';
+    }
 }

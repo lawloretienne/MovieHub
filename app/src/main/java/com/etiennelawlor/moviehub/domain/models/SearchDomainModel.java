@@ -79,4 +79,15 @@ public class SearchDomainModel {
                 || (hasPersons());
     }
     // endregion
+
+
+    @Override
+    public String toString() {
+        return "SearchDomainModel{" +
+                "query='" + query + '\'' +
+                ", movies=" + movies +
+                ", televisionShows=" + televisionShows +
+                ", persons=" + persons +
+                '}';
+    }
 }

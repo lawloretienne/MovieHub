@@ -35,9 +35,10 @@ public class CreditDomainModel {
 
     // endregion
 
+
     @Override
     public String toString() {
-        return "CreditResponse{" +
+        return "CreditDomainModel{" +
                 "id=" + id +
                 ", creditId='" + creditId + '\'' +
                 '}';

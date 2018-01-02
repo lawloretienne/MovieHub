@@ -5,8 +5,8 @@ import com.etiennelawlor.moviehub.data.repositories.movie.MovieDataSourceContrac
 import com.etiennelawlor.moviehub.data.repositories.movie.MovieLocalDataSource;
 import com.etiennelawlor.moviehub.data.repositories.movie.MovieRemoteDataSource;
 import com.etiennelawlor.moviehub.data.repositories.movie.MovieRepository;
-import com.etiennelawlor.moviehub.domain.MoviesDomainContract;
-import com.etiennelawlor.moviehub.domain.MoviesUseCase;
+import com.etiennelawlor.moviehub.domain.usecases.MoviesDomainContract;
+import com.etiennelawlor.moviehub.domain.usecases.MoviesUseCase;
 import com.etiennelawlor.moviehub.presentation.movies.MoviesPresenter;
 import com.etiennelawlor.moviehub.presentation.movies.MoviesUiContract;
 

@@ -5,8 +5,8 @@ import com.etiennelawlor.moviehub.data.repositories.search.SearchDataSourceContr
 import com.etiennelawlor.moviehub.data.repositories.search.SearchLocalDataSource;
 import com.etiennelawlor.moviehub.data.repositories.search.SearchRemoteDataSource;
 import com.etiennelawlor.moviehub.data.repositories.search.SearchRepository;
-import com.etiennelawlor.moviehub.domain.SearchDomainContract;
-import com.etiennelawlor.moviehub.domain.SearchUseCase;
+import com.etiennelawlor.moviehub.domain.usecases.SearchDomainContract;
+import com.etiennelawlor.moviehub.domain.usecases.SearchUseCase;
 import com.etiennelawlor.moviehub.presentation.search.SearchPresenter;
 import com.etiennelawlor.moviehub.presentation.search.SearchUiContract;
 import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerProvider;

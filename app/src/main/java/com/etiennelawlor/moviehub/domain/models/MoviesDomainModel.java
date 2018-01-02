@@ -80,4 +80,15 @@ public class MoviesDomainModel {
         return Calendar.getInstance().getTime().getTime() > expiredAt.getTime();
     }
     // endregion
+
+
+    @Override
+    public String toString() {
+        return "MoviesDomainModel{" +
+                "movies=" + movies +
+                ", pageNumber=" + pageNumber +
+                ", isLastPage=" + isLastPage +
+                ", expiredAt=" + expiredAt +
+                '}';
+    }
 }

@@ -2,7 +2,7 @@ package com.etiennelawlor.moviehub;
 
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowsDataModel;
-import com.etiennelawlor.moviehub.domain.TelevisionShowsDomainContract;
+import com.etiennelawlor.moviehub.domain.usecases.TelevisionShowsDomainContract;
 import com.etiennelawlor.moviehub.presentation.televisionshows.TelevisionShowsPresenter;
 import com.etiennelawlor.moviehub.presentation.televisionshows.TelevisionShowsUiContract;
 
