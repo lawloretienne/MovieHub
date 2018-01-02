@@ -1,9 +1,9 @@
 package com.etiennelawlor.moviehub.presentation.televisionshowdetails;
 
-import com.etiennelawlor.moviehub.domain.models.PersonDomainModel;
-import com.etiennelawlor.moviehub.domain.models.TelevisionShowDetailsDomainModel;
-import com.etiennelawlor.moviehub.domain.models.TelevisionShowDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BasePresenter;
+import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.TelevisionShowDetailsPresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.TelevisionShowPresentationModel;
 
 /**
  * Created by etiennelawlor on 2/9/17.
@@ -12,20 +12,20 @@ import com.etiennelawlor.moviehub.presentation.base.BasePresenter;
 public interface TelevisionShowDetailsUiContract {
 
     interface View {
-        void showTelevisionShowDetails(TelevisionShowDetailsDomainModel televisionShowDetailsDomainModel);
+        void showTelevisionShowDetails(TelevisionShowDetailsPresentationModel televisionShowDetailsPresentationModel);
         void showToolbarTitle();
         void hideToolbarTitle();
         void showErrorView();
 
         // Navigation methods
-        void openPersonDetails(PersonDomainModel person);
-        void openTelevisionShowDetails(TelevisionShowDomainModel televisionShow);
+        void openPersonDetails(PersonPresentationModel person);
+        void openTelevisionShowDetails(TelevisionShowPresentationModel televisionShow);
     }
 
     interface Presenter extends BasePresenter {
         void onLoadTelevisionShowDetails(int televisionShowId);
-        void onPersonClick(PersonDomainModel person);
-        void onTelevisionShowClick(TelevisionShowDomainModel televisionShow);
+        void onPersonClick(PersonPresentationModel person);
+        void onTelevisionShowClick(TelevisionShowPresentationModel televisionShow);
         void onScrollChange(boolean isScrolledPastThreshold);
     }
 }

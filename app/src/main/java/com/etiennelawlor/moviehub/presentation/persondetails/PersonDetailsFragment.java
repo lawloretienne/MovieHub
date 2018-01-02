@@ -49,16 +49,16 @@ import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.di.component.PersonDetailsComponent;
 import com.etiennelawlor.moviehub.di.module.PersonDetailsModule;
-import com.etiennelawlor.moviehub.domain.models.MovieDomainModel;
-import com.etiennelawlor.moviehub.domain.models.PersonCreditDomainModel;
-import com.etiennelawlor.moviehub.domain.models.PersonDetailsDomainModel;
-import com.etiennelawlor.moviehub.domain.models.PersonDomainModel;
-import com.etiennelawlor.moviehub.domain.models.ProfileImageDomainModel;
-import com.etiennelawlor.moviehub.domain.models.ProfileImagesDomainModel;
-import com.etiennelawlor.moviehub.domain.models.TelevisionShowDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.common.GravitySnapHelper;
+import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.PersonCreditPresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.PersonDetailsPresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.ProfileImagePresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.ProfileImagesPresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.TelevisionShowPresentationModel;
 import com.etiennelawlor.moviehub.presentation.moviedetails.MovieDetailsActivity;
 import com.etiennelawlor.moviehub.presentation.televisionshowdetails.TelevisionShowDetailsActivity;
 import com.etiennelawlor.moviehub.util.AnimationUtility;
@@ -145,7 +145,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     // endregion
 
     // region Member Variables
-    private PersonDomainModel person;
+    private PersonPresentationModel person;
     private Unbinder unbinder;
     private Typeface font;
     private int personPosterHeight;
@@ -155,7 +155,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     private PersonCreditsAdapter castAdapter;
     private PersonCreditsAdapter crewAdapter;
     private Transition sharedElementEnterTransition;
-    private PersonDetailsDomainModel personDetailsDomainModel;
+    private PersonDetailsPresentationModel personDetailsPresentationModel;
     private PersonDetailsComponent personDetailsComponent;
     private final Handler handler = new Handler();
     // endregion
@@ -181,12 +181,12 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
         public void onItemClick(int position, View view) {
             selectedView = view;
 
-            PersonCreditDomainModel personCredit = castAdapter.getItem(position);
+            PersonCreditPresentationModel personCredit = castAdapter.getItem(position);
             if(personCredit != null){
                 String mediaType = personCredit.getMediaType();
                 switch (mediaType){
                     case "movie":
-                        MovieDomainModel movie = new MovieDomainModel();
+                        MoviePresentationModel movie = new MoviePresentationModel();
 
                         movie.setTitle(personCredit.getTitle());
                         movie.setId(personCredit.getId());
@@ -196,7 +196,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
                         personDetailsPresenter.onMovieClick(movie);
                         break;
                     case "tv":
-                        TelevisionShowDomainModel televisionShow = new TelevisionShowDomainModel();
+                        TelevisionShowPresentationModel televisionShow = new TelevisionShowPresentationModel();
 
                         televisionShow.setName(personCredit.getName());
                         televisionShow.setId(personCredit.getId());
@@ -217,13 +217,13 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
         public void onItemClick(int position, View view) {
             selectedView = view;
 
-            PersonCreditDomainModel personCredit = crewAdapter.getItem(position);
+            PersonCreditPresentationModel personCredit = crewAdapter.getItem(position);
             if(personCredit != null){
 
                 String mediaType = personCredit.getMediaType();
                 switch (mediaType){
                     case "movie":
-                        MovieDomainModel movie = new MovieDomainModel();
+                        MoviePresentationModel movie = new MoviePresentationModel();
 
                         movie.setTitle(personCredit.getTitle());
                         movie.setId(personCredit.getId());
@@ -233,7 +233,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
                         personDetailsPresenter.onMovieClick(movie);
                         break;
                     case "tv":
-                        TelevisionShowDomainModel televisionShow = new TelevisionShowDomainModel();
+                        TelevisionShowPresentationModel televisionShow = new TelevisionShowPresentationModel();
 
                         televisionShow.setName(personCredit.getName());
                         televisionShow.setId(personCredit.getId());
@@ -519,13 +519,13 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     // region PersonDetailsUiContract.View Methods
 
     @Override
-    public void showPersonDetails(PersonDetailsDomainModel personDetailsDomainModel) {
-        this.personDetailsDomainModel = personDetailsDomainModel;
+    public void showPersonDetails(PersonDetailsPresentationModel personDetailsPresentationModel) {
+        this.personDetailsPresentationModel = personDetailsPresentationModel;
         final Palette profilePalette = person.getProfilePalette();
 
         nestedScrollView.setNestedScrollingEnabled(true);
 
-        person = personDetailsDomainModel.getPerson();
+        person = personDetailsPresentationModel.getPerson();
         person.setProfilePalette(profilePalette);
 
         setUpBackdrop();
@@ -573,7 +573,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     }
 
     @Override
-    public void openMovieDetails(MovieDomainModel movie) {
+    public void openMovieDetails(MoviePresentationModel movie) {
         Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_MOVIE, movie);
@@ -591,7 +591,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     }
 
     @Override
-    public void openTelevisionShowDetails(TelevisionShowDomainModel televisionShow) {
+    public void openTelevisionShowDetails(TelevisionShowPresentationModel televisionShow) {
         Intent intent = new Intent(getActivity(), TelevisionShowDetailsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_TELEVISION_SHOW, televisionShow);
@@ -645,20 +645,20 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
         }
     }
 
-    private String getProfileUrl(PersonDomainModel person){
+    private String getProfileUrl(PersonPresentationModel person){
         String profilePath = person.getProfilePath();
         String profileUrl = String.format("%s%s%s", SECURE_BASE_URL, POSTER_SIZE, profilePath);
         return profileUrl;
     }
 
-    private String getBackdropUrl(PersonDomainModel person){
+    private String getBackdropUrl(PersonPresentationModel person){
         String backdropUrl = "";
 
-        ProfileImagesDomainModel profileImages = person.getImages();
+        ProfileImagesPresentationModel profileImages = person.getImages();
         if(profileImages != null){
-            List<ProfileImageDomainModel> profileImagesList = profileImages.getProfiles();
+            List<ProfileImagePresentationModel> profileImagesList = profileImages.getProfiles();
             if(profileImagesList != null && profileImagesList.size()>0){
-                ProfileImageDomainModel profileImage = profileImagesList.get(profileImagesList.size()-1);
+                ProfileImagePresentationModel profileImage = profileImagesList.get(profileImagesList.size()-1);
                 if(profileImage != null){
                     String filePath = profileImage.getFilePath();
 
@@ -685,7 +685,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     }
 
     private void setUpCast(){
-        List<PersonCreditDomainModel> cast = personDetailsDomainModel.getCast();
+        List<PersonCreditPresentationModel> cast = personDetailsPresentationModel.getCast();
         if(cast != null && cast.size()>0){
             View castView = castViewStub.inflate();
 
@@ -699,9 +699,9 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
             SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
             snapHelper.attachToRecyclerView(castRecyclerView);
 
-            Collections.sort(cast, new Comparator<PersonCreditDomainModel>() {
+            Collections.sort(cast, new Comparator<PersonCreditPresentationModel>() {
                 @Override
-                public int compare(PersonCreditDomainModel pc1, PersonCreditDomainModel pc2) {
+                public int compare(PersonCreditPresentationModel pc1, PersonCreditPresentationModel pc2) {
                     int year1 = -1;
                     if(pc1.getFirstAirYear() != -1){
                         year1 = pc1.getFirstAirYear();
@@ -730,7 +730,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     }
 
     private void setUpCrew(){
-        List<PersonCreditDomainModel> crew = personDetailsDomainModel.getCrew();
+        List<PersonCreditPresentationModel> crew = personDetailsPresentationModel.getCrew();
         if(crew != null && crew.size()>0){
             View crewView = crewViewStub.inflate();
 
@@ -744,9 +744,9 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
             SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
             snapHelper.attachToRecyclerView(crewRecyclerView);
 
-            Collections.sort(crew, new Comparator<PersonCreditDomainModel>() {
+            Collections.sort(crew, new Comparator<PersonCreditPresentationModel>() {
                 @Override
-                public int compare(PersonCreditDomainModel pc1, PersonCreditDomainModel pc2) {
+                public int compare(PersonCreditPresentationModel pc1, PersonCreditPresentationModel pc2) {
                     int year1 = -1;
                     if(pc1.getFirstAirYear() != -1){
                         year1 = pc1.getFirstAirYear();

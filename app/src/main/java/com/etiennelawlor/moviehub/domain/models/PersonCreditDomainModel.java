@@ -156,7 +156,7 @@ public class PersonCreditDomainModel extends CreditDomainModel {
 
     @Override
     public String toString() {
-        return "PersonCreditDomainModel{" +
+        return "PersonCreditPresentationModel{" +
                 "job='" + job + '\'' +
                 ", character='" + character + '\'' +
                 ", title='" + title + '\'' +

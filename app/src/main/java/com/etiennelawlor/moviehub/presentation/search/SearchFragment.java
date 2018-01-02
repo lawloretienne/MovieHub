@@ -32,12 +32,12 @@ import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.di.component.SearchComponent;
 import com.etiennelawlor.moviehub.di.module.SearchModule;
-import com.etiennelawlor.moviehub.domain.models.MovieDomainModel;
-import com.etiennelawlor.moviehub.domain.models.PersonDomainModel;
-import com.etiennelawlor.moviehub.domain.models.TelevisionShowDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.common.GravitySnapHelper;
+import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.TelevisionShowPresentationModel;
 import com.etiennelawlor.moviehub.presentation.moviedetails.MovieDetailsActivity;
 import com.etiennelawlor.moviehub.presentation.persondetails.PersonDetailsActivity;
 import com.etiennelawlor.moviehub.presentation.televisionshowdetails.TelevisionShowDetailsActivity;
@@ -175,7 +175,7 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
         public void onItemClick(int position, View view) {
             selectedMovieView = view;
 
-            MovieDomainModel movie = searchMoviesAdapter.getItem(position);
+            MoviePresentationModel movie = searchMoviesAdapter.getItem(position);
             if(movie != null){
                 searchPresenter.onMovieClick(movie);
             }
@@ -187,7 +187,7 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
         public void onItemClick(int position, View view) {
             selectedTelevisionShowView = view;
 
-            TelevisionShowDomainModel televisionShow = searchTelevisionShowsAdapter.getItem(position);
+            TelevisionShowPresentationModel televisionShow = searchTelevisionShowsAdapter.getItem(position);
             if(televisionShow != null){
                 searchPresenter.onTelevisionShowClick(televisionShow);
             }
@@ -199,7 +199,7 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
         public void onItemClick(int position, View view) {
             selectedPersonView = view;
 
-            PersonDomainModel person = searchPersonsAdapter.getItem(position);
+            PersonPresentationModel person = searchPersonsAdapter.getItem(position);
             if(person != null){
                 searchPresenter.onPersonClick(person);
             }
@@ -355,7 +355,7 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
     }
 
     @Override
-    public void addMoviesToAdapter(List<MovieDomainModel> movies) {
+    public void addMoviesToAdapter(List<MoviePresentationModel> movies) {
         searchMoviesAdapter.addAll(movies);
     }
 
@@ -375,7 +375,7 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
     }
 
     @Override
-    public void addTelevisionShowsToAdapter(List<TelevisionShowDomainModel> televisionShows) {
+    public void addTelevisionShowsToAdapter(List<TelevisionShowPresentationModel> televisionShows) {
         searchTelevisionShowsAdapter.addAll(televisionShows);
     }
 
@@ -395,7 +395,7 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
     }
 
     @Override
-    public void addPersonsToAdapter(List<PersonDomainModel> persons) {
+    public void addPersonsToAdapter(List<PersonPresentationModel> persons) {
         searchPersonsAdapter.addAll(persons);
     }
 
@@ -415,7 +415,7 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
     }
 
     @Override
-    public void openMovieDetails(MovieDomainModel movie) {
+    public void openMovieDetails(MoviePresentationModel movie) {
         Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_MOVIE, movie);
@@ -435,7 +435,7 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
     }
 
     @Override
-    public void openTelevisionShowDetails(TelevisionShowDomainModel televisionShow) {
+    public void openTelevisionShowDetails(TelevisionShowPresentationModel televisionShow) {
         Intent intent = new Intent(getActivity(), TelevisionShowDetailsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_TELEVISION_SHOW, televisionShow);
@@ -454,7 +454,7 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
     }
 
     @Override
-    public void openPersonDetails(PersonDomainModel person) {
+    public void openPersonDetails(PersonPresentationModel person) {
         Intent intent = new Intent(getActivity(), PersonDetailsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_PERSON, person);

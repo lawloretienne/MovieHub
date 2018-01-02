@@ -127,7 +127,7 @@ public class ProfileImageDomainModel implements Parcelable {
 
     @Override
     public String toString() {
-        return "ProfileImageDomainModel{" +
+        return "ProfileImagePresentationModel{" +
                 "aspectRatio=" + aspectRatio +
                 ", filePath='" + filePath + '\'' +
                 ", height=" + height +

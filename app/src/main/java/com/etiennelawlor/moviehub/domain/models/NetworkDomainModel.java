@@ -79,7 +79,7 @@ public class NetworkDomainModel implements Parcelable {
 
     @Override
     public String toString() {
-        return "NetworkDomainModel{" +
+        return "NetworkPresentationModel{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';

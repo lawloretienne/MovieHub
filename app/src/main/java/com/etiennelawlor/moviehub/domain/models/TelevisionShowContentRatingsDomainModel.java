@@ -43,7 +43,7 @@ public class TelevisionShowContentRatingsDomainModel {
 
     @Override
     public String toString() {
-        return "TelevisionShowContentRatingsDomainModel{" +
+        return "TelevisionShowContentRatingsPresentationModel{" +
                 "id=" + id +
                 ", contentRatings=" + contentRatings +
                 '}';

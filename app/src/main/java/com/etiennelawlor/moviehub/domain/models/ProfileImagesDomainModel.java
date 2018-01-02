@@ -71,7 +71,7 @@ public class ProfileImagesDomainModel implements Parcelable {
 
     @Override
     public String toString() {
-        return "ProfileImagesDomainModel{" +
+        return "ProfileImagesPresentationModel{" +
                 "profiles=" + profiles +
                 '}';
     }

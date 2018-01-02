@@ -403,7 +403,7 @@ public class TelevisionShowDomainModel implements Parcelable {
 
     @Override
     public String toString() {
-        return "TelevisionShowDomainModel{" +
+        return "TelevisionShowPresentationModel{" +
                 "backdropPath='" + backdropPath + '\'' +
                 ", episodeRunTime=" + episodeRunTime +
                 ", firstAirDate='" + firstAirDate + '\'' +

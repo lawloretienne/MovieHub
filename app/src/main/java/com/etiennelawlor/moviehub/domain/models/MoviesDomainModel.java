@@ -84,7 +84,7 @@ public class MoviesDomainModel {
 
     @Override
     public String toString() {
-        return "MoviesDomainModel{" +
+        return "MoviesPresentationModel{" +
                 "movies=" + movies +
                 ", pageNumber=" + pageNumber +
                 ", isLastPage=" + isLastPage +

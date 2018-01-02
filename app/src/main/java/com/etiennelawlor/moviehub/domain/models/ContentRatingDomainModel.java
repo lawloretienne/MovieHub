@@ -41,7 +41,7 @@ public class ContentRatingDomainModel {
 
     @Override
     public String toString() {
-        return "ContentRatingDomainModel{" +
+        return "ContentRatingPresentationModel{" +
                 "iso31661='" + iso31661 + '\'' +
                 ", rating='" + rating + '\'' +
                 '}';

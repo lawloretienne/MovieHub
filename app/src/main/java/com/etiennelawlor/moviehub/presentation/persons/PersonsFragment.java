@@ -21,10 +21,10 @@ import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.di.component.PersonsComponent;
 import com.etiennelawlor.moviehub.di.module.PersonsModule;
-import com.etiennelawlor.moviehub.domain.models.PersonDomainModel;
-import com.etiennelawlor.moviehub.domain.models.PersonsDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
+import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.PersonsPresentationModel;
 import com.etiennelawlor.moviehub.presentation.persondetails.PersonDetailsActivity;
 import com.etiennelawlor.moviehub.util.FontCache;
 
@@ -68,7 +68,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     private Typeface font;
     private Unbinder unbinder;
     private StaggeredGridLayoutManager layoutManager;
-    private PersonsDomainModel personsDomainModel;
+    private PersonsPresentationModel personsPresentationModel;
     private PersonsComponent personsComponent;
     private boolean isLoading = false;
     // endregion
@@ -81,7 +81,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     // region Listeners
     @OnClick(R.id.reload_btn)
     public void onReloadButtonClicked() {
-        personsPresenter.onLoadPopularPersons(personsDomainModel == null ? 1 : personsDomainModel.getPageNumber());
+        personsPresenter.onLoadPopularPersons(personsPresentationModel == null ? 1 : personsPresentationModel.getPageNumber());
     }
 
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
@@ -102,7 +102,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
             if ((visibleItemCount + firstVisibleItem) >= totalItemCount
                     && totalItemCount > 0
                     && !isLoading
-                    && !personsDomainModel.isLastPage()) {
+                    && !personsPresentationModel.isLastPage()) {
                 personsPresenter.onScrollToEndOfList();
             }
         }
@@ -162,7 +162,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
         // Pagination
         recyclerView.addOnScrollListener(recyclerViewOnScrollListener);
 
-        personsPresenter.onLoadPopularPersons(personsDomainModel == null ? 1 : personsDomainModel.getPageNumber());
+        personsPresenter.onLoadPopularPersons(personsPresentationModel == null ? 1 : personsPresentationModel.getPageNumber());
     }
 
     @Override
@@ -185,7 +185,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     @Override
     public void onItemClick(int position, View view) {
         selectedPersonView = view;
-        PersonDomainModel person = personsAdapter.getItem(position);
+        PersonPresentationModel person = personsAdapter.getItem(position);
         if(person != null){
             personsPresenter.onPersonClick(person);
         }
@@ -195,7 +195,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     // region PersonsAdapter.OnReloadClickListener Methods
     @Override
     public void onReloadClick() {
-        personsPresenter.onLoadPopularPersons(personsDomainModel.getPageNumber());
+        personsPresenter.onLoadPopularPersons(personsPresentationModel.getPageNumber());
     }
     // endregion
 
@@ -266,23 +266,23 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     }
 
     @Override
-    public void addPersonsToAdapter(List<PersonDomainModel> persons) {
+    public void addPersonsToAdapter(List<PersonPresentationModel> persons) {
         personsAdapter.addAll(persons);
     }
 
     @Override
     public void loadMoreItems() {
-        personsDomainModel.incrementPageNumber();
-        personsPresenter.onLoadPopularPersons(personsDomainModel.getPageNumber());
+        personsPresentationModel.incrementPageNumber();
+        personsPresenter.onLoadPopularPersons(personsPresentationModel.getPageNumber());
     }
 
     @Override
-    public void setPersonsDomainModel(PersonsDomainModel personsDomainModel) {
-        this.personsDomainModel = personsDomainModel;
+    public void setPersonsPresentationModel(PersonsPresentationModel personsPresentationModel) {
+        this.personsPresentationModel = personsPresentationModel;
     }
 
     @Override
-    public void openPersonDetails(PersonDomainModel person) {
+    public void openPersonDetails(PersonPresentationModel person) {
         Intent intent = new Intent(getActivity(), PersonDetailsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_PERSON, person);

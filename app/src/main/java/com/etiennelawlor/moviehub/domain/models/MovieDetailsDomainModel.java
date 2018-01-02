@@ -72,7 +72,7 @@ public class MovieDetailsDomainModel {
 
     @Override
     public String toString() {
-        return "MovieDetailsDomainModel{" +
+        return "MovieDetailsPresentationModel{" +
                 "movie=" + movie +
                 ", cast=" + cast +
                 ", crew=" + crew +

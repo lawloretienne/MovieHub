@@ -1,8 +1,9 @@
 package com.etiennelawlor.moviehub.presentation.movies;
 
-import com.etiennelawlor.moviehub.domain.models.MovieDomainModel;
-import com.etiennelawlor.moviehub.domain.models.MoviesDomainModel;
 import com.etiennelawlor.moviehub.domain.usecases.MoviesDomainContract;
+import com.etiennelawlor.moviehub.presentation.mappers.MoviesPresentationModelMapper;
+import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.MoviesPresentationModel;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 
@@ -22,6 +23,7 @@ public class MoviesPresenter implements MoviesUiContract.Presenter {
     private final MoviesUiContract.View moviesView;
     private final MoviesDomainContract.UseCase moviesUseCase;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private MoviesPresentationModelMapper moviesPresentationModelMapper = new MoviesPresentationModelMapper();
     // endregion
 
     // region Constructors
@@ -49,22 +51,23 @@ public class MoviesPresenter implements MoviesUiContract.Presenter {
         }
 
         Disposable disposable = moviesUseCase.getPopularMovies(currentPage)
+                .map(moviesDomainModel -> moviesPresentationModelMapper.mapToPresentationModel(moviesDomainModel))
 //                .compose(schedulerTransformer)
-                .compose(new ProductionSchedulerTransformer<MoviesDomainModel>())
-                .subscribeWith(new DisposableSingleObserver<MoviesDomainModel>() {
+                .compose(new ProductionSchedulerTransformer<MoviesPresentationModel>())
+                .subscribeWith(new DisposableSingleObserver<MoviesPresentationModel>() {
                     @Override
-                    public void onSuccess(MoviesDomainModel moviesDomainModel) {
-                        if(moviesDomainModel != null){
-                            List<MovieDomainModel> movieDomainModels = moviesDomainModel.getMovies();
-                            int currentPage = moviesDomainModel.getPageNumber();
-                            boolean isLastPage = moviesDomainModel.isLastPage();
-                            boolean hasMovies = moviesDomainModel.hasMovies();
+                    public void onSuccess(MoviesPresentationModel moviesPresentationModel) {
+                        if(moviesPresentationModel != null){
+                            List<MoviePresentationModel> moviePresentationModels = moviesPresentationModel.getMovies();
+                            int currentPage = moviesPresentationModel.getPageNumber();
+                            boolean isLastPage = moviesPresentationModel.isLastPage();
+                            boolean hasMovies = moviesPresentationModel.hasMovies();
                             if(currentPage == 1){
                                 moviesView.hideLoadingView();
 
                                 if(hasMovies){
                                     moviesView.addHeader();
-                                    moviesView.addMoviesToAdapter(movieDomainModels);
+                                    moviesView.addMoviesToAdapter(moviePresentationModels);
 
                                     if(!isLastPage)
                                         moviesView.addFooter();
@@ -75,14 +78,14 @@ public class MoviesPresenter implements MoviesUiContract.Presenter {
                                 moviesView.removeFooter();
 
                                 if(hasMovies){
-                                    moviesView.addMoviesToAdapter(movieDomainModels);
+                                    moviesView.addMoviesToAdapter(moviePresentationModels);
 
                                     if(!isLastPage)
                                         moviesView.addFooter();
                                 }
                             }
 
-                            moviesView.setMoviesDomainModel(moviesDomainModel);
+                            moviesView.setMoviesPresentationModel(moviesPresentationModel);
                         }
                     }
 
@@ -109,7 +112,7 @@ public class MoviesPresenter implements MoviesUiContract.Presenter {
     }
 
     @Override
-    public void onMovieClick(MovieDomainModel movie) {
+    public void onMovieClick(MoviePresentationModel movie) {
         moviesView.openMovieDetails(movie);
     }
 

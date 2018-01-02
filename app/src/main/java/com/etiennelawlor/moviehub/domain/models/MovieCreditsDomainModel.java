@@ -77,7 +77,7 @@ public class MovieCreditsDomainModel {
 
     @Override
     public String toString() {
-        return "MovieCreditsDomainModel{" +
+        return "MovieCreditsPresentationModel{" +
                 "id=" + id +
                 ", cast=" + cast +
                 ", crew=" + crew +

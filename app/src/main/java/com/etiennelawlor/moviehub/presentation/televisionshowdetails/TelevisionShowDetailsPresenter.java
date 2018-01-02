@@ -1,9 +1,10 @@
 package com.etiennelawlor.moviehub.presentation.televisionshowdetails;
 
-import com.etiennelawlor.moviehub.domain.models.PersonDomainModel;
-import com.etiennelawlor.moviehub.domain.models.TelevisionShowDetailsDomainModel;
-import com.etiennelawlor.moviehub.domain.models.TelevisionShowDomainModel;
 import com.etiennelawlor.moviehub.domain.usecases.TelevisionShowDetailsDomainContract;
+import com.etiennelawlor.moviehub.presentation.mappers.TelevisionShowDetailsPresentationModelMapper;
+import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.TelevisionShowDetailsPresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.TelevisionShowPresentationModel;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 
@@ -21,6 +22,7 @@ public class TelevisionShowDetailsPresenter implements TelevisionShowDetailsUiCo
     private final TelevisionShowDetailsUiContract.View televisionShowDetailsView;
     private final TelevisionShowDetailsDomainContract.UseCase televisionShowDetailsUseCase;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private TelevisionShowDetailsPresentationModelMapper televisionShowDetailsPresentationModelMapper = new TelevisionShowDetailsPresentationModelMapper();
     // endregion
 
     // region Constructors
@@ -43,13 +45,14 @@ public class TelevisionShowDetailsPresenter implements TelevisionShowDetailsUiCo
     @Override
     public void onLoadTelevisionShowDetails(int televisionShowId) {
         Disposable disposable = televisionShowDetailsUseCase.getTelevisionShowDetails(televisionShowId)
+                .map(televisionShowDetailsDomainModel -> televisionShowDetailsPresentationModelMapper.mapToPresentationModel(televisionShowDetailsDomainModel))
 //                .compose(schedulerTransformer)
-                .compose(new ProductionSchedulerTransformer<TelevisionShowDetailsDomainModel>())
-                .subscribeWith(new DisposableSingleObserver<TelevisionShowDetailsDomainModel>() {
+                .compose(new ProductionSchedulerTransformer<TelevisionShowDetailsPresentationModel>())
+                .subscribeWith(new DisposableSingleObserver<TelevisionShowDetailsPresentationModel>() {
                     @Override
-                    public void onSuccess(TelevisionShowDetailsDomainModel televisionShowDetailsDomainModel) {
-                        if(televisionShowDetailsDomainModel != null){
-                            televisionShowDetailsView.showTelevisionShowDetails(televisionShowDetailsDomainModel);
+                    public void onSuccess(TelevisionShowDetailsPresentationModel televisionShowDetailsPresentationModel) {
+                        if(televisionShowDetailsPresentationModel != null){
+                            televisionShowDetailsView.showTelevisionShowDetails(televisionShowDetailsPresentationModel);
                         }
                     }
 
@@ -69,12 +72,12 @@ public class TelevisionShowDetailsPresenter implements TelevisionShowDetailsUiCo
     }
 
     @Override
-    public void onPersonClick(PersonDomainModel person) {
+    public void onPersonClick(PersonPresentationModel person) {
         televisionShowDetailsView.openPersonDetails(person);
     }
 
     @Override
-    public void onTelevisionShowClick(TelevisionShowDomainModel televisionShow) {
+    public void onTelevisionShowClick(TelevisionShowPresentationModel televisionShow) {
         televisionShowDetailsView.openTelevisionShowDetails(televisionShow);
     }
 

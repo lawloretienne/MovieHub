@@ -183,7 +183,7 @@ public class PersonDomainModel implements Parcelable {
 
     @Override
     public String toString() {
-        return "PersonDomainModel{" +
+        return "PersonPresentationModel{" +
                 "biography='" + biography + '\'' +
                 ", birthday='" + birthday + '\'' +
                 ", deathday='" + deathday + '\'' +

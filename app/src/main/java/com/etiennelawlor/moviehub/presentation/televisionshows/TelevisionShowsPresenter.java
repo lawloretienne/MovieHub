@@ -1,8 +1,9 @@
 package com.etiennelawlor.moviehub.presentation.televisionshows;
 
-import com.etiennelawlor.moviehub.domain.models.TelevisionShowDomainModel;
-import com.etiennelawlor.moviehub.domain.models.TelevisionShowsDomainModel;
 import com.etiennelawlor.moviehub.domain.usecases.TelevisionShowsDomainContract;
+import com.etiennelawlor.moviehub.presentation.mappers.TelevisionShowsPresentationModelMapper;
+import com.etiennelawlor.moviehub.presentation.models.TelevisionShowPresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.TelevisionShowsPresentationModel;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 
@@ -22,6 +23,7 @@ public class TelevisionShowsPresenter implements TelevisionShowsUiContract.Prese
     private final TelevisionShowsUiContract.View televisionShowsView;
     private final TelevisionShowsDomainContract.UseCase televisionShowsUseCase;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private TelevisionShowsPresentationModelMapper televisionShowsPresentationModelMapper = new TelevisionShowsPresentationModelMapper();
     // endregion
 
     // region Constructors
@@ -50,22 +52,23 @@ public class TelevisionShowsPresenter implements TelevisionShowsUiContract.Prese
         }
 
         Disposable disposable = televisionShowsUseCase.getPopularTelevisionShows(currentPage)
+                .map(televisionShowsDomainModel -> televisionShowsPresentationModelMapper.mapToPresentationModel(televisionShowsDomainModel))
 //                .compose(schedulerTransformer)
-                .compose(new ProductionSchedulerTransformer<TelevisionShowsDomainModel>())
-                .subscribeWith(new DisposableSingleObserver<TelevisionShowsDomainModel>() {
+                .compose(new ProductionSchedulerTransformer<TelevisionShowsPresentationModel>())
+                .subscribeWith(new DisposableSingleObserver<TelevisionShowsPresentationModel>() {
                     @Override
-                    public void onSuccess(TelevisionShowsDomainModel televisionShowsDomainModel) {
-                        if(televisionShowsDomainModel != null){
-                            List<TelevisionShowDomainModel> televisionShowDomainModels = televisionShowsDomainModel.getTelevisionShows();
-                            int currentPage = televisionShowsDomainModel.getPageNumber();
-                            boolean isLastPage = televisionShowsDomainModel.isLastPage();
-                            boolean hasTelevisionShows = televisionShowsDomainModel.hasTelevisionShows();
+                    public void onSuccess(TelevisionShowsPresentationModel televisionShowsPresentationModel) {
+                        if(televisionShowsPresentationModel != null){
+                            List<TelevisionShowPresentationModel> televisionShowPresentationModels = televisionShowsPresentationModel.getTelevisionShows();
+                            int currentPage = televisionShowsPresentationModel.getPageNumber();
+                            boolean isLastPage = televisionShowsPresentationModel.isLastPage();
+                            boolean hasTelevisionShows = televisionShowsPresentationModel.hasTelevisionShows();
                             if(currentPage == 1){
                                 televisionShowsView.hideLoadingView();
 
                                 if(hasTelevisionShows){
                                     televisionShowsView.addHeader();
-                                    televisionShowsView.addTelevisionShowsToAdapter(televisionShowDomainModels);
+                                    televisionShowsView.addTelevisionShowsToAdapter(televisionShowPresentationModels);
 
                                     if(!isLastPage)
                                         televisionShowsView.addFooter();
@@ -76,14 +79,14 @@ public class TelevisionShowsPresenter implements TelevisionShowsUiContract.Prese
                                 televisionShowsView.removeFooter();
 
                                 if(hasTelevisionShows){
-                                    televisionShowsView.addTelevisionShowsToAdapter(televisionShowDomainModels);
+                                    televisionShowsView.addTelevisionShowsToAdapter(televisionShowPresentationModels);
 
                                     if(!isLastPage)
                                         televisionShowsView.addFooter();
                                 }
                             }
 
-                            televisionShowsView.setTelevisionShowsDomainModel(televisionShowsDomainModel);
+                            televisionShowsView.setTelevisionShowsPresentationModel(televisionShowsPresentationModel);
                         }
                     }
 
@@ -110,7 +113,7 @@ public class TelevisionShowsPresenter implements TelevisionShowsUiContract.Prese
     }
 
     @Override
-    public void onTelevisionShowClick(TelevisionShowDomainModel televisionShow) {
+    public void onTelevisionShowClick(TelevisionShowPresentationModel televisionShow) {
         televisionShowsView.openTelevisionShowDetails(televisionShow);
     }
 

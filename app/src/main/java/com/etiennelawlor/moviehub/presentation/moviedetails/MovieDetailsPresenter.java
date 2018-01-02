@@ -1,9 +1,10 @@
 package com.etiennelawlor.moviehub.presentation.moviedetails;
 
-import com.etiennelawlor.moviehub.domain.models.MovieDetailsDomainModel;
-import com.etiennelawlor.moviehub.domain.models.MovieDomainModel;
-import com.etiennelawlor.moviehub.domain.models.PersonDomainModel;
 import com.etiennelawlor.moviehub.domain.usecases.MovieDetailsDomainContract;
+import com.etiennelawlor.moviehub.presentation.mappers.MovieDetailsPresentationModelMapper;
+import com.etiennelawlor.moviehub.presentation.models.MovieDetailsPresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 
@@ -21,6 +22,7 @@ public class MovieDetailsPresenter implements MovieDetailsUiContract.Presenter {
     private final MovieDetailsUiContract.View movieDetailsView;
     private final MovieDetailsDomainContract.UseCase movieDetailsUseCase;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private MovieDetailsPresentationModelMapper movieDetailsPresentationModelMapper= new MovieDetailsPresentationModelMapper();
     // endregion
 
     // region Constructors
@@ -40,13 +42,14 @@ public class MovieDetailsPresenter implements MovieDetailsUiContract.Presenter {
     @Override
     public void onLoadMovieDetails(int movieId) {
         Disposable disposable = movieDetailsUseCase.getMovieDetails(movieId)
+                .map(movieDetailsDomainModel -> movieDetailsPresentationModelMapper.mapToPresentationModel(movieDetailsDomainModel))
 //                .compose(schedulerTransformer)
-                .compose(new ProductionSchedulerTransformer<MovieDetailsDomainModel>())
-                .subscribeWith(new DisposableSingleObserver<MovieDetailsDomainModel>() {
+                .compose(new ProductionSchedulerTransformer<MovieDetailsPresentationModel>())
+                .subscribeWith(new DisposableSingleObserver<MovieDetailsPresentationModel>() {
                     @Override
-                    public void onSuccess(MovieDetailsDomainModel movieDetailsDomainModel) {
-                        if(movieDetailsDomainModel != null){
-                            movieDetailsView.showMovieDetails(movieDetailsDomainModel);
+                    public void onSuccess(MovieDetailsPresentationModel movieDetailsPresentationModel) {
+                        if(movieDetailsPresentationModel != null){
+                            movieDetailsView.showMovieDetails(movieDetailsPresentationModel);
                         }
                     }
 
@@ -66,12 +69,12 @@ public class MovieDetailsPresenter implements MovieDetailsUiContract.Presenter {
     }
 
     @Override
-    public void onPersonClick(PersonDomainModel person) {
+    public void onPersonClick(PersonPresentationModel person) {
         movieDetailsView.openPersonDetails(person);
     }
 
     @Override
-    public void onMovieClick(MovieDomainModel movie) {
+    public void onMovieClick(MoviePresentationModel movie) {
         movieDetailsView.openMovieDetails(movie);
     }
 

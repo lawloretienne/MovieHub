@@ -72,7 +72,7 @@ public class ReleaseDateDomainModel {
 
     @Override
     public String toString() {
-        return "ReleaseDateDomainModel{" +
+        return "ReleaseDatePresentationModel{" +
                 "certification='" + certification + '\'' +
                 ", iso6391='" + iso6391 + '\'' +
                 ", note='" + note + '\'' +

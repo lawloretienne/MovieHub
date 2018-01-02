@@ -50,7 +50,7 @@ public class MovieReleaseDatesDomainModel {
 
     @Override
     public String toString() {
-        return "MovieReleaseDatesDomainModel{" +
+        return "MovieReleaseDatesPresentationModel{" +
                 "id=" + id +
                 ", movieReleaseDates=" + movieReleaseDates +
                 ", expiredAt=" + expiredAt +

@@ -18,9 +18,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.domain.models.PersonCreditDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.common.widget.DynamicHeightImageView;
+import com.etiennelawlor.moviehub.presentation.models.PersonCreditPresentationModel;
 import com.etiennelawlor.moviehub.util.AnimationUtility;
 import com.etiennelawlor.moviehub.util.ColorUtility;
 import com.etiennelawlor.moviehub.util.DisplayUtility;
@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
  * Created by etiennelawlor on 12/17/16.
  */
 
-public class PersonCreditsAdapter extends BaseAdapter<PersonCreditDomainModel> {
+public class PersonCreditsAdapter extends BaseAdapter<PersonCreditPresentationModel> {
 
     // region Constants
     // endregion
@@ -117,7 +117,7 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCreditDomainModel> {
     protected void bindItemViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         final PersonCreditViewHolder holder = (PersonCreditViewHolder) viewHolder;
 
-        final PersonCreditDomainModel personCredit = getItem(position);
+        final PersonCreditPresentationModel personCredit = getItem(position);
         if (personCredit != null) {
             holder.bind(personCredit);
         }
@@ -153,7 +153,7 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCreditDomainModel> {
     @Override
     public void addFooter() {
         isFooterAdded = true;
-        add(new PersonCreditDomainModel());
+        add(new PersonCreditPresentationModel());
     }
 
     // region Inner Classes
@@ -189,7 +189,7 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCreditDomainModel> {
         // endregion
 
         // region Helper Methods
-        private void bind(PersonCreditDomainModel personCredit){
+        private void bind(PersonCreditPresentationModel personCredit){
             resetInfoBackgroundColor(infoLinearLayout);
             resetTitleTextColor(titleTextView);
             resetSubtitleTextColor(subtitleTextView);
@@ -201,7 +201,7 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCreditDomainModel> {
             setUpCaption(captionTextView, personCredit);
         }
 
-        private void setUpThumbnail(final PersonCreditViewHolder vh, final PersonCreditDomainModel personCredit){
+        private void setUpThumbnail(final PersonCreditViewHolder vh, final PersonCreditPresentationModel personCredit){
             final DynamicHeightImageView iv = vh.thumbnailImageView;
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) iv.getLayoutParams();
             layoutParams.width = ivWidth;
@@ -263,7 +263,7 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCreditDomainModel> {
             }
         }
 
-        private void setUpTitle(TextView tv, PersonCreditDomainModel personCredit){
+        private void setUpTitle(TextView tv, PersonCreditPresentationModel personCredit){
             String title = personCredit.getTitle();
             String name = personCredit.getName();
             if (!TextUtils.isEmpty(title)) {
@@ -289,7 +289,7 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCreditDomainModel> {
             }
         }
 
-        private void setUpSubtitle(TextView tv, PersonCreditDomainModel personCredit){
+        private void setUpSubtitle(TextView tv, PersonCreditPresentationModel personCredit){
             String job = personCredit.getJob();
             String character = personCredit.getCharacter();
             if (!TextUtils.isEmpty(job)) {
@@ -301,7 +301,7 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCreditDomainModel> {
             }
         }
 
-        private void setUpCaption(TextView tv, PersonCreditDomainModel personCredit){
+        private void setUpCaption(TextView tv, PersonCreditPresentationModel personCredit){
             int firstAirYear = personCredit.getFirstAirYear();
             int releaseYear = personCredit.getReleaseYear();
             if(firstAirYear != -1){

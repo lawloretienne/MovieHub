@@ -120,7 +120,7 @@ public class MoviesPresenterTest {
 
         verify(mockMoviesView).hideLoadingView();
         verify(mockMoviesView).showEmptyView();
-        verify(mockMoviesView).setMoviesDomainModel(moviesDataModel);
+        verify(mockMoviesView).setMoviesPresentationModel(moviesDataModel);
     }
 
     @Test
@@ -139,7 +139,7 @@ public class MoviesPresenterTest {
         disposableSingleObserverArgumentCaptor.getValue().onSuccess(moviesDataModel);
 
         verify(mockMoviesView).removeFooter();
-        verify(mockMoviesView).setMoviesDomainModel(moviesDataModel);
+        verify(mockMoviesView).setMoviesPresentationModel(moviesDataModel);
     }
 
     @Test
@@ -162,7 +162,7 @@ public class MoviesPresenterTest {
         verify(mockMoviesView).hideLoadingView();
         verify(mockMoviesView).addHeader();
         verify(mockMoviesView).addMoviesToAdapter(moviesDataModel.getMovies());
-        verify(mockMoviesView).setMoviesDomainModel(moviesDataModel);
+        verify(mockMoviesView).setMoviesPresentationModel(moviesDataModel);
     }
 
     @Test
@@ -186,7 +186,7 @@ public class MoviesPresenterTest {
         verify(mockMoviesView).addHeader();
         verify(mockMoviesView).addMoviesToAdapter(moviesDataModel.getMovies());
         verify(mockMoviesView).addFooter();
-        verify(mockMoviesView).setMoviesDomainModel(moviesDataModel);
+        verify(mockMoviesView).setMoviesPresentationModel(moviesDataModel);
     }
 
     @Test
@@ -206,7 +206,7 @@ public class MoviesPresenterTest {
 
         verify(mockMoviesView).removeFooter();
         verify(mockMoviesView).addMoviesToAdapter(moviesDataModel.getMovies());
-        verify(mockMoviesView).setMoviesDomainModel(moviesDataModel);
+        verify(mockMoviesView).setMoviesPresentationModel(moviesDataModel);
     }
 
     @Test
@@ -227,8 +227,8 @@ public class MoviesPresenterTest {
         verify(mockMoviesView).removeFooter();
         verify(mockMoviesView).addMoviesToAdapter(moviesDataModel.getMovies());
         verify(mockMoviesView).addFooter();
-        verify(mockMoviesView).setMoviesDomainModel(moviesDataModel);
-//        verify(mockMoviesView, times(1)).setModel(any(MoviesDomainModel.class)); // Alternative verify check
+        verify(mockMoviesView).setMoviesPresentationModel(moviesDataModel);
+//        verify(mockMoviesView, times(1)).setModel(any(MoviesPresentationModel.class)); // Alternative verify check
     }
 
     @Test

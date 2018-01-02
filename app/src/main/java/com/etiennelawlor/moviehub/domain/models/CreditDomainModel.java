@@ -38,7 +38,7 @@ public class CreditDomainModel {
 
     @Override
     public String toString() {
-        return "CreditDomainModel{" +
+        return "CreditPresentationModel{" +
                 "id=" + id +
                 ", creditId='" + creditId + '\'' +
                 '}';

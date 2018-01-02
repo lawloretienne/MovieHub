@@ -54,7 +54,7 @@ public class PersonDetailsDomainModel {
 
     @Override
     public String toString() {
-        return "PersonDetailsDomainModel{" +
+        return "PersonDetailsPresentationModel{" +
                 "person=" + person +
                 ", cast=" + cast +
                 ", crew=" + crew +

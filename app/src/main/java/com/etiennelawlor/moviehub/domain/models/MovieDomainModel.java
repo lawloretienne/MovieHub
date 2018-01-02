@@ -330,7 +330,7 @@ public class MovieDomainModel implements Parcelable {
 
     @Override
     public String toString() {
-        return "MovieDomainModel{" +
+        return "MoviePresentationModel{" +
                 "adult=" + adult +
                 ", backdropPath='" + backdropPath + '\'' +
                 ", budget=" + budget +

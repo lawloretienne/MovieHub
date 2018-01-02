@@ -83,7 +83,7 @@ public class SearchDomainModel {
 
     @Override
     public String toString() {
-        return "SearchDomainModel{" +
+        return "SearchPresentationModel{" +
                 "query='" + query + '\'' +
                 ", movies=" + movies +
                 ", televisionShows=" + televisionShows +

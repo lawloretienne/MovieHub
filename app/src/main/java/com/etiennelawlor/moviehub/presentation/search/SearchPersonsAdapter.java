@@ -18,9 +18,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.domain.models.PersonDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.common.widget.DynamicHeightImageView;
+import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
 import com.etiennelawlor.moviehub.util.AnimationUtility;
 import com.etiennelawlor.moviehub.util.ColorUtility;
 import com.etiennelawlor.moviehub.util.DisplayUtility;
@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
  * Created by etiennelawlor on 12/17/16.
  */
 
-public class SearchPersonsAdapter extends BaseAdapter<PersonDomainModel> {
+public class SearchPersonsAdapter extends BaseAdapter<PersonPresentationModel> {
 
     // region Constants
     // endregion
@@ -117,7 +117,7 @@ public class SearchPersonsAdapter extends BaseAdapter<PersonDomainModel> {
     protected void bindItemViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         final PersonViewHolder holder = (PersonViewHolder) viewHolder;
 
-        final PersonDomainModel person = getItem(position);
+        final PersonPresentationModel person = getItem(position);
         if (person != null) {
             holder.bind(person);
         }
@@ -153,7 +153,7 @@ public class SearchPersonsAdapter extends BaseAdapter<PersonDomainModel> {
     @Override
     public void addFooter() {
         isFooterAdded = true;
-        add(new PersonDomainModel());
+        add(new PersonPresentationModel());
     }
 
     // region Inner Classes
@@ -187,7 +187,7 @@ public class SearchPersonsAdapter extends BaseAdapter<PersonDomainModel> {
         // endregion
 
         // region Helper Methods
-        private void bind(PersonDomainModel person){
+        private void bind(PersonPresentationModel person){
             resetInfoBackgroundColor(infoLinearLayout);
             resetTitleTextColor(titleTextView);
 
@@ -195,7 +195,7 @@ public class SearchPersonsAdapter extends BaseAdapter<PersonDomainModel> {
             setUpTitle(titleTextView, person);
         }
 
-        private void setUpThumbnail(final PersonViewHolder vh, final PersonDomainModel person){
+        private void setUpThumbnail(final PersonViewHolder vh, final PersonPresentationModel person){
             final DynamicHeightImageView iv = vh.thumbnailImageView;
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) iv.getLayoutParams();
             layoutParams.width = ivWidth;
@@ -254,7 +254,7 @@ public class SearchPersonsAdapter extends BaseAdapter<PersonDomainModel> {
             }
         }
 
-        private void setUpTitle(TextView tv, PersonDomainModel person){
+        private void setUpTitle(TextView tv, PersonPresentationModel person){
             String name = person.getName();
             if (!TextUtils.isEmpty(name)) {
                 tv.setText(name);

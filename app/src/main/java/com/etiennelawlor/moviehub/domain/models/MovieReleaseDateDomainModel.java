@@ -44,7 +44,7 @@ public class MovieReleaseDateDomainModel {
 
     @Override
     public String toString() {
-        return "MovieReleaseDateDomainModel{" +
+        return "MovieReleaseDatePresentationModel{" +
                 "iso31661='" + iso31661 + '\'' +
                 ", releaseDates=" + releaseDates +
                 '}';

@@ -49,14 +49,14 @@ import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.di.component.TelevisionShowDetailsComponent;
 import com.etiennelawlor.moviehub.di.module.TelevisionShowDetailsModule;
-import com.etiennelawlor.moviehub.domain.models.GenreDomainModel;
-import com.etiennelawlor.moviehub.domain.models.PersonDomainModel;
-import com.etiennelawlor.moviehub.domain.models.TelevisionShowCreditDomainModel;
-import com.etiennelawlor.moviehub.domain.models.TelevisionShowDetailsDomainModel;
-import com.etiennelawlor.moviehub.domain.models.TelevisionShowDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.common.GravitySnapHelper;
+import com.etiennelawlor.moviehub.presentation.models.GenrePresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.TelevisionShowCreditPresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.TelevisionShowDetailsPresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.TelevisionShowPresentationModel;
 import com.etiennelawlor.moviehub.presentation.persondetails.PersonDetailsActivity;
 import com.etiennelawlor.moviehub.util.AnimationUtility;
 import com.etiennelawlor.moviehub.util.ColorUtility;
@@ -149,7 +149,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     // endregion
 
     // region Member Variables
-    private TelevisionShowDomainModel televisionShow;
+    private TelevisionShowPresentationModel televisionShow;
     private Unbinder unbinder;
     private Typeface font;
     private int televisionShowPosterHeight;
@@ -160,7 +160,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     private TelevisionShowCreditsAdapter castAdapter;
     private TelevisionShowCreditsAdapter crewAdapter;
     private Transition sharedElementEnterTransition;
-    private TelevisionShowDetailsDomainModel televisionShowDetailsDomainModel;
+    private TelevisionShowDetailsPresentationModel televisionShowDetailsPresentationModel;
     private TelevisionShowDetailsComponent televisionShowDetailsComponent;
     private final Handler handler = new Handler();
     // endregion
@@ -186,9 +186,9 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
         public void onItemClick(int position, View view) {
             selectedPersonView = view;
 
-            TelevisionShowCreditDomainModel televisionShowCredit = castAdapter.getItem(position);
+            TelevisionShowCreditPresentationModel televisionShowCredit = castAdapter.getItem(position);
             if(televisionShowCredit != null){
-                PersonDomainModel person = new PersonDomainModel();
+                PersonPresentationModel person = new PersonPresentationModel();
 
                 person.setName(televisionShowCredit.getName());
                 person.setId(televisionShowCredit.getId());
@@ -204,9 +204,9 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
         public void onItemClick(int position, View view) {
             selectedPersonView = view;
 
-            TelevisionShowCreditDomainModel televisionShowCredit = crewAdapter.getItem(position);
+            TelevisionShowCreditPresentationModel televisionShowCredit = crewAdapter.getItem(position);
             if(televisionShowCredit != null){
-                PersonDomainModel person = new PersonDomainModel();
+                PersonPresentationModel person = new PersonPresentationModel();
 
                 person.setName(televisionShowCredit.getName());
                 person.setId(televisionShowCredit.getId());
@@ -222,7 +222,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
         public void onItemClick(int position, View view) {
             selectedTelevisionView = view;
 
-            TelevisionShowDomainModel televisionShow = similarTelevisionShowsAdapter.getItem(position);
+            TelevisionShowPresentationModel televisionShow = similarTelevisionShowsAdapter.getItem(position);
             if(televisionShow != null){
                 televisionShowDetailsPresenter.onTelevisionShowClick(televisionShow);
             }
@@ -499,13 +499,13 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     // region TelevisionShowDetailsUiContract.View Methods
 
     @Override
-    public void showTelevisionShowDetails(TelevisionShowDetailsDomainModel televisionShowDetailsDomainModel) {
-        this.televisionShowDetailsDomainModel = televisionShowDetailsDomainModel;
+    public void showTelevisionShowDetails(TelevisionShowDetailsPresentationModel televisionShowDetailsPresentationModel) {
+        this.televisionShowDetailsPresentationModel = televisionShowDetailsPresentationModel;
         final Palette posterPalette = televisionShow.getPosterPalette();
 
         nestedScrollView.setNestedScrollingEnabled(true);
 
-        televisionShow = televisionShowDetailsDomainModel.getTelevisionShow();
+        televisionShow = televisionShowDetailsPresentationModel.getTelevisionShow();
         televisionShow.setPosterPalette(posterPalette);
 
         setUpBackdrop();
@@ -556,7 +556,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     }
 
     @Override
-    public void openPersonDetails(PersonDomainModel person) {
+    public void openPersonDetails(PersonPresentationModel person) {
         Intent intent = new Intent(getActivity(), PersonDetailsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_PERSON, person);
@@ -575,7 +575,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     }
 
     @Override
-    public void openTelevisionShowDetails(TelevisionShowDomainModel televisionShow) {
+    public void openTelevisionShowDetails(TelevisionShowPresentationModel televisionShow) {
         Intent intent = new Intent(getActivity(), TelevisionShowDetailsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_TELEVISION_SHOW, televisionShow);
@@ -633,13 +633,13 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
         }
     }
 
-    private String getPosterUrl(TelevisionShowDomainModel televisionShow){
+    private String getPosterUrl(TelevisionShowPresentationModel televisionShow){
         String posterPath = televisionShow.getPosterPath();
         String posterUrl = String.format("%s%s%s", SECURE_BASE_URL, POSTER_SIZE, posterPath);
         return posterUrl;
     }
 
-    private String getBackdropUrl(TelevisionShowDomainModel televisionShow){
+    private String getBackdropUrl(TelevisionShowPresentationModel televisionShow){
         String backdropPath = televisionShow.getBackdropPath();
         String backdropUrl = String.format("%s%s%s", SECURE_BASE_URL, BACKDROP_SIZE, backdropPath);
         return backdropUrl;
@@ -659,7 +659,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     }
 
     private void setUpCast(){
-        List<TelevisionShowCreditDomainModel> cast = televisionShowDetailsDomainModel.getCast();
+        List<TelevisionShowCreditPresentationModel> cast = televisionShowDetailsPresentationModel.getCast();
         if(cast != null && cast.size()>0){
             View castView = castViewStub.inflate();
 
@@ -678,7 +678,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     }
 
     private void setUpCrew(){
-        List<TelevisionShowCreditDomainModel> crew = televisionShowDetailsDomainModel.getCrew();
+        List<TelevisionShowCreditPresentationModel> crew = televisionShowDetailsPresentationModel.getCrew();
         if(crew != null && crew.size()>0){
             View crewView = crewViewStub.inflate();
 
@@ -697,7 +697,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     }
 
     private void setUpSimilarTelevisionShows(){
-        List<TelevisionShowDomainModel> similarTelevisionShows = televisionShowDetailsDomainModel.getSimilarTelevisionShows();
+        List<TelevisionShowPresentationModel> similarTelevisionShows = televisionShowDetailsPresentationModel.getSimilarTelevisionShows();
         if(similarTelevisionShows != null && similarTelevisionShows.size()>0){
             View similarTelevisionShowsView = similarTelevisionShowsViewStub.inflate();
 
@@ -711,9 +711,9 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
             SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
             snapHelper.attachToRecyclerView(similarTelevisionShowsRecyclerView);
 
-            Collections.sort(similarTelevisionShows, new Comparator<TelevisionShowDomainModel>() {
+            Collections.sort(similarTelevisionShows, new Comparator<TelevisionShowPresentationModel>() {
                 @Override
-                public int compare(TelevisionShowDomainModel t1, TelevisionShowDomainModel t2) {
+                public int compare(TelevisionShowPresentationModel t1, TelevisionShowPresentationModel t2) {
                     int year1 = -1;
                     if(t1.getFirstAirDateYear() != -1){
                         year1 = t1.getFirstAirDateYear();
@@ -782,12 +782,12 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     }
 
     private void setUpGenres(){
-        List<GenreDomainModel> genres = televisionShow.getGenres();
+        List<GenrePresentationModel> genres = televisionShow.getGenres();
         if(genres != null && genres.size()>0){
             StringBuilder stringBuilder = new StringBuilder("");
 
             for(int i=0; i<genres.size(); i++){
-                GenreDomainModel genre = genres.get(i);
+                GenrePresentationModel genre = genres.get(i);
                 stringBuilder.append(genre.getName());
                 if(i!=genres.size()-1){
                     stringBuilder.append(" | ");
@@ -828,7 +828,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     }
 
     private void setUpRating(){
-        String rating = televisionShowDetailsDomainModel.getRating();
+        String rating = televisionShowDetailsPresentationModel.getRating();
 
         if(!TextUtils.isEmpty(rating)){
             ratingTextView.setText(rating);

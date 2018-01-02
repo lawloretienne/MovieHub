@@ -1,8 +1,9 @@
 package com.etiennelawlor.moviehub.presentation.persons;
 
-import com.etiennelawlor.moviehub.domain.models.PersonDomainModel;
-import com.etiennelawlor.moviehub.domain.models.PersonsDomainModel;
 import com.etiennelawlor.moviehub.domain.usecases.PersonsDomainContract;
+import com.etiennelawlor.moviehub.presentation.mappers.PersonsPresentationModelMapper;
+import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.PersonsPresentationModel;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 
@@ -22,6 +23,7 @@ public class PersonsPresenter implements PersonsUiContract.Presenter {
     private final PersonsUiContract.View personsView;
     private final PersonsDomainContract.UseCase personsUseCase;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private PersonsPresentationModelMapper personsPresentationModelMapper = new PersonsPresentationModelMapper();
     // endregion
 
     // region Constructors
@@ -49,16 +51,17 @@ public class PersonsPresenter implements PersonsUiContract.Presenter {
         }
 
         Disposable disposable = personsUseCase.getPopularPersons(currentPage)
+                .map(personsDomainModel -> personsPresentationModelMapper.mapToPresentationModel(personsDomainModel))
 //                .compose(schedulerTransformer)
-                .compose(new ProductionSchedulerTransformer<PersonsDomainModel>())
-                .subscribeWith(new DisposableSingleObserver<PersonsDomainModel>() {
+                .compose(new ProductionSchedulerTransformer<PersonsPresentationModel>())
+                .subscribeWith(new DisposableSingleObserver<PersonsPresentationModel>() {
                     @Override
-                    public void onSuccess(PersonsDomainModel personsDomainModel) {
-                        if(personsDomainModel != null){
-                            List<PersonDomainModel> persons = personsDomainModel.getPersons();
-                            int currentPage = personsDomainModel.getPageNumber();
-                            boolean isLastPage = personsDomainModel.isLastPage();
-                            boolean hasMovies = personsDomainModel.hasPersons();
+                    public void onSuccess(PersonsPresentationModel personsPresentationModel) {
+                        if(personsPresentationModel != null){
+                            List<PersonPresentationModel> persons = personsPresentationModel.getPersons();
+                            int currentPage = personsPresentationModel.getPageNumber();
+                            boolean isLastPage = personsPresentationModel.isLastPage();
+                            boolean hasMovies = personsPresentationModel.hasPersons();
 
                             if(currentPage == 1){
                                 personsView.hideLoadingView();
@@ -83,7 +86,7 @@ public class PersonsPresenter implements PersonsUiContract.Presenter {
                                 }
                             }
 
-                            personsView.setPersonsDomainModel(personsDomainModel);
+                            personsView.setPersonsPresentationModel(personsPresentationModel);
                         }
                     }
 
@@ -110,7 +113,7 @@ public class PersonsPresenter implements PersonsUiContract.Presenter {
     }
 
     @Override
-    public void onPersonClick(PersonDomainModel person) {
+    public void onPersonClick(PersonPresentationModel person) {
         personsView.openPersonDetails(person);
     }
 

@@ -48,7 +48,7 @@ public class TelevisionShowCreditsDomainModel {
 
     @Override
     public String toString() {
-        return "TelevisionShowCreditsDomainModel{" +
+        return "TelevisionShowCreditsPresentationModel{" +
                 "id=" + id +
                 ", cast=" + cast +
                 ", crew=" + crew +

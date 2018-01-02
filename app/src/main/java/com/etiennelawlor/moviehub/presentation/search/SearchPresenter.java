@@ -1,10 +1,11 @@
 package com.etiennelawlor.moviehub.presentation.search;
 
-import com.etiennelawlor.moviehub.domain.models.MovieDomainModel;
-import com.etiennelawlor.moviehub.domain.models.PersonDomainModel;
-import com.etiennelawlor.moviehub.domain.models.SearchDomainModel;
-import com.etiennelawlor.moviehub.domain.models.TelevisionShowDomainModel;
 import com.etiennelawlor.moviehub.domain.usecases.SearchDomainContract;
+import com.etiennelawlor.moviehub.presentation.mappers.SearchPresentationModelMapper;
+import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.SearchPresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.TelevisionShowPresentationModel;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 import com.etiennelawlor.moviehub.util.rxjava.SchedulerProvider;
@@ -28,6 +29,7 @@ public class SearchPresenter implements SearchUiContract.Presenter {
     private final SearchDomainContract.UseCase searchUseCase;
     private final SchedulerProvider schedulerProvider;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private SearchPresentationModelMapper searchPresentationModelMapper = new SearchPresentationModelMapper();
     // endregion
 
     // region Constructors
@@ -91,42 +93,43 @@ public class SearchPresenter implements SearchUiContract.Presenter {
                     @Override
                     public void onNext(String s) {
                         Disposable innerDisposable = searchUseCase.getSearchResponse(s)
+                                .map(searchDomainModel -> searchPresentationModelMapper.mapToPresentationModel(searchDomainModel))
                             //  .compose(schedulerTransformer)
                                 .compose(new ProductionSchedulerTransformer<>())
-                                .subscribeWith(new DisposableSingleObserver<SearchDomainModel>() {
+                                .subscribeWith(new DisposableSingleObserver<SearchPresentationModel>() {
                                     @Override
-                                    public void onSuccess(SearchDomainModel searchDomainModel) {
+                                    public void onSuccess(SearchPresentationModel searchPresentationModel) {
                                         searchView.hideLoadingView();
-                                        if (searchDomainModel != null) {
+                                        if (searchPresentationModel != null) {
                                             searchView.clearMoviesAdapter();
                                             searchView.clearTelevisionShowsAdapter();
                                             searchView.clearPersonsAdapter();
 
-                                            if(searchDomainModel.hasMovies()){
-                                                searchView.addMoviesToAdapter(searchDomainModel.getMovies());
+                                            if(searchPresentationModel.hasMovies()){
+                                                searchView.addMoviesToAdapter(searchPresentationModel.getMovies());
                                                 searchView.showMoviesView();
                                             } else {
                                                 searchView.hideMoviesView();
                                             }
 
-                                            if(searchDomainModel.hasTelevisionShows()){
-                                                searchView.addTelevisionShowsToAdapter(searchDomainModel.getTelevisionShows());
+                                            if(searchPresentationModel.hasTelevisionShows()){
+                                                searchView.addTelevisionShowsToAdapter(searchPresentationModel.getTelevisionShows());
                                                 searchView.showTelevisionShowsView();
                                             } else {
                                                 searchView.hideTelevisionShowsView();
                                             }
 
-                                            if(searchDomainModel.hasPersons()){
-                                                searchView.addPersonsToAdapter(searchDomainModel.getPersons());
+                                            if(searchPresentationModel.hasPersons()){
+                                                searchView.addPersonsToAdapter(searchPresentationModel.getPersons());
                                                 searchView.showPersonsView();
                                             } else {
                                                 searchView.hidePersonsView();
                                             }
 
-                                            if(searchDomainModel.hasResults()){
+                                            if(searchPresentationModel.hasResults()){
                                                 searchView.hideEmptyView();
                                             } else {
-                                                searchView.setEmptyText(String.format("No results found for \"%s\"", searchDomainModel.getQuery()));
+                                                searchView.setEmptyText(String.format("No results found for \"%s\"", searchPresentationModel.getQuery()));
                                                 searchView.showEmptyView();
                                             }
                                         }
@@ -151,17 +154,17 @@ public class SearchPresenter implements SearchUiContract.Presenter {
     }
 
     @Override
-    public void onMovieClick(MovieDomainModel movie) {
+    public void onMovieClick(MoviePresentationModel movie) {
         searchView.openMovieDetails(movie);
     }
 
     @Override
-    public void onTelevisionShowClick(TelevisionShowDomainModel televisionShow) {
+    public void onTelevisionShowClick(TelevisionShowPresentationModel televisionShow) {
         searchView.openTelevisionShowDetails(televisionShow);
     }
 
     @Override
-    public void onPersonClick(PersonDomainModel person) {
+    public void onPersonClick(PersonPresentationModel person) {
         searchView.openPersonDetails(person);
     }
 

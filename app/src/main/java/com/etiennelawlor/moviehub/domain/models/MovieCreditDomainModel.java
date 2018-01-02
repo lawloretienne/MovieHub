@@ -94,7 +94,7 @@ public class MovieCreditDomainModel extends CreditDomainModel {
 
     @Override
     public String toString() {
-        return "MovieCreditDomainModel{" +
+        return "MovieCreditPresentationModel{" +
                 "job='" + job + '\'' +
                 ", character='" + character + '\'' +
                 ", name='" + name + '\'' +

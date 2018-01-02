@@ -84,7 +84,7 @@ public class PersonsDomainModel {
 
     @Override
     public String toString() {
-        return "PersonsDomainModel{" +
+        return "PersonsPresentationModel{" +
                 "persons=" + persons +
                 ", pageNumber=" + pageNumber +
                 ", isLastPage=" + isLastPage +
