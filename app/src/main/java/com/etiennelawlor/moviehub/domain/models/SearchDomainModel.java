@@ -1,9 +1,5 @@
 package com.etiennelawlor.moviehub.domain.models;
 
-import com.etiennelawlor.moviehub.data.repositories.models.MovieDataModel;
-import com.etiennelawlor.moviehub.data.repositories.models.PersonDataModel;
-import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
-
 import java.util.List;
 
 /**
@@ -14,9 +10,9 @@ public class SearchDomainModel {
 
     // region Member Variables
     private String query;
-    private List<MovieDataModel> movies;
-    private List<TelevisionShowDataModel> televisionShows;
-    private List<PersonDataModel> persons;
+    private List<MovieDomainModel> movies;
+    private List<TelevisionShowDomainModel> televisionShows;
+    private List<PersonDomainModel> persons;
     // endregion
 
     // region Constructors
@@ -30,15 +26,15 @@ public class SearchDomainModel {
         return query;
     }
 
-    public List<MovieDataModel> getMovies() {
+    public List<MovieDomainModel> getMovies() {
         return movies;
     }
 
-    public List<TelevisionShowDataModel> getTelevisionShows() {
+    public List<TelevisionShowDomainModel> getTelevisionShows() {
         return televisionShows;
     }
 
-    public List<PersonDataModel> getPersons() {
+    public List<PersonDomainModel> getPersons() {
         return persons;
     }
 
@@ -50,15 +46,15 @@ public class SearchDomainModel {
         this.query = query;
     }
 
-    public void setMovies(List<MovieDataModel> movies) {
+    public void setMovies(List<MovieDomainModel> movies) {
         this.movies = movies;
     }
 
-    public void setTelevisionShows(List<TelevisionShowDataModel> televisionShows) {
+    public void setTelevisionShows(List<TelevisionShowDomainModel> televisionShows) {
         this.televisionShows = televisionShows;
     }
 
-    public void setPersons(List<PersonDataModel> persons) {
+    public void setPersons(List<PersonDomainModel> persons) {
         this.persons = persons;
     }
 

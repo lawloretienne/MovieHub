@@ -118,7 +118,7 @@ public class TelevisionShowsPresenterTest {
 
         verify(mockTelevisionShowsView).hideLoadingView();
         verify(mockTelevisionShowsView).showEmptyView();
-        verify(mockTelevisionShowsView).setTelevisionShowsDataModel(televisionShowsDataModel);
+        verify(mockTelevisionShowsView).setTelevisionShowsDomainModel(televisionShowsDataModel);
     }
 
     @Test
@@ -137,7 +137,7 @@ public class TelevisionShowsPresenterTest {
         disposableSingleObserverArgumentCaptor.getValue().onSuccess(televisionShowsDataModel);
 
         verify(mockTelevisionShowsView).removeFooter();
-        verify(mockTelevisionShowsView).setTelevisionShowsDataModel(televisionShowsDataModel);
+        verify(mockTelevisionShowsView).setTelevisionShowsDomainModel(televisionShowsDataModel);
     }
 
     @Test
@@ -160,7 +160,7 @@ public class TelevisionShowsPresenterTest {
         verify(mockTelevisionShowsView).hideLoadingView();
         verify(mockTelevisionShowsView).addHeader();
         verify(mockTelevisionShowsView).addTelevisionShowsToAdapter(televisionShowsDataModel.getTelevisionShows());
-        verify(mockTelevisionShowsView).setTelevisionShowsDataModel(televisionShowsDataModel);
+        verify(mockTelevisionShowsView).setTelevisionShowsDomainModel(televisionShowsDataModel);
     }
 
     @Test
@@ -184,7 +184,7 @@ public class TelevisionShowsPresenterTest {
         verify(mockTelevisionShowsView).addHeader();
         verify(mockTelevisionShowsView).addTelevisionShowsToAdapter(televisionShowsDataModel.getTelevisionShows());
         verify(mockTelevisionShowsView).addFooter();
-        verify(mockTelevisionShowsView).setTelevisionShowsDataModel(televisionShowsDataModel);
+        verify(mockTelevisionShowsView).setTelevisionShowsDomainModel(televisionShowsDataModel);
     }
 
     @Test
@@ -204,7 +204,7 @@ public class TelevisionShowsPresenterTest {
 
         verify(mockTelevisionShowsView).removeFooter();
         verify(mockTelevisionShowsView).addTelevisionShowsToAdapter(televisionShowsDataModel.getTelevisionShows());
-        verify(mockTelevisionShowsView).setTelevisionShowsDataModel(televisionShowsDataModel);
+        verify(mockTelevisionShowsView).setTelevisionShowsDomainModel(televisionShowsDataModel);
     }
 
     @Test
@@ -225,7 +225,7 @@ public class TelevisionShowsPresenterTest {
         verify(mockTelevisionShowsView).removeFooter();
         verify(mockTelevisionShowsView).addTelevisionShowsToAdapter(televisionShowsDataModel.getTelevisionShows());
         verify(mockTelevisionShowsView).addFooter();
-        verify(mockTelevisionShowsView).setTelevisionShowsDataModel(televisionShowsDataModel);
+        verify(mockTelevisionShowsView).setTelevisionShowsDomainModel(televisionShowsDataModel);
 //        verify(mockTelevisionShowsView, times(1)).setModel(any(TelevisionShowsWrapper.class)); // Alternative verify check
     }
 

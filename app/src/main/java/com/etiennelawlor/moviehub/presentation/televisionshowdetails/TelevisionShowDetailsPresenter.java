@@ -1,9 +1,9 @@
 package com.etiennelawlor.moviehub.presentation.televisionshowdetails;
 
-import com.etiennelawlor.moviehub.data.repositories.models.PersonDataModel;
-import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
 import com.etiennelawlor.moviehub.domain.TelevisionShowDetailsDomainContract;
+import com.etiennelawlor.moviehub.domain.models.PersonDomainModel;
 import com.etiennelawlor.moviehub.domain.models.TelevisionShowDetailsDomainModel;
+import com.etiennelawlor.moviehub.domain.models.TelevisionShowDomainModel;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 
@@ -69,12 +69,12 @@ public class TelevisionShowDetailsPresenter implements TelevisionShowDetailsUiCo
     }
 
     @Override
-    public void onPersonClick(PersonDataModel person) {
+    public void onPersonClick(PersonDomainModel person) {
         televisionShowDetailsView.openPersonDetails(person);
     }
 
     @Override
-    public void onTelevisionShowClick(TelevisionShowDataModel televisionShow) {
+    public void onTelevisionShowClick(TelevisionShowDomainModel televisionShow) {
         televisionShowDetailsView.openTelevisionShowDetails(televisionShow);
     }
 

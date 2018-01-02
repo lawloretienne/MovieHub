@@ -1,8 +1,5 @@
 package com.etiennelawlor.moviehub.domain.models;
 
-import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowCreditDataModel;
-import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
-
 import java.util.List;
 
 /**
@@ -12,10 +9,10 @@ import java.util.List;
 public class TelevisionShowDetailsDomainModel {
 
     // region Member Variables
-    private TelevisionShowDataModel televisionShow;
-    private List<TelevisionShowCreditDataModel> cast;
-    private List<TelevisionShowCreditDataModel> crew;
-    private List<TelevisionShowDataModel> similarTelevisionShows;
+    private TelevisionShowDomainModel televisionShow;
+    private List<TelevisionShowCreditDomainModel> cast;
+    private List<TelevisionShowCreditDomainModel> crew;
+    private List<TelevisionShowDomainModel> similarTelevisionShows;
     private String rating;
     // endregion
 
@@ -29,19 +26,19 @@ public class TelevisionShowDetailsDomainModel {
     // region Getters
 
 
-    public TelevisionShowDataModel getTelevisionShow() {
+    public TelevisionShowDomainModel getTelevisionShow() {
         return televisionShow;
     }
 
-    public List<TelevisionShowCreditDataModel> getCast() {
+    public List<TelevisionShowCreditDomainModel> getCast() {
         return cast;
     }
 
-    public List<TelevisionShowCreditDataModel> getCrew() {
+    public List<TelevisionShowCreditDomainModel> getCrew() {
         return crew;
     }
 
-    public List<TelevisionShowDataModel> getSimilarTelevisionShows() {
+    public List<TelevisionShowDomainModel> getSimilarTelevisionShows() {
         return similarTelevisionShows;
     }
 
@@ -54,19 +51,19 @@ public class TelevisionShowDetailsDomainModel {
     // region Setters
 
 
-    public void setTelevisionShow(TelevisionShowDataModel televisionShow) {
+    public void setTelevisionShow(TelevisionShowDomainModel televisionShow) {
         this.televisionShow = televisionShow;
     }
 
-    public void setCast(List<TelevisionShowCreditDataModel> cast) {
+    public void setCast(List<TelevisionShowCreditDomainModel> cast) {
         this.cast = cast;
     }
 
-    public void setCrew(List<TelevisionShowCreditDataModel> crew) {
+    public void setCrew(List<TelevisionShowCreditDomainModel> crew) {
         this.crew = crew;
     }
 
-    public void setSimilarTelevisionShows(List<TelevisionShowDataModel> similarTelevisionShows) {
+    public void setSimilarTelevisionShows(List<TelevisionShowDomainModel> similarTelevisionShows) {
         this.similarTelevisionShows = similarTelevisionShows;
     }
 

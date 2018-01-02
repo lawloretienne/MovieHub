@@ -1,8 +1,8 @@
 package com.etiennelawlor.moviehub.presentation.search;
 
-import com.etiennelawlor.moviehub.data.repositories.models.MovieDataModel;
-import com.etiennelawlor.moviehub.data.repositories.models.PersonDataModel;
-import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
+import com.etiennelawlor.moviehub.domain.models.MovieDomainModel;
+import com.etiennelawlor.moviehub.domain.models.PersonDomainModel;
+import com.etiennelawlor.moviehub.domain.models.TelevisionShowDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BasePresenter;
 
 import java.util.List;
@@ -22,29 +22,29 @@ public interface SearchUiContract {
         void showLoadingView();
         void hideLoadingView();
         void showErrorView();
-        void addMoviesToAdapter(List<MovieDataModel> movies);
+        void addMoviesToAdapter(List<MovieDomainModel> movies);
         void clearMoviesAdapter();
         void hideMoviesView();
         void showMoviesView();
-        void addTelevisionShowsToAdapter(List<TelevisionShowDataModel> televisionShows);
+        void addTelevisionShowsToAdapter(List<TelevisionShowDomainModel> televisionShows);
         void clearTelevisionShowsAdapter();
         void hideTelevisionShowsView();
         void showTelevisionShowsView();
-        void addPersonsToAdapter(List<PersonDataModel> persons);
+        void addPersonsToAdapter(List<PersonDomainModel> persons);
         void clearPersonsAdapter();
         void hidePersonsView();
         void showPersonsView();
 
         // Navigation methods
-        void openMovieDetails(MovieDataModel movie);
-        void openTelevisionShowDetails(TelevisionShowDataModel televisionShow);
-        void openPersonDetails(PersonDataModel person);
+        void openMovieDetails(MovieDomainModel movie);
+        void openTelevisionShowDetails(TelevisionShowDomainModel televisionShow);
+        void openPersonDetails(PersonDomainModel person);
     }
 
     interface Presenter extends BasePresenter {
         void onLoadSearch(Observable<CharSequence> searchQueryChangeObservable);
-        void onMovieClick(MovieDataModel movie);
-        void onTelevisionShowClick(TelevisionShowDataModel televisionShow);
-        void onPersonClick(PersonDataModel person);
+        void onMovieClick(MovieDomainModel movie);
+        void onTelevisionShowClick(TelevisionShowDomainModel televisionShow);
+        void onPersonClick(PersonDomainModel person);
     }
 }

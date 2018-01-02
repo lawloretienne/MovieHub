@@ -6,6 +6,8 @@ import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowCreditD
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowCreditsDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowsDataModel;
+import com.etiennelawlor.moviehub.domain.mappers.TelevisionShowCreditDomainModelMapper;
+import com.etiennelawlor.moviehub.domain.mappers.TelevisionShowDomainModelMapper;
 import com.etiennelawlor.moviehub.domain.models.TelevisionShowDetailsDomainModel;
 
 import java.util.ArrayList;
@@ -20,6 +22,9 @@ public class TelevisionShowDetailsDomainModelComposer {
     // region Constants
     private static final String ISO_31661 = "US";
     // endregion
+
+    private TelevisionShowCreditDomainModelMapper televisionShowCreditDomainModelMapper = new TelevisionShowCreditDomainModelMapper();
+    private TelevisionShowDomainModelMapper televisionShowDomainModelMapper = new TelevisionShowDomainModelMapper();
 
     public TelevisionShowDetailsDomainModel compose(TelevisionShowDataModel televisionShowDataModel, TelevisionShowCreditsDataModel televisionShowCreditsDataModel, TelevisionShowsDataModel televisionShowsDataModel, TelevisionShowContentRatingsDataModel televisionShowContentRatingsDataModel){
         TelevisionShowDetailsDomainModel televisionShowDetailsDomainModel = new TelevisionShowDetailsDomainModel();
@@ -54,11 +59,11 @@ public class TelevisionShowDetailsDomainModelComposer {
             }
         }
 
-        televisionShowDetailsDomainModel.setCast(cast);
-        televisionShowDetailsDomainModel.setCrew(crew);
+        televisionShowDetailsDomainModel.setCast(televisionShowCreditDomainModelMapper.mapListToDomainModelList(cast));
+        televisionShowDetailsDomainModel.setCrew(televisionShowCreditDomainModelMapper.mapListToDomainModelList(crew));
         televisionShowDetailsDomainModel.setRating(rating);
-        televisionShowDetailsDomainModel.setSimilarTelevisionShows(similarTelevisionShows);
-        televisionShowDetailsDomainModel.setTelevisionShow(televisionShowDataModel);
+        televisionShowDetailsDomainModel.setSimilarTelevisionShows(televisionShowDomainModelMapper.mapListToDomainModelList(similarTelevisionShows));
+        televisionShowDetailsDomainModel.setTelevisionShow(televisionShowDomainModelMapper.mapToDomainModel(televisionShowDataModel));
 
         return televisionShowDetailsDomainModel;
     }

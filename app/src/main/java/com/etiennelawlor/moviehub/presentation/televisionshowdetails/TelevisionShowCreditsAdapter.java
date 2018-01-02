@@ -18,7 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowCreditDataModel;
+import com.etiennelawlor.moviehub.domain.models.TelevisionShowCreditDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.common.widget.DynamicHeightImageView;
 import com.etiennelawlor.moviehub.util.AnimationUtility;
@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
  * Created by etiennelawlor on 12/17/16.
  */
 
-public class TelevisionShowCreditsAdapter extends BaseAdapter<TelevisionShowCreditDataModel> {
+public class TelevisionShowCreditsAdapter extends BaseAdapter<TelevisionShowCreditDomainModel> {
 
     // region Constants
     // endregion
@@ -117,7 +117,7 @@ public class TelevisionShowCreditsAdapter extends BaseAdapter<TelevisionShowCred
     protected void bindItemViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         final TelevisionShowCreditViewHolder holder = (TelevisionShowCreditViewHolder) viewHolder;
 
-        final TelevisionShowCreditDataModel televisionShowCredit = getItem(position);
+        final TelevisionShowCreditDomainModel televisionShowCredit = getItem(position);
         if (televisionShowCredit != null) {
             holder.bind(televisionShowCredit);
         }
@@ -153,7 +153,7 @@ public class TelevisionShowCreditsAdapter extends BaseAdapter<TelevisionShowCred
     @Override
     public void addFooter() {
         isFooterAdded = true;
-        add(new TelevisionShowCreditDataModel());
+        add(new TelevisionShowCreditDomainModel());
     }
 
     // region Inner Classes
@@ -187,7 +187,7 @@ public class TelevisionShowCreditsAdapter extends BaseAdapter<TelevisionShowCred
         // endregion
 
         // region Helper Methods
-        private void bind(TelevisionShowCreditDataModel televisionShowCredit){
+        private void bind(TelevisionShowCreditDomainModel televisionShowCredit){
             resetInfoBackgroundColor(infoLinearLayout);
             resetTitleTextColor(titleTextView);
             resetSubtitleTextColor(subtitleTextView);
@@ -197,7 +197,7 @@ public class TelevisionShowCreditsAdapter extends BaseAdapter<TelevisionShowCred
             setUpSubtitle(subtitleTextView, televisionShowCredit);
         }
 
-        private void setUpThumbnail(final TelevisionShowCreditViewHolder vh, final TelevisionShowCreditDataModel televisionShowCredit){
+        private void setUpThumbnail(final TelevisionShowCreditViewHolder vh, final TelevisionShowCreditDomainModel televisionShowCredit){
             final DynamicHeightImageView iv = vh.thumbnailImageView;
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) iv.getLayoutParams();
             layoutParams.width = ivWidth;
@@ -257,7 +257,7 @@ public class TelevisionShowCreditsAdapter extends BaseAdapter<TelevisionShowCred
             }
         }
 
-        private void setUpTitle(TextView tv, TelevisionShowCreditDataModel televisionShowCredit){
+        private void setUpTitle(TextView tv, TelevisionShowCreditDomainModel televisionShowCredit){
             String name = televisionShowCredit.getName();
             if (!TextUtils.isEmpty(name)) {
                 tv.setText(name);
@@ -278,7 +278,7 @@ public class TelevisionShowCreditsAdapter extends BaseAdapter<TelevisionShowCred
             }
         }
 
-        private void setUpSubtitle(TextView tv, TelevisionShowCreditDataModel televisionShowCredit){
+        private void setUpSubtitle(TextView tv, TelevisionShowCreditDomainModel televisionShowCredit){
             String job = televisionShowCredit.getJob();
             String character = televisionShowCredit.getCharacter();
             if (!TextUtils.isEmpty(job)) {

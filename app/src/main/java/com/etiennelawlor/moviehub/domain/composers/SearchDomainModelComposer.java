@@ -6,6 +6,9 @@ import com.etiennelawlor.moviehub.data.repositories.models.PersonDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.PersonsDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowsDataModel;
+import com.etiennelawlor.moviehub.domain.mappers.MovieDomainModelMapper;
+import com.etiennelawlor.moviehub.domain.mappers.PersonDomainModelMapper;
+import com.etiennelawlor.moviehub.domain.mappers.TelevisionShowDomainModelMapper;
 import com.etiennelawlor.moviehub.domain.models.SearchDomainModel;
 
 import java.util.ArrayList;
@@ -16,6 +19,10 @@ import java.util.List;
  */
 
 public class SearchDomainModelComposer {
+
+    private MovieDomainModelMapper movieDomainModelMapper = new MovieDomainModelMapper();
+    private PersonDomainModelMapper personDomainModelMapper = new PersonDomainModelMapper();
+    private TelevisionShowDomainModelMapper televisionShowDomainModelMapper = new TelevisionShowDomainModelMapper();
 
     public SearchDomainModel compose(MoviesDataModel moviesDataModel, TelevisionShowsDataModel televisionShowsDataModel, PersonsDataModel personsDataModel, String query){
         SearchDomainModel searchDomainModel = new SearchDomainModel();
@@ -36,10 +43,10 @@ public class SearchDomainModelComposer {
             persons = personsDataModel.getPersons();
         }
 
-        searchDomainModel.setMovies(movies);
-        searchDomainModel.setPersons(persons);
+        searchDomainModel.setMovies(movieDomainModelMapper.mapListToDomainModelList(movies));
+        searchDomainModel.setPersons(personDomainModelMapper.mapListToDomainModelList(persons));
         searchDomainModel.setQuery(query);
-        searchDomainModel.setTelevisionShows(televisionShows);
+        searchDomainModel.setTelevisionShows(televisionShowDomainModelMapper.mapListToDomainModelList(televisionShows));
 
         return searchDomainModel;
     }

@@ -1,8 +1,8 @@
 package com.etiennelawlor.moviehub.presentation.televisionshows;
 
-import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
-import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowsDataModel;
 import com.etiennelawlor.moviehub.domain.TelevisionShowsDomainContract;
+import com.etiennelawlor.moviehub.domain.models.TelevisionShowDomainModel;
+import com.etiennelawlor.moviehub.domain.models.TelevisionShowsDomainModel;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 
@@ -51,21 +51,21 @@ public class TelevisionShowsPresenter implements TelevisionShowsUiContract.Prese
 
         Disposable disposable = televisionShowsUseCase.getPopularTelevisionShows(currentPage)
 //                .compose(schedulerTransformer)
-                .compose(new ProductionSchedulerTransformer<TelevisionShowsDataModel>())
-                .subscribeWith(new DisposableSingleObserver<TelevisionShowsDataModel>() {
+                .compose(new ProductionSchedulerTransformer<TelevisionShowsDomainModel>())
+                .subscribeWith(new DisposableSingleObserver<TelevisionShowsDomainModel>() {
                     @Override
-                    public void onSuccess(TelevisionShowsDataModel televisionShowsDataModel) {
-                        if(televisionShowsDataModel != null){
-                            List<TelevisionShowDataModel> televisionShowDataModels = televisionShowsDataModel.getTelevisionShows();
-                            int currentPage = televisionShowsDataModel.getPageNumber();
-                            boolean isLastPage = televisionShowsDataModel.isLastPage();
-                            boolean hasTelevisionShows = televisionShowsDataModel.hasTelevisionShows();
+                    public void onSuccess(TelevisionShowsDomainModel televisionShowsDomainModel) {
+                        if(televisionShowsDomainModel != null){
+                            List<TelevisionShowDomainModel> televisionShowDomainModels = televisionShowsDomainModel.getTelevisionShows();
+                            int currentPage = televisionShowsDomainModel.getPageNumber();
+                            boolean isLastPage = televisionShowsDomainModel.isLastPage();
+                            boolean hasTelevisionShows = televisionShowsDomainModel.hasTelevisionShows();
                             if(currentPage == 1){
                                 televisionShowsView.hideLoadingView();
 
                                 if(hasTelevisionShows){
                                     televisionShowsView.addHeader();
-                                    televisionShowsView.addTelevisionShowsToAdapter(televisionShowDataModels);
+                                    televisionShowsView.addTelevisionShowsToAdapter(televisionShowDomainModels);
 
                                     if(!isLastPage)
                                         televisionShowsView.addFooter();
@@ -76,14 +76,14 @@ public class TelevisionShowsPresenter implements TelevisionShowsUiContract.Prese
                                 televisionShowsView.removeFooter();
 
                                 if(hasTelevisionShows){
-                                    televisionShowsView.addTelevisionShowsToAdapter(televisionShowDataModels);
+                                    televisionShowsView.addTelevisionShowsToAdapter(televisionShowDomainModels);
 
                                     if(!isLastPage)
                                         televisionShowsView.addFooter();
                                 }
                             }
 
-                            televisionShowsView.setTelevisionShowsDataModel(televisionShowsDataModel);
+                            televisionShowsView.setTelevisionShowsDomainModel(televisionShowsDomainModel);
                         }
                     }
 
@@ -110,7 +110,7 @@ public class TelevisionShowsPresenter implements TelevisionShowsUiContract.Prese
     }
 
     @Override
-    public void onTelevisionShowClick(TelevisionShowDataModel televisionShow) {
+    public void onTelevisionShowClick(TelevisionShowDomainModel televisionShow) {
         televisionShowsView.openTelevisionShowDetails(televisionShow);
     }
 

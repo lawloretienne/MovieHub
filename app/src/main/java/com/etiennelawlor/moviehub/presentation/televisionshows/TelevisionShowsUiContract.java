@@ -1,7 +1,7 @@
 package com.etiennelawlor.moviehub.presentation.televisionshows;
 
-import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
-import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowsDataModel;
+import com.etiennelawlor.moviehub.domain.models.TelevisionShowDomainModel;
+import com.etiennelawlor.moviehub.domain.models.TelevisionShowsDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BasePresenter;
 
 import java.util.List;
@@ -25,17 +25,17 @@ public interface TelevisionShowsUiContract {
         void removeFooter();
         void showErrorFooter();
         void showLoadingFooter();
-        void addTelevisionShowsToAdapter(List<TelevisionShowDataModel> televisionShows);
+        void addTelevisionShowsToAdapter(List<TelevisionShowDomainModel> televisionShows);
         void loadMoreItems();
-        void setTelevisionShowsDataModel(TelevisionShowsDataModel televisionShowsDataModel);
+        void setTelevisionShowsDomainModel(TelevisionShowsDomainModel televisionShowsDomainModel);
 
         // Navigation methods
-        void openTelevisionShowDetails(TelevisionShowDataModel televisionShow);
+        void openTelevisionShowDetails(TelevisionShowDomainModel televisionShow);
     }
 
     interface Presenter extends BasePresenter {
         void onLoadPopularTelevisionShows(int currentPage);
-        void onTelevisionShowClick(TelevisionShowDataModel televisionShow);
+        void onTelevisionShowClick(TelevisionShowDomainModel televisionShow);
         void onScrollToEndOfList();
     }
 }

@@ -47,13 +47,13 @@ import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.repositories.models.GenreDataModel;
-import com.etiennelawlor.moviehub.data.repositories.models.PersonDataModel;
-import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowCreditDataModel;
-import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
 import com.etiennelawlor.moviehub.di.component.TelevisionShowDetailsComponent;
 import com.etiennelawlor.moviehub.di.module.TelevisionShowDetailsModule;
+import com.etiennelawlor.moviehub.domain.models.GenreDomainModel;
+import com.etiennelawlor.moviehub.domain.models.PersonDomainModel;
+import com.etiennelawlor.moviehub.domain.models.TelevisionShowCreditDomainModel;
 import com.etiennelawlor.moviehub.domain.models.TelevisionShowDetailsDomainModel;
+import com.etiennelawlor.moviehub.domain.models.TelevisionShowDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.common.GravitySnapHelper;
@@ -149,7 +149,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     // endregion
 
     // region Member Variables
-    private TelevisionShowDataModel televisionShow;
+    private TelevisionShowDomainModel televisionShow;
     private Unbinder unbinder;
     private Typeface font;
     private int televisionShowPosterHeight;
@@ -186,9 +186,9 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
         public void onItemClick(int position, View view) {
             selectedPersonView = view;
 
-            TelevisionShowCreditDataModel televisionShowCredit = castAdapter.getItem(position);
+            TelevisionShowCreditDomainModel televisionShowCredit = castAdapter.getItem(position);
             if(televisionShowCredit != null){
-                PersonDataModel person = new PersonDataModel();
+                PersonDomainModel person = new PersonDomainModel();
 
                 person.setName(televisionShowCredit.getName());
                 person.setId(televisionShowCredit.getId());
@@ -204,9 +204,9 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
         public void onItemClick(int position, View view) {
             selectedPersonView = view;
 
-            TelevisionShowCreditDataModel televisionShowCredit = crewAdapter.getItem(position);
+            TelevisionShowCreditDomainModel televisionShowCredit = crewAdapter.getItem(position);
             if(televisionShowCredit != null){
-                PersonDataModel person = new PersonDataModel();
+                PersonDomainModel person = new PersonDomainModel();
 
                 person.setName(televisionShowCredit.getName());
                 person.setId(televisionShowCredit.getId());
@@ -222,7 +222,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
         public void onItemClick(int position, View view) {
             selectedTelevisionView = view;
 
-            TelevisionShowDataModel televisionShow = similarTelevisionShowsAdapter.getItem(position);
+            TelevisionShowDomainModel televisionShow = similarTelevisionShowsAdapter.getItem(position);
             if(televisionShow != null){
                 televisionShowDetailsPresenter.onTelevisionShowClick(televisionShow);
             }
@@ -556,7 +556,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     }
 
     @Override
-    public void openPersonDetails(PersonDataModel person) {
+    public void openPersonDetails(PersonDomainModel person) {
         Intent intent = new Intent(getActivity(), PersonDetailsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_PERSON, person);
@@ -575,7 +575,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     }
 
     @Override
-    public void openTelevisionShowDetails(TelevisionShowDataModel televisionShow) {
+    public void openTelevisionShowDetails(TelevisionShowDomainModel televisionShow) {
         Intent intent = new Intent(getActivity(), TelevisionShowDetailsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_TELEVISION_SHOW, televisionShow);
@@ -633,13 +633,13 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
         }
     }
 
-    private String getPosterUrl(TelevisionShowDataModel televisionShow){
+    private String getPosterUrl(TelevisionShowDomainModel televisionShow){
         String posterPath = televisionShow.getPosterPath();
         String posterUrl = String.format("%s%s%s", SECURE_BASE_URL, POSTER_SIZE, posterPath);
         return posterUrl;
     }
 
-    private String getBackdropUrl(TelevisionShowDataModel televisionShow){
+    private String getBackdropUrl(TelevisionShowDomainModel televisionShow){
         String backdropPath = televisionShow.getBackdropPath();
         String backdropUrl = String.format("%s%s%s", SECURE_BASE_URL, BACKDROP_SIZE, backdropPath);
         return backdropUrl;
@@ -659,7 +659,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     }
 
     private void setUpCast(){
-        List<TelevisionShowCreditDataModel> cast = televisionShowDetailsDomainModel.getCast();
+        List<TelevisionShowCreditDomainModel> cast = televisionShowDetailsDomainModel.getCast();
         if(cast != null && cast.size()>0){
             View castView = castViewStub.inflate();
 
@@ -678,7 +678,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     }
 
     private void setUpCrew(){
-        List<TelevisionShowCreditDataModel> crew = televisionShowDetailsDomainModel.getCrew();
+        List<TelevisionShowCreditDomainModel> crew = televisionShowDetailsDomainModel.getCrew();
         if(crew != null && crew.size()>0){
             View crewView = crewViewStub.inflate();
 
@@ -697,7 +697,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     }
 
     private void setUpSimilarTelevisionShows(){
-        List<TelevisionShowDataModel> similarTelevisionShows = televisionShowDetailsDomainModel.getSimilarTelevisionShows();
+        List<TelevisionShowDomainModel> similarTelevisionShows = televisionShowDetailsDomainModel.getSimilarTelevisionShows();
         if(similarTelevisionShows != null && similarTelevisionShows.size()>0){
             View similarTelevisionShowsView = similarTelevisionShowsViewStub.inflate();
 
@@ -711,9 +711,9 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
             SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
             snapHelper.attachToRecyclerView(similarTelevisionShowsRecyclerView);
 
-            Collections.sort(similarTelevisionShows, new Comparator<TelevisionShowDataModel>() {
+            Collections.sort(similarTelevisionShows, new Comparator<TelevisionShowDomainModel>() {
                 @Override
-                public int compare(TelevisionShowDataModel t1, TelevisionShowDataModel t2) {
+                public int compare(TelevisionShowDomainModel t1, TelevisionShowDomainModel t2) {
                     int year1 = -1;
                     if(t1.getFirstAirDateYear() != -1){
                         year1 = t1.getFirstAirDateYear();
@@ -782,12 +782,12 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     }
 
     private void setUpGenres(){
-        List<GenreDataModel> genres = televisionShow.getGenres();
+        List<GenreDomainModel> genres = televisionShow.getGenres();
         if(genres != null && genres.size()>0){
             StringBuilder stringBuilder = new StringBuilder("");
 
             for(int i=0; i<genres.size(); i++){
-                GenreDataModel genre = genres.get(i);
+                GenreDomainModel genre = genres.get(i);
                 stringBuilder.append(genre.getName());
                 if(i!=genres.size()-1){
                     stringBuilder.append(" | ");
