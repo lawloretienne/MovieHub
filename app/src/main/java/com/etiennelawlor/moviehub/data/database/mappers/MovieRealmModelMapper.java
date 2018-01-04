@@ -3,13 +3,17 @@ package com.etiennelawlor.moviehub.data.database.mappers;
 import com.etiennelawlor.moviehub.data.database.models.MovieRealmModel;
 import com.etiennelawlor.moviehub.data.repositories.models.MovieDataModel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.realm.Realm;
+import io.realm.RealmList;
 
 /**
  * Created by etiennelawlor on 5/14/17.
  */
 
-public class MovieRealmModelMapper implements RealmModelMapper<MovieDataModel, MovieRealmModel> {
+public class MovieRealmModelMapper implements RealmModelMapper<MovieDataModel, MovieRealmModel>, RealmModelListMapper<MovieDataModel, MovieRealmModel> {
 
     private GenreRealmModelMapper genreRealmMapper = new GenreRealmModelMapper();
 
@@ -67,5 +71,23 @@ public class MovieRealmModelMapper implements RealmModelMapper<MovieDataModel, M
         movieDataModel.setVoteAverage(movieRealmModel.getVoteAverage());
         movieDataModel.setVoteCount(movieRealmModel.getVoteCount());
         return movieDataModel;
+    }
+
+    @Override
+    public RealmList<MovieRealmModel> mapListToRealmModelList(List<MovieDataModel> movieDataModels) {
+        RealmList<MovieRealmModel> movieRealmModels = new RealmList<>();
+        for(MovieDataModel movieDataModel : movieDataModels){
+            movieRealmModels.add(mapToRealmModel(movieDataModel));
+        }
+        return movieRealmModels;
+    }
+
+    @Override
+    public List<MovieDataModel> mapListFromRealmModelList(RealmList<MovieRealmModel> movieRealmModels) {
+        List<MovieDataModel> movieDataModels = new ArrayList<>();
+        for(MovieRealmModel movieRealmModel : movieRealmModels){
+            movieDataModels.add(mapFromRealmModel(movieRealmModel));
+        }
+        return movieDataModels;
     }
 }

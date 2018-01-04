@@ -3,13 +3,17 @@ package com.etiennelawlor.moviehub.data.database.mappers;
 import com.etiennelawlor.moviehub.data.database.models.TelevisionShowRealmModel;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.realm.Realm;
+import io.realm.RealmList;
 
 /**
  * Created by etiennelawlor on 5/14/17.
  */
 
-public class TelevisionShowRealmModelMapper implements RealmModelMapper<TelevisionShowDataModel, TelevisionShowRealmModel> {
+public class TelevisionShowRealmModelMapper implements RealmModelMapper<TelevisionShowDataModel, TelevisionShowRealmModel>, RealmModelListMapper<TelevisionShowDataModel, TelevisionShowRealmModel> {
 
     private GenreRealmModelMapper genreRealmMapper = new GenreRealmModelMapper();
     private NetworkRealmModelMapper networkRealmMapper = new NetworkRealmModelMapper();
@@ -75,5 +79,23 @@ public class TelevisionShowRealmModelMapper implements RealmModelMapper<Televisi
         televisionShowDataModel.setVoteCount(televisionShowRealmModel.getVoteCount());
 
         return televisionShowDataModel;
+    }
+
+    @Override
+    public RealmList<TelevisionShowRealmModel> mapListToRealmModelList(List<TelevisionShowDataModel> televisionShowDataModels) {
+        RealmList<TelevisionShowRealmModel> televisionShowRealmModels = new RealmList<>();
+        for(TelevisionShowDataModel televisionShowDataModel : televisionShowDataModels){
+            televisionShowRealmModels.add(mapToRealmModel(televisionShowDataModel));
+        }
+        return televisionShowRealmModels;
+    }
+
+    @Override
+    public List<TelevisionShowDataModel> mapListFromRealmModelList(RealmList<TelevisionShowRealmModel> televisionShowRealmModels) {
+        List<TelevisionShowDataModel> televisionShowDataModels = new ArrayList<>();
+        for(TelevisionShowRealmModel televisionShowRealmModel : televisionShowRealmModels){
+            televisionShowDataModels.add(mapFromRealmModel(televisionShowRealmModel));
+        }
+        return televisionShowDataModels;
     }
 }

@@ -3,13 +3,17 @@ package com.etiennelawlor.moviehub.data.database.mappers;
 import com.etiennelawlor.moviehub.data.database.models.PersonRealmModel;
 import com.etiennelawlor.moviehub.data.repositories.models.PersonDataModel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.realm.Realm;
+import io.realm.RealmList;
 
 /**
  * Created by etiennelawlor on 5/14/17.
  */
 
-public class PersonRealmModelMapper implements RealmModelMapper<PersonDataModel, PersonRealmModel> {
+public class PersonRealmModelMapper implements RealmModelMapper<PersonDataModel, PersonRealmModel>, RealmModelListMapper<PersonDataModel, PersonRealmModel> {
 
     private ProfileImagesRealmModelMapper profileImagesRealmMapper = new ProfileImagesRealmModelMapper();
 
@@ -45,5 +49,23 @@ public class PersonRealmModelMapper implements RealmModelMapper<PersonDataModel,
         personDataModel.setImages(profileImagesRealmMapper.mapFromRealmModel(personRealmModel.getImages()));
 
         return personDataModel;
+    }
+
+    @Override
+    public RealmList<PersonRealmModel> mapListToRealmModelList(List<PersonDataModel> personDataModels) {
+        RealmList<PersonRealmModel> personRealmModels = new RealmList<>();
+        for(PersonDataModel personDataModel : personDataModels){
+            personRealmModels.add(mapToRealmModel(personDataModel));
+        }
+        return personRealmModels;
+    }
+
+    @Override
+    public List<PersonDataModel> mapListFromRealmModelList(RealmList<PersonRealmModel> personRealmModels) {
+        List<PersonDataModel> personDataModels = new ArrayList<>();
+        for(PersonRealmModel personRealmModel : personRealmModels){
+            personDataModels.add(mapFromRealmModel(personRealmModel));
+        }
+        return personDataModels;
     }
 }
