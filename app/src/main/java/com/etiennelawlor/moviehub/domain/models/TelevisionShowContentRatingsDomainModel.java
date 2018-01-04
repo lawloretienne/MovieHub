@@ -1,7 +1,5 @@
 package com.etiennelawlor.moviehub.domain.models;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 
 /**
@@ -11,9 +9,7 @@ import java.util.List;
 public class TelevisionShowContentRatingsDomainModel {
 
     // region Fields
-    @SerializedName("id")
     public int id;
-    @SerializedName("results")
     public List<ContentRatingDomainModel> contentRatings = null;
     // endregion
 
@@ -43,7 +39,7 @@ public class TelevisionShowContentRatingsDomainModel {
 
     @Override
     public String toString() {
-        return "TelevisionShowContentRatingsPresentationModel{" +
+        return "TelevisionShowContentRatingsDomainModel{" +
                 "id=" + id +
                 ", contentRatings=" + contentRatings +
                 '}';

@@ -73,10 +73,9 @@ public class TelevisionShowDetailsDomainModel {
 
     // endregion
 
-
     @Override
     public String toString() {
-        return "TelevisionShowDetailsPresentationModel{" +
+        return "TelevisionShowDetailsDomainModel{" +
                 "televisionShow=" + televisionShow +
                 ", cast=" + cast +
                 ", crew=" + crew +

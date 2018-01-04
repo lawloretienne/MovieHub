@@ -47,10 +47,9 @@ public class MovieReleaseDatesDomainModel {
 
     // endregion
 
-
     @Override
     public String toString() {
-        return "MovieReleaseDatesPresentationModel{" +
+        return "MovieReleaseDatesDomainModel{" +
                 "id=" + id +
                 ", movieReleaseDates=" + movieReleaseDates +
                 ", expiredAt=" + expiredAt +

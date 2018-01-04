@@ -69,10 +69,9 @@ public class MovieDetailsDomainModel {
 
     // endregion
 
-
     @Override
     public String toString() {
-        return "MovieDetailsPresentationModel{" +
+        return "MovieDetailsDomainModel{" +
                 "movie=" + movie +
                 ", cast=" + cast +
                 ", crew=" + crew +

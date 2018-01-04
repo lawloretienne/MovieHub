@@ -51,10 +51,9 @@ public class PersonDetailsDomainModel {
 
     // endregion
 
-
     @Override
     public String toString() {
-        return "PersonDetailsPresentationModel{" +
+        return "PersonDetailsDomainModel{" +
                 "person=" + person +
                 ", cast=" + cast +
                 ", crew=" + crew +

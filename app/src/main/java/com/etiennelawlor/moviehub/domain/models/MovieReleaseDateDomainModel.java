@@ -1,7 +1,5 @@
 package com.etiennelawlor.moviehub.domain.models;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 
 /**
@@ -11,9 +9,7 @@ import java.util.List;
 public class MovieReleaseDateDomainModel {
 
     // region Fields
-    @SerializedName("iso_3166_1")
     public String iso31661;
-    @SerializedName("release_dates")
     public List<ReleaseDateDomainModel> releaseDates = null;
     // endregion
 
@@ -41,10 +37,9 @@ public class MovieReleaseDateDomainModel {
 
     // endregion
 
-
     @Override
     public String toString() {
-        return "MovieReleaseDatePresentationModel{" +
+        return "MovieReleaseDateDomainModel{" +
                 "iso31661='" + iso31661 + '\'' +
                 ", releaseDates=" + releaseDates +
                 '}';

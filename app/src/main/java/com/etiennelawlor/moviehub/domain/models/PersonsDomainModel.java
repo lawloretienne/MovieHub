@@ -1,6 +1,5 @@
 package com.etiennelawlor.moviehub.domain.models;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -18,13 +17,6 @@ public class PersonsDomainModel {
     // endregion
 
     // region Constructors
-
-    public PersonsDomainModel(List<PersonDomainModel> persons, int pageNumber, boolean isLastPage, Date expiredAt) {
-        this.persons = persons;
-        this.pageNumber = pageNumber;
-        this.isLastPage = isLastPage;
-        this.expiredAt = expiredAt;
-    }
 
     public PersonsDomainModel() {
     }
@@ -71,20 +63,9 @@ public class PersonsDomainModel {
 
     // endregion
 
-    // Helper Methods
-    public boolean hasPersons() { return persons.size() > 0;}
-
-    public void incrementPageNumber() { this.pageNumber += 1; }
-
-    public boolean isExpired() {
-        return Calendar.getInstance().getTime().getTime() > expiredAt.getTime();
-    }
-    // endregion
-
-
     @Override
     public String toString() {
-        return "PersonsPresentationModel{" +
+        return "PersonsDomainModel{" +
                 "persons=" + persons +
                 ", pageNumber=" + pageNumber +
                 ", isLastPage=" + isLastPage +

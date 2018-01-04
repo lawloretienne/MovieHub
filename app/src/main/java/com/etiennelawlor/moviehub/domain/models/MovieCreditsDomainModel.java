@@ -1,6 +1,5 @@
 package com.etiennelawlor.moviehub.domain.models;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -18,13 +17,6 @@ public class MovieCreditsDomainModel {
     // endregion
 
     // region Constructors
-    public MovieCreditsDomainModel(int id, List<MovieCreditDomainModel> cast, List<MovieCreditDomainModel> crew, Date expiredAt) {
-        this.id = id;
-        this.cast = cast;
-        this.crew = crew;
-        this.expiredAt = expiredAt;
-    }
-
     public MovieCreditsDomainModel() {
     }
     // endregion
@@ -69,15 +61,9 @@ public class MovieCreditsDomainModel {
 
     // endregion
 
-    // Helper Methods
-    public boolean isExpired() {
-        return Calendar.getInstance().getTime().getTime() > expiredAt.getTime();
-    }
-    // endregion
-
     @Override
     public String toString() {
-        return "MovieCreditsPresentationModel{" +
+        return "MovieCreditsDomainModel{" +
                 "id=" + id +
                 ", cast=" + cast +
                 ", crew=" + crew +

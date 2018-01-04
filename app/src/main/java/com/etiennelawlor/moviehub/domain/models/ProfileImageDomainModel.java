@@ -1,43 +1,18 @@
 package com.etiennelawlor.moviehub.domain.models;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import com.google.gson.annotations.SerializedName;
-
 /**
  * Created by etiennelawlor on 12/31/17.
  */
 
-public class ProfileImageDomainModel implements Parcelable {
+public class ProfileImageDomainModel {
 
     // region Fields
-    @SerializedName("aspect_ratio")
     public float aspectRatio;
-    @SerializedName("file_path")
     public String filePath;
-    @SerializedName("height")
     public int height;
-    @SerializedName("vote_average")
     public float voteAverage;
-    @SerializedName("vote_count")
     public int voteCount;
-    @SerializedName("width")
     public int width;
-    // endregion
-
-    // region Constructors
-    public ProfileImageDomainModel() {
-    }
-
-    protected ProfileImageDomainModel(Parcel in) {
-        this.aspectRatio = in.readFloat();
-        this.filePath = in.readString();
-        this.height = in.readInt();
-        this.voteAverage = in.readFloat();
-        this.voteCount = in.readInt();
-        this.width = in.readInt();
-    }
     // endregion
 
     // region Getters
@@ -96,38 +71,9 @@ public class ProfileImageDomainModel implements Parcelable {
 
     // endregion
 
-    // region Parcelable Methods
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeFloat(this.aspectRatio);
-        dest.writeString(this.filePath);
-        dest.writeInt(this.height);
-        dest.writeFloat(this.voteAverage);
-        dest.writeInt(this.voteCount);
-        dest.writeInt(this.width);
-    }
-    // endregion
-
-    public static final Creator<ProfileImageDomainModel> CREATOR = new Creator<ProfileImageDomainModel>() {
-        @Override
-        public ProfileImageDomainModel createFromParcel(Parcel source) {
-            return new ProfileImageDomainModel(source);
-        }
-
-        @Override
-        public ProfileImageDomainModel[] newArray(int size) {
-            return new ProfileImageDomainModel[size];
-        }
-    };
-
     @Override
     public String toString() {
-        return "ProfileImagePresentationModel{" +
+        return "ProfileImageDomainModel{" +
                 "aspectRatio=" + aspectRatio +
                 ", filePath='" + filePath + '\'' +
                 ", height=" + height +

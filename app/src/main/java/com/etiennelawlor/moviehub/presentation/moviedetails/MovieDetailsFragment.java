@@ -798,8 +798,8 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
             StringBuilder stringBuilder = new StringBuilder("");
 
             for(int i=0; i<genres.size(); i++){
-                GenrePresentationModel genreDomainModel = genres.get(i);
-                stringBuilder.append(genreDomainModel.getName());
+                GenrePresentationModel genre = genres.get(i);
+                stringBuilder.append(genre.getName());
                 if(i!=genres.size()-1){
                     stringBuilder.append(" | ");
                 }

@@ -1,6 +1,5 @@
 package com.etiennelawlor.moviehub.domain.models;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -18,13 +17,6 @@ public class MoviesDomainModel {
     // endregion
 
     // region Constructors
-
-    public MoviesDomainModel(List<MovieDomainModel> movies, int pageNumber, boolean isLastPage, Date expiredAt) {
-        this.movies = movies;
-        this.pageNumber = pageNumber;
-        this.isLastPage = isLastPage;
-        this.expiredAt = expiredAt;
-    }
 
     public MoviesDomainModel() {
     }
@@ -71,20 +63,9 @@ public class MoviesDomainModel {
 
     // endregion
 
-    // Helper Methods
-    public boolean hasMovies() { return movies.size() > 0;}
-
-    public void incrementPageNumber() { this.pageNumber += 1; }
-
-    public boolean isExpired() {
-        return Calendar.getInstance().getTime().getTime() > expiredAt.getTime();
-    }
-    // endregion
-
-
     @Override
     public String toString() {
-        return "MoviesPresentationModel{" +
+        return "MoviesDomainModel{" +
                 "movies=" + movies +
                 ", pageNumber=" + pageNumber +
                 ", isLastPage=" + isLastPage +
