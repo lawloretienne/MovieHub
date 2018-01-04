@@ -3,13 +3,17 @@ package com.etiennelawlor.moviehub.data.database.mappers;
 import com.etiennelawlor.moviehub.data.database.models.ProfileImageRealmModel;
 import com.etiennelawlor.moviehub.data.repositories.models.ProfileImageDataModel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.realm.Realm;
+import io.realm.RealmList;
 
 /**
  * Created by etiennelawlor on 5/14/17.
  */
 
-public class ProfileImageRealmModelMapper implements RealmModelMapper<ProfileImageDataModel, ProfileImageRealmModel> {
+public class ProfileImageRealmModelMapper implements RealmModelMapper<ProfileImageDataModel, ProfileImageRealmModel>, RealmModelListMapper<ProfileImageDataModel, ProfileImageRealmModel> {
 
     @Override
     public ProfileImageRealmModel mapToRealmModel(ProfileImageDataModel profileImageDataModel) {
@@ -36,5 +40,25 @@ public class ProfileImageRealmModelMapper implements RealmModelMapper<ProfileIma
         profileImageDataModel.setWidth(profileImageRealmModel.getWidth());
 
         return profileImageDataModel;
+    }
+
+    @Override
+    public RealmList<ProfileImageRealmModel> mapListToRealmModelList(List<ProfileImageDataModel> profileImageDataModels) {
+        RealmList<ProfileImageRealmModel> profileImageRealmModels = new RealmList<>();
+        if(profileImageDataModels != null && profileImageDataModels.size()>0) {
+            for (ProfileImageDataModel profileImageDataModel : profileImageDataModels) {
+                profileImageRealmModels.add(mapToRealmModel(profileImageDataModel));
+            }
+        }
+        return profileImageRealmModels;
+    }
+
+    @Override
+    public List<ProfileImageDataModel> mapListFromRealmModelList(RealmList<ProfileImageRealmModel> profileImageRealmModels) {
+        List<ProfileImageDataModel> profileImageDataModels = new ArrayList<>();
+        for(ProfileImageRealmModel profileImageRealmModel : profileImageRealmModels){
+            profileImageDataModels.add(mapFromRealmModel(profileImageRealmModel));
+        }
+        return profileImageDataModels;
     }
 }

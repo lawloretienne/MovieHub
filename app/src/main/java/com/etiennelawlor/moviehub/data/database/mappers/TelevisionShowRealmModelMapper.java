@@ -1,19 +1,9 @@
 package com.etiennelawlor.moviehub.data.database.mappers;
 
-import com.etiennelawlor.moviehub.data.database.models.GenreRealmModel;
-import com.etiennelawlor.moviehub.data.database.models.IntegerRealmModel;
-import com.etiennelawlor.moviehub.data.database.models.NetworkRealmModel;
-import com.etiennelawlor.moviehub.data.database.models.StringRealmModel;
 import com.etiennelawlor.moviehub.data.database.models.TelevisionShowRealmModel;
-import com.etiennelawlor.moviehub.data.repositories.models.GenreDataModel;
-import com.etiennelawlor.moviehub.data.repositories.models.NetworkDataModel;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowDataModel;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import io.realm.Realm;
-import io.realm.RealmList;
 
 /**
  * Created by etiennelawlor on 5/14/17.
@@ -31,65 +21,19 @@ public class TelevisionShowRealmModelMapper implements RealmModelMapper<Televisi
         TelevisionShowRealmModel realmTelevisionShow = Realm.getDefaultInstance().createObject(TelevisionShowRealmModel.class);
 
         realmTelevisionShow.setBackdropPath(televisionShowDataModel.getBackdropPath());
-
-        List<Integer> episodeRunTimes = televisionShowDataModel.getEpisodeRunTime();
-        RealmList<IntegerRealmModel> realmIntegers = new RealmList<>();
-        if(episodeRunTimes != null && episodeRunTimes.size()>0) {
-            for (Integer episodeRunTime : episodeRunTimes) {
-                realmIntegers.add(integerRealmMapper.mapToRealmModel(episodeRunTime));
-            }
-        }
-        realmTelevisionShow.setEpisodeRunTime(realmIntegers);
-
+        realmTelevisionShow.setEpisodeRunTime(integerRealmMapper.mapListToRealmModelList(televisionShowDataModel.getEpisodeRunTime()));
         realmTelevisionShow.setFirstAirDate(televisionShowDataModel.getFirstAirDate());
-
-        List<GenreDataModel> genreDataModels = televisionShowDataModel.getGenres();
-        RealmList<GenreRealmModel> realmGenres = new RealmList<>();
-        if(genreDataModels != null && genreDataModels.size()>0) {
-            for (GenreDataModel genreDataModel : genreDataModels) {
-                realmGenres.add(genreRealmMapper.mapToRealmModel(genreDataModel));
-            }
-        }
-        realmTelevisionShow.setGenres(realmGenres);
-
+        realmTelevisionShow.setGenres(genreRealmMapper.mapListToRealmModelList(televisionShowDataModel.getGenres()));
         realmTelevisionShow.setHomepage(televisionShowDataModel.getHomepage());
         realmTelevisionShow.setId(televisionShowDataModel.getId());
         realmTelevisionShow.setInProduction(televisionShowDataModel.isInProduction());
-
-        List<String> languages = televisionShowDataModel.getLanguages();
-        RealmList<StringRealmModel> realmLanguages = new RealmList<>();
-        if(languages != null && languages.size()>0) {
-            for (String language : languages) {
-                realmLanguages.add(stringRealmMapper.mapToRealmModel(language));
-            }
-        }
-        realmTelevisionShow.setLanguages(realmLanguages);
-
+        realmTelevisionShow.setLanguages(stringRealmMapper.mapListToRealmModelList(televisionShowDataModel.getLanguages()));
         realmTelevisionShow.setLastAirDate(televisionShowDataModel.getLastAirDate());
         realmTelevisionShow.setName(televisionShowDataModel.getName());
-
-
-        List<NetworkDataModel> networkDataModels = televisionShowDataModel.getNetworks();
-        RealmList<NetworkRealmModel> networkRealmModels = new RealmList<>();
-        if(networkDataModels != null && networkDataModels.size()>0) {
-            for (NetworkDataModel networkDataModel : networkDataModels) {
-                networkRealmModels.add(networkRealmMapper.mapToRealmModel(networkDataModel));
-            }
-        }
-        realmTelevisionShow.setNetworks(networkRealmModels);
-
+        realmTelevisionShow.setNetworks(networkRealmMapper.mapListToRealmModelList(televisionShowDataModel.getNetworks()));
         realmTelevisionShow.setNumberOfEpisodes(televisionShowDataModel.getNumberOfEpisodes());
         realmTelevisionShow.setNumberOfSeasons(televisionShowDataModel.getNumberOfSeasons());
-
-        List<String> originCountries = televisionShowDataModel.getOriginCountry();
-        RealmList<StringRealmModel> realmOriginCountries = new RealmList<>();
-        if(originCountries != null && originCountries.size()>0) {
-            for (String originCountry : originCountries) {
-                realmOriginCountries.add(stringRealmMapper.mapToRealmModel(originCountry));
-            }
-        }
-        realmTelevisionShow.setOriginCountry(realmOriginCountries);
-
+        realmTelevisionShow.setOriginCountry(stringRealmMapper.mapListToRealmModelList(televisionShowDataModel.getOriginCountry()));
         realmTelevisionShow.setOriginalLanguage(televisionShowDataModel.getOriginalLanguage());
         realmTelevisionShow.setOriginalName(televisionShowDataModel.getOriginalName());
         realmTelevisionShow.setOverview(televisionShowDataModel.getOverview());
@@ -106,56 +50,20 @@ public class TelevisionShowRealmModelMapper implements RealmModelMapper<Televisi
     @Override
     public TelevisionShowDataModel mapFromRealmModel(TelevisionShowRealmModel televisionShowRealmModel) {
         TelevisionShowDataModel televisionShowDataModel = new TelevisionShowDataModel();
-
         televisionShowDataModel.setBackdropPath(televisionShowRealmModel.getBackdropPath());
-
-        RealmList<IntegerRealmModel> realmEpisodeRunTimes = televisionShowRealmModel.getEpisodeRunTime();
-        List<Integer> episodeRunTimes = new ArrayList<>();
-        for(IntegerRealmModel realmEpisodeRunTime : realmEpisodeRunTimes){
-            episodeRunTimes.add(integerRealmMapper.mapFromRealmModel(realmEpisodeRunTime));
-        }
-        televisionShowDataModel.setEpisodeRunTime(episodeRunTimes);
-
+        televisionShowDataModel.setEpisodeRunTime(integerRealmMapper.mapListFromRealmModelList(televisionShowRealmModel.getEpisodeRunTime()));
         televisionShowDataModel.setFirstAirDate(televisionShowRealmModel.getFirstAirDate());
-
-        RealmList<GenreRealmModel> realmGenres = televisionShowRealmModel.getGenres();
-        List<GenreDataModel> genreDataModels = new ArrayList<>();
-        for(GenreRealmModel realmGenre : realmGenres){
-            genreDataModels.add(genreRealmMapper.mapFromRealmModel(realmGenre));
-        }
-        televisionShowDataModel.setGenres(genreDataModels);
-
+        televisionShowDataModel.setGenres(genreRealmMapper.mapListFromRealmModelList(televisionShowRealmModel.getGenres()));
         televisionShowDataModel.setHomepage(televisionShowRealmModel.getHomepage());
         televisionShowDataModel.setId(televisionShowRealmModel.getId());
         televisionShowDataModel.setInProduction(televisionShowRealmModel.isInProduction());
-
-        RealmList<StringRealmModel> realmLanguages = televisionShowRealmModel.getLanguages();
-        List<String> languages = new ArrayList<>();
-        for(StringRealmModel realmLanguage : realmLanguages){
-            languages.add(stringRealmMapper.mapFromRealmModel(realmLanguage));
-        }
-        televisionShowDataModel.setLanguages(languages);
-
+        televisionShowDataModel.setLanguages(stringRealmMapper.mapListFromRealmModelList(televisionShowRealmModel.getLanguages()));
         televisionShowDataModel.setLastAirDate(televisionShowRealmModel.getLastAirDate());
         televisionShowDataModel.setName(televisionShowRealmModel.getName());
-
-        RealmList<NetworkRealmModel> networkRealmModels = televisionShowRealmModel.getNetworks();
-        List<NetworkDataModel> networkDataModels = new ArrayList<>();
-        for(NetworkRealmModel networkRealmModel : networkRealmModels){
-            networkDataModels.add(networkRealmMapper.mapFromRealmModel(networkRealmModel));
-        }
-        televisionShowDataModel.setNetworks(networkDataModels);
-
+        televisionShowDataModel.setNetworks(networkRealmMapper.mapListFromRealmModelList(televisionShowRealmModel.getNetworks()));
         televisionShowDataModel.setNumberOfEpisodes(televisionShowRealmModel.getNumberOfEpisodes());
         televisionShowDataModel.setNumberOfSeasons(televisionShowRealmModel.getNumberOfSeasons());
-
-        RealmList<StringRealmModel> realmOriginCountries = televisionShowRealmModel.getOriginCountry();
-        List<String> originCountries = new ArrayList<>();
-        for(StringRealmModel realmOriginCountry : realmOriginCountries){
-            originCountries.add(stringRealmMapper.mapFromRealmModel(realmOriginCountry));
-        }
-        televisionShowDataModel.setOriginCountry(originCountries);
-
+        televisionShowDataModel.setOriginCountry(stringRealmMapper.mapListFromRealmModelList(televisionShowRealmModel.getOriginCountry()));
         televisionShowDataModel.setOriginalLanguage(televisionShowRealmModel.getOriginalLanguage());
         televisionShowDataModel.setOriginalName(televisionShowRealmModel.getOriginalName());
         televisionShowDataModel.setOverview(televisionShowRealmModel.getOverview());
