@@ -1,7 +1,5 @@
 package com.etiennelawlor.moviehub.presentation.models;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 
 /**
@@ -11,11 +9,8 @@ import java.util.List;
 public class PersonCreditsPresentationModel {
 
     // region Fields
-    @SerializedName("id")
     public int id;
-    @SerializedName("cast")
     public List<PersonCreditPresentationModel> cast = null;
-    @SerializedName("crew")
     public List<PersonCreditPresentationModel> crew = null;
     // endregion
 

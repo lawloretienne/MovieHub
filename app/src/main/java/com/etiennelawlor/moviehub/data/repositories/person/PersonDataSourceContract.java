@@ -25,10 +25,8 @@ public interface PersonDataSourceContract {
     interface LocalDateSource {
         Maybe<PersonsDataModel> getPopularPersons(int currentPage);
         void savePopularPersons(PersonsDataModel personsDataModel);
-
         Maybe<PersonDataModel> getPerson(int personId);
         void savePerson(PersonDataModel person);
-
         Maybe<PersonCreditsDataModel> getPersonCredits(int personId);
         void savePersonCredits(PersonCreditsDataModel personCreditsResponse);
     }

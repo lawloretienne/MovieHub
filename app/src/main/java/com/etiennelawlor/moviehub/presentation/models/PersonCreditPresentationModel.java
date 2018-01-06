@@ -4,7 +4,6 @@ import android.support.v7.graphics.Palette;
 import android.text.TextUtils;
 
 import com.etiennelawlor.moviehub.util.DateUtility;
-import com.google.gson.annotations.SerializedName;
 
 import java.util.Calendar;
 
@@ -21,23 +20,14 @@ public class PersonCreditPresentationModel extends CreditPresentationModel {
     // endregion
 
     // region Fields
-    @SerializedName("job")
     public String job;
-    @SerializedName("character")
     public String character;
-    @SerializedName("title")
     public String title;
-    @SerializedName("name")
     public String name;
-    @SerializedName("department")
     public String department;
-    @SerializedName("poster_path")
     public String posterPath;
-    @SerializedName("first_air_date")
     public String firstAirDate;
-    @SerializedName("release_date")
     public String releaseDate;
-    @SerializedName("media_type")
     public String mediaType;
 
     private Palette posterPalette;

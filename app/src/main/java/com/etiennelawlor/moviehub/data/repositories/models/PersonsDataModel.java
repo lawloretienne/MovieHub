@@ -10,7 +10,7 @@ import java.util.List;
 
 public class PersonsDataModel {
 
-    // region Member Variables
+    // region Fields
     private List<PersonDataModel> persons;
     private int pageNumber;
     private boolean isLastPage;

@@ -8,7 +8,7 @@ import java.util.List;
 
 public class TelevisionShowDetailsDomainModel {
 
-    // region Member Variables
+    // region Fields
     private TelevisionShowDomainModel televisionShow;
     private List<TelevisionShowCreditDomainModel> cast;
     private List<TelevisionShowCreditDomainModel> crew;
@@ -49,7 +49,6 @@ public class TelevisionShowDetailsDomainModel {
     // endregion
 
     // region Setters
-
 
     public void setTelevisionShow(TelevisionShowDomainModel televisionShow) {
         this.televisionShow = televisionShow;

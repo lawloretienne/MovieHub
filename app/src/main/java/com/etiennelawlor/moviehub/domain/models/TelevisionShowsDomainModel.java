@@ -9,7 +9,7 @@ import java.util.List;
 
 public class TelevisionShowsDomainModel {
 
-    // region Member Variables
+    // region Fields
     private List<TelevisionShowDomainModel> televisionShows;
     private int pageNumber;
     private boolean isLastPage;

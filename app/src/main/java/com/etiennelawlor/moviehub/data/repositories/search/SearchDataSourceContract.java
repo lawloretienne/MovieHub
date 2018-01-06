@@ -24,15 +24,10 @@ public interface SearchDataSourceContract {
 
     interface LocalDateSource {
         Maybe<MoviesDataModel> getMovieSearchResults(String query, int page);
-
         void saveMovieSearchResults(MoviesDataModel moviesDataModel);
-
         Maybe<TelevisionShowsDataModel> getTelevisionShowSearchResults(String query, int page);
-
         void saveTelevisionShowSearchResults(TelevisionShowsDataModel televisionShowsDataModel);
-
         Maybe<PersonsDataModel> getPersonSearchResults(String query, int page);
-
         void savePersonSearchResults(PersonsDataModel personsDataModel);
     }
 

@@ -1,7 +1,5 @@
 package com.etiennelawlor.moviehub.presentation.models;
 
-import com.google.gson.annotations.SerializedName;
-
 /**
  * Created by etiennelawlor on 12/31/17.
  */
@@ -9,9 +7,7 @@ import com.google.gson.annotations.SerializedName;
 public class ContentRatingPresentationModel {
 
     // region Fields
-    @SerializedName("iso_3166_1")
     public String iso31661;
-    @SerializedName("rating")
     public String rating;
     // endregion
 

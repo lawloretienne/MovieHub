@@ -8,7 +8,7 @@ import java.util.List;
 
 public class PersonDetailsPresentationModel {
 
-    // region Member Variables
+    // region Fields
     private PersonPresentationModel person;
     private List<PersonCreditPresentationModel> cast;
     private List<PersonCreditPresentationModel> crew;

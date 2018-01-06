@@ -29,16 +29,12 @@ public interface TelevisionShowDataSourceContract {
     interface LocalDateSource {
         Maybe<TelevisionShowsDataModel> getPopularTelevisionShows(int currentPage);
         void savePopularTelevisionShows(TelevisionShowsDataModel televisionShowsDataModel);
-
         Maybe<TelevisionShowDataModel> getTelevisionShow(int tvId);
         void saveTelevisionShow(TelevisionShowDataModel televisionShowDataModel);
-
         Maybe<TelevisionShowCreditsDataModel> getTelevisionShowCredits(int tvId);
         void saveTelevisionShowCredits(TelevisionShowCreditsDataModel televisionShowCreditsDataModel);
-
         Maybe<TelevisionShowsDataModel> getSimilarTelevisionShows(int tvId);
         void saveSimilarTelevisionShows(TelevisionShowsDataModel televisionShowsDataModel);
-
         Maybe<TelevisionShowContentRatingsDataModel> getTelevisionShowContentRatings(int tvId);
         void saveTelevisionShowContentRatings(TelevisionShowContentRatingsDataModel televisionShowContentRatingsResponse);
     }

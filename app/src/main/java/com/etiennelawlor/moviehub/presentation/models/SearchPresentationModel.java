@@ -8,7 +8,7 @@ import java.util.List;
 
 public class SearchPresentationModel {
 
-    // region Member Variables
+    // region Fields
     private String query;
     private List<MoviePresentationModel> movies;
     private List<TelevisionShowPresentationModel> televisionShows;

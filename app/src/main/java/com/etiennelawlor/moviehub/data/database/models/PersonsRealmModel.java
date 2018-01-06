@@ -12,7 +12,7 @@ import io.realm.annotations.PrimaryKey;
 
 public class PersonsRealmModel extends RealmObject {
 
-    // region Member Variables
+    // region Fields
     private RealmList<PersonRealmModel> persons;
     @PrimaryKey
     private int pageNumber;

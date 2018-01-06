@@ -10,7 +10,7 @@ import java.util.List;
 
 public class MoviesPresentationModel {
 
-    // region Member Variables
+    // region Fields
     private List<MoviePresentationModel> movies;
     private int pageNumber;
     private boolean isLastPage;

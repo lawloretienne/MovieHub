@@ -3,8 +3,6 @@ package com.etiennelawlor.moviehub.presentation.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +13,6 @@ import java.util.List;
 public class ProfileImagesPresentationModel implements Parcelable {
 
     // region Fields
-    @SerializedName("profiles")
     public List<ProfileImagePresentationModel> profiles = null;
     // endregion
 

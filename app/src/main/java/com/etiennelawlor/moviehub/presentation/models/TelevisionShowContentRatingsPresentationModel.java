@@ -1,7 +1,5 @@
 package com.etiennelawlor.moviehub.presentation.models;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 
 /**
@@ -11,9 +9,7 @@ import java.util.List;
 public class TelevisionShowContentRatingsPresentationModel {
 
     // region Fields
-    @SerializedName("id")
     public int id;
-    @SerializedName("results")
     public List<ContentRatingPresentationModel> contentRatings = null;
     // endregion
 

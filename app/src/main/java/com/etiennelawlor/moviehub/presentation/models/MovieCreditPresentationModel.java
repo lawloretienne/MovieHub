@@ -2,8 +2,6 @@ package com.etiennelawlor.moviehub.presentation.models;
 
 import android.support.v7.graphics.Palette;
 
-import com.google.gson.annotations.SerializedName;
-
 /**
  * Created by etiennelawlor on 1/1/18.
  */
@@ -16,15 +14,10 @@ public class MovieCreditPresentationModel extends CreditPresentationModel {
     // endregion
 
     // region Fields
-    @SerializedName("job")
     public String job;
-    @SerializedName("character")
     public String character;
-    @SerializedName("name")
     public String name;
-    @SerializedName("department")
     public String department;
-    @SerializedName("profile_path")
     public String profilePath;
 
     private Palette profilePalette;

@@ -8,7 +8,7 @@ import java.util.List;
 
 public class MovieDetailsDomainModel {
 
-    // region Member Variables
+    // region Fields
     private MovieDomainModel movie;
     private List<MovieCreditDomainModel> cast;
     private List<MovieCreditDomainModel> crew;

@@ -30,16 +30,12 @@ public interface MovieDataSourceContract {
     interface LocalDateSource {
         Maybe<MoviesDataModel> getPopularMovies(int currentPage);
         void savePopularMovies(MoviesDataModel moviesDataModel);
-
         Maybe<MovieDataModel> getMovie(int movieId);
         void saveMovie(MovieDataModel movie);
-
         Maybe<MovieCreditsDataModel> getMovieCredits(int movieId);
         void saveMovieCredits(MovieCreditsDataModel movieCreditsDataModel);
-
         Maybe<MoviesDataModel> getSimilarMovies(int movieId);
         void saveSimilarMovies(MoviesDataModel moviesDataModel);
-
         Maybe<MovieReleaseDatesDataModel> getMovieReleaseDates(int movieId);
         void saveMovieReleaseDates(MovieReleaseDatesDataModel movieReleaseDatesEnvelope);
     }

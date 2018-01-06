@@ -3,8 +3,6 @@ package com.etiennelawlor.moviehub.presentation.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.gson.annotations.SerializedName;
-
 /**
  * Created by etiennelawlor on 12/31/17.
  */
@@ -12,17 +10,11 @@ import com.google.gson.annotations.SerializedName;
 public class ProfileImagePresentationModel implements Parcelable {
 
     // region Fields
-    @SerializedName("aspect_ratio")
     public float aspectRatio;
-    @SerializedName("file_path")
     public String filePath;
-    @SerializedName("height")
     public int height;
-    @SerializedName("vote_average")
     public float voteAverage;
-    @SerializedName("vote_count")
     public int voteCount;
-    @SerializedName("width")
     public int width;
     // endregion
 

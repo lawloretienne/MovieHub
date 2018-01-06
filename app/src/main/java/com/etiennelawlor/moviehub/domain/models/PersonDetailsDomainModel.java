@@ -8,7 +8,7 @@ import java.util.List;
 
 public class PersonDetailsDomainModel {
 
-    // region Member Variables
+    // region Fields
     private PersonDomainModel person;
     private List<PersonCreditDomainModel> cast;
     private List<PersonCreditDomainModel> crew;

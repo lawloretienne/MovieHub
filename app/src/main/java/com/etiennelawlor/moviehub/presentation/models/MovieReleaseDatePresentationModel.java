@@ -1,7 +1,5 @@
 package com.etiennelawlor.moviehub.presentation.models;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 
 /**
@@ -11,9 +9,7 @@ import java.util.List;
 public class MovieReleaseDatePresentationModel {
 
     // region Fields
-    @SerializedName("iso_3166_1")
     public String iso31661;
-    @SerializedName("release_dates")
     public List<ReleaseDatePresentationModel> releaseDates = null;
     // endregion
 

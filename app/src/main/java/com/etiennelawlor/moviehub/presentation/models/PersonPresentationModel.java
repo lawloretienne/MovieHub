@@ -4,8 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v7.graphics.Palette;
 
-import com.google.gson.annotations.SerializedName;
-
 /**
  * Created by etiennelawlor on 12/31/17.
  */
@@ -18,23 +16,14 @@ public class PersonPresentationModel implements Parcelable {
     // endregion
 
     // region Fields
-    @SerializedName("biography")
     public String biography;
-    @SerializedName("birthday")
     public String birthday;
-    @SerializedName("deathday")
     public String deathday;
-    @SerializedName("id")
     public int id;
-    @SerializedName("imdb_id")
     public String imdbId;
-    @SerializedName("name")
     public String name;
-    @SerializedName("place_of_birth")
     public String placeOfBirth;
-    @SerializedName("profile_path")
     public String profilePath;
-    @SerializedName("images")
     public ProfileImagesPresentationModel images;
 
     private Palette profilePalette;

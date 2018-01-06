@@ -10,7 +10,7 @@ import java.util.List;
 
 public class MoviesDataModel {
 
-    // region Member Variables
+    // region Fields
     private List<MovieDataModel> movies;
     private int pageNumber;
     private boolean isLastPage;

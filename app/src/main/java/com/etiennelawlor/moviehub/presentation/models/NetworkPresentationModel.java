@@ -3,8 +3,6 @@ package com.etiennelawlor.moviehub.presentation.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.gson.annotations.SerializedName;
-
 /**
  * Created by etiennelawlor on 1/1/18.
  */
@@ -12,9 +10,7 @@ import com.google.gson.annotations.SerializedName;
 public class NetworkPresentationModel implements Parcelable {
 
     // region Fields
-    @SerializedName("id")
     public int id;
-    @SerializedName("name")
     public String name;
     // endregion
 

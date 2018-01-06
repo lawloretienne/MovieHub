@@ -9,7 +9,7 @@ import java.util.List;
 
 public class PersonsDomainModel {
 
-    // region Member Variables
+    // region Fields
     private List<PersonDomainModel> persons;
     private int pageNumber;
     private boolean isLastPage;
