@@ -1,30 +1,30 @@
-package com.etiennelawlor.moviehub.presentation.persondetails;
+package com.etiennelawlor.moviehub.presentation.televisionshowdetails;
 
 import com.etiennelawlor.moviehub.presentation.base.BasePresenter;
-import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
-import com.etiennelawlor.moviehub.presentation.models.PersonDetailsPresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.TelevisionShowDetailsPresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.TelevisionShowPresentationModel;
 
 /**
  * Created by etiennelawlor on 2/9/17.
  */
 
-public interface PersonDetailsUiContract {
+public interface TelevisionShowDetailsPresentationContract {
 
     interface View {
-        void showPersonDetails(PersonDetailsPresentationModel personDetailsPresentationModel);
+        void showTelevisionShowDetails(TelevisionShowDetailsPresentationModel televisionShowDetailsPresentationModel);
         void showToolbarTitle();
         void hideToolbarTitle();
         void showErrorView();
 
         // Navigation methods
-        void openMovieDetails(MoviePresentationModel movie);
+        void openPersonDetails(PersonPresentationModel person);
         void openTelevisionShowDetails(TelevisionShowPresentationModel televisionShow);
     }
 
     interface Presenter extends BasePresenter {
-        void onLoadPersonDetails(int personId);
-        void onMovieClick(MoviePresentationModel movie);
+        void onLoadTelevisionShowDetails(int televisionShowId);
+        void onPersonClick(PersonPresentationModel person);
         void onTelevisionShowClick(TelevisionShowPresentationModel televisionShow);
         void onScrollChange(boolean isScrolledPastThreshold);
     }

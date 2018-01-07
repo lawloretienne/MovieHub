@@ -83,7 +83,7 @@ import butterknife.Unbinder;
  * Created by etiennelawlor on 12/18/16.
  */
 
-public class TelevisionShowDetailsFragment extends BaseFragment implements TelevisionShowDetailsUiContract.View {
+public class TelevisionShowDetailsFragment extends BaseFragment implements TelevisionShowDetailsPresentationContract.View {
 
     // region Constants
     public static final String PATTERN = "yyyy-MM-dd";
@@ -167,7 +167,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
 
     // region Injected Variables
     @Inject
-    TelevisionShowDetailsUiContract.Presenter televisionShowDetailsPresenter;
+    TelevisionShowDetailsPresentationContract.Presenter televisionShowDetailsPresenter;
     // endregion
 
     // region Listeners
@@ -496,7 +496,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     }
     // endregion
 
-    // region TelevisionShowDetailsUiContract.View Methods
+    // region TelevisionShowDetailsPresentationContract.View Methods
 
     @Override
     public void showTelevisionShowDetails(TelevisionShowDetailsPresentationModel televisionShowDetailsPresentationModel) {

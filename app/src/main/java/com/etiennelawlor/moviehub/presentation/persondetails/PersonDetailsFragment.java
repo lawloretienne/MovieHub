@@ -86,7 +86,7 @@ import butterknife.Unbinder;
  * Created by etiennelawlor on 12/18/16.
  */
 
-public class PersonDetailsFragment extends BaseFragment implements PersonDetailsUiContract.View {
+public class PersonDetailsFragment extends BaseFragment implements PersonDetailsPresentationContract.View {
 
     // region Constants
     public static final String PATTERN = "yyyy-MM-dd";
@@ -162,7 +162,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
 
     // region Injected Variables
     @Inject
-    PersonDetailsUiContract.Presenter personDetailsPresenter;
+    PersonDetailsPresentationContract.Presenter personDetailsPresenter;
     // endregion
 
     // region Listeners
@@ -516,7 +516,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     }
     // endregion
 
-    // region PersonDetailsUiContract.View Methods
+    // region PersonDetailsPresentationContract.View Methods
 
     @Override
     public void showPersonDetails(PersonDetailsPresentationModel personDetailsPresentationModel) {

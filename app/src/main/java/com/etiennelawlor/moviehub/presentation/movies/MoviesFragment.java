@@ -42,7 +42,7 @@ import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
  * Created by etiennelawlor on 12/16/16.
  */
 
-public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItemClickListener, MoviesAdapter.OnReloadClickListener, MoviesUiContract.View {
+public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItemClickListener, MoviesAdapter.OnReloadClickListener, MoviesPresentationContract.View {
 
     // region Constants
     public static final String KEY_MOVIE = "KEY_MOVIE";
@@ -75,7 +75,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
 
     // region Injected Variables
     @Inject
-    MoviesUiContract.Presenter moviesPresenter;
+    MoviesPresentationContract.Presenter moviesPresenter;
     // endregion
 
     // region Listeners
@@ -199,7 +199,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     }
     // endregion
 
-    // region MoviesUiContract.View Methods
+    // region MoviesPresentationContract.View Methods
 
     @Override
     public void showEmptyView() {

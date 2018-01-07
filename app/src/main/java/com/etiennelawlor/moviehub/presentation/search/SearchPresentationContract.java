@@ -13,7 +13,7 @@ import io.reactivex.Observable;
  * Created by etiennelawlor on 2/9/17.
  */
 
-public interface SearchUiContract {
+public interface SearchPresentationContract {
 
     interface View {
         void showEmptyView();

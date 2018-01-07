@@ -42,7 +42,7 @@ import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
  * Created by etiennelawlor on 12/16/16.
  */
 
-public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnItemClickListener, PersonsAdapter.OnReloadClickListener, PersonsUiContract.View {
+public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnItemClickListener, PersonsAdapter.OnReloadClickListener, PersonsPresentationContract.View {
 
     // region Constants
     public static final String KEY_PERSON = "KEY_PERSON";
@@ -75,7 +75,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
 
     // region Injected Variables
     @Inject
-    PersonsUiContract.Presenter personsPresenter;
+    PersonsPresentationContract.Presenter personsPresenter;
     // endregion
 
     // region Listeners
@@ -199,7 +199,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     }
     // endregion
 
-    // region PersonsUiContract.View Methods
+    // region PersonsPresentationContract.View Methods
 
     @Override
     public void showEmptyView() {

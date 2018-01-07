@@ -6,7 +6,7 @@ import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.domain.models.TelevisionShowDetailsDomainModel;
 import com.etiennelawlor.moviehub.domain.usecases.TelevisionShowDetailsDomainContract;
 import com.etiennelawlor.moviehub.presentation.televisionshowdetails.TelevisionShowDetailsPresenter;
-import com.etiennelawlor.moviehub.presentation.televisionshowdetails.TelevisionShowDetailsUiContract;
+import com.etiennelawlor.moviehub.presentation.televisionshowdetails.TelevisionShowDetailsPresentationContract;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +34,7 @@ public class TelevisionShowDetailsPresenterTest {
 
     // Mocks
     @Mock
-    private TelevisionShowDetailsUiContract.View mockTelevisionShowDetailsView;
+    private TelevisionShowDetailsPresentationContract.View mockTelevisionShowDetailsView;
     @Mock
     private TelevisionShowDetailsDomainContract.UseCase mockTelevisionShowDetailsUseCase;
 

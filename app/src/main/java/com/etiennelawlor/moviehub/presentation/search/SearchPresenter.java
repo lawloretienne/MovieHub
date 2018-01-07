@@ -22,10 +22,10 @@ import io.reactivex.observers.DisposableSingleObserver;
  * Created by etiennelawlor on 2/9/17.
  */
 
-public class SearchPresenter implements SearchUiContract.Presenter {
+public class SearchPresenter implements SearchPresentationContract.Presenter {
 
     // region Member Variables
-    private final SearchUiContract.View searchView;
+    private final SearchPresentationContract.View searchView;
     private final SearchDomainContract.UseCase searchUseCase;
     private final SchedulerProvider schedulerProvider;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -33,14 +33,14 @@ public class SearchPresenter implements SearchUiContract.Presenter {
     // endregion
 
     // region Constructors
-    public SearchPresenter(SearchUiContract.View searchView, SearchDomainContract.UseCase searchUseCase, SchedulerProvider schedulerProvider) {
+    public SearchPresenter(SearchPresentationContract.View searchView, SearchDomainContract.UseCase searchUseCase, SchedulerProvider schedulerProvider) {
         this.searchView = searchView;
         this.searchUseCase = searchUseCase;
         this.schedulerProvider = schedulerProvider;
     }
     // endregion
 
-    // region SearchUiContract.Presenter Methods
+    // region SearchPresentationContract.Presenter Methods
 
     @Override
     public void onDestroyView() {

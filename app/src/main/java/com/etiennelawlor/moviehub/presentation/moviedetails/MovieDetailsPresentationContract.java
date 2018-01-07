@@ -9,7 +9,7 @@ import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
  * Created by etiennelawlor on 2/9/17.
  */
 
-public interface MovieDetailsUiContract {
+public interface MovieDetailsPresentationContract {
 
     interface View {
         void showMovieDetails(MovieDetailsPresentationModel movieDetailsPresentationModel);

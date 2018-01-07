@@ -17,23 +17,23 @@ import io.reactivex.observers.DisposableSingleObserver;
  * Created by etiennelawlor on 2/9/17.
  */
 
-public class TelevisionShowsPresenter implements TelevisionShowsUiContract.Presenter {
+public class TelevisionShowsPresenter implements TelevisionShowsPresentationContract.Presenter {
 
     // region Member Variables
-    private final TelevisionShowsUiContract.View televisionShowsView;
+    private final TelevisionShowsPresentationContract.View televisionShowsView;
     private final TelevisionShowsDomainContract.UseCase televisionShowsUseCase;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private TelevisionShowsPresentationModelMapper televisionShowsPresentationModelMapper = new TelevisionShowsPresentationModelMapper();
     // endregion
 
     // region Constructors
-    public TelevisionShowsPresenter(TelevisionShowsUiContract.View televisionShowsView, TelevisionShowsDomainContract.UseCase televisionShowsUseCase) {
+    public TelevisionShowsPresenter(TelevisionShowsPresentationContract.View televisionShowsView, TelevisionShowsDomainContract.UseCase televisionShowsUseCase) {
         this.televisionShowsView = televisionShowsView;
         this.televisionShowsUseCase = televisionShowsUseCase;
     }
     // endregion
 
-    // region TelevisionShowsUiContract.Presenter Methods
+    // region TelevisionShowsPresentationContract.Presenter Methods
 
     @Override
     public void onDestroyView() {

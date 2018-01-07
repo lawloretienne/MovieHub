@@ -60,7 +60,7 @@ import timber.log.Timber;
  * Created by etiennelawlor on 1/13/17.
  */
 
-public class SearchFragment extends BaseFragment implements SearchUiContract.View {
+public class SearchFragment extends BaseFragment implements SearchPresentationContract.View {
 
     // region Constants
     public static final String KEY_MOVIE = "KEY_MOVIE";
@@ -113,7 +113,7 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
 
     // region Injected Variables
     @Inject
-    SearchUiContract.Presenter searchPresenter;
+    SearchPresentationContract.Presenter searchPresenter;
     // endregion
 
     // region Listeners
@@ -307,7 +307,7 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
         return super.onOptionsItemSelected(item);
     }
 
-    // region SearchUiContract.View Methods
+    // region SearchPresentationContract.View Methods
 
     @Override
     public void showEmptyView() {

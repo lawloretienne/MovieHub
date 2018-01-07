@@ -3,8 +3,8 @@ package com.etiennelawlor.moviehub;
 import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.MoviesDataModel;
 import com.etiennelawlor.moviehub.domain.usecases.MoviesDomainContract;
+import com.etiennelawlor.moviehub.presentation.movies.MoviesPresentationContract;
 import com.etiennelawlor.moviehub.presentation.movies.MoviesPresenter;
-import com.etiennelawlor.moviehub.presentation.movies.MoviesUiContract;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +35,7 @@ public class MoviesPresenterTest {
 
     // Mocks
     @Mock
-    private MoviesUiContract.View mockMoviesView;
+    private MoviesPresentationContract.View mockMoviesView;
     @Mock
     private MoviesDomainContract.UseCase mockMoviesUseCase;
 

@@ -7,7 +7,7 @@ import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.domain.models.PersonDetailsDomainModel;
 import com.etiennelawlor.moviehub.domain.usecases.PersonDetailsDomainContract;
 import com.etiennelawlor.moviehub.presentation.persondetails.PersonDetailsPresenter;
-import com.etiennelawlor.moviehub.presentation.persondetails.PersonDetailsUiContract;
+import com.etiennelawlor.moviehub.presentation.persondetails.PersonDetailsPresentationContract;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +35,7 @@ public class PersonDetailsPresenterTest {
 
     // Mocks
     @Mock
-    private PersonDetailsUiContract.View mockPersonDetailsView;
+    private PersonDetailsPresentationContract.View mockPersonDetailsView;
     @Mock
     private PersonDetailsDomainContract.UseCase mockPersonDetailsUseCase;
 

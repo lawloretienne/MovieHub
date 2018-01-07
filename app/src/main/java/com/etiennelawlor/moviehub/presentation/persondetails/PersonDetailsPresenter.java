@@ -16,10 +16,10 @@ import io.reactivex.observers.DisposableSingleObserver;
  * Created by etiennelawlor on 2/9/17.
  */
 
-public class PersonDetailsPresenter implements PersonDetailsUiContract.Presenter {
+public class PersonDetailsPresenter implements PersonDetailsPresentationContract.Presenter {
 
     // region Member Variables
-    private final PersonDetailsUiContract.View personDetailsView;
+    private final PersonDetailsPresentationContract.View personDetailsView;
     private final PersonDetailsDomainContract.UseCase personDetailsUseCase;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private PersonDetailsPresentationModelMapper personDetailsPresentationModelMapper = new PersonDetailsPresentationModelMapper();
@@ -27,14 +27,14 @@ public class PersonDetailsPresenter implements PersonDetailsUiContract.Presenter
 
     // region Constructors
 
-    public PersonDetailsPresenter(PersonDetailsUiContract.View personDetailsView, PersonDetailsDomainContract.UseCase personDetailsUseCase) {
+    public PersonDetailsPresenter(PersonDetailsPresentationContract.View personDetailsView, PersonDetailsDomainContract.UseCase personDetailsUseCase) {
         this.personDetailsView = personDetailsView;
         this.personDetailsUseCase = personDetailsUseCase;
     }
 
     // endregion
 
-    // region PersonDetailsUiContract.Presenter Methods
+    // region PersonDetailsPresentationContract.Presenter Methods
 
     @Override
     public void onDestroyView() {

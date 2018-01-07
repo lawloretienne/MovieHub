@@ -7,8 +7,8 @@ import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowRemoteDataS
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowRepository;
 import com.etiennelawlor.moviehub.domain.usecases.TelevisionShowsDomainContract;
 import com.etiennelawlor.moviehub.domain.usecases.TelevisionShowsUseCase;
+import com.etiennelawlor.moviehub.presentation.televisionshows.TelevisionShowsPresentationContract;
 import com.etiennelawlor.moviehub.presentation.televisionshows.TelevisionShowsPresenter;
-import com.etiennelawlor.moviehub.presentation.televisionshows.TelevisionShowsUiContract;
 
 import dagger.Module;
 import dagger.Provides;
@@ -20,9 +20,9 @@ import dagger.Provides;
 @Module
 public class TelevisionShowsModule {
 
-    private TelevisionShowsUiContract.View televisionShowsView;
+    private TelevisionShowsPresentationContract.View televisionShowsView;
 
-    public TelevisionShowsModule(TelevisionShowsUiContract.View televisionShowsView) {
+    public TelevisionShowsModule(TelevisionShowsPresentationContract.View televisionShowsView) {
         this.televisionShowsView = televisionShowsView;
     }
 
@@ -47,7 +47,7 @@ public class TelevisionShowsModule {
     }
 
     @Provides
-    public TelevisionShowsUiContract.Presenter provideTelevisionShowsPresenter(TelevisionShowsDomainContract.UseCase televisionShowsUseCase) {
+    public TelevisionShowsPresentationContract.Presenter provideTelevisionShowsPresenter(TelevisionShowsDomainContract.UseCase televisionShowsUseCase) {
         return new TelevisionShowsPresenter(televisionShowsView, televisionShowsUseCase);
     }
 }

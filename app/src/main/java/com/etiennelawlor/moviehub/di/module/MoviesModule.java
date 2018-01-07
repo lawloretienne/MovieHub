@@ -8,7 +8,7 @@ import com.etiennelawlor.moviehub.data.repositories.movie.MovieRepository;
 import com.etiennelawlor.moviehub.domain.usecases.MoviesDomainContract;
 import com.etiennelawlor.moviehub.domain.usecases.MoviesUseCase;
 import com.etiennelawlor.moviehub.presentation.movies.MoviesPresenter;
-import com.etiennelawlor.moviehub.presentation.movies.MoviesUiContract;
+import com.etiennelawlor.moviehub.presentation.movies.MoviesPresentationContract;
 
 import dagger.Module;
 import dagger.Provides;
@@ -20,9 +20,9 @@ import dagger.Provides;
 @Module
 public class MoviesModule {
 
-    private MoviesUiContract.View moviesView;
+    private MoviesPresentationContract.View moviesView;
 
-    public MoviesModule(MoviesUiContract.View moviesView) {
+    public MoviesModule(MoviesPresentationContract.View moviesView) {
         this.moviesView = moviesView;
     }
 
@@ -47,7 +47,7 @@ public class MoviesModule {
     }
 
     @Provides
-    public MoviesUiContract.Presenter provideMoviesPresenter(MoviesDomainContract.UseCase moviesUseCase) {
+    public MoviesPresentationContract.Presenter provideMoviesPresenter(MoviesDomainContract.UseCase moviesUseCase) {
         return new MoviesPresenter(moviesView, moviesUseCase);
     }
 }

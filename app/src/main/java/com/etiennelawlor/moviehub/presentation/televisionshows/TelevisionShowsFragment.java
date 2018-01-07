@@ -42,7 +42,7 @@ import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
  * Created by etiennelawlor on 12/16/16.
  */
 
-public class TelevisionShowsFragment extends BaseFragment implements TelevisionShowsAdapter.OnItemClickListener, TelevisionShowsAdapter.OnReloadClickListener, TelevisionShowsUiContract.View {
+public class TelevisionShowsFragment extends BaseFragment implements TelevisionShowsAdapter.OnItemClickListener, TelevisionShowsAdapter.OnReloadClickListener, TelevisionShowsPresentationContract.View {
 
     // region Constants
     public static final String KEY_TELEVISION_SHOW = "KEY_TELEVISION_SHOW";
@@ -75,7 +75,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
 
     // region Injected Variables
     @Inject
-    TelevisionShowsUiContract.Presenter televisionShowsPresenter;
+    TelevisionShowsPresentationContract.Presenter televisionShowsPresenter;
     // endregion
 
     // region Listeners
@@ -200,7 +200,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
     }
     // endregion
 
-    // region TelevisionShowsUiContract.View Methods
+    // region TelevisionShowsPresentationContract.View Methods
 
     @Override
     public void showEmptyView() {

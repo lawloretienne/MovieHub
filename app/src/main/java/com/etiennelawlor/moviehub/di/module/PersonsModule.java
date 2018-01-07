@@ -7,8 +7,8 @@ import com.etiennelawlor.moviehub.data.repositories.person.PersonRemoteDataSourc
 import com.etiennelawlor.moviehub.data.repositories.person.PersonRepository;
 import com.etiennelawlor.moviehub.domain.usecases.PersonsDomainContract;
 import com.etiennelawlor.moviehub.domain.usecases.PersonsUseCase;
+import com.etiennelawlor.moviehub.presentation.persons.PersonsPresentationContract;
 import com.etiennelawlor.moviehub.presentation.persons.PersonsPresenter;
-import com.etiennelawlor.moviehub.presentation.persons.PersonsUiContract;
 
 import dagger.Module;
 import dagger.Provides;
@@ -20,9 +20,9 @@ import dagger.Provides;
 @Module
 public class PersonsModule {
 
-    private PersonsUiContract.View personsView;
+    private PersonsPresentationContract.View personsView;
 
-    public PersonsModule(PersonsUiContract.View personsView) {
+    public PersonsModule(PersonsPresentationContract.View personsView) {
         this.personsView = personsView;
     }
 
@@ -47,7 +47,7 @@ public class PersonsModule {
     }
 
     @Provides
-    public PersonsUiContract.Presenter providePersonsPresenter(PersonsDomainContract.UseCase personsUseCase) {
+    public PersonsPresentationContract.Presenter providePersonsPresenter(PersonsDomainContract.UseCase personsUseCase) {
         return new PersonsPresenter(personsView, personsUseCase);
     }
 }

@@ -5,8 +5,8 @@ import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.domain.models.SearchDomainModel;
 import com.etiennelawlor.moviehub.domain.usecases.SearchDomainContract;
+import com.etiennelawlor.moviehub.presentation.search.SearchPresentationContract;
 import com.etiennelawlor.moviehub.presentation.search.SearchPresenter;
-import com.etiennelawlor.moviehub.presentation.search.SearchUiContract;
 import com.etiennelawlor.moviehub.util.rxjava.TestSchedulerProvider;
 
 import org.junit.Before;
@@ -37,7 +37,7 @@ public class SearchPresenterTest {
 
     // Mocks
     @Mock
-    private SearchUiContract.View mockSearchView;
+    private SearchPresentationContract.View mockSearchView;
     @Mock
     private SearchDomainContract.UseCase mockSearchUseCase;
 

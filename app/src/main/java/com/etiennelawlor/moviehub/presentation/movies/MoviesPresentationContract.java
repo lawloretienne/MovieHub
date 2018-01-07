@@ -10,7 +10,7 @@ import java.util.List;
  * Created by etiennelawlor on 2/9/17.
  */
 
-public interface MoviesUiContract {
+public interface MoviesPresentationContract {
 
     interface View {
         void showEmptyView();

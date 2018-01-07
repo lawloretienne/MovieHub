@@ -3,8 +3,8 @@ package com.etiennelawlor.moviehub;
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.data.repositories.models.TelevisionShowsDataModel;
 import com.etiennelawlor.moviehub.domain.usecases.TelevisionShowsDomainContract;
+import com.etiennelawlor.moviehub.presentation.televisionshows.TelevisionShowsPresentationContract;
 import com.etiennelawlor.moviehub.presentation.televisionshows.TelevisionShowsPresenter;
-import com.etiennelawlor.moviehub.presentation.televisionshows.TelevisionShowsUiContract;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +34,7 @@ public class TelevisionShowsPresenterTest {
 
     // Mocks
     @Mock
-    private TelevisionShowsUiContract.View mockTelevisionShowsView;
+    private TelevisionShowsPresentationContract.View mockTelevisionShowsView;
     @Mock
     private TelevisionShowsDomainContract.UseCase mockTelevisionShowsUseCase;
 
