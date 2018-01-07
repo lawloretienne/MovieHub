@@ -73,7 +73,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -99,6 +98,8 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     public static final String SECURE_BASE_URL = "https://image.tmdb.org/t/p/";
     public static final String POSTER_SIZE = "w342";
     public static final String PROFILE_SIZE = "h632";
+    public static final String MOVIE_MEDIA_TYPE = "movie";
+    public static final String TELEVISION_SHOW_MEDIA_TYPE = "tv";
     // endregion
 
     // region Views
@@ -185,7 +186,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
             if(personCredit != null){
                 String mediaType = personCredit.getMediaType();
                 switch (mediaType){
-                    case "movie":
+                    case MOVIE_MEDIA_TYPE:
                         MoviePresentationModel movie = new MoviePresentationModel();
 
                         movie.setTitle(personCredit.getTitle());
@@ -195,7 +196,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
 
                         personDetailsPresenter.onMovieClick(movie);
                         break;
-                    case "tv":
+                    case TELEVISION_SHOW_MEDIA_TYPE:
                         TelevisionShowPresentationModel televisionShow = new TelevisionShowPresentationModel();
 
                         televisionShow.setName(personCredit.getName());
@@ -222,7 +223,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
 
                 String mediaType = personCredit.getMediaType();
                 switch (mediaType){
-                    case "movie":
+                    case MOVIE_MEDIA_TYPE:
                         MoviePresentationModel movie = new MoviePresentationModel();
 
                         movie.setTitle(personCredit.getTitle());
@@ -232,7 +233,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
 
                         personDetailsPresenter.onMovieClick(movie);
                         break;
-                    case "tv":
+                    case TELEVISION_SHOW_MEDIA_TYPE:
                         TelevisionShowPresentationModel televisionShow = new TelevisionShowPresentationModel();
 
                         televisionShow.setName(personCredit.getName());
@@ -300,12 +301,9 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
 
         @Override
         public void onAnimationEnd(Animation animation) {
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    setUpCast();
-                    setUpCrew();
-                }
+            handler.postDelayed(() -> {
+                setUpCast();
+                setUpCrew();
             }, DELAY);
         }
 
@@ -322,78 +320,72 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
         public void onSuccess() {
             if(isResumed()){
                 final Bitmap bitmap = ((BitmapDrawable) backdropImageView.getDrawable()).getBitmap();
-                Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-                    public void onGenerated(Palette palette) {
-                        boolean isDark;
-                        @ColorUtility.Lightness int lightness = ColorUtility.isDark(palette);
-                        if (lightness == ColorUtility.LIGHTNESS_UNKNOWN) {
-                            isDark = ColorUtility.isDark(bitmap, bitmap.getWidth() / 2, 0);
-                        } else {
-                            isDark = lightness == ColorUtility.IS_DARK;
-                        }
+                Palette.from(bitmap).generate(palette -> {
+                    boolean isDark;
+                    @ColorUtility.Lightness int lightness = ColorUtility.isDark(palette);
+                    if (lightness == ColorUtility.LIGHTNESS_UNKNOWN) {
+                        isDark = ColorUtility.isDark(bitmap, bitmap.getWidth() / 2, 0);
+                    } else {
+                        isDark = lightness == ColorUtility.IS_DARK;
+                    }
 
+                    if (!isDark && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        // Make back icon dark on light images
+                        ImageButton backButton = (ImageButton) toolbar.getChildAt(0);
+                        backButton.setColorFilter(ContextCompat.getColor(getContext(), R.color.dark_icon));
+
+                        // Make toolbar title text color dark
+                        collapsingToolbarLayout.setCollapsedTitleTextColor(ContextCompat.getColor(getContext(), R.color.eighty_percent_transparency_black));
+                    }
+
+                    // color the status bar. Set a complementary dark color on L,
+                    // light or dark color on M (with matching status bar icons)
+                    statusBarColor = getActivity().getWindow().getStatusBarColor();
+                    final Palette.Swatch topColor =
+                            ColorUtility.getMostPopulousSwatch(palette);
+                    if (topColor != null
+                            && (isDark || Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
+                        statusBarColor = ColorUtility.scrimify(topColor.getRgb(),
+                                isDark, SCRIM_ADJUSTMENT);
+                        // set a light status bar on M+
                         if (!isDark && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            // Make back icon dark on light images
-                            ImageButton backButton = (ImageButton) toolbar.getChildAt(0);
-                            backButton.setColorFilter(ContextCompat.getColor(getContext(), R.color.dark_icon));
-
-                            // Make toolbar title text color dark
-                            collapsingToolbarLayout.setCollapsedTitleTextColor(ContextCompat.getColor(getContext(), R.color.eighty_percent_transparency_black));
+                            ViewUtility.setLightStatusBar(getActivity().getWindow().getDecorView());
                         }
+                    }
 
-                        // color the status bar. Set a complementary dark color on L,
-                        // light or dark color on M (with matching status bar icons)
-                        statusBarColor = getActivity().getWindow().getStatusBarColor();
-                        final Palette.Swatch topColor =
-                                ColorUtility.getMostPopulousSwatch(palette);
-                        if (topColor != null
-                                && (isDark || Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
-                            statusBarColor = ColorUtility.scrimify(topColor.getRgb(),
-                                    isDark, SCRIM_ADJUSTMENT);
-                            // set a light status bar on M+
-                            if (!isDark && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                ViewUtility.setLightStatusBar(getActivity().getWindow().getDecorView());
+                    if (statusBarColor != getActivity().getWindow().getStatusBarColor()) {
+                        ValueAnimator statusBarColorAnim = ValueAnimator.ofArgb(
+                                getActivity().getWindow().getStatusBarColor(), statusBarColor);
+                        statusBarColorAnim.addUpdateListener(animation -> {
+                            if(getActivity() != null){
+                                getActivity().getWindow().setStatusBarColor(
+                                        (int) animation.getAnimatedValue());
                             }
-                        }
+                        });
+                        statusBarColorAnim.setDuration(500L);
+                        statusBarColorAnim.setInterpolator(
+                                AnimationUtility.getFastOutSlowInInterpolator(getContext()));
+                        statusBarColorAnim.start();
+                    }
 
-                        if (statusBarColor != getActivity().getWindow().getStatusBarColor()) {
-                            ValueAnimator statusBarColorAnim = ValueAnimator.ofArgb(
-                                    getActivity().getWindow().getStatusBarColor(), statusBarColor);
-                            statusBarColorAnim.addUpdateListener(new ValueAnimator
-                                    .AnimatorUpdateListener() {
-                                @Override
-                                public void onAnimationUpdate(ValueAnimator animation) {
-                                    if(getActivity() != null){
-                                        getActivity().getWindow().setStatusBarColor(
-                                                (int) animation.getAnimatedValue());
-                                    }
-                                }
-                            });
-                            statusBarColorAnim.setDuration(500L);
-                            statusBarColorAnim.setInterpolator(
-                                    AnimationUtility.getFastOutSlowInInterpolator(getContext()));
-                            statusBarColorAnim.start();
-                        }
+                    if (isDark || Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        GradientDrawable gradientDrawable = new GradientDrawable(
+                                GradientDrawable.Orientation.BOTTOM_TOP,
+                                new int[] {
+                                        ContextCompat.getColor(getContext(), android.R.color.transparent),
+                                        statusBarColor});
 
-                        if (isDark || Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            GradientDrawable gradientDrawable = new GradientDrawable(
-                                    GradientDrawable.Orientation.BOTTOM_TOP,
-                                    new int[] {
-                                            ContextCompat.getColor(getContext(), android.R.color.transparent),
-                                            statusBarColor});
+                        backdropFrameLayout.setForeground(gradientDrawable);
+                        collapsingToolbarLayout.setContentScrim(new ColorDrawable(ColorUtility.modifyAlpha(statusBarColor, 0.9f)));
+                    } else {
+                        GradientDrawable gradientDrawable = new GradientDrawable(
+                                GradientDrawable.Orientation.BOTTOM_TOP,
+                                new int[] {
+                                        ContextCompat.getColor(getContext(), android.R.color.transparent),
+                                        ContextCompat.getColor(getContext(), R.color.status_bar_color)});
 
-                            backdropFrameLayout.setForeground(gradientDrawable);
-                            collapsingToolbarLayout.setContentScrim(new ColorDrawable(ColorUtility.modifyAlpha(statusBarColor, 0.9f)));
-                        } else {
-                            GradientDrawable gradientDrawable = new GradientDrawable(
-                                    GradientDrawable.Orientation.BOTTOM_TOP,
-                                    new int[] {
-                                            ContextCompat.getColor(getContext(), android.R.color.transparent),
-                                            ContextCompat.getColor(getContext(), R.color.status_bar_color)});
-
-                            backdropFrameLayout.setForeground(gradientDrawable);
-                            collapsingToolbarLayout.setContentScrim(new ColorDrawable(ColorUtility.modifyAlpha(ContextCompat.getColor(getContext(), R.color.status_bar_color), 0.9f)));
-                        }
+                        backdropFrameLayout.setForeground(gradientDrawable);
+                        collapsingToolbarLayout.setContentScrim(new ColorDrawable(ColorUtility.modifyAlpha(ContextCompat.getColor(getContext(), R.color.status_bar_color), 0.9f)));
                     }
                 });
             }
@@ -410,13 +402,11 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
         @Override
         public void onSuccess() {
             final Bitmap bitmap = ((BitmapDrawable) personProfileImageView.getDrawable()).getBitmap();
-            Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-                public void onGenerated(Palette palette) {
-                    setUpPersonHeaderBackgroundColor(palette);
-                    setUpTitleTextColor(titleTextView, palette);
+            Palette.from(bitmap).generate(palette -> {
+                setUpPersonHeaderBackgroundColor(palette);
+                setUpTitleTextColor(titleTextView, palette);
 
-                    getActivity().supportStartPostponedEnterTransition();
-                }
+                getActivity().supportStartPostponedEnterTransition();
             });
         }
 
@@ -553,15 +543,12 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
 
     @Override
     public void showErrorView() {
-        Snackbar snackbar = Snackbar.make(ButterKnife.findById(getActivity(), R.id.main_content),
+        Snackbar snackbar = Snackbar.make(getActivity().findViewById(R.id.main_content),
                 TrestleUtility.getFormattedText("NetworkResponse connection is unavailable.", font, 16),
                 Snackbar.LENGTH_INDEFINITE);
-        snackbar.setAction("RETRY", new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(person != null)
-                    personDetailsPresenter.onLoadPersonDetails(person.getId());
-            }
+        snackbar.setAction("RETRY", view -> {
+            if(person != null)
+                personDetailsPresenter.onLoadPersonDetails(person.getId());
         });
         View snackBarView = snackbar.getView();
 //                            snackBarView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.grey_200));
@@ -582,7 +569,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
         Resources resources = getResources();
 //            window.setStatusBarColor(primaryDark);
 
-        Pair<View, String> moviePair = getPair(selectedView, resources.getString(R.string.transition_movie_thumbnail));
+        Pair<View, String> moviePair = getThumbnailPair(selectedView, resources.getString(R.string.transition_movie_thumbnail));
 
         ActivityOptionsCompat options = getActivityOptionsCompat(moviePair);
         Window window = getActivity().getWindow();
@@ -600,7 +587,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
         Resources resources = getResources();
 //            window.setStatusBarColor(primaryDark);
 
-        Pair<View, String> televisionShowPair  = getPair(selectedView, resources.getString(R.string.transition_television_show_thumbnail));
+        Pair<View, String> televisionShowPair  = getThumbnailPair(selectedView, resources.getString(R.string.transition_television_show_thumbnail));
 
         ActivityOptionsCompat options = getActivityOptionsCompat(televisionShowPair);
         Window window = getActivity().getWindow();
@@ -689,7 +676,8 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
         if(cast != null && cast.size()>0){
             View castView = castViewStub.inflate();
 
-            RecyclerView castRecyclerView = ButterKnife.findById(castView, R.id.cast_rv);
+            RecyclerView castRecyclerView = castView.findViewById(R.id.cast_rv);
+
 
             LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
             castRecyclerView.setLayoutManager(layoutManager);
@@ -699,30 +687,27 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
             SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
             snapHelper.attachToRecyclerView(castRecyclerView);
 
-            Collections.sort(cast, new Comparator<PersonCreditPresentationModel>() {
-                @Override
-                public int compare(PersonCreditPresentationModel pc1, PersonCreditPresentationModel pc2) {
-                    int year1 = -1;
-                    if(pc1.getFirstAirYear() != -1){
-                        year1 = pc1.getFirstAirYear();
-                    } else if(pc1.getReleaseYear() != -1){
-                        year1 = pc1.getReleaseYear();
-                    }
-
-                    int year2 = -1;
-                    if(pc2.getFirstAirYear() != -1){
-                        year2 = pc2.getFirstAirYear();
-                    } else if(pc2.getReleaseYear() != -1){
-                        year2 = pc2.getReleaseYear();
-                    }
-
-                    if(year1 > year2)
-                        return -1;
-                    else if(year1 < year2)
-                        return 1;
-                    else
-                        return 0;
+            Collections.sort(cast, (pc1, pc2) -> {
+                int year1 = -1;
+                if(pc1.getFirstAirYear() != -1){
+                    year1 = pc1.getFirstAirYear();
+                } else if(pc1.getReleaseYear() != -1){
+                    year1 = pc1.getReleaseYear();
                 }
+
+                int year2 = -1;
+                if(pc2.getFirstAirYear() != -1){
+                    year2 = pc2.getFirstAirYear();
+                } else if(pc2.getReleaseYear() != -1){
+                    year2 = pc2.getReleaseYear();
+                }
+
+                if(year1 > year2)
+                    return -1;
+                else if(year1 < year2)
+                    return 1;
+                else
+                    return 0;
             });
 
             castAdapter.addAll(cast);
@@ -734,7 +719,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
         if(crew != null && crew.size()>0){
             View crewView = crewViewStub.inflate();
 
-            RecyclerView crewRecyclerView = ButterKnife.findById(crewView, R.id.crew_rv);
+            RecyclerView crewRecyclerView = crewView.findViewById(R.id.crew_rv);
 
             LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
             crewRecyclerView.setLayoutManager(layoutManager);
@@ -744,30 +729,27 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
             SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
             snapHelper.attachToRecyclerView(crewRecyclerView);
 
-            Collections.sort(crew, new Comparator<PersonCreditPresentationModel>() {
-                @Override
-                public int compare(PersonCreditPresentationModel pc1, PersonCreditPresentationModel pc2) {
-                    int year1 = -1;
-                    if(pc1.getFirstAirYear() != -1){
-                        year1 = pc1.getFirstAirYear();
-                    } else if(pc1.getReleaseYear() != -1){
-                        year1 = pc1.getReleaseYear();
-                    }
-
-                    int year2 = -1;
-                    if(pc2.getFirstAirYear() != -1){
-                        year2 = pc2.getFirstAirYear();
-                    } else if(pc2.getReleaseYear() != -1){
-                        year2 = pc2.getReleaseYear();
-                    }
-
-                    if(year1 > year2)
-                        return -1;
-                    else if(year1 < year2)
-                        return 1;
-                    else
-                        return 0;
+            Collections.sort(crew, (pc1, pc2) -> {
+                int year1 = -1;
+                if(pc1.getFirstAirYear() != -1){
+                    year1 = pc1.getFirstAirYear();
+                } else if(pc1.getReleaseYear() != -1){
+                    year1 = pc1.getReleaseYear();
                 }
+
+                int year2 = -1;
+                if(pc2.getFirstAirYear() != -1){
+                    year2 = pc2.getFirstAirYear();
+                } else if(pc2.getReleaseYear() != -1){
+                    year2 = pc2.getReleaseYear();
+                }
+
+                if(year1 > year2)
+                    return -1;
+                else if(year1 < year2)
+                    return 1;
+                else
+                    return 0;
             });
 
             crewAdapter.addAll(crew);
@@ -890,7 +872,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
         return options;
     }
 
-    private Pair<View, String> getPair(View view, String transition){
+    private Pair<View, String> getThumbnailPair(View view, String transition){
         Pair<View, String> posterImagePair = null;
         View posterImageView = view.findViewById(R.id.thumbnail_iv);
         if(posterImageView != null){

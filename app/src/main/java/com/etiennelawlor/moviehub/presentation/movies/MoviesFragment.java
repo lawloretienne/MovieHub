@@ -293,7 +293,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
 //            window.setStatusBarColor(ContextCompat.getColor(getContext(), R.color.status_bar_color));
 
         Resources resources = selectedMovieView.getResources();
-        Pair<View, String> moviePair  = getPair(selectedMovieView, resources.getString(R.string.transition_movie_thumbnail));
+        Pair<View, String> moviePair  = getThumbnailPair(selectedMovieView, resources.getString(R.string.transition_movie_thumbnail));
 
         ActivityOptionsCompat options = getActivityOptionsCompat(moviePair);
 
@@ -341,7 +341,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
         return options;
     }
 
-    private Pair<View, String> getPair(View view, String transition){
+    private Pair<View, String> getThumbnailPair(View view, String transition){
         Pair<View, String> posterImagePair = null;
         View posterImageView = view.findViewById(R.id.thumbnail_iv);
         if(posterImageView != null){

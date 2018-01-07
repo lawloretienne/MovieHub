@@ -61,8 +61,6 @@ public class PersonDetailsPresenter implements PersonDetailsPresentationContract
                         throwable.printStackTrace();
 
                         if(NetworkUtility.isKnownException(throwable)){
-//                            moviesView.showErrorFooter();
-//                            moviesView.setErrorText("Can't load data.\nCheck your network connection.");
                             personDetailsView.showErrorView();
                         }
                     }

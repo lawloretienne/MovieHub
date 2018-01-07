@@ -293,7 +293,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
 //            window.setStatusBarColor(primaryDark);
 
         Resources resources = selectedTelevisionShowView.getResources();
-        Pair<View, String> televisionShowPair  = getPair(selectedTelevisionShowView, resources.getString(R.string.transition_television_show_thumbnail));
+        Pair<View, String> televisionShowPair  = getThumbnailPair(selectedTelevisionShowView, resources.getString(R.string.transition_television_show_thumbnail));
 
         ActivityOptionsCompat options = getActivityOptionsCompat(televisionShowPair);
 
@@ -339,7 +339,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
         return options;
     }
 
-    private Pair<View, String> getPair(View view, String transition){
+    private Pair<View, String> getThumbnailPair(View view, String transition){
         Pair<View, String> posterImagePair = null;
         View posterImageView = view.findViewById(R.id.thumbnail_iv);
         if(posterImageView != null){

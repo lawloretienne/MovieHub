@@ -208,9 +208,6 @@ public class SearchFragment extends BaseFragment implements SearchPresentationCo
 
     // endregion
 
-    // region Callbacks
-    // endregion
-
     // region Constructors
     public SearchFragment() {
     }
@@ -241,7 +238,6 @@ public class SearchFragment extends BaseFragment implements SearchPresentationCo
         sharedElementEnterTransition.addListener(enterTransitionTransitionListener);
 //        sharedElementReturnTransition = getActivity().getWindow().getSharedElementReturnTransition();
 //        sharedElementReturnTransition.addListener(returnTransitionTransitionListener);
-
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
     }
@@ -336,18 +332,14 @@ public class SearchFragment extends BaseFragment implements SearchPresentationCo
 
     @Override
     public void showErrorView() {
-        Snackbar snackbar = Snackbar.make(ButterKnife.findById(getActivity(), R.id.main_content),
+
+        Snackbar snackbar = Snackbar.make(getActivity().findViewById(R.id.main_content),
                 TrestleUtility.getFormattedText("NetworkResponse connection is unavailable.", font, 16),
                 Snackbar.LENGTH_INDEFINITE);
-        snackbar.setAction("RETRY", new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                searchPresenter.onLoadSearch(searchQueryChangeObservable);
-            }
-        });
+        snackbar.setAction("RETRY", view -> searchPresenter.onLoadSearch(searchQueryChangeObservable));
         View snackBarView = snackbar.getView();
 //                            snackBarView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.grey_200));
-        TextView textView = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text);
+        TextView textView = snackBarView.findViewById(android.support.design.R.id.snackbar_text);
         textView.setTextColor(ContextCompat.getColor(getContext(), R.color.secondary_text_light));
         textView.setTypeface(font);
 
@@ -426,7 +418,7 @@ public class SearchFragment extends BaseFragment implements SearchPresentationCo
 //                window.setStatusBarColor(statusBarColor);
 
         Resources resources = selectedMovieView.getResources();
-        Pair<View, String> moviePair  = getPair(selectedMovieView, resources.getString(R.string.transition_movie_thumbnail));
+        Pair<View, String> moviePair  = getThumbnailPair(selectedMovieView, resources.getString(R.string.transition_movie_thumbnail));
 
         ActivityOptionsCompat options = getActivityOptionsCompat(moviePair);
 
@@ -445,7 +437,7 @@ public class SearchFragment extends BaseFragment implements SearchPresentationCo
 //            window.setStatusBarColor(primaryDark);
 
         Resources resources = selectedTelevisionShowView.getResources();
-        Pair<View, String> televisionShowPair  = getPair(selectedTelevisionShowView, resources.getString(R.string.transition_television_show_thumbnail));
+        Pair<View, String> televisionShowPair  = getThumbnailPair(selectedTelevisionShowView, resources.getString(R.string.transition_television_show_thumbnail));
 
         ActivityOptionsCompat options = getActivityOptionsCompat(televisionShowPair);
 
@@ -464,7 +456,7 @@ public class SearchFragment extends BaseFragment implements SearchPresentationCo
 //            window.setStatusBarColor(primaryDark);
 
         Resources resources = selectedPersonView.getResources();
-        Pair<View, String> personPair  = getPair(selectedPersonView, resources.getString(R.string.transition_person_thumbnail));
+        Pair<View, String> personPair  = getThumbnailPair(selectedPersonView, resources.getString(R.string.transition_person_thumbnail));
 
         ActivityOptionsCompat options = getActivityOptionsCompat(personPair);
 
@@ -542,9 +534,9 @@ public class SearchFragment extends BaseFragment implements SearchPresentationCo
         return options;
     }
 
-    private Pair<View, String> getPair(View view, String transition){
+    private Pair<View, String> getThumbnailPair(View view, String transition){
         Pair<View, String> posterImagePair = null;
-        View posterImageView = view.findViewById(R.id.thumbnail_iv);;
+        View posterImageView = view.findViewById(R.id.thumbnail_iv);
         if(posterImageView != null){
             posterImagePair = Pair.create(posterImageView, transition);
         }

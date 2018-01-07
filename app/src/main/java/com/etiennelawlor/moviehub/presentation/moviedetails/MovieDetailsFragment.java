@@ -276,13 +276,10 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
 
         @Override
         public void onAnimationEnd(Animation animation) {
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    setUpCast();
-                    setUpCrew();
-                    setUpSimilarMovies();
-                }
+            handler.postDelayed(() -> {
+                setUpCast();
+                setUpCrew();
+                setUpSimilarMovies();
             }, DELAY);
         }
 
@@ -298,78 +295,72 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
         @Override
         public void onSuccess() {
             final Bitmap bitmap = ((BitmapDrawable) backdropImageView.getDrawable()).getBitmap();
-            Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-                public void onGenerated(Palette palette) {
-                    boolean isDark;
-                    @ColorUtility.Lightness int lightness = ColorUtility.isDark(palette);
-                    if (lightness == ColorUtility.LIGHTNESS_UNKNOWN) {
-                        isDark = ColorUtility.isDark(bitmap, bitmap.getWidth() / 2, 0);
-                    } else {
-                        isDark = lightness == ColorUtility.IS_DARK;
-                    }
+            Palette.from(bitmap).generate(palette -> {
+                boolean isDark;
+                @ColorUtility.Lightness int lightness = ColorUtility.isDark(palette);
+                if (lightness == ColorUtility.LIGHTNESS_UNKNOWN) {
+                    isDark = ColorUtility.isDark(bitmap, bitmap.getWidth() / 2, 0);
+                } else {
+                    isDark = lightness == ColorUtility.IS_DARK;
+                }
 
+                if (!isDark && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    // Make back icon dark on light images
+                    ImageButton backButton = (ImageButton) toolbar.getChildAt(0);
+                    backButton.setColorFilter(ContextCompat.getColor(getContext(), R.color.dark_icon));
+
+                    // Make toolbar title text color dark
+                    collapsingToolbarLayout.setCollapsedTitleTextColor(ContextCompat.getColor(getContext(), R.color.eighty_percent_transparency_black));
+                }
+
+                // color the status bar. Set a complementary dark color on L,
+                // light or dark color on M (with matching status bar icons)
+                statusBarColor = getActivity().getWindow().getStatusBarColor();
+                final Palette.Swatch topColor =
+                        ColorUtility.getMostPopulousSwatch(palette);
+                if (topColor != null
+                        && (isDark || Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
+                    statusBarColor = ColorUtility.scrimify(topColor.getRgb(),
+                            isDark, SCRIM_ADJUSTMENT);
+                    // set a light status bar on M+
                     if (!isDark && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        // Make back icon dark on light images
-                        ImageButton backButton = (ImageButton) toolbar.getChildAt(0);
-                        backButton.setColorFilter(ContextCompat.getColor(getContext(), R.color.dark_icon));
-
-                        // Make toolbar title text color dark
-                        collapsingToolbarLayout.setCollapsedTitleTextColor(ContextCompat.getColor(getContext(), R.color.eighty_percent_transparency_black));
+                        ViewUtility.setLightStatusBar(getActivity().getWindow().getDecorView());
                     }
+                }
 
-                    // color the status bar. Set a complementary dark color on L,
-                    // light or dark color on M (with matching status bar icons)
-                    statusBarColor = getActivity().getWindow().getStatusBarColor();
-                    final Palette.Swatch topColor =
-                            ColorUtility.getMostPopulousSwatch(palette);
-                    if (topColor != null
-                            && (isDark || Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
-                        statusBarColor = ColorUtility.scrimify(topColor.getRgb(),
-                                isDark, SCRIM_ADJUSTMENT);
-                        // set a light status bar on M+
-                        if (!isDark && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            ViewUtility.setLightStatusBar(getActivity().getWindow().getDecorView());
+                if (statusBarColor != getActivity().getWindow().getStatusBarColor()) {
+                    ValueAnimator statusBarColorAnim = ValueAnimator.ofArgb(
+                            getActivity().getWindow().getStatusBarColor(), statusBarColor);
+                    statusBarColorAnim.addUpdateListener(animation -> {
+                        if(getActivity() != null){
+                            getActivity().getWindow().setStatusBarColor(
+                                    (int) animation.getAnimatedValue());
                         }
-                    }
+                    });
+                    statusBarColorAnim.setDuration(500L);
+                    statusBarColorAnim.setInterpolator(
+                            AnimationUtility.getFastOutSlowInInterpolator(getContext()));
+                    statusBarColorAnim.start();
+                }
 
-                    if (statusBarColor != getActivity().getWindow().getStatusBarColor()) {
-                        ValueAnimator statusBarColorAnim = ValueAnimator.ofArgb(
-                                getActivity().getWindow().getStatusBarColor(), statusBarColor);
-                        statusBarColorAnim.addUpdateListener(new ValueAnimator
-                                .AnimatorUpdateListener() {
-                            @Override
-                            public void onAnimationUpdate(ValueAnimator animation) {
-                                if(getActivity() != null){
-                                    getActivity().getWindow().setStatusBarColor(
-                                            (int) animation.getAnimatedValue());
-                                }
-                            }
-                        });
-                        statusBarColorAnim.setDuration(500L);
-                        statusBarColorAnim.setInterpolator(
-                                AnimationUtility.getFastOutSlowInInterpolator(getContext()));
-                        statusBarColorAnim.start();
-                    }
+                if (isDark || Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    GradientDrawable gradientDrawable = new GradientDrawable(
+                            GradientDrawable.Orientation.BOTTOM_TOP,
+                            new int[] {
+                                    ContextCompat.getColor(getContext(), android.R.color.transparent),
+                                    statusBarColor});
 
-                    if (isDark || Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        GradientDrawable gradientDrawable = new GradientDrawable(
-                                GradientDrawable.Orientation.BOTTOM_TOP,
-                                new int[] {
-                                        ContextCompat.getColor(getContext(), android.R.color.transparent),
-                                        statusBarColor});
+                    backdropFrameLayout.setForeground(gradientDrawable);
+                    collapsingToolbarLayout.setContentScrim(new ColorDrawable(ColorUtility.modifyAlpha(statusBarColor, 0.9f)));
+                } else {
+                    GradientDrawable gradientDrawable = new GradientDrawable(
+                            GradientDrawable.Orientation.BOTTOM_TOP,
+                            new int[] {
+                                    ContextCompat.getColor(getContext(), android.R.color.transparent),
+                                    ContextCompat.getColor(getContext(), R.color.status_bar_color)});
 
-                        backdropFrameLayout.setForeground(gradientDrawable);
-                        collapsingToolbarLayout.setContentScrim(new ColorDrawable(ColorUtility.modifyAlpha(statusBarColor, 0.9f)));
-                    } else {
-                        GradientDrawable gradientDrawable = new GradientDrawable(
-                                GradientDrawable.Orientation.BOTTOM_TOP,
-                                new int[] {
-                                        ContextCompat.getColor(getContext(), android.R.color.transparent),
-                                        ContextCompat.getColor(getContext(), R.color.status_bar_color)});
-
-                        backdropFrameLayout.setForeground(gradientDrawable);
-                        collapsingToolbarLayout.setContentScrim(new ColorDrawable(ColorUtility.modifyAlpha(ContextCompat.getColor(getContext(), R.color.status_bar_color), 0.9f)));
-                    }
+                    backdropFrameLayout.setForeground(gradientDrawable);
+                    collapsingToolbarLayout.setContentScrim(new ColorDrawable(ColorUtility.modifyAlpha(ContextCompat.getColor(getContext(), R.color.status_bar_color), 0.9f)));
                 }
             });
         }
@@ -384,13 +375,11 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
         @Override
         public void onSuccess() {
             final Bitmap bitmap = ((BitmapDrawable) moviePosterImageView.getDrawable()).getBitmap();
-            Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-                public void onGenerated(Palette palette) {
-                    setUpMovieHeaderBackgroundColor(palette);
-                    setUpTitleTextColor(titleTextView, palette);
+            Palette.from(bitmap).generate(palette -> {
+                setUpMovieHeaderBackgroundColor(palette);
+                setUpTitleTextColor(titleTextView, palette);
 
-                    getActivity().supportStartPostponedEnterTransition();
-                }
+                getActivity().supportStartPostponedEnterTransition();
             });
         }
 
@@ -533,19 +522,16 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
 
     @Override
     public void showErrorView() {
-        Snackbar snackbar = Snackbar.make(ButterKnife.findById(getActivity(), R.id.main_content),
+        Snackbar snackbar = Snackbar.make(getActivity().findViewById(R.id.main_content),
                 TrestleUtility.getFormattedText("NetworkResponse connection is unavailable.", font, 16),
                 Snackbar.LENGTH_INDEFINITE);
-        snackbar.setAction("RETRY", new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(movie != null)
-                    movieDetailsPresenter.onLoadMovieDetails(movie.getId());
-            }
+        snackbar.setAction("RETRY", view -> {
+            if(movie != null)
+                movieDetailsPresenter.onLoadMovieDetails(movie.getId());
         });
         View snackBarView = snackbar.getView();
 //                            snackBarView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.grey_200));
-        TextView textView = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text);
+        TextView textView = snackBarView.findViewById(android.support.design.R.id.snackbar_text);
         textView.setTextColor(ContextCompat.getColor(getContext(), R.color.secondary_text_light));
         textView.setTypeface(font);
 
@@ -563,7 +549,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
 //            window.setStatusBarColor(primaryDark);
 
         Resources resources = selectedPersonView.getResources();
-        Pair<View, String> personPair  = getPair(selectedPersonView, resources.getString(R.string.transition_person_thumbnail));
+        Pair<View, String> personPair  = getThumbnailPair(selectedPersonView, resources.getString(R.string.transition_person_thumbnail));
 
         ActivityOptionsCompat options = getActivityOptionsCompat(personPair);
 
@@ -583,7 +569,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
 //                window.setStatusBarColor(statusBarColor);
 
         Resources resources = selectedMovieView.getResources();
-        Pair<View, String> moviePair  = getPair(selectedMovieView, resources.getString(R.string.transition_movie_thumbnail));
+        Pair<View, String> moviePair  = getThumbnailPair(selectedMovieView, resources.getString(R.string.transition_movie_thumbnail));
 
         ActivityOptionsCompat options = getActivityOptionsCompat(moviePair);
 
@@ -661,7 +647,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
         if(cast != null && cast.size()>0){
             View castView = castViewStub.inflate();
 
-            RecyclerView castRecyclerView = ButterKnife.findById(castView, R.id.cast_rv);
+            RecyclerView castRecyclerView = castView.findViewById(R.id.cast_rv);
 
             LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
             castRecyclerView.setLayoutManager(layoutManager);
@@ -680,7 +666,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
         if(crew != null && crew.size()>0){
             View crewView = crewViewStub.inflate();
 
-            RecyclerView crewRecyclerView = ButterKnife.findById(crewView, R.id.crew_rv);
+            RecyclerView crewRecyclerView = crewView.findViewById(R.id.crew_rv);
 
             LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
             crewRecyclerView.setLayoutManager(layoutManager);
@@ -699,7 +685,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
         if(similarMovies != null && similarMovies.size()>0){
             View similarMoviesView = similarMoviesViewStub.inflate();
 
-            RecyclerView similarMoviesRecyclerView = ButterKnife.findById(similarMoviesView, R.id.similar_movies_rv);
+            RecyclerView similarMoviesRecyclerView = similarMoviesView.findViewById(R.id.similar_movies_rv);
 
             LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
             similarMoviesRecyclerView.setLayoutManager(layoutManager);
@@ -709,26 +695,23 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
             SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
             snapHelper.attachToRecyclerView(similarMoviesRecyclerView);
 
-            Collections.sort(similarMovies, new Comparator<MoviePresentationModel>() {
-                @Override
-                public int compare(MoviePresentationModel m1, MoviePresentationModel m2) {
-                    int year1 = -1;
-                    if(m1.getReleaseDateYear() != -1){
-                        year1 = m1.getReleaseDateYear();
-                    }
-
-                    int year2 = -1;
-                    if(m2.getReleaseDateYear() != -1){
-                        year2 = m2.getReleaseDateYear();
-                    }
-
-                    if(year1 > year2)
-                        return -1;
-                    else if(year1 < year2)
-                        return 1;
-                    else
-                        return 0;
+            Collections.sort(similarMovies, (m1, m2) -> {
+                int year1 = -1;
+                if(m1.getReleaseDateYear() != -1){
+                    year1 = m1.getReleaseDateYear();
                 }
+
+                int year2 = -1;
+                if(m2.getReleaseDateYear() != -1){
+                    year2 = m2.getReleaseDateYear();
+                }
+
+                if(year1 > year2)
+                    return -1;
+                else if(year1 < year2)
+                    return 1;
+                else
+                    return 0;
             });
 
             similarMoviesAdapter.addAll(similarMovies);
@@ -893,7 +876,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
         return options;
     }
 
-    private Pair<View, String> getPair(View view, String transition){
+    private Pair<View, String> getThumbnailPair(View view, String transition){
         Pair<View, String> posterImagePair = null;
         View posterImageView = view.findViewById(R.id.thumbnail_iv);
         if(posterImageView != null){

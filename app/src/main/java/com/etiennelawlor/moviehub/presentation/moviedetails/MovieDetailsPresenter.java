@@ -58,8 +58,6 @@ public class MovieDetailsPresenter implements MovieDetailsPresentationContract.P
                         throwable.printStackTrace();
 
                         if(NetworkUtility.isKnownException(throwable)){
-//                            moviesView.showErrorFooter();
-//                            moviesView.setErrorText("Can't load data.\nCheck your network connection.");
                             movieDetailsView.showErrorView();
                         }
                     }

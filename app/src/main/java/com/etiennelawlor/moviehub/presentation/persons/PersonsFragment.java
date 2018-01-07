@@ -292,7 +292,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
 //            window.setStatusBarColor(primaryDark);
 
         Resources resources = selectedPersonView.getResources();
-        Pair<View, String> personPair  = getPair(selectedPersonView, resources.getString(R.string.transition_person_thumbnail));
+        Pair<View, String> personPair  = getThumbnailPair(selectedPersonView, resources.getString(R.string.transition_person_thumbnail));
 
         ActivityOptionsCompat options = getActivityOptionsCompat(personPair);
 
@@ -339,7 +339,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
         return options;
     }
 
-    private Pair<View, String> getPair(View view, String transition){
+    private Pair<View, String> getThumbnailPair(View view, String transition){
         Pair<View, String> posterImagePair = null;
         View posterImageView = view.findViewById(R.id.thumbnail_iv);
         if(posterImageView != null){

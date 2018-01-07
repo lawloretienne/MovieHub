@@ -73,14 +73,11 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCreditPresentationMo
 
         final PersonCreditViewHolder holder = new PersonCreditViewHolder(v);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int adapterPos = holder.getAdapterPosition();
-                if (adapterPos != RecyclerView.NO_POSITION) {
-                    if (onItemClickListener != null) {
-                        onItemClickListener.onItemClick(adapterPos, holder.itemView);
-                    }
+        holder.itemView.setOnClickListener(v1 -> {
+            int adapterPos = holder.getAdapterPosition();
+            if (adapterPos != RecyclerView.NO_POSITION) {
+                if (onItemClickListener != null) {
+                    onItemClickListener.onItemClick(adapterPos, holder.itemView);
                 }
             }
         });
@@ -96,12 +93,9 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCreditPresentationMo
         v.setLayoutParams(layoutParams);
 
         final FooterViewHolder holder = new FooterViewHolder(v);
-        holder.reloadButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(onReloadClickListener != null){
-                    onReloadClickListener.onReloadClick();
-                }
+        holder.reloadButton.setOnClickListener(v1 -> {
+            if(onReloadClickListener != null){
+                onReloadClickListener.onReloadClick();
             }
         });
 
@@ -227,15 +221,13 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCreditPresentationMo
                                     setUpCaptionTextColor(vh.captionTextView, personCredit.getPosterPalette());
                                 } else {
                                     Bitmap bitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
-                                    Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-                                        public void onGenerated(Palette palette) {
-                                            personCredit.setPosterPalette(palette);
+                                    Palette.from(bitmap).generate(palette -> {
+                                        personCredit.setPosterPalette(palette);
 
-                                            setUpInfoBackgroundColor(vh.infoLinearLayout, palette);
-                                            setUpTitleTextColor(vh.titleTextView, palette);
-                                            setUpSubtitleTextColor(vh.subtitleTextView, palette);
-                                            setUpCaptionTextColor(vh.captionTextView, palette);
-                                        }
+                                        setUpInfoBackgroundColor(vh.infoLinearLayout, palette);
+                                        setUpTitleTextColor(vh.titleTextView, palette);
+                                        setUpSubtitleTextColor(vh.subtitleTextView, palette);
+                                        setUpCaptionTextColor(vh.captionTextView, palette);
                                     });
                                 }
                             }
