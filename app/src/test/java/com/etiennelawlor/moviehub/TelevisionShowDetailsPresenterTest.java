@@ -5,8 +5,8 @@ import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCreditResp
 import com.etiennelawlor.moviehub.data.network.response.TelevisionShowResponse;
 import com.etiennelawlor.moviehub.domain.models.TelevisionShowDetailsDomainModel;
 import com.etiennelawlor.moviehub.domain.usecases.TelevisionShowDetailsDomainContract;
-import com.etiennelawlor.moviehub.presentation.televisionshowdetails.TelevisionShowDetailsPresenter;
 import com.etiennelawlor.moviehub.presentation.televisionshowdetails.TelevisionShowDetailsPresentationContract;
+import com.etiennelawlor.moviehub.presentation.televisionshowdetails.TelevisionShowDetailsPresenter;
 
 import org.junit.Before;
 import org.junit.Test;

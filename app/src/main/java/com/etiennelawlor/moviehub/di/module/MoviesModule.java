@@ -7,8 +7,8 @@ import com.etiennelawlor.moviehub.data.repositories.movie.MovieRemoteDataSource;
 import com.etiennelawlor.moviehub.data.repositories.movie.MovieRepository;
 import com.etiennelawlor.moviehub.domain.usecases.MoviesDomainContract;
 import com.etiennelawlor.moviehub.domain.usecases.MoviesUseCase;
-import com.etiennelawlor.moviehub.presentation.movies.MoviesPresenter;
 import com.etiennelawlor.moviehub.presentation.movies.MoviesPresentationContract;
+import com.etiennelawlor.moviehub.presentation.movies.MoviesPresenter;
 
 import dagger.Module;
 import dagger.Provides;

@@ -5,8 +5,8 @@ import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
 import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
 import com.etiennelawlor.moviehub.domain.models.MovieDetailsDomainModel;
 import com.etiennelawlor.moviehub.domain.usecases.MovieDetailsDomainContract;
-import com.etiennelawlor.moviehub.presentation.moviedetails.MovieDetailsPresenter;
 import com.etiennelawlor.moviehub.presentation.moviedetails.MovieDetailsPresentationContract;
+import com.etiennelawlor.moviehub.presentation.moviedetails.MovieDetailsPresenter;
 
 import org.junit.Before;
 import org.junit.Test;

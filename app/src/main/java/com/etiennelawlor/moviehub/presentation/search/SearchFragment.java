@@ -1,6 +1,5 @@
 package com.etiennelawlor.moviehub.presentation.search;
 
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -408,12 +407,6 @@ public class SearchFragment extends BaseFragment implements SearchPresentationCo
 
     @Override
     public void openMovieDetails(MoviePresentationModel movie) {
-        Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(KEY_MOVIE, movie);
-//                bundle.putInt(MovieDetailsActivity.KEY_STATUS_BAR_COLOR, getActivity().getWindow().getStatusBarColor());
-        intent.putExtras(bundle);
-
         Window window = getActivity().getWindow();
 //                window.setStatusBarColor(statusBarColor);
 
@@ -421,16 +414,11 @@ public class SearchFragment extends BaseFragment implements SearchPresentationCo
         ActivityOptionsCompat options = getActivityOptionsCompat(moviePair);
 
         window.setExitTransition(null);
-        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+        ActivityCompat.startActivity(getActivity(), MovieDetailsActivity.createIntent(getContext(), movie), options.toBundle());
     }
 
     @Override
     public void openTelevisionShowDetails(TelevisionShowPresentationModel televisionShow) {
-        Intent intent = new Intent(getActivity(), TelevisionShowDetailsActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(KEY_TELEVISION_SHOW, televisionShow);
-        intent.putExtras(bundle);
-
         Window window = getActivity().getWindow();
 //            window.setStatusBarColor(primaryDark);
 
@@ -438,16 +426,11 @@ public class SearchFragment extends BaseFragment implements SearchPresentationCo
         ActivityOptionsCompat options = getActivityOptionsCompat(televisionShowPair);
 
         window.setExitTransition(null);
-        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+        ActivityCompat.startActivity(getActivity(), TelevisionShowDetailsActivity.createIntent(getContext(), televisionShow), options.toBundle());
     }
 
     @Override
     public void openPersonDetails(PersonPresentationModel person) {
-        Intent intent = new Intent(getActivity(), PersonDetailsActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(KEY_PERSON, person);
-        intent.putExtras(bundle);
-
         Window window = getActivity().getWindow();
 //            window.setStatusBarColor(primaryDark);
 
@@ -455,7 +438,7 @@ public class SearchFragment extends BaseFragment implements SearchPresentationCo
         ActivityOptionsCompat options = getActivityOptionsCompat(personPair);
 
         window.setExitTransition(null);
-        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+        ActivityCompat.startActivity(getActivity(), PersonDetailsActivity.createIntent(getContext(), person), options.toBundle());
     }
 
     // endregion

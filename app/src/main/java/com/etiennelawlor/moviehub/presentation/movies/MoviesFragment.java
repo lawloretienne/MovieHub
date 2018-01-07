@@ -1,6 +1,5 @@
 package com.etiennelawlor.moviehub.presentation.movies;
 
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -283,12 +282,6 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
 
     @Override
     public void openMovieDetails(MoviePresentationModel movie) {
-        Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(KEY_MOVIE, movie);
-//            bundle.putInt(MovieDetailsActivity.KEY_STATUS_BAR_COLOR, getActivity().getWindow().getStatusBarColor());
-        intent.putExtras(bundle);
-
         Window window = getActivity().getWindow();
 //            window.setStatusBarColor(ContextCompat.getColor(getContext(), R.color.status_bar_color));
 
@@ -296,7 +289,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
         ActivityOptionsCompat options = getActivityOptionsCompat(moviePair);
 
         window.setExitTransition(null);
-        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+        ActivityCompat.startActivity(getActivity(), MovieDetailsActivity.createIntent(getContext(), movie), options.toBundle());
     }
 
     // endregion

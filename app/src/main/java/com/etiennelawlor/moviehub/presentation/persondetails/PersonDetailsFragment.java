@@ -1,7 +1,6 @@
 package com.etiennelawlor.moviehub.presentation.persondetails;
 
 import android.animation.ValueAnimator;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -81,6 +80,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+import static com.etiennelawlor.moviehub.presentation.persondetails.PersonDetailsActivity.KEY_PERSON;
+
 /**
  * Created by etiennelawlor on 12/18/16.
  */
@@ -89,9 +90,6 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
 
     // region Constants
     public static final String PATTERN = "yyyy-MM-dd";
-    public static final String KEY_PERSON = "KEY_PERSON";
-    public static final String KEY_MOVIE = "KEY_MOVIE";
-    public static final String KEY_TELEVISION_SHOW = "KEY_TELEVISION_SHOW";
     private static final float SCRIM_ADJUSTMENT = 0.075f;
     private static final int DELAY = 0;
     private static final int START_OFFSET = 500;
@@ -561,34 +559,24 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
 
     @Override
     public void openMovieDetails(MoviePresentationModel movie) {
-        Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(KEY_MOVIE, movie);
-        intent.putExtras(bundle);
-
 //            window.setStatusBarColor(primaryDark);
 
         Pair<View, String> moviePair = getMoviePair();
         ActivityOptionsCompat options = getActivityOptionsCompat(moviePair);
         Window window = getActivity().getWindow();
         window.setExitTransition(null);
-        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+        ActivityCompat.startActivity(getActivity(), MovieDetailsActivity.createIntent(getContext(), movie), options.toBundle());
     }
 
     @Override
     public void openTelevisionShowDetails(TelevisionShowPresentationModel televisionShow) {
-        Intent intent = new Intent(getActivity(), TelevisionShowDetailsActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(KEY_TELEVISION_SHOW, televisionShow);
-        intent.putExtras(bundle);
-
 //            window.setStatusBarColor(primaryDark);
 
         Pair<View, String> televisionShowPair  = getTelevisionShowPair();
         ActivityOptionsCompat options = getActivityOptionsCompat(televisionShowPair);
         Window window = getActivity().getWindow();
         window.setExitTransition(null);
-        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+        ActivityCompat.startActivity(getActivity(), TelevisionShowDetailsActivity.createIntent(getContext(), televisionShow), options.toBundle());
     }
 
     // endregion
@@ -870,14 +858,14 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
 
     private Pair<View, String> getMoviePair(){
         Resources resources = getResources();
-        String transitionName = resources.getString(R.string.transition_television_show_thumbnail);
+        String transitionName = resources.getString(R.string.transition_movie_thumbnail);
         View view = selectedView.findViewById(R.id.thumbnail_iv);
         return getPair(view, transitionName);
     }
 
     private Pair<View, String> getTelevisionShowPair(){
         Resources resources = getResources();
-        String transitionName = resources.getString(R.string.transition_movie_thumbnail);
+        String transitionName = resources.getString(R.string.transition_television_show_thumbnail);
         View view = selectedView.findViewById(R.id.thumbnail_iv);
         return getPair(view, transitionName);
     }

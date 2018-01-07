@@ -1,6 +1,5 @@
 package com.etiennelawlor.moviehub.presentation.main;
 
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -127,9 +126,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     @Override
     public void viewSearch() {
-        Intent intent = new Intent(this, SearchActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-
         Window window = getWindow();
 //        window.setStatusBarColor(primaryDark);
 
@@ -139,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         ActivityOptionsCompat options = getActivityOptionsCompat(searchPair);
 
         window.setExitTransition(null);
-        ActivityCompat.startActivity(this, intent, options.toBundle());
+        ActivityCompat.startActivity(this, SearchActivity.createIntent(this), options.toBundle());
     }
 
     // endregion

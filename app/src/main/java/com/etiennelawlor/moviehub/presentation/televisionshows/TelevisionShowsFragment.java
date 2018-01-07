@@ -1,6 +1,5 @@
 package com.etiennelawlor.moviehub.presentation.televisionshows;
 
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -284,11 +283,6 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
 
     @Override
     public void openTelevisionShowDetails(TelevisionShowPresentationModel televisionShow) {
-        Intent intent = new Intent(getActivity(), TelevisionShowDetailsActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(KEY_TELEVISION_SHOW, televisionShow);
-        intent.putExtras(bundle);
-
         Window window = getActivity().getWindow();
 //            window.setStatusBarColor(primaryDark);
 
@@ -296,7 +290,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
         ActivityOptionsCompat options = getActivityOptionsCompat(televisionShowPair);
 
         window.setExitTransition(null);
-        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+        ActivityCompat.startActivity(getActivity(), TelevisionShowDetailsActivity.createIntent(getContext(), televisionShow), options.toBundle());
     }
     // endregion
 

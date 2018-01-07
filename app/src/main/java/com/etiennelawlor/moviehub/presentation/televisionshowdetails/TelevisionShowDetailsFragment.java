@@ -1,7 +1,6 @@
 package com.etiennelawlor.moviehub.presentation.televisionshowdetails;
 
 import android.animation.ValueAnimator;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -78,6 +77,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+import static com.etiennelawlor.moviehub.presentation.televisionshowdetails.TelevisionShowDetailsActivity.KEY_TELEVISION_SHOW;
+
 /**
  * Created by etiennelawlor on 12/18/16.
  */
@@ -86,8 +87,6 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
 
     // region Constants
     public static final String PATTERN = "yyyy-MM-dd";
-    public static final String KEY_TELEVISION_SHOW = "KEY_TELEVISION_SHOW";
-    public static final String KEY_PERSON = "KEY_PERSON";
     private static final float SCRIM_ADJUSTMENT = 0.075f;
     private static final int DELAY = 0;
     private static final int START_OFFSET = 500;
@@ -543,11 +542,6 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
 
     @Override
     public void openPersonDetails(PersonPresentationModel person) {
-        Intent intent = new Intent(getActivity(), PersonDetailsActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(KEY_PERSON, person);
-        intent.putExtras(bundle);
-
         Window window = getActivity().getWindow();
 //            window.setStatusBarColor(primaryDark);
 
@@ -555,16 +549,11 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
         ActivityOptionsCompat options = getActivityOptionsCompat(personPair);
 
         window.setExitTransition(null);
-        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+        ActivityCompat.startActivity(getActivity(), PersonDetailsActivity.createIntent(getContext(), person), options.toBundle());
     }
 
     @Override
     public void openTelevisionShowDetails(TelevisionShowPresentationModel televisionShow) {
-        Intent intent = new Intent(getActivity(), TelevisionShowDetailsActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(KEY_TELEVISION_SHOW, televisionShow);
-        intent.putExtras(bundle);
-
         Window window = getActivity().getWindow();
         window.setStatusBarColor(statusBarColor);
 
@@ -572,7 +561,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
         ActivityOptionsCompat options = getActivityOptionsCompat(televisionShowPair);
 
         window.setExitTransition(null);
-        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+        ActivityCompat.startActivity(getActivity(), TelevisionShowDetailsActivity.createIntent(getContext(), televisionShow), options.toBundle());
     }
 
     // endregion

@@ -1,5 +1,7 @@
 package com.etiennelawlor.moviehub.presentation.search;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +32,13 @@ public class SearchActivity extends AppCompatActivity {
                     .attach(fragment)
                     .commit();
         }
+    }
+
+    // Use factory methods for creating Intents
+    public static Intent createIntent(Context context){
+        Intent intent = new Intent(context, SearchActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        return intent;
     }
     // endregion
 }

@@ -1,6 +1,5 @@
 package com.etiennelawlor.moviehub.presentation.persons;
 
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -283,11 +282,6 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
 
     @Override
     public void openPersonDetails(PersonPresentationModel person) {
-        Intent intent = new Intent(getActivity(), PersonDetailsActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(KEY_PERSON, person);
-        intent.putExtras(bundle);
-
         Window window = getActivity().getWindow();
 //            window.setStatusBarColor(primaryDark);
 
@@ -295,7 +289,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
         ActivityOptionsCompat options = getActivityOptionsCompat(personPair);
 
         window.setExitTransition(null);
-        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+        ActivityCompat.startActivity(getActivity(), PersonDetailsActivity.createIntent(getContext(), person), options.toBundle());
     }
 
     // endregion

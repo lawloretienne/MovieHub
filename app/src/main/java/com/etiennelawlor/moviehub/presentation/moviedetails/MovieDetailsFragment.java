@@ -1,7 +1,6 @@
 package com.etiennelawlor.moviehub.presentation.moviedetails;
 
 import android.animation.ValueAnimator;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -71,7 +70,6 @@ import com.squareup.picasso.Picasso;
 import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -81,6 +79,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+import static com.etiennelawlor.moviehub.presentation.moviedetails.MovieDetailsActivity.KEY_MOVIE;
+
 /**
  * Created by etiennelawlor on 12/18/16.
  */
@@ -89,8 +89,6 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
 
     // region Constants
     public static final String PATTERN = "yyyy-MM-dd";
-    public static final String KEY_MOVIE = "KEY_MOVIE";
-    public static final String KEY_PERSON = "KEY_PERSON";
     private static final float SCRIM_ADJUSTMENT = 0.075f;
     private static final int DELAY = 0;
     private static final int START_OFFSET = 500;
@@ -540,11 +538,6 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
 
     @Override
     public void openPersonDetails(PersonPresentationModel person) {
-        Intent intent = new Intent(getActivity(), PersonDetailsActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(KEY_PERSON, person);
-        intent.putExtras(bundle);
-
         Window window = getActivity().getWindow();
 //            window.setStatusBarColor(primaryDark);
 
@@ -552,17 +545,11 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
         ActivityOptionsCompat options = getActivityOptionsCompat(personPair);
 
         window.setExitTransition(null);
-        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+        ActivityCompat.startActivity(getActivity(), PersonDetailsActivity.createIntent(getContext(), person), options.toBundle());
     }
 
     @Override
     public void openMovieDetails(MoviePresentationModel movie) {
-        Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(KEY_MOVIE, movie);
-//                bundle.putInt(MovieDetailsActivity.KEY_STATUS_BAR_COLOR, getActivity().getWindow().getStatusBarColor());
-        intent.putExtras(bundle);
-
         Window window = getActivity().getWindow();
 //                window.setStatusBarColor(statusBarColor);
 
@@ -570,7 +557,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
         ActivityOptionsCompat options = getActivityOptionsCompat(moviePair);
 
         window.setExitTransition(null);
-        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+        ActivityCompat.startActivity(getActivity(), MovieDetailsActivity.createIntent(getContext(), movie), options.toBundle());
     }
 
     // endregion
