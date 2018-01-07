@@ -9,8 +9,10 @@ import com.etiennelawlor.moviehub.presentation.models.PersonDetailsPresentationM
 
 public class PersonDetailsPresentationModelMapper implements PresentationModelMapper<PersonDetailsDomainModel, PersonDetailsPresentationModel> {
 
+    // region Member Variables
     private PersonCreditPresentationModelMapper personCreditPresentationModelMapper = new PersonCreditPresentationModelMapper();
     private PersonPresentationModelMapper personPresentationModelMapper = new PersonPresentationModelMapper();
+    // endregion
 
     @Override
     public PersonDetailsPresentationModel mapToPresentationModel(PersonDetailsDomainModel personDetailsDomainModel) {

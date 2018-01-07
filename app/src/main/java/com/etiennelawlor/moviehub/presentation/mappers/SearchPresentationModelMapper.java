@@ -9,9 +9,11 @@ import com.etiennelawlor.moviehub.presentation.models.SearchPresentationModel;
 
 public class SearchPresentationModelMapper implements PresentationModelMapper<SearchDomainModel, SearchPresentationModel> {
 
+    // region Member Variables
     private MoviePresentationModelMapper moviePresentationModelMapper = new MoviePresentationModelMapper();
     private PersonPresentationModelMapper personPresentationModelMapper = new PersonPresentationModelMapper();
     private TelevisionShowPresentationModelMapper televisionShowPresentationModelMapper = new TelevisionShowPresentationModelMapper();
+    // endregion
 
     @Override
     public SearchPresentationModel mapToPresentationModel(SearchDomainModel searchDomainModel) {

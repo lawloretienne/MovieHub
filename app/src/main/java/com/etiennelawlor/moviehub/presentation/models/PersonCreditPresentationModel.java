@@ -143,7 +143,6 @@ public class PersonCreditPresentationModel extends CreditPresentationModel {
 
     // endregion
 
-
     @Override
     public String toString() {
         return "PersonCreditPresentationModel{" +

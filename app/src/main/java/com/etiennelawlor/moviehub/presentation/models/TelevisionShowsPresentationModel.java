@@ -1,6 +1,5 @@
 package com.etiennelawlor.moviehub.presentation.models;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -18,13 +17,6 @@ public class TelevisionShowsPresentationModel {
     // endregion
 
     // region Constructors
-
-    public TelevisionShowsPresentationModel(List<TelevisionShowPresentationModel> televisionShows, int pageNumber, boolean isLastPage, Date expiredAt) {
-        this.televisionShows = televisionShows;
-        this.pageNumber = pageNumber;
-        this.isLastPage = isLastPage;
-        this.expiredAt = expiredAt;
-    }
 
     public TelevisionShowsPresentationModel() {
     }
@@ -75,10 +67,6 @@ public class TelevisionShowsPresentationModel {
     public boolean hasTelevisionShows() { return televisionShows.size() > 0;}
 
     public void incrementPageNumber() { this.pageNumber += 1; }
-
-    public boolean isExpired() {
-        return Calendar.getInstance().getTime().getTime() > expiredAt.getTime();
-    }
     // endregion
 
     @Override

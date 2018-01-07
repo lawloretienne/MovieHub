@@ -37,7 +37,6 @@ public class MovieReleaseDatePresentationModel {
 
     // endregion
 
-
     @Override
     public String toString() {
         return "MovieReleaseDatePresentationModel{" +

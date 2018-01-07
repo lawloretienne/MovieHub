@@ -84,7 +84,6 @@ public class MovieCreditPresentationModel extends CreditPresentationModel {
 
     // endregion
 
-
     @Override
     public String toString() {
         return "MovieCreditPresentationModel{" +

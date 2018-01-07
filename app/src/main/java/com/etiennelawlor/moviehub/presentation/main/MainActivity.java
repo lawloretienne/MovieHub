@@ -86,29 +86,27 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         if(!item.isChecked()){
                             item.setChecked(true);
+                            Fragment fragment;
                             switch (item.getItemId()) {
                                 case R.id.action_movies:
-                                    getSupportFragmentManager()
-                                            .beginTransaction()
-                                            .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                                            .replace(R.id.content_fl, MoviesFragment.newInstance(), "")
-                                            .commit();
+                                    fragment = MoviesFragment.newInstance();
                                     break;
                                 case R.id.action_tv_shows:
-                                    getSupportFragmentManager()
-                                            .beginTransaction()
-                                            .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                                            .replace(R.id.content_fl, TelevisionShowsFragment.newInstance(), "")
-                                            .commit();
+                                    fragment = TelevisionShowsFragment.newInstance();
                                     break;
                                 case R.id.action_people:
-                                    getSupportFragmentManager()
-                                            .beginTransaction()
-                                            .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                                            .replace(R.id.content_fl, PersonsFragment.newInstance(), "")
-                                            .commit();
+                                    fragment = PersonsFragment.newInstance();
+                                    break;
+                                default:
+                                    fragment = MoviesFragment.newInstance();
                                     break;
                             }
+
+                            getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                                    .replace(R.id.content_fl, fragment, "")
+                                    .commit();
                         } else {
                             Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_fl);
                             if(fragment instanceof MoviesFragment){
@@ -136,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 //        window.setStatusBarColor(primaryDark);
 
         Resources resources = searchCardView.getResources();
-        Pair<View, String> searchPair  = getPair(searchCardView, resources.getString(R.string.transition_search));
+        Pair<View, String> searchPair  = getSearchViewPair(searchCardView, resources.getString(R.string.transition_search));
 
         ActivityOptionsCompat options = getActivityOptionsCompat(searchPair);
 
@@ -204,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         return pair;
     }
 
-    private Pair<View, String> getPair(View view, String transition){
+    private Pair<View, String> getSearchViewPair(View view, String transition){
         Pair<View, String> searchPair = null;
         View searchView = view.findViewById(R.id.search_cv);
         if(searchView != null){

@@ -80,7 +80,6 @@ public class SearchPresentationModel {
     }
     // endregion
 
-
     @Override
     public String toString() {
         return "SearchPresentationModel{" +

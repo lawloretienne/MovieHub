@@ -46,7 +46,6 @@ public class PersonCreditsPresentationModel {
 
     // endregion
 
-
     @Override
     public String toString() {
         return "PersonCreditsPresentationModel{" +

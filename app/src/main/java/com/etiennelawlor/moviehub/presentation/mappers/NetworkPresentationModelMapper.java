@@ -11,6 +11,7 @@ import java.util.List;
  */
 
 public class NetworkPresentationModelMapper implements PresentationModelMapper<NetworkDomainModel, NetworkPresentationModel>, PresentationModelListMapper<NetworkDomainModel, NetworkPresentationModel> {
+
     @Override
     public NetworkPresentationModel mapToPresentationModel(NetworkDomainModel networkDomainModel) {
         NetworkPresentationModel networkPresentationModel = new NetworkPresentationModel();
@@ -29,4 +30,5 @@ public class NetworkPresentationModelMapper implements PresentationModelMapper<N
         }
         return networkPresentationModels;
     }
+
 }

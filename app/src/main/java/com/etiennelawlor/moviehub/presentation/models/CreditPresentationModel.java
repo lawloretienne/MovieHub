@@ -35,7 +35,6 @@ public class CreditPresentationModel {
 
     // endregion
 
-
     @Override
     public String toString() {
         return "CreditPresentationModel{" +

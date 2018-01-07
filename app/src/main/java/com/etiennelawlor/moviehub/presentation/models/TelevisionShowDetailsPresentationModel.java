@@ -73,7 +73,6 @@ public class TelevisionShowDetailsPresentationModel {
 
     // endregion
 
-
     @Override
     public String toString() {
         return "TelevisionShowDetailsPresentationModel{" +

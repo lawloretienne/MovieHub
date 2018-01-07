@@ -62,7 +62,6 @@ public class ReleaseDatePresentationModel {
 
     // endregion
 
-
     @Override
     public String toString() {
         return "ReleaseDatePresentationModel{" +

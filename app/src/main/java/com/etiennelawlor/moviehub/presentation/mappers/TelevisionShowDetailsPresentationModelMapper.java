@@ -9,8 +9,10 @@ import com.etiennelawlor.moviehub.presentation.models.TelevisionShowDetailsPrese
 
 public class TelevisionShowDetailsPresentationModelMapper implements PresentationModelMapper<TelevisionShowDetailsDomainModel, TelevisionShowDetailsPresentationModel> {
 
+    // region Member Variables
     private TelevisionShowCreditPresentationModelMapper televisionShowCreditPresentationModelMapper = new TelevisionShowCreditPresentationModelMapper();
     private TelevisionShowPresentationModelMapper televisionShowPresentationModelMapper = new TelevisionShowPresentationModelMapper();
+    // endregion
 
     @Override
     public TelevisionShowDetailsPresentationModel mapToPresentationModel(TelevisionShowDetailsDomainModel televisionShowDetailsDomainModel) {
