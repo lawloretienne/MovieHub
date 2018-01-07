@@ -1,16 +1,17 @@
 package com.etiennelawlor.moviehub;
 
-import com.etiennelawlor.moviehub.data.network.response.MovieCreditResponse;
-import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
-import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
+import com.etiennelawlor.moviehub.domain.models.MovieCreditDomainModel;
 import com.etiennelawlor.moviehub.domain.models.MovieDetailsDomainModel;
+import com.etiennelawlor.moviehub.domain.models.MovieDomainModel;
 import com.etiennelawlor.moviehub.domain.usecases.MovieDetailsDomainContract;
+import com.etiennelawlor.moviehub.presentation.mappers.MovieDetailsPresentationModelMapper;
+import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
 import com.etiennelawlor.moviehub.presentation.moviedetails.MovieDetailsPresentationContract;
 import com.etiennelawlor.moviehub.presentation.moviedetails.MovieDetailsPresenter;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -18,11 +19,12 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.Single;
 
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by etiennelawlor on 2/9/17.
@@ -39,12 +41,11 @@ public class MovieDetailsPresenterTest {
     private MovieDetailsDomainContract.UseCase mockMovieDetailsUseCase;
 
     // Stubs
-    private ArgumentCaptor<DisposableSingleObserver> disposableSingleObserverArgumentCaptor;
     // endregion
 
     // region Member Variables
-    private MovieDetailsDomainModel movieDetailsDomainModel;
     private MovieDetailsPresenter movieDetailsPresenter;
+    private MovieDetailsPresentationModelMapper movieDetailsPresentationModelMapper = new MovieDetailsPresentationModelMapper();
     // endregion
 
     @Before
@@ -58,55 +59,51 @@ public class MovieDetailsPresenterTest {
     }
 
     // region Test Methods
-//    @Test(expected = IOException.class)
-    @Test
+    @Test(expected = UnknownHostException.class)
     public void onLoadMovieDetails_shouldShowError_whenRequestFailed() {
         // 1. (Given) Set up conditions required for the test
-        MovieResponse movie = new MovieResponse();
+        MovieDomainModel movie = new MovieDomainModel();
         movie.setId(1);
-        List<MovieCreditResponse> cast = new ArrayList<>();
-        List<MovieCreditResponse> crew = new ArrayList<>();
-        List<MovieResponse> similarMovies = new ArrayList<>();
-        String rating = "";
-        movieDetailsDomainModel = new MovieDetailsDomainModel(movie, cast, crew, similarMovies, rating);
+
+        when(mockMovieDetailsUseCase.getMovieDetails(anyInt())).thenThrow(UnknownHostException.class);
 
         // 2. (When) Then perform one or more actions
         movieDetailsPresenter.onLoadMovieDetails(movie.getId());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
-        verify(mockMovieDetailsUseCase).getMovieDetails(anyInt(), disposableSingleObserverArgumentCaptor.capture());
-        disposableSingleObserverArgumentCaptor.getValue().onError(new UnknownHostException());
-
         verify(mockMovieDetailsView).showErrorView();
     }
 
     @Test
     public void onLoadMovieDetails_shouldShowMovieDetails_whenRequestSucceeded() {
         // 1. (Given) Set up conditions required for the test
-        MovieResponse movie = new MovieResponse();
+        MovieDomainModel movie = new MovieDomainModel();
+//        movie.setId(346364);
         movie.setId(1);
-        List<MovieCreditResponse> cast = new ArrayList<>();
-        List<MovieCreditResponse> crew = new ArrayList<>();
-        List<MovieResponse> similarMovies = new ArrayList<>();
+        List<MovieCreditDomainModel> cast = new ArrayList<>();
+        List<MovieCreditDomainModel> crew = new ArrayList<>();
+        List<MovieDomainModel> similarMovies = new ArrayList<>();
         String rating = "";
-        movieDetailsDomainModel = new MovieDetailsDomainModel(movie, cast, crew, similarMovies, rating);
+        MovieDetailsDomainModel movieDetailsDomainModel = new MovieDetailsDomainModel();
+        movieDetailsDomainModel.setRating(rating);
+        movieDetailsDomainModel.setCast(cast);
+        movieDetailsDomainModel.setCrew(crew);
+        movieDetailsDomainModel.setMovie(movie);
+        movieDetailsDomainModel.setSimilarMovies(similarMovies);
+
+        when(mockMovieDetailsUseCase.getMovieDetails(anyInt())).thenReturn(Single.just(movieDetailsDomainModel));
 
         // 2. (When) Then perform one or more actions
         movieDetailsPresenter.onLoadMovieDetails(movie.getId());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
-        verify(mockMovieDetailsUseCase).getMovieDetails(anyInt(), disposableSingleObserverArgumentCaptor.capture());
-        disposableSingleObserverArgumentCaptor.getValue().onSuccess(movieDetailsDomainModel);
-
-        verify(mockMovieDetailsView).showMovieDetails(movieDetailsDomainModel);
+        verify(mockMovieDetailsView).showMovieDetails(movieDetailsPresentationModelMapper.mapToPresentationModel(movieDetailsDomainModel));
     }
 
     @Test
     public void onPersonClick_shouldOpenPersonDetails() {
         // 1. (Given) Set up conditions required for the test
-        PersonResponse person = new PersonResponse();
+        PersonPresentationModel person = new PersonPresentationModel();
 
         // 2. (When) Then perform one or more actions
         movieDetailsPresenter.onPersonClick(person);
@@ -120,7 +117,7 @@ public class MovieDetailsPresenterTest {
     @Test
     public void onMovieClick_shouldOpenMovieDetails() {
         // 1. (Given) Set up conditions required for the test
-        MovieResponse movie = new MovieResponse();
+        MoviePresentationModel movie = new MoviePresentationModel();
 
         // 2. (When) Then perform one or more actions
         movieDetailsPresenter.onMovieClick(movie);
@@ -167,8 +164,10 @@ public class MovieDetailsPresenterTest {
         movieDetailsPresenter.onDestroyView();
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verifyZeroInteractions(mockMovieDetailsView);
-        verify(mockMovieDetailsUseCase).clearDisposables();
+        verifyZeroInteractions(mockMovieDetailsUseCase);
     }
+
+
 
     // endregion
 }

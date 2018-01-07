@@ -22,7 +22,7 @@ public class MovieDetailsPresenter implements MovieDetailsPresentationContract.P
     private final MovieDetailsPresentationContract.View movieDetailsView;
     private final MovieDetailsDomainContract.UseCase movieDetailsUseCase;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private MovieDetailsPresentationModelMapper movieDetailsPresentationModelMapper= new MovieDetailsPresentationModelMapper();
+    private MovieDetailsPresentationModelMapper movieDetailsPresentationModelMapper = new MovieDetailsPresentationModelMapper();
     // endregion
 
     // region Constructors
