@@ -548,9 +548,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
         Window window = getActivity().getWindow();
 //            window.setStatusBarColor(primaryDark);
 
-        Resources resources = selectedPersonView.getResources();
-        Pair<View, String> personPair  = getThumbnailPair(selectedPersonView, resources.getString(R.string.transition_person_thumbnail));
-
+        Pair<View, String> personPair  = getPersonPair();
         ActivityOptionsCompat options = getActivityOptionsCompat(personPair);
 
         window.setExitTransition(null);
@@ -568,9 +566,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
         Window window = getActivity().getWindow();
 //                window.setStatusBarColor(statusBarColor);
 
-        Resources resources = selectedMovieView.getResources();
-        Pair<View, String> moviePair  = getThumbnailPair(selectedMovieView, resources.getString(R.string.transition_movie_thumbnail));
-
+        Pair<View, String> moviePair  = getMoviePair();
         ActivityOptionsCompat options = getActivityOptionsCompat(moviePair);
 
         window.setExitTransition(null);
@@ -876,29 +872,43 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
         return options;
     }
 
-    private Pair<View, String> getThumbnailPair(View view, String transition){
-        Pair<View, String> posterImagePair = null;
-        View posterImageView = view.findViewById(R.id.thumbnail_iv);
-        if(posterImageView != null){
-            posterImagePair = Pair.create(posterImageView, transition);
-        }
+    private Pair<View, String> getMoviePair(){
+        Resources resources = getResources();
+        String transitionName = resources.getString(R.string.transition_movie_thumbnail);
+        View view = selectedMovieView.findViewById(R.id.thumbnail_iv);
+        return getPair(view, transitionName);
+    }
 
-        return posterImagePair;
+    private Pair<View, String> getPersonPair(){
+        Resources resources = getResources();
+        String transitionName = resources.getString(R.string.transition_person_thumbnail);
+        View view = selectedPersonView.findViewById(R.id.thumbnail_iv);
+        return getPair(view, transitionName);
     }
 
     private Pair<View, String> getStatusBarPair(){
-        Pair<View, String> pair = null;
-        View statusBar = getActivity().findViewById(android.R.id.statusBarBackground);
-        if(statusBar != null)
-            pair = Pair.create(statusBar, statusBar.getTransitionName());
-        return pair;
+        View view = getActivity().findViewById(android.R.id.statusBarBackground);
+        return getPair(view);
     }
 
     private Pair<View, String> getNavigationBarPair(){
+        View view = getActivity().findViewById(android.R.id.navigationBarBackground);
+        return getPair(view);
+    }
+
+    private Pair<View, String> getPair(View view, String transitionName){
         Pair<View, String> pair = null;
-        View navigationBar = getActivity().findViewById(android.R.id.navigationBarBackground);
-        if(navigationBar != null)
-            pair = Pair.create(navigationBar, navigationBar.getTransitionName());
+        if(view != null) {
+            pair = Pair.create(view, transitionName);
+        }
+        return pair;
+    }
+
+    private Pair<View, String> getPair(View view){
+        Pair<View, String> pair = null;
+        if(view != null) {
+            pair = Pair.create(view, view.getTransitionName());
+        }
         return pair;
     }
 
