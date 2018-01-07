@@ -895,7 +895,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
 
     private Pair<View, String> getPair(View view, String transition){
         Pair<View, String> posterImagePair = null;
-        View posterImageView = ButterKnife.findById(view, R.id.thumbnail_iv);
+        View posterImageView = view.findViewById(R.id.thumbnail_iv);
         if(posterImageView != null){
             posterImagePair = Pair.create(posterImageView, transition);
         }
@@ -905,7 +905,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
 
     private Pair<View, String> getStatusBarPair(){
         Pair<View, String> pair = null;
-        View statusBar = ButterKnife.findById(getActivity(), android.R.id.statusBarBackground);
+        View statusBar = getActivity().findViewById(android.R.id.statusBarBackground);
         if(statusBar != null)
             pair = Pair.create(statusBar, statusBar.getTransitionName());
         return pair;
@@ -913,7 +913,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsUi
 
     private Pair<View, String> getNavigationBarPair(){
         Pair<View, String> pair = null;
-        View navigationBar = ButterKnife.findById(getActivity(), android.R.id.navigationBarBackground);
+        View navigationBar = getActivity().findViewById(android.R.id.navigationBarBackground);
         if(navigationBar != null)
             pair = Pair.create(navigationBar, navigationBar.getTransitionName());
         return pair;

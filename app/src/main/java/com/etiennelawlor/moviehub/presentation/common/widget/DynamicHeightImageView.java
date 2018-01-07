@@ -6,6 +6,7 @@ package com.etiennelawlor.moviehub.presentation.common.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
@@ -14,7 +15,7 @@ import com.etiennelawlor.moviehub.R;
 /**
  * An {@link ImageView} layout that maintains a consistent width to height aspect ratio.
  */
-public class DynamicHeightImageView extends ImageView {
+public class DynamicHeightImageView extends AppCompatImageView {
 
     // region Member Variables
     private double heightRatio;

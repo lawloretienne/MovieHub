@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     private Pair<View, String> getStatusBarPair(){
         Pair<View, String> pair = null;
-        View statusBar = ButterKnife.findById(this, android.R.id.statusBarBackground);
+        View statusBar = findViewById(android.R.id.statusBarBackground);
         if(statusBar != null)
             pair = Pair.create(statusBar, statusBar.getTransitionName());
         return pair;
@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     private Pair<View, String> getNavigationBarPair(){
         Pair<View, String> pair = null;
-        View navigationBar = ButterKnife.findById(this, android.R.id.navigationBarBackground);
+        View navigationBar = findViewById(android.R.id.navigationBarBackground);
         if(navigationBar != null)
             pair = Pair.create(navigationBar, navigationBar.getTransitionName());
         return pair;
@@ -206,7 +206,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     private Pair<View, String> getPair(View view, String transition){
         Pair<View, String> searchPair = null;
-        View searchView = ButterKnife.findById(view, R.id.search_cv);
+        View searchView = view.findViewById(R.id.search_cv);
         if(searchView != null){
             searchPair = Pair.create(searchView, transition);
         }
