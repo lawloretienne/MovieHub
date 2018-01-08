@@ -1,5 +1,6 @@
 package com.etiennelawlor.moviehub.presentation.movies;
 
+import com.etiennelawlor.moviehub.domain.models.MoviesDomainModel;
 import com.etiennelawlor.moviehub.domain.usecases.MoviesDomainContract;
 import com.etiennelawlor.moviehub.presentation.mappers.MoviesPresentationModelMapper;
 import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
@@ -53,13 +54,14 @@ public class MoviesPresenter implements MoviesPresentationContract.Presenter {
         }
 
         Disposable disposable = moviesUseCase.getPopularMovies(currentPage)
-                .map(moviesDomainModel -> moviesPresentationModelMapper.mapToPresentationModel(moviesDomainModel))
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
-                .subscribeWith(new DisposableSingleObserver<MoviesPresentationModel>() {
+                .subscribeWith(new DisposableSingleObserver<MoviesDomainModel>() {
                     @Override
-                    public void onSuccess(MoviesPresentationModel moviesPresentationModel) {
-                        if(moviesPresentationModel != null){
+                    public void onSuccess(MoviesDomainModel moviesDomainModel) {
+                        if(moviesDomainModel != null){
+                            MoviesPresentationModel moviesPresentationModel = moviesPresentationModelMapper.mapToPresentationModel(moviesDomainModel);
+
                             List<MoviePresentationModel> moviePresentationModels = moviesPresentationModel.getMovies();
                             int currentPage = moviesPresentationModel.getPageNumber();
                             boolean isLastPage = moviesPresentationModel.isLastPage();

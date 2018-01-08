@@ -1,5 +1,6 @@
 package com.etiennelawlor.moviehub.presentation.moviedetails;
 
+import com.etiennelawlor.moviehub.domain.models.MovieDetailsDomainModel;
 import com.etiennelawlor.moviehub.domain.usecases.MovieDetailsDomainContract;
 import com.etiennelawlor.moviehub.presentation.mappers.MovieDetailsPresentationModelMapper;
 import com.etiennelawlor.moviehub.presentation.models.MovieDetailsPresentationModel;
@@ -44,13 +45,13 @@ public class MovieDetailsPresenter implements MovieDetailsPresentationContract.P
     @Override
     public void onLoadMovieDetails(int movieId) {
         Disposable disposable = movieDetailsUseCase.getMovieDetails(movieId)
-                .map(movieDetailsDomainModel -> movieDetailsPresentationModelMapper.mapToPresentationModel(movieDetailsDomainModel))
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
-                .subscribeWith(new DisposableSingleObserver<MovieDetailsPresentationModel>() {
+                .subscribeWith(new DisposableSingleObserver<MovieDetailsDomainModel>() {
                     @Override
-                    public void onSuccess(MovieDetailsPresentationModel movieDetailsPresentationModel) {
-                        if(movieDetailsPresentationModel != null){
+                    public void onSuccess(MovieDetailsDomainModel movieDetailsDomainModel) {
+                        if(movieDetailsDomainModel != null){
+                            MovieDetailsPresentationModel movieDetailsPresentationModel = movieDetailsPresentationModelMapper.mapToPresentationModel(movieDetailsDomainModel);
                             movieDetailsView.showMovieDetails(movieDetailsPresentationModel);
                         }
                     }

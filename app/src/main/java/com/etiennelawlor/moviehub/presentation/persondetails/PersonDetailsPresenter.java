@@ -1,5 +1,6 @@
 package com.etiennelawlor.moviehub.presentation.persondetails;
 
+import com.etiennelawlor.moviehub.domain.models.PersonDetailsDomainModel;
 import com.etiennelawlor.moviehub.domain.usecases.PersonDetailsDomainContract;
 import com.etiennelawlor.moviehub.presentation.mappers.PersonDetailsPresentationModelMapper;
 import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
@@ -47,13 +48,14 @@ public class PersonDetailsPresenter implements PersonDetailsPresentationContract
     @Override
     public void onLoadPersonDetails(int personId) {
         Disposable disposable = personDetailsUseCase.getPersonDetails(personId)
-                .map(personDetailsDomainModel -> personDetailsPresentationModelMapper.mapToPresentationModel(personDetailsDomainModel))
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
-                .subscribeWith(new DisposableSingleObserver<PersonDetailsPresentationModel>() {
+                .subscribeWith(new DisposableSingleObserver<PersonDetailsDomainModel>() {
                     @Override
-                    public void onSuccess(PersonDetailsPresentationModel personDetailsPresentationModel) {
-                        if(personDetailsPresentationModel != null){
+                    public void onSuccess(PersonDetailsDomainModel personDetailsDomainModel) {
+                        if(personDetailsDomainModel != null){
+                            PersonDetailsPresentationModel personDetailsPresentationModel = personDetailsPresentationModelMapper.mapToPresentationModel(personDetailsDomainModel);
+
                             personDetailsView.showPersonDetails(personDetailsPresentationModel);
                         }
                     }

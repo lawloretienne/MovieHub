@@ -1,5 +1,6 @@
 package com.etiennelawlor.moviehub.presentation.televisionshows;
 
+import com.etiennelawlor.moviehub.domain.models.TelevisionShowsDomainModel;
 import com.etiennelawlor.moviehub.domain.usecases.TelevisionShowsDomainContract;
 import com.etiennelawlor.moviehub.presentation.mappers.TelevisionShowsPresentationModelMapper;
 import com.etiennelawlor.moviehub.presentation.models.TelevisionShowPresentationModel;
@@ -54,13 +55,14 @@ public class TelevisionShowsPresenter implements TelevisionShowsPresentationCont
         }
 
         Disposable disposable = televisionShowsUseCase.getPopularTelevisionShows(currentPage)
-                .map(televisionShowsDomainModel -> televisionShowsPresentationModelMapper.mapToPresentationModel(televisionShowsDomainModel))
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
-                .subscribeWith(new DisposableSingleObserver<TelevisionShowsPresentationModel>() {
+                .subscribeWith(new DisposableSingleObserver<TelevisionShowsDomainModel>() {
                     @Override
-                    public void onSuccess(TelevisionShowsPresentationModel televisionShowsPresentationModel) {
-                        if(televisionShowsPresentationModel != null){
+                    public void onSuccess(TelevisionShowsDomainModel televisionShowsDomainModel) {
+                        if(televisionShowsDomainModel != null){
+                            TelevisionShowsPresentationModel televisionShowsPresentationModel = televisionShowsPresentationModelMapper.mapToPresentationModel(televisionShowsDomainModel);
+
                             List<TelevisionShowPresentationModel> televisionShowPresentationModels = televisionShowsPresentationModel.getTelevisionShows();
                             int currentPage = televisionShowsPresentationModel.getPageNumber();
                             boolean isLastPage = televisionShowsPresentationModel.isLastPage();

@@ -1,5 +1,6 @@
 package com.etiennelawlor.moviehub.presentation.search;
 
+import com.etiennelawlor.moviehub.domain.models.SearchDomainModel;
 import com.etiennelawlor.moviehub.domain.usecases.SearchDomainContract;
 import com.etiennelawlor.moviehub.presentation.mappers.SearchPresentationModelMapper;
 import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
@@ -92,14 +93,16 @@ public class SearchPresenter implements SearchPresentationContract.Presenter {
                     @Override
                     public void onNext(String s) {
                         Disposable innerDisposable = searchUseCase.getSearchResponse(s)
-                                .map(searchDomainModel -> searchPresentationModelMapper.mapToPresentationModel(searchDomainModel))
                                 .subscribeOn(schedulerProvider.io())
                                 .observeOn(schedulerProvider.ui())
-                                .subscribeWith(new DisposableSingleObserver<SearchPresentationModel>() {
+                                .subscribeWith(new DisposableSingleObserver<SearchDomainModel>() {
                                     @Override
-                                    public void onSuccess(SearchPresentationModel searchPresentationModel) {
+                                    public void onSuccess(SearchDomainModel searchDomainModel) {
                                         searchView.hideLoadingView();
-                                        if (searchPresentationModel != null) {
+
+                                        if (searchDomainModel != null) {
+                                            SearchPresentationModel searchPresentationModel = searchPresentationModelMapper.mapToPresentationModel(searchDomainModel);
+
                                             searchView.clearMoviesAdapter();
                                             searchView.clearTelevisionShowsAdapter();
                                             searchView.clearPersonsAdapter();

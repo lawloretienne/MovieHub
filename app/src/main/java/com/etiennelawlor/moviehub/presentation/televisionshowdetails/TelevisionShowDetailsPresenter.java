@@ -1,5 +1,6 @@
 package com.etiennelawlor.moviehub.presentation.televisionshowdetails;
 
+import com.etiennelawlor.moviehub.domain.models.TelevisionShowDetailsDomainModel;
 import com.etiennelawlor.moviehub.domain.usecases.TelevisionShowDetailsDomainContract;
 import com.etiennelawlor.moviehub.presentation.mappers.TelevisionShowDetailsPresentationModelMapper;
 import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
@@ -47,13 +48,14 @@ public class TelevisionShowDetailsPresenter implements TelevisionShowDetailsPres
     @Override
     public void onLoadTelevisionShowDetails(int televisionShowId) {
         Disposable disposable = televisionShowDetailsUseCase.getTelevisionShowDetails(televisionShowId)
-                .map(televisionShowDetailsDomainModel -> televisionShowDetailsPresentationModelMapper.mapToPresentationModel(televisionShowDetailsDomainModel))
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
-                .subscribeWith(new DisposableSingleObserver<TelevisionShowDetailsPresentationModel>() {
+                .subscribeWith(new DisposableSingleObserver<TelevisionShowDetailsDomainModel>() {
                     @Override
-                    public void onSuccess(TelevisionShowDetailsPresentationModel televisionShowDetailsPresentationModel) {
-                        if(televisionShowDetailsPresentationModel != null){
+                    public void onSuccess(TelevisionShowDetailsDomainModel televisionShowDetailsDomainModel) {
+                        if(televisionShowDetailsDomainModel != null){
+                            TelevisionShowDetailsPresentationModel televisionShowDetailsPresentationModel = televisionShowDetailsPresentationModelMapper.mapToPresentationModel(televisionShowDetailsDomainModel);
+
                             televisionShowDetailsView.showTelevisionShowDetails(televisionShowDetailsPresentationModel);
                         }
                     }
