@@ -5,7 +5,7 @@ import com.etiennelawlor.moviehub.presentation.mappers.MoviesPresentationModelMa
 import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.MoviesPresentationModel;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
-import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
+import com.etiennelawlor.moviehub.util.rxjava.SchedulerProvider;
 
 import java.util.List;
 
@@ -22,14 +22,16 @@ public class MoviesPresenter implements MoviesPresentationContract.Presenter {
     // region Member Variables
     private final MoviesPresentationContract.View moviesView;
     private final MoviesDomainContract.UseCase moviesUseCase;
+    private final SchedulerProvider schedulerProvider;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private MoviesPresentationModelMapper moviesPresentationModelMapper = new MoviesPresentationModelMapper();
     // endregion
 
     // region Constructors
-    public MoviesPresenter(MoviesPresentationContract.View moviesView, MoviesDomainContract.UseCase moviesUseCase) {
+    public MoviesPresenter(MoviesPresentationContract.View moviesView, MoviesDomainContract.UseCase moviesUseCase, SchedulerProvider schedulerProvider) {
         this.moviesView = moviesView;
         this.moviesUseCase = moviesUseCase;
+        this.schedulerProvider = schedulerProvider;
     }
     // endregion
 
@@ -52,8 +54,8 @@ public class MoviesPresenter implements MoviesPresentationContract.Presenter {
 
         Disposable disposable = moviesUseCase.getPopularMovies(currentPage)
                 .map(moviesDomainModel -> moviesPresentationModelMapper.mapToPresentationModel(moviesDomainModel))
-//                .compose(schedulerTransformer)
-                .compose(new ProductionSchedulerTransformer<MoviesPresentationModel>())
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
                 .subscribeWith(new DisposableSingleObserver<MoviesPresentationModel>() {
                     @Override
                     public void onSuccess(MoviesPresentationModel moviesPresentationModel) {

@@ -6,7 +6,7 @@ import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.PersonDetailsPresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.TelevisionShowPresentationModel;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
-import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
+import com.etiennelawlor.moviehub.util.rxjava.SchedulerProvider;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -21,15 +21,17 @@ public class PersonDetailsPresenter implements PersonDetailsPresentationContract
     // region Member Variables
     private final PersonDetailsPresentationContract.View personDetailsView;
     private final PersonDetailsDomainContract.UseCase personDetailsUseCase;
+    private final SchedulerProvider schedulerProvider;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private PersonDetailsPresentationModelMapper personDetailsPresentationModelMapper = new PersonDetailsPresentationModelMapper();
     // endregion
 
     // region Constructors
 
-    public PersonDetailsPresenter(PersonDetailsPresentationContract.View personDetailsView, PersonDetailsDomainContract.UseCase personDetailsUseCase) {
+    public PersonDetailsPresenter(PersonDetailsPresentationContract.View personDetailsView, PersonDetailsDomainContract.UseCase personDetailsUseCase, SchedulerProvider schedulerProvider) {
         this.personDetailsView = personDetailsView;
         this.personDetailsUseCase = personDetailsUseCase;
+        this.schedulerProvider = schedulerProvider;
     }
 
     // endregion
@@ -46,8 +48,8 @@ public class PersonDetailsPresenter implements PersonDetailsPresentationContract
     public void onLoadPersonDetails(int personId) {
         Disposable disposable = personDetailsUseCase.getPersonDetails(personId)
                 .map(personDetailsDomainModel -> personDetailsPresentationModelMapper.mapToPresentationModel(personDetailsDomainModel))
-//                .compose(schedulerTransformer)
-                .compose(new ProductionSchedulerTransformer<PersonDetailsPresentationModel>())
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
                 .subscribeWith(new DisposableSingleObserver<PersonDetailsPresentationModel>() {
                     @Override
                     public void onSuccess(PersonDetailsPresentationModel personDetailsPresentationModel) {

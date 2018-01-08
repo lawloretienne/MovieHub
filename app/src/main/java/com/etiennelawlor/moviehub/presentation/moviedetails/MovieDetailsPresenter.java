@@ -6,7 +6,7 @@ import com.etiennelawlor.moviehub.presentation.models.MovieDetailsPresentationMo
 import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
-import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
+import com.etiennelawlor.moviehub.util.rxjava.SchedulerProvider;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -21,14 +21,16 @@ public class MovieDetailsPresenter implements MovieDetailsPresentationContract.P
     // region Member Variables
     private final MovieDetailsPresentationContract.View movieDetailsView;
     private final MovieDetailsDomainContract.UseCase movieDetailsUseCase;
+    private final SchedulerProvider schedulerProvider;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private MovieDetailsPresentationModelMapper movieDetailsPresentationModelMapper = new MovieDetailsPresentationModelMapper();
     // endregion
 
     // region Constructors
-    public MovieDetailsPresenter(MovieDetailsPresentationContract.View movieDetailsView, MovieDetailsDomainContract.UseCase movieDetailsUseCase) {
+    public MovieDetailsPresenter(MovieDetailsPresentationContract.View movieDetailsView, MovieDetailsDomainContract.UseCase movieDetailsUseCase, SchedulerProvider schedulerProvider) {
         this.movieDetailsView = movieDetailsView;
         this.movieDetailsUseCase = movieDetailsUseCase;
+        this.schedulerProvider = schedulerProvider;
     }
     // endregion
 
@@ -43,8 +45,8 @@ public class MovieDetailsPresenter implements MovieDetailsPresentationContract.P
     public void onLoadMovieDetails(int movieId) {
         Disposable disposable = movieDetailsUseCase.getMovieDetails(movieId)
                 .map(movieDetailsDomainModel -> movieDetailsPresentationModelMapper.mapToPresentationModel(movieDetailsDomainModel))
-//                .compose(schedulerTransformer)
-                .compose(new ProductionSchedulerTransformer<MovieDetailsPresentationModel>())
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
                 .subscribeWith(new DisposableSingleObserver<MovieDetailsPresentationModel>() {
                     @Override
                     public void onSuccess(MovieDetailsPresentationModel movieDetailsPresentationModel) {

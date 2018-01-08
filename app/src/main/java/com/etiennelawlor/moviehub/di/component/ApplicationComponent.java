@@ -8,6 +8,7 @@ import com.etiennelawlor.moviehub.di.module.MoviesModule;
 import com.etiennelawlor.moviehub.di.module.NetworkModule;
 import com.etiennelawlor.moviehub.di.module.PersonDetailsModule;
 import com.etiennelawlor.moviehub.di.module.PersonsModule;
+import com.etiennelawlor.moviehub.di.module.RxModule;
 import com.etiennelawlor.moviehub.di.module.SearchModule;
 import com.etiennelawlor.moviehub.di.module.TelevisionShowDetailsModule;
 import com.etiennelawlor.moviehub.di.module.TelevisionShowsModule;
@@ -20,7 +21,7 @@ import dagger.Component;
  */
 
 @ApplicationScope
-@Component(modules = {ApplicationModule.class, AndroidModule.class, NetworkModule.class} )
+@Component(modules = {ApplicationModule.class, AndroidModule.class, NetworkModule.class, RxModule.class} )
 public interface ApplicationComponent {
     // Setup injection targets
     void inject(MovieHubApplication target);

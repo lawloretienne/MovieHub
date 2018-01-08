@@ -9,6 +9,7 @@ import com.etiennelawlor.moviehub.domain.usecases.PersonDetailsDomainContract;
 import com.etiennelawlor.moviehub.domain.usecases.PersonDetailsUseCase;
 import com.etiennelawlor.moviehub.presentation.persondetails.PersonDetailsPresentationContract;
 import com.etiennelawlor.moviehub.presentation.persondetails.PersonDetailsPresenter;
+import com.etiennelawlor.moviehub.util.rxjava.SchedulerProvider;
 
 import dagger.Module;
 import dagger.Provides;
@@ -47,7 +48,7 @@ public class PersonDetailsModule {
     }
 
     @Provides
-    public PersonDetailsPresentationContract.Presenter providePersonDetailsPresenter(PersonDetailsDomainContract.UseCase personDetailsUseCase) {
-        return new PersonDetailsPresenter(personDetailsView, personDetailsUseCase);
+    public PersonDetailsPresentationContract.Presenter providePersonDetailsPresenter(PersonDetailsDomainContract.UseCase personDetailsUseCase, SchedulerProvider schedulerProvider) {
+        return new PersonDetailsPresenter(personDetailsView, personDetailsUseCase, schedulerProvider);
     }
 }

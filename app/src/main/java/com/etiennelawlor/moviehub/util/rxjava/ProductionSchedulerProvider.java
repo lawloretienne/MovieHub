@@ -18,4 +18,14 @@ public class ProductionSchedulerProvider implements SchedulerProvider {
     public Scheduler ui() {
         return AndroidSchedulers.mainThread();
     }
+
+    @Override
+    public Scheduler computation() {
+        return Schedulers.computation();
+    }
+
+    @Override
+    public Scheduler newThread() {
+        return Schedulers.newThread();
+    }
 }

@@ -6,7 +6,7 @@ import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.TelevisionShowDetailsPresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.TelevisionShowPresentationModel;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
-import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
+import com.etiennelawlor.moviehub.util.rxjava.SchedulerProvider;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -21,15 +21,17 @@ public class TelevisionShowDetailsPresenter implements TelevisionShowDetailsPres
     // region Member Variables
     private final TelevisionShowDetailsPresentationContract.View televisionShowDetailsView;
     private final TelevisionShowDetailsDomainContract.UseCase televisionShowDetailsUseCase;
+    private final SchedulerProvider schedulerProvider;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private TelevisionShowDetailsPresentationModelMapper televisionShowDetailsPresentationModelMapper = new TelevisionShowDetailsPresentationModelMapper();
     // endregion
 
     // region Constructors
 
-    public TelevisionShowDetailsPresenter(TelevisionShowDetailsPresentationContract.View televisionShowDetailsView, TelevisionShowDetailsDomainContract.UseCase televisionShowDetailsUseCase) {
+    public TelevisionShowDetailsPresenter(TelevisionShowDetailsPresentationContract.View televisionShowDetailsView, TelevisionShowDetailsDomainContract.UseCase televisionShowDetailsUseCase, SchedulerProvider schedulerProvider) {
         this.televisionShowDetailsView = televisionShowDetailsView;
         this.televisionShowDetailsUseCase = televisionShowDetailsUseCase;
+        this.schedulerProvider = schedulerProvider;
     }
 
     // endregion
@@ -46,8 +48,8 @@ public class TelevisionShowDetailsPresenter implements TelevisionShowDetailsPres
     public void onLoadTelevisionShowDetails(int televisionShowId) {
         Disposable disposable = televisionShowDetailsUseCase.getTelevisionShowDetails(televisionShowId)
                 .map(televisionShowDetailsDomainModel -> televisionShowDetailsPresentationModelMapper.mapToPresentationModel(televisionShowDetailsDomainModel))
-//                .compose(schedulerTransformer)
-                .compose(new ProductionSchedulerTransformer<TelevisionShowDetailsPresentationModel>())
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
                 .subscribeWith(new DisposableSingleObserver<TelevisionShowDetailsPresentationModel>() {
                     @Override
                     public void onSuccess(TelevisionShowDetailsPresentationModel televisionShowDetailsPresentationModel) {

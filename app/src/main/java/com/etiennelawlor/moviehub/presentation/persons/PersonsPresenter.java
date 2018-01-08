@@ -5,7 +5,7 @@ import com.etiennelawlor.moviehub.presentation.mappers.PersonsPresentationModelM
 import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.PersonsPresentationModel;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
-import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
+import com.etiennelawlor.moviehub.util.rxjava.SchedulerProvider;
 
 import java.util.List;
 
@@ -22,14 +22,16 @@ public class PersonsPresenter implements PersonsPresentationContract.Presenter {
     // region Member Variables
     private final PersonsPresentationContract.View personsView;
     private final PersonsDomainContract.UseCase personsUseCase;
+    private final SchedulerProvider schedulerProvider;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private PersonsPresentationModelMapper personsPresentationModelMapper = new PersonsPresentationModelMapper();
     // endregion
 
     // region Constructors
-    public PersonsPresenter(PersonsPresentationContract.View personsView, PersonsDomainContract.UseCase personsUseCase) {
+    public PersonsPresenter(PersonsPresentationContract.View personsView, PersonsDomainContract.UseCase personsUseCase, SchedulerProvider schedulerProvider) {
         this.personsView = personsView;
         this.personsUseCase = personsUseCase;
+        this.schedulerProvider = schedulerProvider;
     }
     // endregion
 
@@ -52,8 +54,8 @@ public class PersonsPresenter implements PersonsPresentationContract.Presenter {
 
         Disposable disposable = personsUseCase.getPopularPersons(currentPage)
                 .map(personsDomainModel -> personsPresentationModelMapper.mapToPresentationModel(personsDomainModel))
-//                .compose(schedulerTransformer)
-                .compose(new ProductionSchedulerTransformer<PersonsPresentationModel>())
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
                 .subscribeWith(new DisposableSingleObserver<PersonsPresentationModel>() {
                     @Override
                     public void onSuccess(PersonsPresentationModel personsPresentationModel) {

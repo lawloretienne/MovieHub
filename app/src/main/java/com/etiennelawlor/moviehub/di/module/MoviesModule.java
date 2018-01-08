@@ -9,6 +9,7 @@ import com.etiennelawlor.moviehub.domain.usecases.MoviesDomainContract;
 import com.etiennelawlor.moviehub.domain.usecases.MoviesUseCase;
 import com.etiennelawlor.moviehub.presentation.movies.MoviesPresentationContract;
 import com.etiennelawlor.moviehub.presentation.movies.MoviesPresenter;
+import com.etiennelawlor.moviehub.util.rxjava.SchedulerProvider;
 
 import dagger.Module;
 import dagger.Provides;
@@ -47,7 +48,7 @@ public class MoviesModule {
     }
 
     @Provides
-    public MoviesPresentationContract.Presenter provideMoviesPresenter(MoviesDomainContract.UseCase moviesUseCase) {
-        return new MoviesPresenter(moviesView, moviesUseCase);
+    public MoviesPresentationContract.Presenter provideMoviesPresenter(MoviesDomainContract.UseCase moviesUseCase, SchedulerProvider schedulerProvider) {
+        return new MoviesPresenter(moviesView, moviesUseCase, schedulerProvider);
     }
 }

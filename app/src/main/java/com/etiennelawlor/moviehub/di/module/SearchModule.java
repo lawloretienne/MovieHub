@@ -9,7 +9,6 @@ import com.etiennelawlor.moviehub.domain.usecases.SearchDomainContract;
 import com.etiennelawlor.moviehub.domain.usecases.SearchUseCase;
 import com.etiennelawlor.moviehub.presentation.search.SearchPresentationContract;
 import com.etiennelawlor.moviehub.presentation.search.SearchPresenter;
-import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerProvider;
 import com.etiennelawlor.moviehub.util.rxjava.SchedulerProvider;
 
 import dagger.Module;
@@ -46,11 +45,6 @@ public class SearchModule {
     @Provides
     public SearchDomainContract.UseCase provideSearchUseCase(SearchDataSourceContract.Repository searchRepository) {
         return new SearchUseCase(searchRepository);
-    }
-
-    @Provides
-    public SchedulerProvider provideSchedulerProvider() {
-        return new ProductionSchedulerProvider();
     }
 
     @Provides

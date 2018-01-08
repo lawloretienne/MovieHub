@@ -5,7 +5,7 @@ import com.etiennelawlor.moviehub.presentation.mappers.TelevisionShowsPresentati
 import com.etiennelawlor.moviehub.presentation.models.TelevisionShowPresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.TelevisionShowsPresentationModel;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
-import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
+import com.etiennelawlor.moviehub.util.rxjava.SchedulerProvider;
 
 import java.util.List;
 
@@ -22,14 +22,16 @@ public class TelevisionShowsPresenter implements TelevisionShowsPresentationCont
     // region Member Variables
     private final TelevisionShowsPresentationContract.View televisionShowsView;
     private final TelevisionShowsDomainContract.UseCase televisionShowsUseCase;
+    private final SchedulerProvider schedulerProvider;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private TelevisionShowsPresentationModelMapper televisionShowsPresentationModelMapper = new TelevisionShowsPresentationModelMapper();
     // endregion
 
     // region Constructors
-    public TelevisionShowsPresenter(TelevisionShowsPresentationContract.View televisionShowsView, TelevisionShowsDomainContract.UseCase televisionShowsUseCase) {
+    public TelevisionShowsPresenter(TelevisionShowsPresentationContract.View televisionShowsView, TelevisionShowsDomainContract.UseCase televisionShowsUseCase, SchedulerProvider schedulerProvider) {
         this.televisionShowsView = televisionShowsView;
         this.televisionShowsUseCase = televisionShowsUseCase;
+        this.schedulerProvider = schedulerProvider;
     }
     // endregion
 
@@ -53,8 +55,8 @@ public class TelevisionShowsPresenter implements TelevisionShowsPresentationCont
 
         Disposable disposable = televisionShowsUseCase.getPopularTelevisionShows(currentPage)
                 .map(televisionShowsDomainModel -> televisionShowsPresentationModelMapper.mapToPresentationModel(televisionShowsDomainModel))
-//                .compose(schedulerTransformer)
-                .compose(new ProductionSchedulerTransformer<TelevisionShowsPresentationModel>())
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
                 .subscribeWith(new DisposableSingleObserver<TelevisionShowsPresentationModel>() {
                     @Override
                     public void onSuccess(TelevisionShowsPresentationModel televisionShowsPresentationModel) {

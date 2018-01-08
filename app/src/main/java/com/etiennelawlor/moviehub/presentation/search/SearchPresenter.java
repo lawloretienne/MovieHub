@@ -7,7 +7,6 @@ import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.SearchPresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.TelevisionShowPresentationModel;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
-import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
 import com.etiennelawlor.moviehub.util.rxjava.SchedulerProvider;
 
 import java.util.concurrent.TimeUnit;
@@ -94,8 +93,8 @@ public class SearchPresenter implements SearchPresentationContract.Presenter {
                     public void onNext(String s) {
                         Disposable innerDisposable = searchUseCase.getSearchResponse(s)
                                 .map(searchDomainModel -> searchPresentationModelMapper.mapToPresentationModel(searchDomainModel))
-                            //  .compose(schedulerTransformer)
-                                .compose(new ProductionSchedulerTransformer<>())
+                                .subscribeOn(schedulerProvider.io())
+                                .observeOn(schedulerProvider.ui())
                                 .subscribeWith(new DisposableSingleObserver<SearchPresentationModel>() {
                                     @Override
                                     public void onSuccess(SearchPresentationModel searchPresentationModel) {
