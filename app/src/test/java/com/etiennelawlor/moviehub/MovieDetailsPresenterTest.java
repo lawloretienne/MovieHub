@@ -77,6 +77,7 @@ public class MovieDetailsPresenterTest {
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMovieDetailsView).showErrorView();
         verify(mockMovieDetailsView, never()).showMovieDetails(movieDetailsDomainModelStub);
+
     }
 
     @Test
@@ -85,6 +86,7 @@ public class MovieDetailsPresenterTest {
         movieDetailsDomainModelStub = getMovieDetailsDomainModelStub();
 
         when(mockMovieDetailsUseCase.getMovieDetails(anyInt())).thenReturn(Single.just(movieDetailsDomainModelStub));
+
 
         // 2. (When) Then perform one or more actions
         movieDetailsPresenter.onLoadMovieDetails(movieDetailsDomainModelStub.getMovie().getId());
