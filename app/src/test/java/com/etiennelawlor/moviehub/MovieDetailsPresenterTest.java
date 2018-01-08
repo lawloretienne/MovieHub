@@ -63,13 +63,12 @@ public class MovieDetailsPresenterTest {
     @Test(expected = UnknownHostException.class)
     public void onLoadMovieDetails_shouldShowError_whenRequestFailed() {
         // 1. (Given) Set up conditions required for the test
-        MovieDomainModel movie = new MovieDomainModel();
-        movie.setId(1);
+        MovieDetailsDomainModel movieDetailsDomainModel = getMovieDetailsDomainModelStub();
 
         when(mockMovieDetailsUseCase.getMovieDetails(anyInt())).thenThrow(UnknownHostException.class);
 
         // 2. (When) Then perform one or more actions
-        movieDetailsPresenter.onLoadMovieDetails(movie.getId());
+        movieDetailsPresenter.onLoadMovieDetails(movieDetailsDomainModel.getMovie().getId());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMovieDetailsView).showErrorView();
@@ -78,25 +77,13 @@ public class MovieDetailsPresenterTest {
     @Test
     public void onLoadMovieDetails_shouldShowMovieDetails_whenRequestSucceeded() {
         // 1. (Given) Set up conditions required for the test
-        MovieDomainModel movie = new MovieDomainModel();
-//        movie.setId(346364);
-        movie.setId(1);
-        List<MovieCreditDomainModel> cast = new ArrayList<>();
-        List<MovieCreditDomainModel> crew = new ArrayList<>();
-        List<MovieDomainModel> similarMovies = new ArrayList<>();
-        String rating = "";
-        MovieDetailsDomainModel movieDetailsDomainModel = new MovieDetailsDomainModel();
-        movieDetailsDomainModel.setRating(rating);
-        movieDetailsDomainModel.setCast(cast);
-        movieDetailsDomainModel.setCrew(crew);
-        movieDetailsDomainModel.setMovie(movie);
-        movieDetailsDomainModel.setSimilarMovies(similarMovies);
+        MovieDetailsDomainModel movieDetailsDomainModel = getMovieDetailsDomainModelStub();
 
         when(mockMovieDetailsUseCase.getMovieDetails(anyInt())).thenReturn(Single.just(movieDetailsDomainModel));
 //        when(mockMovieDetailsUseCase.getMovieDetails(anyInt())).thenReturn(refEq(Single.just(movieDetailsDomainModel)));
 
         // 2. (When) Then perform one or more actions
-        movieDetailsPresenter.onLoadMovieDetails(movie.getId());
+        movieDetailsPresenter.onLoadMovieDetails(movieDetailsDomainModel.getMovie().getId());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMovieDetailsView).showMovieDetails(movieDetailsPresentationModelMapper.mapToPresentationModel(movieDetailsDomainModel));
@@ -170,7 +157,24 @@ public class MovieDetailsPresenterTest {
         verifyZeroInteractions(mockMovieDetailsUseCase);
     }
 
+    // endregion
 
-
+    // region Helper Methods
+    private MovieDetailsDomainModel getMovieDetailsDomainModelStub(){
+        MovieDomainModel movie = new MovieDomainModel();
+//        movie.setId(346364);
+        movie.setId(1);
+        List<MovieCreditDomainModel> cast = new ArrayList<>();
+        List<MovieCreditDomainModel> crew = new ArrayList<>();
+        List<MovieDomainModel> similarMovies = new ArrayList<>();
+        String rating = "";
+        MovieDetailsDomainModel movieDetailsDomainModel = new MovieDetailsDomainModel();
+        movieDetailsDomainModel.setRating(rating);
+        movieDetailsDomainModel.setCast(cast);
+        movieDetailsDomainModel.setCrew(crew);
+        movieDetailsDomainModel.setMovie(movie);
+        movieDetailsDomainModel.setSimilarMovies(similarMovies);
+        return movieDetailsDomainModel;
+    }
     // endregion
 }
