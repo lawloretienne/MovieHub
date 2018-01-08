@@ -167,13 +167,13 @@ public class MovieDetailsPresenterTest {
 
     // region Helper Methods
     private MovieDetailsDomainModel getMovieDetailsDomainModelStub(){
+        MovieDetailsDomainModel movieDetailsDomainModel = new MovieDetailsDomainModel();
         MovieDomainModel movie = new MovieDomainModel();
         movie.setId(1);
         List<MovieCreditDomainModel> cast = new ArrayList<>();
         List<MovieCreditDomainModel> crew = new ArrayList<>();
         List<MovieDomainModel> similarMovies = new ArrayList<>();
         String rating = "";
-        MovieDetailsDomainModel movieDetailsDomainModel = new MovieDetailsDomainModel();
         movieDetailsDomainModel.setRating(rating);
         movieDetailsDomainModel.setCast(cast);
         movieDetailsDomainModel.setCrew(crew);
