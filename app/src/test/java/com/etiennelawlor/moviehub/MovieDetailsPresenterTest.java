@@ -9,20 +9,27 @@ import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
 import com.etiennelawlor.moviehub.presentation.moviedetails.MovieDetailsPresentationContract;
 import com.etiennelawlor.moviehub.presentation.moviedetails.MovieDetailsPresenter;
+import com.etiennelawlor.moviehub.util.rxjava.SchedulerProvider;
 import com.etiennelawlor.moviehub.util.rxjava.TestSchedulerProvider;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Single;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.observers.TestObserver;
+import io.reactivex.subscribers.TestSubscriber;
 
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
@@ -46,7 +53,8 @@ public class MovieDetailsPresenterTest {
 
     // region Member Variables
     private MovieDetailsPresenter movieDetailsPresenter;
-    private MovieDetailsPresentationModelMapper movieDetailsPresentationModelMapper = new MovieDetailsPresentationModelMapper();
+    private ArgumentCaptor<DisposableSingleObserver> disposableSingleObserverArgumentCaptor;
+    private SchedulerProvider schedulerProvider = new TestSchedulerProvider();
     // endregion
 
     @Before
@@ -56,22 +64,45 @@ public class MovieDetailsPresenterTest {
         MockitoAnnotations.initMocks(this);
 
         // Get a reference to the class under test
-        movieDetailsPresenter = new MovieDetailsPresenter(mockMovieDetailsView, mockMovieDetailsUseCase, new TestSchedulerProvider());
+        movieDetailsPresenter = new MovieDetailsPresenter(mockMovieDetailsView, mockMovieDetailsUseCase, schedulerProvider);
     }
 
     // region Test Methods
-    @Test(expected = UnknownHostException.class)
+    @Test(expected = IOException.class)
     public void onLoadMovieDetails_shouldShowError_whenRequestFailed() {
         // 1. (Given) Set up conditions required for the test
         MovieDetailsDomainModel movieDetailsDomainModel = getMovieDetailsDomainModelStub();
 
-        when(mockMovieDetailsUseCase.getMovieDetails(anyInt())).thenThrow(UnknownHostException.class);
+//        when(mockMovieDetailsUseCase.getMovieDetails(anyInt())).thenThrow(new Throwable());
+
+        when(mockMovieDetailsUseCase.getMovieDetails(anyInt())).thenReturn(Single.just(movieDetailsDomainModel));
+
+//        TestObserver<MovieDetailsDomainModel> testObserver = new TestObserver<>();
+//        mockMovieDetailsUseCase.getMovieDetails(anyInt()).toObservable().subscribe(testObserver);
+//        testObserver.onError(new UnknownHostException());
 
         // 2. (When) Then perform one or more actions
         movieDetailsPresenter.onLoadMovieDetails(movieDetailsDomainModel.getMovie().getId());
 
+//        // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
+//        verify(mockMovieDetailsView).showErrorView();
+
+//        TestObserver<MovieDetailsDomainModel> testObserver = new TestObserver<>();
+//        mockMovieDetailsUseCase.getMovieDetails(anyInt()).toObservable().subscribe(testObserver);
+//        testObserver.onError(new UnknownHostException());
+
+        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
+        verify(mockMovieDetailsUseCase).getMovieDetails(anyInt())
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
+                .subscribeWith(disposableSingleObserverArgumentCaptor.capture());
+        disposableSingleObserverArgumentCaptor.getValue().onError(new IOException());
+
+
+
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMovieDetailsView).showErrorView();
+        verify(mockMovieDetailsView, never()).showMovieDetails(movieDetailsDomainModel);
     }
 
     @Test
@@ -85,9 +116,7 @@ public class MovieDetailsPresenterTest {
         movieDetailsPresenter.onLoadMovieDetails(movieDetailsDomainModel.getMovie().getId());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-//        verify(mockMovieDetailsView).showMovieDetails(movieDetailsPresentationModelMapper.mapToPresentationModel(movieDetailsDomainModel));
         verify(mockMovieDetailsView).showMovieDetails(movieDetailsDomainModel);
-
     }
 
     @Test
@@ -162,7 +191,6 @@ public class MovieDetailsPresenterTest {
     // region Helper Methods
     private MovieDetailsDomainModel getMovieDetailsDomainModelStub(){
         MovieDomainModel movie = new MovieDomainModel();
-//        movie.setId(346364);
         movie.setId(1);
         List<MovieCreditDomainModel> cast = new ArrayList<>();
         List<MovieCreditDomainModel> crew = new ArrayList<>();
