@@ -80,14 +80,12 @@ public class MovieDetailsPresenterTest {
         MovieDetailsDomainModel movieDetailsDomainModel = getMovieDetailsDomainModelStub();
 
         when(mockMovieDetailsUseCase.getMovieDetails(anyInt())).thenReturn(Single.just(movieDetailsDomainModel));
-//        when(mockMovieDetailsUseCase.getMovieDetails(anyInt())).thenReturn(refEq(Single.just(movieDetailsDomainModel)));
 
         // 2. (When) Then perform one or more actions
         movieDetailsPresenter.onLoadMovieDetails(movieDetailsDomainModel.getMovie().getId());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMovieDetailsView).showMovieDetails(movieDetailsPresentationModelMapper.mapToPresentationModel(movieDetailsDomainModel));
-//        verify(mockMovieDetailsView).showMovieDetails(refEq(movieDetailsPresentationModelMapper.mapToPresentationModel(movieDetailsDomainModel)));
     }
 
     @Test
