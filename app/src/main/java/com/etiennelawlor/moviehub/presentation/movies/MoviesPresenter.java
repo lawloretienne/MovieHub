@@ -1,10 +1,9 @@
 package com.etiennelawlor.moviehub.presentation.movies;
 
+import com.etiennelawlor.moviehub.domain.models.MovieDomainModel;
 import com.etiennelawlor.moviehub.domain.models.MoviesDomainModel;
 import com.etiennelawlor.moviehub.domain.usecases.MoviesDomainContract;
-import com.etiennelawlor.moviehub.presentation.mappers.MoviesPresentationModelMapper;
 import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
-import com.etiennelawlor.moviehub.presentation.models.MoviesPresentationModel;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 import com.etiennelawlor.moviehub.util.rxjava.SchedulerProvider;
 
@@ -25,7 +24,6 @@ public class MoviesPresenter implements MoviesPresentationContract.Presenter {
     private final MoviesDomainContract.UseCase moviesUseCase;
     private final SchedulerProvider schedulerProvider;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private MoviesPresentationModelMapper moviesPresentationModelMapper = new MoviesPresentationModelMapper();
     // endregion
 
     // region Constructors
@@ -60,18 +58,16 @@ public class MoviesPresenter implements MoviesPresentationContract.Presenter {
                     @Override
                     public void onSuccess(MoviesDomainModel moviesDomainModel) {
                         if(moviesDomainModel != null){
-                            MoviesPresentationModel moviesPresentationModel = moviesPresentationModelMapper.mapToPresentationModel(moviesDomainModel);
-
-                            List<MoviePresentationModel> moviePresentationModels = moviesPresentationModel.getMovies();
-                            int currentPage = moviesPresentationModel.getPageNumber();
-                            boolean isLastPage = moviesPresentationModel.isLastPage();
-                            boolean hasMovies = moviesPresentationModel.hasMovies();
+                            List<MovieDomainModel> movieDomainModels = moviesDomainModel.getMovies();
+                            int currentPage = moviesDomainModel.getPageNumber();
+                            boolean isLastPage = moviesDomainModel.isLastPage();
+                            boolean hasMovies = moviesDomainModel.hasMovies();
                             if(currentPage == 1){
                                 moviesView.hideLoadingView();
 
                                 if(hasMovies){
                                     moviesView.addHeader();
-                                    moviesView.addMoviesToAdapter(moviePresentationModels);
+                                    moviesView.addMoviesToAdapter(movieDomainModels);
 
                                     if(!isLastPage)
                                         moviesView.addFooter();
@@ -82,14 +78,14 @@ public class MoviesPresenter implements MoviesPresentationContract.Presenter {
                                 moviesView.removeFooter();
 
                                 if(hasMovies){
-                                    moviesView.addMoviesToAdapter(moviePresentationModels);
+                                    moviesView.addMoviesToAdapter(movieDomainModels);
 
                                     if(!isLastPage)
                                         moviesView.addFooter();
                                 }
                             }
 
-                            moviesView.setMoviesPresentationModel(moviesPresentationModel);
+                            moviesView.setMoviesPresentationModel(moviesDomainModel);
                         }
                     }
 

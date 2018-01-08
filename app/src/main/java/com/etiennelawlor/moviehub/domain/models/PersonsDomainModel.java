@@ -63,6 +63,10 @@ public class PersonsDomainModel {
 
     // endregion
 
+    // region Helper Methods
+    public boolean hasPersons() { return persons.size() > 0;}
+    // endregion
+
     @Override
     public String toString() {
         return "PersonsDomainModel{" +

@@ -63,6 +63,10 @@ public class TelevisionShowsDomainModel {
 
     // endregion
 
+    // region Helper Methods
+    public boolean hasTelevisionShows() { return televisionShows.size() > 0;}
+    // endregion
+
     @Override
     public String toString() {
         return "TelevisionShowsDomainModel{" +

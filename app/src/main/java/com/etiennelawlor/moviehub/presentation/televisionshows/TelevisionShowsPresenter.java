@@ -1,10 +1,9 @@
 package com.etiennelawlor.moviehub.presentation.televisionshows;
 
+import com.etiennelawlor.moviehub.domain.models.TelevisionShowDomainModel;
 import com.etiennelawlor.moviehub.domain.models.TelevisionShowsDomainModel;
 import com.etiennelawlor.moviehub.domain.usecases.TelevisionShowsDomainContract;
-import com.etiennelawlor.moviehub.presentation.mappers.TelevisionShowsPresentationModelMapper;
 import com.etiennelawlor.moviehub.presentation.models.TelevisionShowPresentationModel;
-import com.etiennelawlor.moviehub.presentation.models.TelevisionShowsPresentationModel;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 import com.etiennelawlor.moviehub.util.rxjava.SchedulerProvider;
 
@@ -25,7 +24,6 @@ public class TelevisionShowsPresenter implements TelevisionShowsPresentationCont
     private final TelevisionShowsDomainContract.UseCase televisionShowsUseCase;
     private final SchedulerProvider schedulerProvider;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private TelevisionShowsPresentationModelMapper televisionShowsPresentationModelMapper = new TelevisionShowsPresentationModelMapper();
     // endregion
 
     // region Constructors
@@ -61,18 +59,16 @@ public class TelevisionShowsPresenter implements TelevisionShowsPresentationCont
                     @Override
                     public void onSuccess(TelevisionShowsDomainModel televisionShowsDomainModel) {
                         if(televisionShowsDomainModel != null){
-                            TelevisionShowsPresentationModel televisionShowsPresentationModel = televisionShowsPresentationModelMapper.mapToPresentationModel(televisionShowsDomainModel);
-
-                            List<TelevisionShowPresentationModel> televisionShowPresentationModels = televisionShowsPresentationModel.getTelevisionShows();
-                            int currentPage = televisionShowsPresentationModel.getPageNumber();
-                            boolean isLastPage = televisionShowsPresentationModel.isLastPage();
-                            boolean hasTelevisionShows = televisionShowsPresentationModel.hasTelevisionShows();
+                            List<TelevisionShowDomainModel> televisionShowDomainModels = televisionShowsDomainModel.getTelevisionShows();
+                            int currentPage = televisionShowsDomainModel.getPageNumber();
+                            boolean isLastPage = televisionShowsDomainModel.isLastPage();
+                            boolean hasTelevisionShows = televisionShowsDomainModel.hasTelevisionShows();
                             if(currentPage == 1){
                                 televisionShowsView.hideLoadingView();
 
                                 if(hasTelevisionShows){
                                     televisionShowsView.addHeader();
-                                    televisionShowsView.addTelevisionShowsToAdapter(televisionShowPresentationModels);
+                                    televisionShowsView.addTelevisionShowsToAdapter(televisionShowDomainModels);
 
                                     if(!isLastPage)
                                         televisionShowsView.addFooter();
@@ -83,14 +79,14 @@ public class TelevisionShowsPresenter implements TelevisionShowsPresentationCont
                                 televisionShowsView.removeFooter();
 
                                 if(hasTelevisionShows){
-                                    televisionShowsView.addTelevisionShowsToAdapter(televisionShowPresentationModels);
+                                    televisionShowsView.addTelevisionShowsToAdapter(televisionShowDomainModels);
 
                                     if(!isLastPage)
                                         televisionShowsView.addFooter();
                                 }
                             }
 
-                            televisionShowsView.setTelevisionShowsPresentationModel(televisionShowsPresentationModel);
+                            televisionShowsView.setTelevisionShowsDomainModel(televisionShowsDomainModel);
                         }
                     }
 

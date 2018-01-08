@@ -1,5 +1,8 @@
 package com.etiennelawlor.moviehub.presentation.search;
 
+import com.etiennelawlor.moviehub.domain.models.MovieDomainModel;
+import com.etiennelawlor.moviehub.domain.models.PersonDomainModel;
+import com.etiennelawlor.moviehub.domain.models.TelevisionShowDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BasePresenter;
 import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
@@ -22,15 +25,15 @@ public interface SearchPresentationContract {
         void showLoadingView();
         void hideLoadingView();
         void showErrorView();
-        void addMoviesToAdapter(List<MoviePresentationModel> movies);
+        void addMoviesToAdapter(List<MovieDomainModel> movies);
         void clearMoviesAdapter();
         void hideMoviesView();
         void showMoviesView();
-        void addTelevisionShowsToAdapter(List<TelevisionShowPresentationModel> televisionShows);
+        void addTelevisionShowsToAdapter(List<TelevisionShowDomainModel> televisionShows);
         void clearTelevisionShowsAdapter();
         void hideTelevisionShowsView();
         void showTelevisionShowsView();
-        void addPersonsToAdapter(List<PersonPresentationModel> persons);
+        void addPersonsToAdapter(List<PersonDomainModel> persons);
         void clearPersonsAdapter();
         void hidePersonsView();
         void showPersonsView();

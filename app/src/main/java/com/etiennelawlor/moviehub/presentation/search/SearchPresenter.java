@@ -2,10 +2,8 @@ package com.etiennelawlor.moviehub.presentation.search;
 
 import com.etiennelawlor.moviehub.domain.models.SearchDomainModel;
 import com.etiennelawlor.moviehub.domain.usecases.SearchDomainContract;
-import com.etiennelawlor.moviehub.presentation.mappers.SearchPresentationModelMapper;
 import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
-import com.etiennelawlor.moviehub.presentation.models.SearchPresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.TelevisionShowPresentationModel;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 import com.etiennelawlor.moviehub.util.rxjava.SchedulerProvider;
@@ -29,7 +27,6 @@ public class SearchPresenter implements SearchPresentationContract.Presenter {
     private final SearchDomainContract.UseCase searchUseCase;
     private final SchedulerProvider schedulerProvider;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private SearchPresentationModelMapper searchPresentationModelMapper = new SearchPresentationModelMapper();
     // endregion
 
     // region Constructors
@@ -101,37 +98,35 @@ public class SearchPresenter implements SearchPresentationContract.Presenter {
                                         searchView.hideLoadingView();
 
                                         if (searchDomainModel != null) {
-                                            SearchPresentationModel searchPresentationModel = searchPresentationModelMapper.mapToPresentationModel(searchDomainModel);
-
                                             searchView.clearMoviesAdapter();
                                             searchView.clearTelevisionShowsAdapter();
                                             searchView.clearPersonsAdapter();
 
-                                            if(searchPresentationModel.hasMovies()){
-                                                searchView.addMoviesToAdapter(searchPresentationModel.getMovies());
+                                            if(searchDomainModel.hasMovies()){
+                                                searchView.addMoviesToAdapter(searchDomainModel.getMovies());
                                                 searchView.showMoviesView();
                                             } else {
                                                 searchView.hideMoviesView();
                                             }
 
-                                            if(searchPresentationModel.hasTelevisionShows()){
-                                                searchView.addTelevisionShowsToAdapter(searchPresentationModel.getTelevisionShows());
+                                            if(searchDomainModel.hasTelevisionShows()){
+                                                searchView.addTelevisionShowsToAdapter(searchDomainModel.getTelevisionShows());
                                                 searchView.showTelevisionShowsView();
                                             } else {
                                                 searchView.hideTelevisionShowsView();
                                             }
 
-                                            if(searchPresentationModel.hasPersons()){
-                                                searchView.addPersonsToAdapter(searchPresentationModel.getPersons());
+                                            if(searchDomainModel.hasPersons()){
+                                                searchView.addPersonsToAdapter(searchDomainModel.getPersons());
                                                 searchView.showPersonsView();
                                             } else {
                                                 searchView.hidePersonsView();
                                             }
 
-                                            if(searchPresentationModel.hasResults()){
+                                            if(searchDomainModel.hasResults()){
                                                 searchView.hideEmptyView();
                                             } else {
-                                                searchView.setEmptyText(String.format("No results found for \"%s\"", searchPresentationModel.getQuery()));
+                                                searchView.setEmptyText(String.format("No results found for \"%s\"", searchDomainModel.getQuery()));
                                                 searchView.showEmptyView();
                                             }
                                         }

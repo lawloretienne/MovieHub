@@ -63,6 +63,10 @@ public class MoviesDomainModel {
 
     // endregion
 
+    // region Helper Methods
+    public boolean hasMovies() { return movies.size() > 0;}
+    // endregion
+
     @Override
     public String toString() {
         return "MoviesDomainModel{" +

@@ -60,6 +60,26 @@ public class SearchDomainModel {
 
     // endregion
 
+    // region Helper Methods
+    public boolean hasMovies() {
+        return movies != null && movies.size() > 0;
+    }
+
+    public boolean hasTelevisionShows() {
+        return televisionShows != null && televisionShows.size() > 0;
+    }
+
+    public boolean hasPersons() {
+        return persons != null && persons.size() > 0;
+    }
+
+    public boolean hasResults(){
+        return (hasMovies())
+                || (hasTelevisionShows())
+                || (hasPersons());
+    }
+    // endregion
+
     @Override
     public String toString() {
         return "SearchDomainModel{" +

@@ -2,8 +2,6 @@ package com.etiennelawlor.moviehub.presentation.moviedetails;
 
 import com.etiennelawlor.moviehub.domain.models.MovieDetailsDomainModel;
 import com.etiennelawlor.moviehub.domain.usecases.MovieDetailsDomainContract;
-import com.etiennelawlor.moviehub.presentation.mappers.MovieDetailsPresentationModelMapper;
-import com.etiennelawlor.moviehub.presentation.models.MovieDetailsPresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
@@ -24,7 +22,6 @@ public class MovieDetailsPresenter implements MovieDetailsPresentationContract.P
     private final MovieDetailsDomainContract.UseCase movieDetailsUseCase;
     private final SchedulerProvider schedulerProvider;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private MovieDetailsPresentationModelMapper movieDetailsPresentationModelMapper = new MovieDetailsPresentationModelMapper();
     // endregion
 
     // region Constructors
@@ -51,8 +48,7 @@ public class MovieDetailsPresenter implements MovieDetailsPresentationContract.P
                     @Override
                     public void onSuccess(MovieDetailsDomainModel movieDetailsDomainModel) {
                         if(movieDetailsDomainModel != null){
-                            MovieDetailsPresentationModel movieDetailsPresentationModel = movieDetailsPresentationModelMapper.mapToPresentationModel(movieDetailsDomainModel);
-                            movieDetailsView.showMovieDetails(movieDetailsPresentationModel);
+                            movieDetailsView.showMovieDetails(movieDetailsDomainModel);
                         }
                     }
 

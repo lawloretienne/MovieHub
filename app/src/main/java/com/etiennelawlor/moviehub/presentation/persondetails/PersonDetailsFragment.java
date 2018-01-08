@@ -48,9 +48,11 @@ import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.di.component.PersonDetailsComponent;
 import com.etiennelawlor.moviehub.di.module.PersonDetailsModule;
+import com.etiennelawlor.moviehub.domain.models.PersonDetailsDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.common.GravitySnapHelper;
+import com.etiennelawlor.moviehub.presentation.mappers.PersonDetailsPresentationModelMapper;
 import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.PersonCreditPresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.PersonDetailsPresentationModel;
@@ -157,6 +159,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     private PersonDetailsPresentationModel personDetailsPresentationModel;
     private PersonDetailsComponent personDetailsComponent;
     private final Handler handler = new Handler();
+    private PersonDetailsPresentationModelMapper personDetailsPresentationModelMapper = new PersonDetailsPresentationModelMapper();
     // endregion
 
     // region Injected Variables
@@ -507,8 +510,8 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     // region PersonDetailsPresentationContract.View Methods
 
     @Override
-    public void showPersonDetails(PersonDetailsPresentationModel personDetailsPresentationModel) {
-        this.personDetailsPresentationModel = personDetailsPresentationModel;
+    public void showPersonDetails(PersonDetailsDomainModel personDetailsDomainModel) {
+        this.personDetailsPresentationModel = personDetailsPresentationModelMapper.mapToPresentationModel(personDetailsDomainModel);
         final Palette profilePalette = person.getProfilePalette();
 
         nestedScrollView.setNestedScrollingEnabled(true);

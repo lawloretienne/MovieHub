@@ -48,9 +48,11 @@ import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.di.component.TelevisionShowDetailsComponent;
 import com.etiennelawlor.moviehub.di.module.TelevisionShowDetailsModule;
+import com.etiennelawlor.moviehub.domain.models.TelevisionShowDetailsDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.common.GravitySnapHelper;
+import com.etiennelawlor.moviehub.presentation.mappers.TelevisionShowDetailsPresentationModelMapper;
 import com.etiennelawlor.moviehub.presentation.models.GenrePresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.TelevisionShowCreditPresentationModel;
@@ -161,6 +163,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     private TelevisionShowDetailsPresentationModel televisionShowDetailsPresentationModel;
     private TelevisionShowDetailsComponent televisionShowDetailsComponent;
     private final Handler handler = new Handler();
+    private TelevisionShowDetailsPresentationModelMapper televisionShowDetailsPresentationModelMapper = new TelevisionShowDetailsPresentationModelMapper();
     // endregion
 
     // region Injected Variables
@@ -484,10 +487,9 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     // endregion
 
     // region TelevisionShowDetailsPresentationContract.View Methods
-
     @Override
-    public void showTelevisionShowDetails(TelevisionShowDetailsPresentationModel televisionShowDetailsPresentationModel) {
-        this.televisionShowDetailsPresentationModel = televisionShowDetailsPresentationModel;
+    public void showTelevisionShowDetails(TelevisionShowDetailsDomainModel televisionShowDetailsDomainModel) {
+        this.televisionShowDetailsPresentationModel = televisionShowDetailsPresentationModelMapper.mapToPresentationModel(televisionShowDetailsDomainModel);
         final Palette posterPalette = televisionShow.getPosterPalette();
 
         nestedScrollView.setNestedScrollingEnabled(true);

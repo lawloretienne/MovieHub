@@ -1,8 +1,8 @@
 package com.etiennelawlor.moviehub.presentation.persondetails;
 
+import com.etiennelawlor.moviehub.domain.models.PersonDetailsDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BasePresenter;
 import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
-import com.etiennelawlor.moviehub.presentation.models.PersonDetailsPresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.TelevisionShowPresentationModel;
 
 /**
@@ -12,7 +12,7 @@ import com.etiennelawlor.moviehub.presentation.models.TelevisionShowPresentation
 public interface PersonDetailsPresentationContract {
 
     interface View {
-        void showPersonDetails(PersonDetailsPresentationModel personDetailsPresentationModel);
+        void showPersonDetails(PersonDetailsDomainModel personDetailsDomainModel);
         void showToolbarTitle();
         void hideToolbarTitle();
         void showErrorView();

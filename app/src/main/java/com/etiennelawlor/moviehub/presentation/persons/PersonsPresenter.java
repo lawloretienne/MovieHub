@@ -1,10 +1,9 @@
 package com.etiennelawlor.moviehub.presentation.persons;
 
+import com.etiennelawlor.moviehub.domain.models.PersonDomainModel;
 import com.etiennelawlor.moviehub.domain.models.PersonsDomainModel;
 import com.etiennelawlor.moviehub.domain.usecases.PersonsDomainContract;
-import com.etiennelawlor.moviehub.presentation.mappers.PersonsPresentationModelMapper;
 import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
-import com.etiennelawlor.moviehub.presentation.models.PersonsPresentationModel;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 import com.etiennelawlor.moviehub.util.rxjava.SchedulerProvider;
 
@@ -25,7 +24,6 @@ public class PersonsPresenter implements PersonsPresentationContract.Presenter {
     private final PersonsDomainContract.UseCase personsUseCase;
     private final SchedulerProvider schedulerProvider;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private PersonsPresentationModelMapper personsPresentationModelMapper = new PersonsPresentationModelMapper();
     // endregion
 
     // region Constructors
@@ -60,12 +58,10 @@ public class PersonsPresenter implements PersonsPresentationContract.Presenter {
                     @Override
                     public void onSuccess(PersonsDomainModel personsDomainModel) {
                         if(personsDomainModel != null){
-                            PersonsPresentationModel personsPresentationModel = personsPresentationModelMapper.mapToPresentationModel(personsDomainModel);
-
-                            List<PersonPresentationModel> persons = personsPresentationModel.getPersons();
-                            int currentPage = personsPresentationModel.getPageNumber();
-                            boolean isLastPage = personsPresentationModel.isLastPage();
-                            boolean hasMovies = personsPresentationModel.hasPersons();
+                            List<PersonDomainModel> persons = personsDomainModel.getPersons();
+                            int currentPage = personsDomainModel.getPageNumber();
+                            boolean isLastPage = personsDomainModel.isLastPage();
+                            boolean hasMovies = personsDomainModel.hasPersons();
 
                             if(currentPage == 1){
                                 personsView.hideLoadingView();
@@ -90,7 +86,7 @@ public class PersonsPresenter implements PersonsPresentationContract.Presenter {
                                 }
                             }
 
-                            personsView.setPersonsPresentationModel(personsPresentationModel);
+                            personsView.setPersonsDomainModel(personsDomainModel);
                         }
                     }
 

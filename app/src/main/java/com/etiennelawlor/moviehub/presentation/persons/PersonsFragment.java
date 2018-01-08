@@ -20,8 +20,12 @@ import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.di.component.PersonsComponent;
 import com.etiennelawlor.moviehub.di.module.PersonsModule;
+import com.etiennelawlor.moviehub.domain.models.PersonDomainModel;
+import com.etiennelawlor.moviehub.domain.models.PersonsDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
+import com.etiennelawlor.moviehub.presentation.mappers.PersonPresentationModelMapper;
+import com.etiennelawlor.moviehub.presentation.mappers.PersonsPresentationModelMapper;
 import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.PersonsPresentationModel;
 import com.etiennelawlor.moviehub.presentation.persondetails.PersonDetailsActivity;
@@ -70,6 +74,8 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     private PersonsPresentationModel personsPresentationModel;
     private PersonsComponent personsComponent;
     private boolean isLoading = false;
+    private PersonsPresentationModelMapper personsPresentationModelMapper = new PersonsPresentationModelMapper();
+    private PersonPresentationModelMapper personPresentationModelMapper = new PersonPresentationModelMapper();
     // endregion
 
     // region Injected Variables
@@ -265,8 +271,8 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     }
 
     @Override
-    public void addPersonsToAdapter(List<PersonPresentationModel> persons) {
-        personsAdapter.addAll(persons);
+    public void addPersonsToAdapter(List<PersonDomainModel> persons) {
+        personsAdapter.addAll(personPresentationModelMapper.mapListToPresentationModelList(persons));
     }
 
     @Override
@@ -276,8 +282,8 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     }
 
     @Override
-    public void setPersonsPresentationModel(PersonsPresentationModel personsPresentationModel) {
-        this.personsPresentationModel = personsPresentationModel;
+    public void setPersonsDomainModel(PersonsDomainModel personsDomainModel) {
+        this.personsPresentationModel = personsPresentationModelMapper.mapToPresentationModel(personsDomainModel);
     }
 
     @Override

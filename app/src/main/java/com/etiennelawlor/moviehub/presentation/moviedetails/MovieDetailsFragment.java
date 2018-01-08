@@ -48,9 +48,11 @@ import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.di.component.MovieDetailsComponent;
 import com.etiennelawlor.moviehub.di.module.MovieDetailsModule;
+import com.etiennelawlor.moviehub.domain.models.MovieDetailsDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.common.GravitySnapHelper;
+import com.etiennelawlor.moviehub.presentation.mappers.MovieDetailsPresentationModelMapper;
 import com.etiennelawlor.moviehub.presentation.models.GenrePresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.MovieCreditPresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.MovieDetailsPresentationModel;
@@ -164,6 +166,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
     private MovieDetailsPresentationModel movieDetailsPresentationModel;
     private MovieDetailsComponent movieDetailsComponent;
     private final Handler handler = new Handler();
+    private MovieDetailsPresentationModelMapper movieDetailsPresentationModelMapper = new MovieDetailsPresentationModelMapper();
     // endregion
 
     // region Injected Variables
@@ -482,8 +485,8 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
     // region MovieDetailsPresentationContract.View Methods
 
     @Override
-    public void showMovieDetails(MovieDetailsPresentationModel movieDetailsPresentationModel) {
-        this.movieDetailsPresentationModel = movieDetailsPresentationModel;
+    public void showMovieDetails(MovieDetailsDomainModel movieDetailsDomainModel) {
+        this.movieDetailsPresentationModel = movieDetailsPresentationModelMapper.mapToPresentationModel(movieDetailsDomainModel);
         final Palette posterPalette = movie.getPosterPalette();
 
         nestedScrollView.setNestedScrollingEnabled(true);

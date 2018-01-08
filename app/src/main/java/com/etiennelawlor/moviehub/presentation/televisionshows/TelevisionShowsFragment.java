@@ -20,8 +20,12 @@ import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.di.component.TelevisionShowsComponent;
 import com.etiennelawlor.moviehub.di.module.TelevisionShowsModule;
+import com.etiennelawlor.moviehub.domain.models.TelevisionShowDomainModel;
+import com.etiennelawlor.moviehub.domain.models.TelevisionShowsDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
+import com.etiennelawlor.moviehub.presentation.mappers.TelevisionShowPresentationModelMapper;
+import com.etiennelawlor.moviehub.presentation.mappers.TelevisionShowsPresentationModelMapper;
 import com.etiennelawlor.moviehub.presentation.models.TelevisionShowPresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.TelevisionShowsPresentationModel;
 import com.etiennelawlor.moviehub.presentation.televisionshowdetails.TelevisionShowDetailsActivity;
@@ -70,6 +74,9 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
     private boolean isLoading = false;
     private TelevisionShowsPresentationModel televisionShowsPresentationModel;
     private TelevisionShowsComponent televisionShowsComponent;
+    private TelevisionShowsPresentationModelMapper televisionShowsPresentationModelMapper = new TelevisionShowsPresentationModelMapper();
+    private TelevisionShowPresentationModelMapper televisionShowPresentationModelMapper = new TelevisionShowPresentationModelMapper();
+
     // endregion
 
     // region Injected Variables
@@ -266,8 +273,8 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
     }
 
     @Override
-    public void addTelevisionShowsToAdapter(List<TelevisionShowPresentationModel> televisionShows) {
-        televisionShowsAdapter.addAll(televisionShows);
+    public void addTelevisionShowsToAdapter(List<TelevisionShowDomainModel> televisionShows) {
+        televisionShowsAdapter.addAll(televisionShowPresentationModelMapper.mapListToPresentationModelList(televisionShows));
     }
 
     @Override
@@ -277,8 +284,8 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
     }
 
     @Override
-    public void setTelevisionShowsPresentationModel(TelevisionShowsPresentationModel televisionShowsPresentationModel) {
-        this.televisionShowsPresentationModel = televisionShowsPresentationModel;
+    public void setTelevisionShowsDomainModel(TelevisionShowsDomainModel televisionShowsDomainModel) {
+        this.televisionShowsPresentationModel = televisionShowsPresentationModelMapper.mapToPresentationModel(televisionShowsDomainModel);
     }
 
     @Override

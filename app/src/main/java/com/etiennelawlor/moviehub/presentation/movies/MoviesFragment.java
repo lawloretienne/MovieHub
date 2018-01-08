@@ -20,8 +20,12 @@ import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.di.component.MoviesComponent;
 import com.etiennelawlor.moviehub.di.module.MoviesModule;
+import com.etiennelawlor.moviehub.domain.models.MovieDomainModel;
+import com.etiennelawlor.moviehub.domain.models.MoviesDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
+import com.etiennelawlor.moviehub.presentation.mappers.MoviePresentationModelMapper;
+import com.etiennelawlor.moviehub.presentation.mappers.MoviesPresentationModelMapper;
 import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.MoviesPresentationModel;
 import com.etiennelawlor.moviehub.presentation.moviedetails.MovieDetailsActivity;
@@ -70,6 +74,8 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     private MoviesPresentationModel moviesPresentationModel;
     private boolean isLoading = false;
     private MoviesComponent moviesComponent;
+    private MoviesPresentationModelMapper moviesPresentationModelMapper = new MoviesPresentationModelMapper();
+    private MoviePresentationModelMapper moviePresentationModelMapper = new MoviePresentationModelMapper();
     // endregion
 
     // region Injected Variables
@@ -265,8 +271,8 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     }
 
     @Override
-    public void addMoviesToAdapter(List<MoviePresentationModel> movies) {
-        moviesAdapter.addAll(movies);
+    public void addMoviesToAdapter(List<MovieDomainModel> movies) {
+        moviesAdapter.addAll(moviePresentationModelMapper.mapListToPresentationModelList(movies));
     }
 
     @Override
@@ -276,8 +282,8 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     }
 
     @Override
-    public void setMoviesPresentationModel(MoviesPresentationModel moviesPresentationModel) {
-        this.moviesPresentationModel = moviesPresentationModel;
+    public void setMoviesPresentationModel(MoviesDomainModel moviesDomainModel) {
+        this.moviesPresentationModel = moviesPresentationModelMapper.mapToPresentationModel(moviesDomainModel);
     }
 
     @Override

@@ -2,9 +2,7 @@ package com.etiennelawlor.moviehub.presentation.persondetails;
 
 import com.etiennelawlor.moviehub.domain.models.PersonDetailsDomainModel;
 import com.etiennelawlor.moviehub.domain.usecases.PersonDetailsDomainContract;
-import com.etiennelawlor.moviehub.presentation.mappers.PersonDetailsPresentationModelMapper;
 import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
-import com.etiennelawlor.moviehub.presentation.models.PersonDetailsPresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.TelevisionShowPresentationModel;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 import com.etiennelawlor.moviehub.util.rxjava.SchedulerProvider;
@@ -24,7 +22,6 @@ public class PersonDetailsPresenter implements PersonDetailsPresentationContract
     private final PersonDetailsDomainContract.UseCase personDetailsUseCase;
     private final SchedulerProvider schedulerProvider;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private PersonDetailsPresentationModelMapper personDetailsPresentationModelMapper = new PersonDetailsPresentationModelMapper();
     // endregion
 
     // region Constructors
@@ -54,9 +51,7 @@ public class PersonDetailsPresenter implements PersonDetailsPresentationContract
                     @Override
                     public void onSuccess(PersonDetailsDomainModel personDetailsDomainModel) {
                         if(personDetailsDomainModel != null){
-                            PersonDetailsPresentationModel personDetailsPresentationModel = personDetailsPresentationModelMapper.mapToPresentationModel(personDetailsDomainModel);
-
-                            personDetailsView.showPersonDetails(personDetailsPresentationModel);
+                            personDetailsView.showPersonDetails(personDetailsDomainModel);
                         }
                     }
 

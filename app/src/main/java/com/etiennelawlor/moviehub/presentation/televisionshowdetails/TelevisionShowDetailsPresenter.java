@@ -2,9 +2,7 @@ package com.etiennelawlor.moviehub.presentation.televisionshowdetails;
 
 import com.etiennelawlor.moviehub.domain.models.TelevisionShowDetailsDomainModel;
 import com.etiennelawlor.moviehub.domain.usecases.TelevisionShowDetailsDomainContract;
-import com.etiennelawlor.moviehub.presentation.mappers.TelevisionShowDetailsPresentationModelMapper;
 import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
-import com.etiennelawlor.moviehub.presentation.models.TelevisionShowDetailsPresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.TelevisionShowPresentationModel;
 import com.etiennelawlor.moviehub.util.NetworkUtility;
 import com.etiennelawlor.moviehub.util.rxjava.SchedulerProvider;
@@ -24,7 +22,6 @@ public class TelevisionShowDetailsPresenter implements TelevisionShowDetailsPres
     private final TelevisionShowDetailsDomainContract.UseCase televisionShowDetailsUseCase;
     private final SchedulerProvider schedulerProvider;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private TelevisionShowDetailsPresentationModelMapper televisionShowDetailsPresentationModelMapper = new TelevisionShowDetailsPresentationModelMapper();
     // endregion
 
     // region Constructors
@@ -54,9 +51,7 @@ public class TelevisionShowDetailsPresenter implements TelevisionShowDetailsPres
                     @Override
                     public void onSuccess(TelevisionShowDetailsDomainModel televisionShowDetailsDomainModel) {
                         if(televisionShowDetailsDomainModel != null){
-                            TelevisionShowDetailsPresentationModel televisionShowDetailsPresentationModel = televisionShowDetailsPresentationModelMapper.mapToPresentationModel(televisionShowDetailsDomainModel);
-
-                            televisionShowDetailsView.showTelevisionShowDetails(televisionShowDetailsPresentationModel);
+                            televisionShowDetailsView.showTelevisionShowDetails(televisionShowDetailsDomainModel);
                         }
                     }
 

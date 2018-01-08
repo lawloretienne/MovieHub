@@ -118,7 +118,7 @@
 //
 //        verify(mockPersonsView).hideLoadingView();
 //        verify(mockPersonsView).showEmptyView();
-//        verify(mockPersonsView).setPersonsPresentationModel(personsDataModel);
+//        verify(mockPersonsView).setPersonsDomainModel(personsDataModel);
 //    }
 //
 //    @Test
@@ -137,7 +137,7 @@
 //        disposableSingleObserverArgumentCaptor.getValue().onSuccess(personsDataModel);
 //
 //        verify(mockPersonsView).removeFooter();
-//        verify(mockPersonsView).setPersonsPresentationModel(personsDataModel);
+//        verify(mockPersonsView).setPersonsDomainModel(personsDataModel);
 //    }
 //
 //    @Test
@@ -160,7 +160,7 @@
 //        verify(mockPersonsView).hideLoadingView();
 //        verify(mockPersonsView).addHeader();
 //        verify(mockPersonsView).addPersonsToAdapter(personsDataModel.getPersons());
-//        verify(mockPersonsView).setPersonsPresentationModel(personsDataModel);
+//        verify(mockPersonsView).setPersonsDomainModel(personsDataModel);
 //    }
 //
 //    @Test
@@ -184,7 +184,7 @@
 //        verify(mockPersonsView).addHeader();
 //        verify(mockPersonsView).addPersonsToAdapter(personsDataModel.getPersons());
 //        verify(mockPersonsView).addFooter();
-//        verify(mockPersonsView).setPersonsPresentationModel(personsDataModel);
+//        verify(mockPersonsView).setPersonsDomainModel(personsDataModel);
 //    }
 //
 //    @Test
@@ -204,7 +204,7 @@
 //
 //        verify(mockPersonsView).removeFooter();
 //        verify(mockPersonsView).addPersonsToAdapter(personsDataModel.getPersons());
-//        verify(mockPersonsView).setPersonsPresentationModel(personsDataModel);
+//        verify(mockPersonsView).setPersonsDomainModel(personsDataModel);
 //    }
 //
 //    @Test
@@ -225,7 +225,7 @@
 //        verify(mockPersonsView).removeFooter();
 //        verify(mockPersonsView).addPersonsToAdapter(personsDataModel.getPersons());
 //        verify(mockPersonsView).addFooter();
-//        verify(mockPersonsView).setPersonsPresentationModel(personsDataModel);
+//        verify(mockPersonsView).setPersonsDomainModel(personsDataModel);
 ////        verify(mockPersonsView, times(1)).setModel(any(PersonsWrapper.class)); // Alternative verify check
 //    }
 //

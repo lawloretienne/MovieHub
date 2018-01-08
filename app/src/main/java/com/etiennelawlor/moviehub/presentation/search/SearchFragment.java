@@ -31,9 +31,15 @@ import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.di.component.SearchComponent;
 import com.etiennelawlor.moviehub.di.module.SearchModule;
+import com.etiennelawlor.moviehub.domain.models.MovieDomainModel;
+import com.etiennelawlor.moviehub.domain.models.PersonDomainModel;
+import com.etiennelawlor.moviehub.domain.models.TelevisionShowDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.common.GravitySnapHelper;
+import com.etiennelawlor.moviehub.presentation.mappers.MoviePresentationModelMapper;
+import com.etiennelawlor.moviehub.presentation.mappers.PersonPresentationModelMapper;
+import com.etiennelawlor.moviehub.presentation.mappers.TelevisionShowPresentationModelMapper;
 import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.TelevisionShowPresentationModel;
@@ -60,12 +66,6 @@ import timber.log.Timber;
  */
 
 public class SearchFragment extends BaseFragment implements SearchPresentationContract.View {
-
-    // region Constants
-    public static final String KEY_MOVIE = "KEY_MOVIE";
-    public static final String KEY_TELEVISION_SHOW = "KEY_TELEVISION_SHOW";
-    public static final String KEY_PERSON = "KEY_PERSON";
-    // endregion
 
     // region Views
     @BindView(R.id.appbar)
@@ -108,6 +108,9 @@ public class SearchFragment extends BaseFragment implements SearchPresentationCo
     private Transition sharedElementEnterTransition;
     private Transition sharedElementReturnTransition;
     private SearchComponent searchComponent;
+    private PersonPresentationModelMapper personPresentationModelMapper = new PersonPresentationModelMapper();
+    private MoviePresentationModelMapper moviePresentationModelMapper = new MoviePresentationModelMapper();
+    private TelevisionShowPresentationModelMapper televisionShowPresentationModelMapper = new TelevisionShowPresentationModelMapper();
     // endregion
 
     // region Injected Variables
@@ -346,8 +349,8 @@ public class SearchFragment extends BaseFragment implements SearchPresentationCo
     }
 
     @Override
-    public void addMoviesToAdapter(List<MoviePresentationModel> movies) {
-        searchMoviesAdapter.addAll(movies);
+    public void addMoviesToAdapter(List<MovieDomainModel> movies) {
+        searchMoviesAdapter.addAll(moviePresentationModelMapper.mapListToPresentationModelList(movies));
     }
 
     @Override
@@ -366,8 +369,8 @@ public class SearchFragment extends BaseFragment implements SearchPresentationCo
     }
 
     @Override
-    public void addTelevisionShowsToAdapter(List<TelevisionShowPresentationModel> televisionShows) {
-        searchTelevisionShowsAdapter.addAll(televisionShows);
+    public void addTelevisionShowsToAdapter(List<TelevisionShowDomainModel> televisionShows) {
+        searchTelevisionShowsAdapter.addAll(televisionShowPresentationModelMapper.mapListToPresentationModelList(televisionShows));
     }
 
     @Override
@@ -386,8 +389,8 @@ public class SearchFragment extends BaseFragment implements SearchPresentationCo
     }
 
     @Override
-    public void addPersonsToAdapter(List<PersonPresentationModel> persons) {
-        searchPersonsAdapter.addAll(persons);
+    public void addPersonsToAdapter(List<PersonDomainModel> persons) {
+        searchPersonsAdapter.addAll(personPresentationModelMapper.mapListToPresentationModelList(persons));
     }
 
     @Override

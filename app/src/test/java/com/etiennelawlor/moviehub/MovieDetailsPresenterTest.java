@@ -85,7 +85,9 @@ public class MovieDetailsPresenterTest {
         movieDetailsPresenter.onLoadMovieDetails(movieDetailsDomainModel.getMovie().getId());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-        verify(mockMovieDetailsView).showMovieDetails(movieDetailsPresentationModelMapper.mapToPresentationModel(movieDetailsDomainModel));
+//        verify(mockMovieDetailsView).showMovieDetails(movieDetailsPresentationModelMapper.mapToPresentationModel(movieDetailsDomainModel));
+        verify(mockMovieDetailsView).showMovieDetails(movieDetailsDomainModel);
+
     }
 
     @Test
