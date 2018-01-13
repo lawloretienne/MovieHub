@@ -28,7 +28,7 @@ public interface MoviesPresentationContract {
         void showLoadingFooter();
         void addMoviesToAdapter(List<MovieDomainModel> movies);
         void loadMoreItems();
-        void setMoviesPresentationModel(MoviesDomainModel moviesPresentationModel);
+        void setMoviesDomainModel(MoviesDomainModel moviesDomainModel);
 
         // Navigation methods
         void openMovieDetails(MoviePresentationModel movie);

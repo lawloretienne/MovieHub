@@ -85,7 +85,7 @@ public class MoviesPresenter implements MoviesPresentationContract.Presenter {
                                 }
                             }
 
-                            moviesView.setMoviesPresentationModel(moviesDomainModel);
+                            moviesView.setMoviesDomainModel(moviesDomainModel);
                         }
                     }
 

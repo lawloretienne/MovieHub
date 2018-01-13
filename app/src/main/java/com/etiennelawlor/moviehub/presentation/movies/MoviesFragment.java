@@ -282,7 +282,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     }
 
     @Override
-    public void setMoviesPresentationModel(MoviesDomainModel moviesDomainModel) {
+    public void setMoviesDomainModel(MoviesDomainModel moviesDomainModel) {
         this.moviesPresentationModel = moviesPresentationModelMapper.mapToPresentationModel(moviesDomainModel);
     }
 

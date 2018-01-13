@@ -1,10 +1,9 @@
 package com.etiennelawlor.moviehub;
 
-import com.etiennelawlor.moviehub.data.network.response.MovieResponse;
-import com.etiennelawlor.moviehub.data.repositories.models.MoviesDataModel;
 import com.etiennelawlor.moviehub.domain.models.MovieDomainModel;
 import com.etiennelawlor.moviehub.domain.models.MoviesDomainModel;
 import com.etiennelawlor.moviehub.domain.usecases.MoviesDomainContract;
+import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
 import com.etiennelawlor.moviehub.presentation.movies.MoviesPresentationContract;
 import com.etiennelawlor.moviehub.presentation.movies.MoviesPresenter;
 import com.etiennelawlor.moviehub.util.rxjava.SchedulerProvider;
@@ -12,18 +11,15 @@ import com.etiennelawlor.moviehub.util.rxjava.TestSchedulerProvider;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import io.reactivex.Single;
-import io.reactivex.observers.DisposableSingleObserver;
 
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
@@ -81,7 +77,6 @@ public class MoviesPresenterTest {
         verify(mockMoviesView).hideErrorView();
         verify(mockMoviesView).showLoadingView();
 
-
         verify(mockMoviesView).hideLoadingView();
         verify(mockMoviesView).setErrorText(anyString());
         verify(mockMoviesView).showErrorView();
@@ -102,174 +97,162 @@ public class MoviesPresenterTest {
 
         verify(mockMoviesView).showErrorFooter();
     }
-//
-//    @Test
-//    public void onLoadPopularMovies_shouldShowEmpty_whenFirstPageHasNoMovies() {
-//        // 1. (Given) Set up conditions required for the test
-//        moviesDataModel = new MoviesDataModel(getListOfMovies(0), 1, true, Calendar.getInstance().getTime());
-//
-//        // 2. (When) Then perform one or more actions
-//        moviesPresenter.onLoadPopularMovies(moviesDataModel.getPageNumber());
-//
-//        // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-//        verify(mockMoviesView).hideEmptyView();
-//        verify(mockMoviesView).hideErrorView();
-//        verify(mockMoviesView).showLoadingView();
-//
-//        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
-//        verify(mockMoviesUseCase).getPopularMovies(anyInt(), disposableSingleObserverArgumentCaptor.capture());
-//        disposableSingleObserverArgumentCaptor.getValue().onSuccess(moviesDataModel);
-//
-//        verify(mockMoviesView).hideLoadingView();
-//        verify(mockMoviesView).showEmptyView();
-//        verify(mockMoviesView).setMoviesPresentationModel(moviesDataModel);
-//    }
-//
-//    @Test
-//    public void onLoadPopularMovies_shouldNotAddMovies_whenNextPageHasNoMovies() {
-//        // 1. (Given) Set up conditions required for the test
-//        moviesDataModel = new MoviesDataModel(getListOfMovies(0), 2, true, Calendar.getInstance().getTime());
-//
-//        // 2. (When) Then perform one or more actions
-//        moviesPresenter.onLoadPopularMovies(moviesDataModel.getPageNumber());
-//
-//        // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-//        verify(mockMoviesView).showLoadingFooter();
-//
-//        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
-//        verify(mockMoviesUseCase).getPopularMovies(anyInt(), disposableSingleObserverArgumentCaptor.capture());
-//        disposableSingleObserverArgumentCaptor.getValue().onSuccess(moviesDataModel);
-//
-//        verify(mockMoviesView).removeFooter();
-//        verify(mockMoviesView).setMoviesPresentationModel(moviesDataModel);
-//    }
-//
-//    @Test
-//    public void onLoadPopularMovies_shouldAddMovies_whenFirstPageHasMoviesAndIsLastPage() {
-//        // 1. (Given) Set up conditions required for the test
-//        moviesDataModel = new MoviesDataModel(getListOfMovies(5), 1, true, Calendar.getInstance().getTime());
-//
-//        // 2. (When) Then perform one or more actions
-//        moviesPresenter.onLoadPopularMovies(moviesDataModel.getPageNumber());
-//
-//        // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-//        verify(mockMoviesView).hideEmptyView();
-//        verify(mockMoviesView).hideErrorView();
-//        verify(mockMoviesView).showLoadingView();
-//
-//        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
-//        verify(mockMoviesUseCase).getPopularMovies(anyInt(), disposableSingleObserverArgumentCaptor.capture());
-//        disposableSingleObserverArgumentCaptor.getValue().onSuccess(moviesDataModel);
-//
-//        verify(mockMoviesView).hideLoadingView();
-//        verify(mockMoviesView).addHeader();
-//        verify(mockMoviesView).addMoviesToAdapter(moviesDataModel.getMovies());
-//        verify(mockMoviesView).setMoviesPresentationModel(moviesDataModel);
-//    }
-//
-//    @Test
-//    public void onLoadPopularMovies_shouldAddMovies_whenFirstPageHasMoviesAndIsNotLastPage() {
-//        // 1. (Given) Set up conditions required for the test
-//        moviesDataModel = new MoviesDataModel(getListOfMovies(5), 1, false, Calendar.getInstance().getTime());
-//
-//        // 2. (When) Then perform one or more actions
-//        moviesPresenter.onLoadPopularMovies(moviesDataModel.getPageNumber());
-//
-//        // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-//        verify(mockMoviesView).hideEmptyView();
-//        verify(mockMoviesView).hideErrorView();
-//        verify(mockMoviesView).showLoadingView();
-//
-//        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
-//        verify(mockMoviesUseCase).getPopularMovies(anyInt(), disposableSingleObserverArgumentCaptor.capture());
-//        disposableSingleObserverArgumentCaptor.getValue().onSuccess(moviesDataModel);
-//
-//        verify(mockMoviesView).hideLoadingView();
-//        verify(mockMoviesView).addHeader();
-//        verify(mockMoviesView).addMoviesToAdapter(moviesDataModel.getMovies());
-//        verify(mockMoviesView).addFooter();
-//        verify(mockMoviesView).setMoviesPresentationModel(moviesDataModel);
-//    }
-//
-//    @Test
-//    public void onLoadPopularMovies_shouldAddMovies_whenNextPageHasMoviesAndIsLastPage() {
-//        // 1. (Given) Set up conditions required for the test
-//        moviesDataModel = new MoviesDataModel(getListOfMovies(5), 2, true, Calendar.getInstance().getTime());
-//
-//        // 2. (When) Then perform one or more actions
-//        moviesPresenter.onLoadPopularMovies(moviesDataModel.getPageNumber());
-//
-//        // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-//        verify(mockMoviesView).showLoadingFooter();
-//
-//        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
-//        verify(mockMoviesUseCase).getPopularMovies(anyInt(), disposableSingleObserverArgumentCaptor.capture());
-//        disposableSingleObserverArgumentCaptor.getValue().onSuccess(moviesDataModel);
-//
-//        verify(mockMoviesView).removeFooter();
-//        verify(mockMoviesView).addMoviesToAdapter(moviesDataModel.getMovies());
-//        verify(mockMoviesView).setMoviesPresentationModel(moviesDataModel);
-//    }
-//
-//    @Test
-//    public void onLoadPopularMovies_shouldAddMovies_whenNextPageHasMoviesAndIsNotLastPage() {
-//        // 1. (Given) Set up conditions required for the test
-//        moviesDataModel = new MoviesDataModel(getListOfMovies(5), 2, false, Calendar.getInstance().getTime());
-//
-//        // 2. (When) Then perform one or more actions
-//        moviesPresenter.onLoadPopularMovies(moviesDataModel.getPageNumber());
-//
-//        // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-//        verify(mockMoviesView).showLoadingFooter();
-//
-//        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
-//        verify(mockMoviesUseCase).getPopularMovies(anyInt(), disposableSingleObserverArgumentCaptor.capture());
-//        disposableSingleObserverArgumentCaptor.getValue().onSuccess(moviesDataModel);
-//
-//        verify(mockMoviesView).removeFooter();
-//        verify(mockMoviesView).addMoviesToAdapter(moviesDataModel.getMovies());
-//        verify(mockMoviesView).addFooter();
-//        verify(mockMoviesView).setMoviesPresentationModel(moviesDataModel);
-////        verify(mockMoviesView, times(1)).setModel(any(MoviesPresentationModel.class)); // Alternative verify check
-//    }
-//
-//    @Test
-//    public void onMovieClick_shouldOpenMovieDetails() {
-//        // 1. (Given) Set up conditions required for the test
-//        MovieResponse movie = new MovieResponse();
-//
-//        // 2. (When) Then perform one or more actions
-//        moviesPresenter.onMovieClick(movie);
-//
-//        // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-//        verify(mockMoviesView).openMovieDetails(movie);
-//
-//        verifyZeroInteractions(mockMoviesUseCase);
-//    }
-//
-//    @Test
-//    public void onScrollToEndOfList_shouldLoadMoreItems() {
-//        // 1. (Given) Set up conditions required for the test
-//
-//        // 2. (When) Then perform one or more actions
-//        moviesPresenter.onScrollToEndOfList();
-//
-//        // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-//        verify(mockMoviesView).loadMoreItems();
-//
-//        verifyZeroInteractions(mockMoviesUseCase);
-//    }
-//
-//    @Test
-//    public void onDestroyView_shouldClearSubscriptions() {
-//        // 1. (Given) Set up conditions required for the test
-//
-//        // 2. (When) Then perform one or more actions
-//        moviesPresenter.onDestroyView();
-//        // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-//        verifyZeroInteractions(mockMoviesView);
-//        verify(mockMoviesUseCase).clearDisposables();
-//    }
+
+    @Test
+    public void onLoadPopularMovies_shouldShowEmpty_whenFirstPageHasNoMovies() {
+        // 1. (Given) Set up conditions required for the test
+        moviesDomainModelStub = getMoviesDomainModelStub(0, 1, true);
+
+        when(mockMoviesUseCase.getPopularMovies(anyInt())).thenReturn(Single.just(moviesDomainModelStub));
+
+        // 2. (When) Then perform one or more actions
+        moviesPresenter.onLoadPopularMovies(moviesDomainModelStub.getPageNumber());
+
+        // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
+        verify(mockMoviesView).hideEmptyView();
+        verify(mockMoviesView).hideErrorView();
+        verify(mockMoviesView).showLoadingView();
+
+        verify(mockMoviesView).hideLoadingView();
+        verify(mockMoviesView).showEmptyView();
+        verify(mockMoviesView).setMoviesDomainModel(moviesDomainModelStub);
+    }
+
+    @Test
+    public void onLoadPopularMovies_shouldNotAddMovies_whenNextPageHasNoMovies() {
+        // 1. (Given) Set up conditions required for the test
+        moviesDomainModelStub = getMoviesDomainModelStub(0, 2, true);
+
+        when(mockMoviesUseCase.getPopularMovies(anyInt())).thenReturn(Single.just(moviesDomainModelStub));
+
+        // 2. (When) Then perform one or more actions
+        moviesPresenter.onLoadPopularMovies(moviesDomainModelStub.getPageNumber());
+
+        // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
+        verify(mockMoviesView).showLoadingFooter();
+
+        verify(mockMoviesView).removeFooter();
+        verify(mockMoviesView).setMoviesDomainModel(moviesDomainModelStub);
+    }
+
+    @Test
+    public void onLoadPopularMovies_shouldAddMovies_whenFirstPageHasMoviesAndIsLastPage() {
+        // 1. (Given) Set up conditions required for the test
+        moviesDomainModelStub = getMoviesDomainModelStub(5, 1, true);
+
+        when(mockMoviesUseCase.getPopularMovies(anyInt())).thenReturn(Single.just(moviesDomainModelStub));
+
+        // 2. (When) Then perform one or more actions
+        moviesPresenter.onLoadPopularMovies(moviesDomainModelStub.getPageNumber());
+
+        // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
+        verify(mockMoviesView).hideEmptyView();
+        verify(mockMoviesView).hideErrorView();
+        verify(mockMoviesView).showLoadingView();
+
+        verify(mockMoviesView).hideLoadingView();
+        verify(mockMoviesView).addHeader();
+        verify(mockMoviesView).addMoviesToAdapter(moviesDomainModelStub.getMovies());
+        verify(mockMoviesView).setMoviesDomainModel(moviesDomainModelStub);
+    }
+
+    @Test
+    public void onLoadPopularMovies_shouldAddMovies_whenFirstPageHasMoviesAndIsNotLastPage() {
+        // 1. (Given) Set up conditions required for the test
+        moviesDomainModelStub = getMoviesDomainModelStub(5, 1, false);
+
+        when(mockMoviesUseCase.getPopularMovies(anyInt())).thenReturn(Single.just(moviesDomainModelStub));
+
+        // 2. (When) Then perform one or more actions
+        moviesPresenter.onLoadPopularMovies(moviesDomainModelStub.getPageNumber());
+
+        // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
+        verify(mockMoviesView).hideEmptyView();
+        verify(mockMoviesView).hideErrorView();
+        verify(mockMoviesView).showLoadingView();
+
+        verify(mockMoviesView).hideLoadingView();
+        verify(mockMoviesView).addHeader();
+        verify(mockMoviesView).addMoviesToAdapter(moviesDomainModelStub.getMovies());
+        verify(mockMoviesView).addFooter();
+        verify(mockMoviesView).setMoviesDomainModel(moviesDomainModelStub);
+    }
+
+    @Test
+    public void onLoadPopularMovies_shouldAddMovies_whenNextPageHasMoviesAndIsLastPage() {
+        // 1. (Given) Set up conditions required for the test
+        moviesDomainModelStub = getMoviesDomainModelStub(5, 2, true);
+
+        when(mockMoviesUseCase.getPopularMovies(anyInt())).thenReturn(Single.just(moviesDomainModelStub));
+
+        // 2. (When) Then perform one or more actions
+        moviesPresenter.onLoadPopularMovies(moviesDomainModelStub.getPageNumber());
+
+        // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
+        verify(mockMoviesView).showLoadingFooter();
+
+        verify(mockMoviesView).removeFooter();
+        verify(mockMoviesView).addMoviesToAdapter(moviesDomainModelStub.getMovies());
+        verify(mockMoviesView).setMoviesDomainModel(moviesDomainModelStub);
+    }
+
+    @Test
+    public void onLoadPopularMovies_shouldAddMovies_whenNextPageHasMoviesAndIsNotLastPage() {
+        // 1. (Given) Set up conditions required for the test
+        moviesDomainModelStub = getMoviesDomainModelStub(5, 2, false);
+
+        when(mockMoviesUseCase.getPopularMovies(anyInt())).thenReturn(Single.just(moviesDomainModelStub));
+
+        // 2. (When) Then perform one or more actions
+        moviesPresenter.onLoadPopularMovies(moviesDomainModelStub.getPageNumber());
+
+        // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
+        verify(mockMoviesView).showLoadingFooter();
+
+        verify(mockMoviesView).removeFooter();
+        verify(mockMoviesView).addMoviesToAdapter(moviesDomainModelStub.getMovies());
+        verify(mockMoviesView).addFooter();
+        verify(mockMoviesView).setMoviesDomainModel(moviesDomainModelStub);
+//        verify(mockMoviesView, times(1)).setModel(any(MoviesPresentationModel.class)); // Alternative verify check
+    }
+
+    @Test
+    public void onMovieClick_shouldOpenMovieDetails() {
+        // 1. (Given) Set up conditions required for the test
+        MoviePresentationModel movie = new MoviePresentationModel();
+
+        // 2. (When) Then perform one or more actions
+        moviesPresenter.onMovieClick(movie);
+
+        // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
+        verify(mockMoviesView).openMovieDetails(movie);
+
+        verifyZeroInteractions(mockMoviesUseCase);
+    }
+
+    @Test
+    public void onScrollToEndOfList_shouldLoadMoreItems() {
+        // 1. (Given) Set up conditions required for the test
+
+        // 2. (When) Then perform one or more actions
+        moviesPresenter.onScrollToEndOfList();
+
+        // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
+        verify(mockMoviesView).loadMoreItems();
+
+        verifyZeroInteractions(mockMoviesUseCase);
+    }
+
+    @Test
+    public void onDestroyView_shouldNotInteractWithViewOrUsecase() {
+        // 1. (Given) Set up conditions required for the test
+
+        // 2. (When) Then perform one or more actions
+        moviesPresenter.onDestroyView();
+        // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
+        verifyZeroInteractions(mockMoviesView);
+        verifyZeroInteractions(mockMoviesUseCase);
+    }
 
     // endregion
 
