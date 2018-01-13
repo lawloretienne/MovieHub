@@ -47,10 +47,6 @@ import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
 public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItemClickListener, MoviesAdapter.OnReloadClickListener, MoviesPresentationContract.View {
 
-    // region Constants
-    public static final String KEY_MOVIE = "KEY_MOVIE";
-    // endregion
-
     // region Views
     @BindView(R.id.rv)
     RecyclerView recyclerView;

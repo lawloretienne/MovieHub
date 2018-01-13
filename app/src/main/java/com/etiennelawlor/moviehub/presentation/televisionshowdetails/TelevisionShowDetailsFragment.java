@@ -527,9 +527,9 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     public void showErrorView() {
 
         Snackbar snackbar = Snackbar.make(getActivity().findViewById(R.id.main_content),
-                TrestleUtility.getFormattedText("NetworkResponse connection is unavailable.", font, 16),
+                TrestleUtility.getFormattedText(getString(R.string.network_connection_unavailable), font, 16),
                 Snackbar.LENGTH_INDEFINITE);
-        snackbar.setAction("RETRY", view -> {
+        snackbar.setAction(R.string.retry, view -> {
             if(televisionShow != null)
                 televisionShowDetailsPresenter.onLoadTelevisionShowDetails(televisionShow.getId());
         });
@@ -742,7 +742,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
             overview = overview.trim();
             overviewTextView.setText(overview);
         } else {
-            overviewTextView.setText("N/A");
+            overviewTextView.setText(R.string.not_available);
         }
     }
 

@@ -47,10 +47,6 @@ import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
 public class TelevisionShowsFragment extends BaseFragment implements TelevisionShowsAdapter.OnItemClickListener, TelevisionShowsAdapter.OnReloadClickListener, TelevisionShowsPresentationContract.View {
 
-    // region Constants
-    public static final String KEY_TELEVISION_SHOW = "KEY_TELEVISION_SHOW";
-    // endregion
-
     // region Views
     @BindView(R.id.rv)
     RecyclerView recyclerView;

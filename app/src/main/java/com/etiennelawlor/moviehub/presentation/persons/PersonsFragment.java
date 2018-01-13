@@ -47,10 +47,6 @@ import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
 public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnItemClickListener, PersonsAdapter.OnReloadClickListener, PersonsPresentationContract.View {
 
-    // region Constants
-    public static final String KEY_PERSON = "KEY_PERSON";
-    // endregion
-
     // region Views
     @BindView(R.id.rv)
     RecyclerView recyclerView;

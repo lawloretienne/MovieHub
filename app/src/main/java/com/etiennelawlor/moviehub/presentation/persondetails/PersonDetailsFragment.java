@@ -545,9 +545,9 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     @Override
     public void showErrorView() {
         Snackbar snackbar = Snackbar.make(getActivity().findViewById(R.id.main_content),
-                TrestleUtility.getFormattedText("NetworkResponse connection is unavailable.", font, 16),
+                TrestleUtility.getFormattedText(getString(R.string.network_connection_unavailable), font, 16),
                 Snackbar.LENGTH_INDEFINITE);
-        snackbar.setAction("RETRY", view -> {
+        snackbar.setAction(R.string.retry, view -> {
             if(person != null)
                 personDetailsPresenter.onLoadPersonDetails(person.getId());
         });
@@ -775,7 +775,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
         if(!TextUtils.isEmpty(biography)){
             bioTextView.setText(biography);
         } else {
-            bioTextView.setText("N/A");
+            bioTextView.setText(R.string.not_available);
         }
     }
 
@@ -784,7 +784,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
         if(!TextUtils.isEmpty(birthPlace)){
             birthplaceTextView.setText(birthPlace);
         } else {
-            birthplaceTextView.setText("N/A");
+            birthplaceTextView.setText(R.string.not_available);
         }
     }
 
@@ -802,7 +802,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
 
             dateOfBirthTextView.setText(formattedDateOfBirth);
         } else {
-            dateOfBirthTextView.setText("N/A");
+            dateOfBirthTextView.setText(R.string.not_available);
         }
     }
 

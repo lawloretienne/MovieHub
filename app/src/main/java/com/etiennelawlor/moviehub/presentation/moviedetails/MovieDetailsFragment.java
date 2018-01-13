@@ -524,9 +524,9 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
     @Override
     public void showErrorView() {
         Snackbar snackbar = Snackbar.make(getActivity().findViewById(R.id.main_content),
-                TrestleUtility.getFormattedText("NetworkResponse connection is unavailable.", font, 16),
+                TrestleUtility.getFormattedText(getString(R.string.network_connection_unavailable), font, 16),
                 Snackbar.LENGTH_INDEFINITE);
-        snackbar.setAction("RETRY", view -> {
+        snackbar.setAction(R.string.retry, view -> {
             if(movie != null)
                 movieDetailsPresenter.onLoadMovieDetails(movie.getId());
         });
@@ -738,7 +738,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
         if(!TextUtils.isEmpty(overview)){
             overviewTextView.setText(overview);
         } else {
-            overviewTextView.setText("N/A");
+            overviewTextView.setText(R.string.not_available);
         }
     }
 
@@ -757,7 +757,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
                 durationTextView.setText(String.format("%dm", minutes));
             }
         } else {
-            durationTextView.setText("N/A");
+            durationTextView.setText(R.string.not_available);
         }
     }
 
@@ -805,7 +805,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
         if(budget > 0){
             budgetTextView.setText(String.format("$%s", NumberFormat.getNumberInstance(Locale.US).format(budget)));
         } else {
-            budgetTextView.setText("N/A");
+            budgetTextView.setText(R.string.not_available);
         }
     }
 
@@ -814,7 +814,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
         if(revenue > 0L){
             revenueTextView.setText(String.format("$%s", NumberFormat.getNumberInstance(Locale.US).format(revenue)));
         } else {
-            revenueTextView.setText("N/A");
+            revenueTextView.setText(R.string.not_available);
         }
     }
 

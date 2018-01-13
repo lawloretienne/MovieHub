@@ -336,9 +336,9 @@ public class SearchFragment extends BaseFragment implements SearchPresentationCo
     public void showErrorView() {
 
         Snackbar snackbar = Snackbar.make(getActivity().findViewById(R.id.main_content),
-                TrestleUtility.getFormattedText("NetworkResponse connection is unavailable.", font, 16),
+                TrestleUtility.getFormattedText(getString(R.string.network_connection_unavailable), font, 16),
                 Snackbar.LENGTH_INDEFINITE);
-        snackbar.setAction("RETRY", view -> searchPresenter.onLoadSearch(searchQueryChangeObservable));
+        snackbar.setAction(R.string.retry, view -> searchPresenter.onLoadSearch(searchQueryChangeObservable));
         View snackBarView = snackbar.getView();
 //                            snackBarView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.grey_200));
         TextView textView = snackBarView.findViewById(android.support.design.R.id.snackbar_text);

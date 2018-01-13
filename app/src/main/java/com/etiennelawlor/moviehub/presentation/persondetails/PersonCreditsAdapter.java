@@ -263,7 +263,7 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCreditPresentationMo
             } else if (!TextUtils.isEmpty(name)) {
                 tv.setText(name);
             } else {
-                tv.setText("N/A");
+                tv.setText(R.string.not_available);
             }
         }
 
@@ -289,7 +289,7 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCreditPresentationMo
             } else if (!TextUtils.isEmpty(character)) {
                 tv.setText(character);
             } else {
-                tv.setText("N/A");
+                tv.setText(R.string.not_available);
             }
         }
 
