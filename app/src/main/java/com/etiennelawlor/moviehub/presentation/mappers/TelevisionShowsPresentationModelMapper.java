@@ -26,7 +26,7 @@ public class TelevisionShowsPresentationModelMapper implements PresentationModel
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, SEVEN_DAYS);
         televisionShowsPresentationModel.setExpiredAt(calendar.getTime());
-        televisionShowsPresentationModel.setLastPage(televisionShowsDomainModel.getTelevisionShows().size() < PAGE_SIZE ? true : false);
+        televisionShowsPresentationModel.setLastPage(televisionShowsDomainModel.getTelevisionShows().size() < PAGE_SIZE);
         televisionShowsPresentationModel.setTelevisionShows(televisionShowPresentationModelMapper.mapListToPresentationModelList(televisionShowsDomainModel.getTelevisionShows()));
         televisionShowsPresentationModel.setPageNumber(televisionShowsDomainModel.getPageNumber());
         return televisionShowsPresentationModel;

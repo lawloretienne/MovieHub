@@ -151,7 +151,6 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     private Typeface font;
     private int personPosterHeight;
     private int padding;
-    private int scrollThreshold;
     private int statusBarColor;
     private PersonCreditsAdapter castAdapter;
     private PersonCreditsAdapter crewAdapter;
@@ -171,7 +170,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     private NestedScrollView.OnScrollChangeListener nestedScrollViewOnScrollChangeListener = new NestedScrollView.OnScrollChangeListener() {
         @Override
         public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-            scrollThreshold = personPosterHeight - personDetailsHeaderLinearLayout.getMeasuredHeight() + padding;
+            int scrollThreshold = personPosterHeight - personDetailsHeaderLinearLayout.getMeasuredHeight() + padding;
 
             boolean isScrolledPastThreshold = (scrollY >= scrollThreshold);
             personDetailsPresenter.onScrollChange(isScrolledPastThreshold);

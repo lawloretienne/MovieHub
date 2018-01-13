@@ -44,8 +44,6 @@ public class MovieDetailsPresenterTest {
 
     // Stubs
     private MovieDetailsDomainModel movieDetailsDomainModelStub;
-    private PersonPresentationModel personStub;
-    private MoviePresentationModel movieStub;
     // endregion
 
     // region Member Variables
@@ -99,7 +97,7 @@ public class MovieDetailsPresenterTest {
     @Test
     public void onPersonClick_shouldOpenPersonDetails() {
         // 1. (Given) Set up conditions required for the test
-        personStub = new PersonPresentationModel();
+        PersonPresentationModel personStub = new PersonPresentationModel();
 
         // 2. (When) Then perform one or more actions
         movieDetailsPresenter.onPersonClick(personStub);
@@ -113,7 +111,7 @@ public class MovieDetailsPresenterTest {
     @Test
     public void onMovieClick_shouldOpenMovieDetails() {
         // 1. (Given) Set up conditions required for the test
-        movieStub = new MoviePresentationModel();
+        MoviePresentationModel movieStub = new MoviePresentationModel();
 
         // 2. (When) Then perform one or more actions
         movieDetailsPresenter.onMovieClick(movieStub);

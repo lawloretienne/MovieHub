@@ -154,7 +154,6 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     private Typeface font;
     private int televisionShowPosterHeight;
     private int padding;
-    private int scrollThreshold;
     private int statusBarColor;
     private SimilarTelevisionShowsAdapter similarTelevisionShowsAdapter;
     private TelevisionShowCreditsAdapter castAdapter;
@@ -175,7 +174,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     private NestedScrollView.OnScrollChangeListener nestedScrollViewOnScrollChangeListener = new NestedScrollView.OnScrollChangeListener() {
         @Override
         public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-            scrollThreshold = televisionShowPosterHeight - televisionShowDetailsHeaderLinearLayout.getMeasuredHeight() + padding;
+            int scrollThreshold = televisionShowPosterHeight - televisionShowDetailsHeaderLinearLayout.getMeasuredHeight() + padding;
 
             boolean isScrolledPastThreshold = (scrollY >= scrollThreshold);
             televisionShowDetailsPresenter.onScrollChange(isScrolledPastThreshold);

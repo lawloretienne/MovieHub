@@ -29,8 +29,7 @@ public class PersonDetailsUseCase implements PersonDetailsDomainContract.UseCase
         return Single.zip(
                 personRepository.getPerson(personId),
                 personRepository.getPersonCredits(personId),
-                (personDataModel, personCreditsDataModel) ->
-                    personDetailsDomainModelComposer.compose(personDataModel, personCreditsDataModel));
+                personDetailsDomainModelComposer::compose);
     }
     // endregion
 

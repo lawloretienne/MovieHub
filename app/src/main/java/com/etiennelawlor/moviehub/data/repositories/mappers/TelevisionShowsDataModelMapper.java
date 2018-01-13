@@ -26,7 +26,7 @@ public class TelevisionShowsDataModelMapper implements DataModelMapper<Televisio
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, SEVEN_DAYS);
         televisionShowsDataModel.setExpiredAt(calendar.getTime());
-        televisionShowsDataModel.setLastPage(televisionShowsResponse.getTelevisionShows().size() < PAGE_SIZE ? true : false);
+        televisionShowsDataModel.setLastPage(televisionShowsResponse.getTelevisionShows().size() < PAGE_SIZE);
         televisionShowsDataModel.setTelevisionShows(televisionShowDataModelMapper.mapListToDataModelList(televisionShowsResponse.getTelevisionShows()));
         televisionShowsDataModel.setPageNumber(televisionShowsResponse.getPage());
         return televisionShowsDataModel;

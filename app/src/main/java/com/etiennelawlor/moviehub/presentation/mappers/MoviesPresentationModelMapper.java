@@ -26,7 +26,7 @@ public class MoviesPresentationModelMapper implements PresentationModelMapper<Mo
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, SEVEN_DAYS);
         moviesPresentationModel.setExpiredAt(calendar.getTime());
-        moviesPresentationModel.setLastPage(moviesDomainModel.getMovies().size() < PAGE_SIZE ? true : false);
+        moviesPresentationModel.setLastPage(moviesDomainModel.getMovies().size() < PAGE_SIZE);
         moviesPresentationModel.setMovies(moviePresentationModelMapper.mapListToPresentationModelList(moviesDomainModel.getMovies()));
         moviesPresentationModel.setPageNumber(moviesDomainModel.getPageNumber());
         return moviesPresentationModel;

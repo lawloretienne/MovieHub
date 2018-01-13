@@ -157,7 +157,6 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
     private Typeface font;
     private int moviePosterHeight;
     private int padding;
-    private int scrollThreshold;
     private int statusBarColor;
     private SimilarMoviesAdapter similarMoviesAdapter;
     private MovieCreditsAdapter castAdapter;
@@ -178,7 +177,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
     private NestedScrollView.OnScrollChangeListener nestedScrollViewOnScrollChangeListener = new NestedScrollView.OnScrollChangeListener() {
         @Override
         public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-            scrollThreshold = moviePosterHeight - movieDetailsHeaderLinearLayout.getMeasuredHeight() + padding;
+            int scrollThreshold = moviePosterHeight - movieDetailsHeaderLinearLayout.getMeasuredHeight() + padding;
 
             boolean isScrolledPastThreshold = (scrollY >= scrollThreshold);
             movieDetailsPresenter.onScrollChange(isScrolledPastThreshold);

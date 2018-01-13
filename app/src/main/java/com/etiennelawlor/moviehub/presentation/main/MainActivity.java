@@ -80,44 +80,41 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         formatMenuItems();
 
         bottomNavigationView.setOnNavigationItemSelectedListener(
-                new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        if(!item.isChecked()){
-                            item.setChecked(true);
-                            Fragment fragment;
-                            switch (item.getItemId()) {
-                                case R.id.action_movies:
-                                    fragment = MoviesFragment.newInstance();
-                                    break;
-                                case R.id.action_tv_shows:
-                                    fragment = TelevisionShowsFragment.newInstance();
-                                    break;
-                                case R.id.action_people:
-                                    fragment = PersonsFragment.newInstance();
-                                    break;
-                                default:
-                                    fragment = MoviesFragment.newInstance();
-                                    break;
-                            }
-
-                            getSupportFragmentManager()
-                                    .beginTransaction()
-                                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                                    .replace(R.id.content_fl, fragment, "")
-                                    .commit();
-                        } else {
-                            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_fl);
-                            if(fragment instanceof MoviesFragment){
-                                ((MoviesFragment)fragment).scrollToTop();
-                            } else if(fragment instanceof TelevisionShowsFragment){
-                                ((TelevisionShowsFragment)fragment).scrollToTop();
-                            } else if(fragment instanceof PersonsFragment){
-                                ((PersonsFragment)fragment).scrollToTop();
-                            }
+                item -> {
+                    if(!item.isChecked()){
+                        item.setChecked(true);
+                        Fragment fragment1;
+                        switch (item.getItemId()) {
+                            case R.id.action_movies:
+                                fragment1 = MoviesFragment.newInstance();
+                                break;
+                            case R.id.action_tv_shows:
+                                fragment1 = TelevisionShowsFragment.newInstance();
+                                break;
+                            case R.id.action_people:
+                                fragment1 = PersonsFragment.newInstance();
+                                break;
+                            default:
+                                fragment1 = MoviesFragment.newInstance();
+                                break;
                         }
-                        return false;
+
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                                .replace(R.id.content_fl, fragment1, "")
+                                .commit();
+                    } else {
+                        Fragment fragment1 = getSupportFragmentManager().findFragmentById(R.id.content_fl);
+                        if(fragment1 instanceof MoviesFragment){
+                            ((MoviesFragment) fragment1).scrollToTop();
+                        } else if(fragment1 instanceof TelevisionShowsFragment){
+                            ((TelevisionShowsFragment) fragment1).scrollToTop();
+                        } else if(fragment1 instanceof PersonsFragment){
+                            ((PersonsFragment) fragment1).scrollToTop();
+                        }
                     }
+                    return false;
                 });
     }
     // endregion

@@ -31,8 +31,7 @@ public class MovieDetailsUseCase implements MovieDetailsDomainContract.UseCase {
                 movieRepository.getMovieCredits(movieId),
                 movieRepository.getSimilarMovies(movieId),
                 movieRepository.getMovieReleaseDates(movieId),
-                (movieDataModel, movieCreditsDataModel, moviesDataModel, movieReleaseDatesDataModel) ->
-                    movieDetailsDomainModelComposer.compose(movieDataModel, movieCreditsDataModel, moviesDataModel, movieReleaseDatesDataModel)
+                movieDetailsDomainModelComposer::compose
                 );
     }
     // endregion

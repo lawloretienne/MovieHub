@@ -64,7 +64,6 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
 
     // region Member Variables
     private TelevisionShowsAdapter televisionShowsAdapter;
-    private Typeface font;
     private Unbinder unbinder;
     private StaggeredGridLayoutManager layoutManager;
     private boolean isLoading = false;
@@ -135,8 +134,6 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
         super.onCreate(savedInstanceState);
 
         createTelevisionShowsComponent().inject(this);
-
-        font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
     }
 
     @Override

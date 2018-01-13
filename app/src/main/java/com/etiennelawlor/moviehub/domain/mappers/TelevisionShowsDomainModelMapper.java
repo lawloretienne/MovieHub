@@ -26,7 +26,7 @@ public class TelevisionShowsDomainModelMapper implements DomainModelMapper<Telev
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, SEVEN_DAYS);
         televisionShowsDomainModel.setExpiredAt(calendar.getTime());
-        televisionShowsDomainModel.setLastPage(televisionShowsDataModel.getTelevisionShows().size() < PAGE_SIZE ? true : false);
+        televisionShowsDomainModel.setLastPage(televisionShowsDataModel.getTelevisionShows().size() < PAGE_SIZE);
         televisionShowsDomainModel.setTelevisionShows(televisionShowDomainModelMapper.mapListToDomainModelList(televisionShowsDataModel.getTelevisionShows()));
         televisionShowsDomainModel.setPageNumber(televisionShowsDataModel.getPageNumber());
         return televisionShowsDomainModel;

@@ -18,5 +18,26 @@
     <string name="network_connection_unavailable">Network connection is unavailable.</string>
     <string name="retry">RETRY</string>
     <string name="not_available">N/A</string>
+    <string name="movie_poster">Movie Poster</string>
+    <string name="actor_headshot">Actor Headshot</string>
+    <string name="television_show_poster">Television Show Poster</string>
+    <string name="cast_credits">Cast Credits</string>
+    <string name="crew_credits">Crew Credits</string>
+    <string name="overview">Overview</string>
+    <string name="status">Status</string>
+    <string name="release_date">Release Date</string>
+    <string name="budget">Budget</string>
+    <string name="revenue">Revenue</string>
+    <string name="bio">Bio</string>
+    <string name="birthplace">Birthplace</string>
+    <string name="born">Born</string>
+    <string name="died">Died</string>
+    <string name="search_movies_tv_shows_and_people">Search Movies, TV Shows, and People</string>
+    <string name="seasons">Seasons</string>
+    <string name="first_air_date">First Air Date</string>
+    <string name="no_available_movies">No available movies.</string>
+    <string name="no_available_people">No available people.</string>
+    <string name="similar_movies">Similar Movies</string>
+    <string name="similar_television_shows">Similar Television Shows</string>
 
 </resources>

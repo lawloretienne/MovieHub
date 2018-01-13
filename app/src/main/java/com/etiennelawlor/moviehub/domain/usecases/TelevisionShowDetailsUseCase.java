@@ -31,8 +31,7 @@ public class TelevisionShowDetailsUseCase implements TelevisionShowDetailsDomain
                 televisionShowRepository.getTelevisionShowCredits(televisionShowId),
                 televisionShowRepository.getSimilarTelevisionShows(televisionShowId),
                 televisionShowRepository.getTelevisionShowContentRatings(televisionShowId),
-                (televisionShowDataModel, televisionShowCreditsDataModel, televisionShowsDataModel, televisionShowContentRatingsDataModel) ->
-                    televisionShowDetailsDomainModelComposer.compose(televisionShowDataModel, televisionShowCreditsDataModel, televisionShowsDataModel, televisionShowContentRatingsDataModel));
+                televisionShowDetailsDomainModelComposer::compose);
     }
     // endregion
 

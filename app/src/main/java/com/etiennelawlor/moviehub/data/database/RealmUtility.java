@@ -64,17 +64,14 @@ public class RealmUtility {
             boolean isLastPage = moviesDataModel.isLastPage();
             Date expiredAt = moviesDataModel.getExpiredAt();
 
-            realm.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
-                    MoviesRealmModel moviesRealmModel = new MoviesRealmModel();
-                    moviesRealmModel.setMovies(movieRealmModelMapper.mapListToRealmModelList(movies));
-                    moviesRealmModel.setPageNumber(pageNumber);
-                    moviesRealmModel.setLastPage(isLastPage);
-                    moviesRealmModel.setExpiredAt(expiredAt);
+            realm.executeTransaction(realm1 -> {
+                MoviesRealmModel moviesRealmModel = new MoviesRealmModel();
+                moviesRealmModel.setMovies(movieRealmModelMapper.mapListToRealmModelList(movies));
+                moviesRealmModel.setPageNumber(pageNumber);
+                moviesRealmModel.setLastPage(isLastPage);
+                moviesRealmModel.setExpiredAt(expiredAt);
 
-                    realm.copyToRealmOrUpdate(moviesRealmModel);
-                }
+                realm1.copyToRealmOrUpdate(moviesRealmModel);
             });
 
         } catch (Exception e){
@@ -118,17 +115,14 @@ public class RealmUtility {
             boolean isLastPage = televisionShowsDataModel.isLastPage();
             Date expiredAt = televisionShowsDataModel.getExpiredAt();
 
-            realm.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
-                    TelevisionShowsRealmModel televisionShowsRealmModel = new TelevisionShowsRealmModel();
-                    televisionShowsRealmModel.setTelevisionShows(televisionShowRealmModelMapper.mapListToRealmModelList(televisionShowDataModels));
-                    televisionShowsRealmModel.setPageNumber(pageNumber);
-                    televisionShowsRealmModel.setLastPage(isLastPage);
-                    televisionShowsRealmModel.setExpiredAt(expiredAt);
+            realm.executeTransaction(realm1 -> {
+                TelevisionShowsRealmModel televisionShowsRealmModel = new TelevisionShowsRealmModel();
+                televisionShowsRealmModel.setTelevisionShows(televisionShowRealmModelMapper.mapListToRealmModelList(televisionShowDataModels));
+                televisionShowsRealmModel.setPageNumber(pageNumber);
+                televisionShowsRealmModel.setLastPage(isLastPage);
+                televisionShowsRealmModel.setExpiredAt(expiredAt);
 
-                    realm.copyToRealmOrUpdate(televisionShowsRealmModel);
-                }
+                realm1.copyToRealmOrUpdate(televisionShowsRealmModel);
             });
 
         } catch (Exception e){
@@ -172,17 +166,14 @@ public class RealmUtility {
             boolean isLastPage = personsDataModel.isLastPage();
             Date expiredAt = personsDataModel.getExpiredAt();
 
-            realm.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
-                    PersonsRealmModel personsRealmModel = new PersonsRealmModel();
-                    personsRealmModel.setPersons(personRealmModelMapper.mapListToRealmModelList(persons));
-                    personsRealmModel.setPageNumber(pageNumber);
-                    personsRealmModel.setLastPage(isLastPage);
-                    personsRealmModel.setExpiredAt(expiredAt);
+            realm.executeTransaction(realm1 -> {
+                PersonsRealmModel personsRealmModel = new PersonsRealmModel();
+                personsRealmModel.setPersons(personRealmModelMapper.mapListToRealmModelList(persons));
+                personsRealmModel.setPageNumber(pageNumber);
+                personsRealmModel.setLastPage(isLastPage);
+                personsRealmModel.setExpiredAt(expiredAt);
 
-                    realm.copyToRealmOrUpdate(personsRealmModel);
-                }
+                realm1.copyToRealmOrUpdate(personsRealmModel);
             });
 
         } catch (Exception e){

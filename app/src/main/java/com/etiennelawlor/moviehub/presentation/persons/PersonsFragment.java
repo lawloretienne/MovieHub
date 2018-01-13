@@ -64,7 +64,6 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
 
     // region Member Variables
     private PersonsAdapter personsAdapter;
-    private Typeface font;
     private Unbinder unbinder;
     private StaggeredGridLayoutManager layoutManager;
     private PersonsPresentationModel personsPresentationModel;
@@ -134,8 +133,6 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
         super.onCreate(savedInstanceState);
 
         createPersonsComponent().inject(this);
-
-        font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
     }
 
     @Override

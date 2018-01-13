@@ -32,7 +32,7 @@
                 android:ellipsize="end"
                 android:padding="16dp"
                 android:singleLine="true"
-                android:text="Search Movies, TV Shows, and People"
+                android:text="@string/search_movies_tv_shows_and_people"
                 android:textColor="@color/hint_text_dark"
                 android:textSize="16sp"
                 app:textFont="lato_medium" />

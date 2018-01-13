@@ -211,44 +211,65 @@ public class TelevisionShowPresentationModel implements Parcelable {
             NetworkPresentationModel network = networks.get(0);
             formattedNetwork = network.getName();
 
-            if(formattedNetwork.equals("Fox Broadcasting Company") || formattedNetwork.equals("Fox")){
-                formattedNetwork = "FOX";
-            } else if(formattedNetwork.equals("American Broadcasting Company")){
-                formattedNetwork = "ABC";
-            } else if(formattedNetwork.equals("The WB Television NetworkResponse")){
-                formattedNetwork = "The WB";
-            } else if(formattedNetwork.equals("National Educational Television")){
-                formattedNetwork = "NET";
-            } else if(formattedNetwork.equals("CBC Television")){
-                formattedNetwork = "CBC";
-            } else if(formattedNetwork.equals("British Broadcasting Corporation")){
-                formattedNetwork = "BBC";
-            } else if(formattedNetwork.equals("Lifetime Television")){
-                formattedNetwork = "Lifetime";
-            } else if(formattedNetwork.equals("Public Broadcasting Service")){
-                formattedNetwork = "PBS";
-            } else if(formattedNetwork.equals("Oprah Winfrey NetworkResponse")){
-                formattedNetwork = "OWN";
-            } else if(formattedNetwork.equals("The History Channel")){
-                formattedNetwork = "History";
-            } else if(formattedNetwork.equals("Orion Cinema NetworkResponse")){
-                formattedNetwork = "OCN";
-            } else if(formattedNetwork.equals("National Geographic Channel")){
-                formattedNetwork = "National Geographic";
-            } else if(formattedNetwork.equals("Seoul Broadcasting System")){
-                formattedNetwork = "SBS";
-            } else if(formattedNetwork.equals("Total Variety NetworkResponse")){
-                formattedNetwork = "TVN";
-            } else if(formattedNetwork.equals("Canal de las Estrellas")){
-                formattedNetwork = "Las Estrellas";
-            } else if(formattedNetwork.equals("Black Entertainment Television")){
-                formattedNetwork = "BET";
-            } else if(formattedNetwork.equals("RTL Television")){
-                formattedNetwork = "RTL";
-            } else if(formattedNetwork.equals("Munhwa Broadcasting Corporation")){
-                formattedNetwork = "MBC";
-            } else if(formattedNetwork.equals("Mainichi Broadcasting System")){
-                formattedNetwork = "MBS";
+            switch (formattedNetwork) {
+                case "Fox Broadcasting Company":
+                case "Fox":
+                    formattedNetwork = "FOX";
+                    break;
+                case "American Broadcasting Company":
+                    formattedNetwork = "ABC";
+                    break;
+                case "The WB Television NetworkResponse":
+                    formattedNetwork = "The WB";
+                    break;
+                case "National Educational Television":
+                    formattedNetwork = "NET";
+                    break;
+                case "CBC Television":
+                    formattedNetwork = "CBC";
+                    break;
+                case "British Broadcasting Corporation":
+                    formattedNetwork = "BBC";
+                    break;
+                case "Lifetime Television":
+                    formattedNetwork = "Lifetime";
+                    break;
+                case "Public Broadcasting Service":
+                    formattedNetwork = "PBS";
+                    break;
+                case "Oprah Winfrey NetworkResponse":
+                    formattedNetwork = "OWN";
+                    break;
+                case "The History Channel":
+                    formattedNetwork = "History";
+                    break;
+                case "Orion Cinema NetworkResponse":
+                    formattedNetwork = "OCN";
+                    break;
+                case "National Geographic Channel":
+                    formattedNetwork = "National Geographic";
+                    break;
+                case "Seoul Broadcasting System":
+                    formattedNetwork = "SBS";
+                    break;
+                case "Total Variety NetworkResponse":
+                    formattedNetwork = "TVN";
+                    break;
+                case "Canal de las Estrellas":
+                    formattedNetwork = "Las Estrellas";
+                    break;
+                case "Black Entertainment Television":
+                    formattedNetwork = "BET";
+                    break;
+                case "RTL Television":
+                    formattedNetwork = "RTL";
+                    break;
+                case "Munhwa Broadcasting Corporation":
+                    formattedNetwork = "MBC";
+                    break;
+                case "Mainichi Broadcasting System":
+                    formattedNetwork = "MBS";
+                    break;
             }
         }
         return formattedNetwork;

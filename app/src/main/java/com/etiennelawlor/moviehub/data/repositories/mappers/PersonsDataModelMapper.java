@@ -26,7 +26,7 @@ public class PersonsDataModelMapper implements DataModelMapper<PersonsResponse, 
     public PersonsDataModel mapToDataModel(PersonsResponse personsResponse) {
         PersonsDataModel personsDataModel = new PersonsDataModel();
         List<PersonResponse> personResponses = personsResponse.getPersons();
-        personsDataModel.setLastPage(personResponses.size() < PAGE_SIZE ? true : false);
+        personsDataModel.setLastPage(personResponses.size() < PAGE_SIZE);
         personsDataModel.setPageNumber(personsResponse.getPage());
         personsDataModel.setPersons(personDataModelMapper.mapListToDataModelList(personsResponse.getPersons()));
         Calendar calendar = Calendar.getInstance();

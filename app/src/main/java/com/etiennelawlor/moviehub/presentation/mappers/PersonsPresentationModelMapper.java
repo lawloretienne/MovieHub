@@ -26,7 +26,7 @@ public class PersonsPresentationModelMapper implements PresentationModelMapper<P
     public PersonsPresentationModel mapToPresentationModel(PersonsDomainModel personsDomainModel) {
         PersonsPresentationModel personsPresentationModel = new PersonsPresentationModel();
         List<PersonDomainModel> personDomainModels = personsDomainModel.getPersons();
-        personsPresentationModel.setLastPage(personDomainModels.size() < PAGE_SIZE ? true : false);
+        personsPresentationModel.setLastPage(personDomainModels.size() < PAGE_SIZE);
         personsPresentationModel.setPageNumber(personsDomainModel.getPageNumber());
         personsPresentationModel.setPersons(personPresentationModelMapper.mapListToPresentationModelList(personsDomainModel.getPersons()));
         Calendar calendar = Calendar.getInstance();

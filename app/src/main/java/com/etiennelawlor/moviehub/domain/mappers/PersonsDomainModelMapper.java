@@ -26,7 +26,7 @@ public class PersonsDomainModelMapper implements DomainModelMapper<PersonsDataMo
     public PersonsDomainModel mapToDomainModel(PersonsDataModel personsDataModel) {
         PersonsDomainModel personsDomainModel = new PersonsDomainModel();
         List<PersonDataModel> personDataModels = personsDataModel.getPersons();
-        personsDomainModel.setLastPage(personDataModels.size() < PAGE_SIZE ? true : false);
+        personsDomainModel.setLastPage(personDataModels.size() < PAGE_SIZE);
         personsDomainModel.setPageNumber(personsDataModel.getPageNumber());
         personsDomainModel.setPersons(personDomainModelMapper.mapListToDomainModelList(personsDataModel.getPersons()));
         Calendar calendar = Calendar.getInstance();

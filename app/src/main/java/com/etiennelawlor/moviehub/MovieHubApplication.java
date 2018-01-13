@@ -126,7 +126,7 @@ public class MovieHubApplication extends Application {
         private static final int MAX_LOG_LENGTH = 4000;
 
         @Override
-        protected boolean isLoggable(int priority) {
+        protected boolean isLoggable(String tag, int priority) {
             if (priority == Log.VERBOSE || priority == Log.DEBUG || priority == Log.INFO) {
                 return false;
             }

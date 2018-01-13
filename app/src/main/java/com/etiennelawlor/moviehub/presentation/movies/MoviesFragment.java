@@ -64,7 +64,6 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
 
     // region Member Variables
     private MoviesAdapter moviesAdapter;
-    private Typeface font;
     private Unbinder unbinder;
     private StaggeredGridLayoutManager layoutManager;
     private MoviesPresentationModel moviesPresentationModel;
@@ -133,8 +132,6 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
         super.onCreate(savedInstanceState);
 
         createMoviesComponent().inject(this);
-
-        font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
     }
 
     @Override

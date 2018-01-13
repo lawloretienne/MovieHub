@@ -26,7 +26,7 @@ public class MoviesDataModelMapper implements DataModelMapper<MoviesResponse, Mo
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, SEVEN_DAYS);
         moviesDataModel.setExpiredAt(calendar.getTime());
-        moviesDataModel.setLastPage(moviesResponse.getMovies().size() < PAGE_SIZE ? true : false);
+        moviesDataModel.setLastPage(moviesResponse.getMovies().size() < PAGE_SIZE);
         moviesDataModel.setMovies(movieDataModelMapper.mapListToDataModelList(moviesResponse.getMovies()));
         moviesDataModel.setPageNumber(moviesResponse.getPage());
         return moviesDataModel;

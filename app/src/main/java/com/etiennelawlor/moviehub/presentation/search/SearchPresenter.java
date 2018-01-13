@@ -71,11 +71,11 @@ public class SearchPresenter implements SearchPresentationContract.Presenter {
 
                     return !isEmpty(charSequence);
                 })
-                .map(charSequence -> charSequence.toString())
+                .map(CharSequence::toString)
 //                .switchMap(q -> {
 //                    return searchRepository.getSearch(q);
 //                })
-                .switchMap(q -> Observable.just(q))
+                .switchMap(Observable::just)
                 .subscribeWith(new DisposableObserver<String>() {
                     @Override
                     public void onComplete() {
@@ -169,10 +169,7 @@ public class SearchPresenter implements SearchPresentationContract.Presenter {
 
     // region Helper Methods
     public static boolean isEmpty(CharSequence str) {
-        if (str == null || str.length() == 0)
-            return true;
-        else
-            return false;
+        return str == null || str.length() == 0;
     }
     // endregion
 }

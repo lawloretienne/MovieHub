@@ -26,7 +26,7 @@ public class MoviesDomainModelMapper implements DomainModelMapper<MoviesDataMode
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, SEVEN_DAYS);
         moviesDomainModel.setExpiredAt(calendar.getTime());
-        moviesDomainModel.setLastPage(moviesDataModel.getMovies().size() < PAGE_SIZE ? true : false);
+        moviesDomainModel.setLastPage(moviesDataModel.getMovies().size() < PAGE_SIZE);
         moviesDomainModel.setMovies(movieDomainModelMapper.mapListToDomainModelList(moviesDataModel.getMovies()));
         moviesDomainModel.setPageNumber(moviesDataModel.getPageNumber());
         return moviesDomainModel;
