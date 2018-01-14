@@ -18,16 +18,15 @@ public interface TelevisionShowsPresentationContract {
         void hideEmptyView();
         void showErrorView();
         void hideErrorView();
-        void setErrorText(String errorText);
         void showLoadingView();
         void hideLoadingView();
-        void addHeader();
-        void addFooter();
-        void removeFooter();
-        void showErrorFooter();
-        void showLoadingFooter();
-        void addTelevisionShowsToAdapter(List<TelevisionShowDomainModel> televisionShows);
-        void loadMoreItems();
+        void addHeaderView();
+        void addFooterView();
+        void removeFooterView();
+        void showErrorFooterView();
+        void showLoadingFooterView();
+        void showTelevisionShows(List<TelevisionShowDomainModel> televisionShows);
+        void loadMoreTelevisionShows();
         void setTelevisionShowsDomainModel(TelevisionShowsDomainModel televisionShowsDomainModel);
 
         // Navigation methods

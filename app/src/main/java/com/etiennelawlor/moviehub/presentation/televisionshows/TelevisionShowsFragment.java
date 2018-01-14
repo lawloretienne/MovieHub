@@ -50,8 +50,6 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
     RecyclerView recyclerView;
     @BindView(R.id.error_ll)
     LinearLayout errorLinearLayout;
-    @BindView(R.id.error_tv)
-    TextView errorTextView;
     @BindView(R.id.pb)
     ProgressBar progressBar;
     @BindView(android.R.id.empty)
@@ -220,11 +218,6 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
     }
 
     @Override
-    public void setErrorText(String errorText) {
-        errorTextView.setText(errorText);
-    }
-
-    @Override
     public void showLoadingView() {
         progressBar.setVisibility(View.VISIBLE);
         isLoading = true;
@@ -237,39 +230,39 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
     }
 
     @Override
-    public void addHeader() {
+    public void addHeaderView() {
         televisionShowsAdapter.addHeader();
     }
 
     @Override
-    public void addFooter() {
+    public void addFooterView() {
         televisionShowsAdapter.addFooter();
     }
 
     @Override
-    public void removeFooter() {
+    public void removeFooterView() {
         televisionShowsAdapter.removeFooter();
         isLoading = false;
     }
 
     @Override
-    public void showErrorFooter() {
+    public void showErrorFooterView() {
         televisionShowsAdapter.updateFooter(BaseAdapter.FooterType.ERROR);
     }
 
     @Override
-    public void showLoadingFooter() {
+    public void showLoadingFooterView() {
         televisionShowsAdapter.updateFooter(BaseAdapter.FooterType.LOAD_MORE);
         isLoading = true;
     }
 
     @Override
-    public void addTelevisionShowsToAdapter(List<TelevisionShowDomainModel> televisionShows) {
+    public void showTelevisionShows(List<TelevisionShowDomainModel> televisionShows) {
         televisionShowsAdapter.addAll(televisionShowPresentationModelMapper.mapListToPresentationModelList(televisionShows));
     }
 
     @Override
-    public void loadMoreItems() {
+    public void loadMoreTelevisionShows() {
         televisionShowsPresentationModel.incrementPageNumber();
         televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsPresentationModel.getPageNumber());
     }

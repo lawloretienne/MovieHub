@@ -4,7 +4,6 @@ import com.etiennelawlor.moviehub.domain.models.PersonDomainModel;
 import com.etiennelawlor.moviehub.domain.models.PersonsDomainModel;
 import com.etiennelawlor.moviehub.domain.usecases.PersonsDomainContract;
 import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
-import com.etiennelawlor.moviehub.util.NetworkUtility;
 import com.etiennelawlor.moviehub.util.rxjava.SchedulerProvider;
 
 import java.util.List;
@@ -48,7 +47,7 @@ public class PersonsPresenter implements PersonsPresentationContract.Presenter {
             personsView.hideErrorView();
             personsView.showLoadingView();
         } else{
-            personsView.showLoadingFooter();
+            personsView.showLoadingFooterView();
         }
 
         Disposable disposable = personsUseCase.getPopularPersons(currentPage)
@@ -67,22 +66,22 @@ public class PersonsPresenter implements PersonsPresentationContract.Presenter {
                                 personsView.hideLoadingView();
 
                                 if(hasMovies){
-                                    personsView.addHeader();
-                                    personsView.addPersonsToAdapter(persons);
+                                    personsView.addHeaderView();
+                                    personsView.showPersons(persons);
 
                                     if(!isLastPage)
-                                        personsView.addFooter();
+                                        personsView.addFooterView();
                                 } else {
                                     personsView.showEmptyView();
                                 }
                             } else {
-                                personsView.removeFooter();
+                                personsView.removeFooterView();
 
                                 if(hasMovies){
-                                    personsView.addPersonsToAdapter(persons);
+                                    personsView.showPersons(persons);
 
                                     if(!isLastPage)
-                                        personsView.addFooter();
+                                        personsView.addFooterView();
                                 }
                             }
 
@@ -97,14 +96,9 @@ public class PersonsPresenter implements PersonsPresentationContract.Presenter {
                         if(currentPage == 1){
                             personsView.hideLoadingView();
 
-                            if (NetworkUtility.isKnownException(throwable)) {
-                                personsView.setErrorText("Can't load data.\nCheck your network connection.");
-                                personsView.showErrorView();
-                            }
+                            personsView.showErrorView();
                         } else {
-                            if(NetworkUtility.isKnownException(throwable)){
-                                personsView.showErrorFooter();
-                            }
+                            personsView.showErrorFooterView();
                         }
                     }
                 });
@@ -119,7 +113,7 @@ public class PersonsPresenter implements PersonsPresentationContract.Presenter {
 
     @Override
     public void onScrollToEndOfList() {
-        personsView.loadMoreItems();
+        personsView.loadMorePersons();
     }
     // endregion
 }

@@ -138,9 +138,7 @@ public class SearchPresenter implements SearchPresentationContract.Presenter {
 
                                         searchView.hideLoadingView();
 
-                                        if (NetworkUtility.isKnownException(throwable)) {
-                                            searchView.showErrorView();
-                                        }
+                                        searchView.showErrorView();
                                     }
                                 });
 

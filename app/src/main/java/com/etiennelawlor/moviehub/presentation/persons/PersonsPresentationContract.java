@@ -18,16 +18,15 @@ public interface PersonsPresentationContract {
         void hideEmptyView();
         void showErrorView();
         void hideErrorView();
-        void setErrorText(String errorText);
         void showLoadingView();
         void hideLoadingView();
-        void addHeader();
-        void addFooter();
-        void removeFooter();
-        void showErrorFooter();
-        void showLoadingFooter();
-        void addPersonsToAdapter(List<PersonDomainModel> persons);
-        void loadMoreItems();
+        void addHeaderView();
+        void addFooterView();
+        void removeFooterView();
+        void showErrorFooterView();
+        void showLoadingFooterView();
+        void showPersons(List<PersonDomainModel> persons);
+        void loadMorePersons();
         void setPersonsDomainModel(PersonsDomainModel personsDomainModel);
 
         // Navigation methods

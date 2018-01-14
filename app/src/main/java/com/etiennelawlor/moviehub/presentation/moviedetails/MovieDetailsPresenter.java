@@ -56,9 +56,7 @@ public class MovieDetailsPresenter implements MovieDetailsPresentationContract.P
                     public void onError(Throwable throwable) {
                         throwable.printStackTrace();
 
-                        if(NetworkUtility.isKnownException(throwable)){
-                            movieDetailsView.showErrorView();
-                        }
+                        movieDetailsView.showErrorView();
                     }
                 });
 

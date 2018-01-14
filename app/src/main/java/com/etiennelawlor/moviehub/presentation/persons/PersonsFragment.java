@@ -50,8 +50,6 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     RecyclerView recyclerView;
     @BindView(R.id.error_ll)
     LinearLayout errorLinearLayout;
-    @BindView(R.id.error_tv)
-    TextView errorTextView;
     @BindView(R.id.pb)
     ProgressBar progressBar;
     @BindView(android.R.id.empty)
@@ -218,11 +216,6 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     }
 
     @Override
-    public void setErrorText(String errorText) {
-        errorTextView.setText(errorText);
-    }
-
-    @Override
     public void showLoadingView() {
         progressBar.setVisibility(View.VISIBLE);
         isLoading = true;
@@ -235,39 +228,39 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     }
 
     @Override
-    public void addHeader() {
+    public void addHeaderView() {
         personsAdapter.addHeader();
     }
 
     @Override
-    public void addFooter() {
+    public void addFooterView() {
         personsAdapter.addFooter();
     }
 
     @Override
-    public void removeFooter() {
+    public void removeFooterView() {
         personsAdapter.removeFooter();
         isLoading = false;
     }
 
     @Override
-    public void showErrorFooter() {
+    public void showErrorFooterView() {
         personsAdapter.updateFooter(BaseAdapter.FooterType.ERROR);
     }
 
     @Override
-    public void showLoadingFooter() {
+    public void showLoadingFooterView() {
         personsAdapter.updateFooter(BaseAdapter.FooterType.LOAD_MORE);
         isLoading = true;
     }
 
     @Override
-    public void addPersonsToAdapter(List<PersonDomainModel> persons) {
+    public void showPersons(List<PersonDomainModel> persons) {
         personsAdapter.addAll(personPresentationModelMapper.mapListToPresentationModelList(persons));
     }
 
     @Override
-    public void loadMoreItems() {
+    public void loadMorePersons() {
         personsPresentationModel.incrementPageNumber();
         personsPresenter.onLoadPopularPersons(personsPresentationModel.getPageNumber());
     }

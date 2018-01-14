@@ -59,9 +59,7 @@ public class PersonDetailsPresenter implements PersonDetailsPresentationContract
                     public void onError(Throwable throwable) {
                         throwable.printStackTrace();
 
-                        if(NetworkUtility.isKnownException(throwable)){
-                            personDetailsView.showErrorView();
-                        }
+                        personDetailsView.showErrorView();
                     }
                 });
 

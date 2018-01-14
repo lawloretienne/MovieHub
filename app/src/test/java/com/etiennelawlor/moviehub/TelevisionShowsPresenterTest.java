@@ -22,7 +22,6 @@ import java.util.List;
 import io.reactivex.Single;
 
 import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
@@ -78,7 +77,6 @@ public class TelevisionShowsPresenterTest {
         verify(mockTelevisionShowsView).showLoadingView();
 
         verify(mockTelevisionShowsView).hideLoadingView();
-        verify(mockTelevisionShowsView).setErrorText(anyString());
         verify(mockTelevisionShowsView).showErrorView();
     }
 
@@ -93,9 +91,9 @@ public class TelevisionShowsPresenterTest {
         televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsDomainModelStub.getPageNumber());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-        verify(mockTelevisionShowsView).showLoadingFooter();
+        verify(mockTelevisionShowsView).showLoadingFooterView();
 
-        verify(mockTelevisionShowsView).showErrorFooter();
+        verify(mockTelevisionShowsView).showErrorFooterView();
     }
 
     @Test
@@ -129,9 +127,9 @@ public class TelevisionShowsPresenterTest {
         televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsDomainModelStub.getPageNumber());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-        verify(mockTelevisionShowsView).showLoadingFooter();
+        verify(mockTelevisionShowsView).showLoadingFooterView();
 
-        verify(mockTelevisionShowsView).removeFooter();
+        verify(mockTelevisionShowsView).removeFooterView();
         verify(mockTelevisionShowsView).setTelevisionShowsDomainModel(televisionShowsDomainModelStub);
     }
 
@@ -151,8 +149,8 @@ public class TelevisionShowsPresenterTest {
         verify(mockTelevisionShowsView).showLoadingView();
 
         verify(mockTelevisionShowsView).hideLoadingView();
-        verify(mockTelevisionShowsView).addHeader();
-        verify(mockTelevisionShowsView).addTelevisionShowsToAdapter(televisionShowsDomainModelStub.getTelevisionShows());
+        verify(mockTelevisionShowsView).addHeaderView();
+        verify(mockTelevisionShowsView).showTelevisionShows(televisionShowsDomainModelStub.getTelevisionShows());
         verify(mockTelevisionShowsView).setTelevisionShowsDomainModel(televisionShowsDomainModelStub);
     }
 
@@ -172,9 +170,9 @@ public class TelevisionShowsPresenterTest {
         verify(mockTelevisionShowsView).showLoadingView();
 
         verify(mockTelevisionShowsView).hideLoadingView();
-        verify(mockTelevisionShowsView).addHeader();
-        verify(mockTelevisionShowsView).addTelevisionShowsToAdapter(televisionShowsDomainModelStub.getTelevisionShows());
-        verify(mockTelevisionShowsView).addFooter();
+        verify(mockTelevisionShowsView).addHeaderView();
+        verify(mockTelevisionShowsView).showTelevisionShows(televisionShowsDomainModelStub.getTelevisionShows());
+        verify(mockTelevisionShowsView).addFooterView();
         verify(mockTelevisionShowsView).setTelevisionShowsDomainModel(televisionShowsDomainModelStub);
     }
 
@@ -189,10 +187,10 @@ public class TelevisionShowsPresenterTest {
         televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsDomainModelStub.getPageNumber());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-        verify(mockTelevisionShowsView).showLoadingFooter();
+        verify(mockTelevisionShowsView).showLoadingFooterView();
 
-        verify(mockTelevisionShowsView).removeFooter();
-        verify(mockTelevisionShowsView).addTelevisionShowsToAdapter(televisionShowsDomainModelStub.getTelevisionShows());
+        verify(mockTelevisionShowsView).removeFooterView();
+        verify(mockTelevisionShowsView).showTelevisionShows(televisionShowsDomainModelStub.getTelevisionShows());
         verify(mockTelevisionShowsView).setTelevisionShowsDomainModel(televisionShowsDomainModelStub);
     }
 
@@ -207,11 +205,11 @@ public class TelevisionShowsPresenterTest {
         televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsDomainModelStub.getPageNumber());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-        verify(mockTelevisionShowsView).showLoadingFooter();
+        verify(mockTelevisionShowsView).showLoadingFooterView();
 
-        verify(mockTelevisionShowsView).removeFooter();
-        verify(mockTelevisionShowsView).addTelevisionShowsToAdapter(televisionShowsDomainModelStub.getTelevisionShows());
-        verify(mockTelevisionShowsView).addFooter();
+        verify(mockTelevisionShowsView).removeFooterView();
+        verify(mockTelevisionShowsView).showTelevisionShows(televisionShowsDomainModelStub.getTelevisionShows());
+        verify(mockTelevisionShowsView).addFooterView();
         verify(mockTelevisionShowsView).setTelevisionShowsDomainModel(televisionShowsDomainModelStub);
     }
 
@@ -237,7 +235,7 @@ public class TelevisionShowsPresenterTest {
         televisionShowsPresenter.onScrollToEndOfList();
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-        verify(mockTelevisionShowsView).loadMoreItems();
+        verify(mockTelevisionShowsView).loadMoreTelevisionShows();
 
         verifyZeroInteractions(mockTelevisionShowsUseCase);
     }

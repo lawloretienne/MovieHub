@@ -4,7 +4,6 @@ import com.etiennelawlor.moviehub.domain.models.TelevisionShowDomainModel;
 import com.etiennelawlor.moviehub.domain.models.TelevisionShowsDomainModel;
 import com.etiennelawlor.moviehub.domain.usecases.TelevisionShowsDomainContract;
 import com.etiennelawlor.moviehub.presentation.models.TelevisionShowPresentationModel;
-import com.etiennelawlor.moviehub.util.NetworkUtility;
 import com.etiennelawlor.moviehub.util.rxjava.SchedulerProvider;
 
 import java.util.List;
@@ -49,7 +48,7 @@ public class TelevisionShowsPresenter implements TelevisionShowsPresentationCont
             televisionShowsView.hideErrorView();
             televisionShowsView.showLoadingView();
         } else{
-            televisionShowsView.showLoadingFooter();
+            televisionShowsView.showLoadingFooterView();
         }
 
         Disposable disposable = televisionShowsUseCase.getPopularTelevisionShows(currentPage)
@@ -67,22 +66,22 @@ public class TelevisionShowsPresenter implements TelevisionShowsPresentationCont
                                 televisionShowsView.hideLoadingView();
 
                                 if(hasTelevisionShows){
-                                    televisionShowsView.addHeader();
-                                    televisionShowsView.addTelevisionShowsToAdapter(televisionShowDomainModels);
+                                    televisionShowsView.addHeaderView();
+                                    televisionShowsView.showTelevisionShows(televisionShowDomainModels);
 
                                     if(!isLastPage)
-                                        televisionShowsView.addFooter();
+                                        televisionShowsView.addFooterView();
                                 } else {
                                     televisionShowsView.showEmptyView();
                                 }
                             } else {
-                                televisionShowsView.removeFooter();
+                                televisionShowsView.removeFooterView();
 
                                 if(hasTelevisionShows){
-                                    televisionShowsView.addTelevisionShowsToAdapter(televisionShowDomainModels);
+                                    televisionShowsView.showTelevisionShows(televisionShowDomainModels);
 
                                     if(!isLastPage)
-                                        televisionShowsView.addFooter();
+                                        televisionShowsView.addFooterView();
                                 }
                             }
 
@@ -97,14 +96,9 @@ public class TelevisionShowsPresenter implements TelevisionShowsPresentationCont
                         if(currentPage == 1){
                             televisionShowsView.hideLoadingView();
 
-                            if (NetworkUtility.isKnownException(throwable)) {
-                                televisionShowsView.setErrorText("Can't load data.\nCheck your network connection.");
-                                televisionShowsView.showErrorView();
-                            }
+                            televisionShowsView.showErrorView();
                         } else {
-                            if(NetworkUtility.isKnownException(throwable)){
-                                televisionShowsView.showErrorFooter();
-                            }
+                            televisionShowsView.showErrorFooterView();
                         }
                     }
                 });
@@ -119,7 +113,7 @@ public class TelevisionShowsPresenter implements TelevisionShowsPresentationCont
 
     @Override
     public void onScrollToEndOfList() {
-        televisionShowsView.loadMoreItems();
+        televisionShowsView.loadMoreTelevisionShows();
     }
 
     // endregion

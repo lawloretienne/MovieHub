@@ -59,9 +59,7 @@ public class TelevisionShowDetailsPresenter implements TelevisionShowDetailsPres
                     public void onError(Throwable throwable) {
                         throwable.printStackTrace();
 
-                        if(NetworkUtility.isKnownException(throwable)){
-                            televisionShowDetailsView.showErrorView();
-                        }
+                        televisionShowDetailsView.showErrorView();
                     }
                 });
 

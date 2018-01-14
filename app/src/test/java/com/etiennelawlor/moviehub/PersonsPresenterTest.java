@@ -22,7 +22,6 @@ import java.util.List;
 import io.reactivex.Single;
 
 import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
@@ -78,7 +77,6 @@ public class PersonsPresenterTest {
         verify(mockPersonsView).showLoadingView();
 
         verify(mockPersonsView).hideLoadingView();
-        verify(mockPersonsView).setErrorText(anyString());
         verify(mockPersonsView).showErrorView();
     }
 
@@ -93,9 +91,9 @@ public class PersonsPresenterTest {
         personsPresenter.onLoadPopularPersons(personsDomainModelStub.getPageNumber());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-        verify(mockPersonsView).showLoadingFooter();
+        verify(mockPersonsView).showLoadingFooterView();
 
-        verify(mockPersonsView).showErrorFooter();
+        verify(mockPersonsView).showErrorFooterView();
     }
 
     @Test
@@ -129,9 +127,9 @@ public class PersonsPresenterTest {
         personsPresenter.onLoadPopularPersons(personsDomainModelStub.getPageNumber());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-        verify(mockPersonsView).showLoadingFooter();
+        verify(mockPersonsView).showLoadingFooterView();
 
-        verify(mockPersonsView).removeFooter();
+        verify(mockPersonsView).removeFooterView();
         verify(mockPersonsView).setPersonsDomainModel(personsDomainModelStub);
     }
 
@@ -151,8 +149,8 @@ public class PersonsPresenterTest {
         verify(mockPersonsView).showLoadingView();
 
         verify(mockPersonsView).hideLoadingView();
-        verify(mockPersonsView).addHeader();
-        verify(mockPersonsView).addPersonsToAdapter(personsDomainModelStub.getPersons());
+        verify(mockPersonsView).addHeaderView();
+        verify(mockPersonsView).showPersons(personsDomainModelStub.getPersons());
         verify(mockPersonsView).setPersonsDomainModel(personsDomainModelStub);
     }
 
@@ -172,9 +170,9 @@ public class PersonsPresenterTest {
         verify(mockPersonsView).showLoadingView();
 
         verify(mockPersonsView).hideLoadingView();
-        verify(mockPersonsView).addHeader();
-        verify(mockPersonsView).addPersonsToAdapter(personsDomainModelStub.getPersons());
-        verify(mockPersonsView).addFooter();
+        verify(mockPersonsView).addHeaderView();
+        verify(mockPersonsView).showPersons(personsDomainModelStub.getPersons());
+        verify(mockPersonsView).addFooterView();
         verify(mockPersonsView).setPersonsDomainModel(personsDomainModelStub);
     }
 
@@ -189,10 +187,10 @@ public class PersonsPresenterTest {
         personsPresenter.onLoadPopularPersons(personsDomainModelStub.getPageNumber());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-        verify(mockPersonsView).showLoadingFooter();
+        verify(mockPersonsView).showLoadingFooterView();
 
-        verify(mockPersonsView).removeFooter();
-        verify(mockPersonsView).addPersonsToAdapter(personsDomainModelStub.getPersons());
+        verify(mockPersonsView).removeFooterView();
+        verify(mockPersonsView).showPersons(personsDomainModelStub.getPersons());
         verify(mockPersonsView).setPersonsDomainModel(personsDomainModelStub);
     }
 
@@ -207,11 +205,11 @@ public class PersonsPresenterTest {
         personsPresenter.onLoadPopularPersons(personsDomainModelStub.getPageNumber());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-        verify(mockPersonsView).showLoadingFooter();
+        verify(mockPersonsView).showLoadingFooterView();
 
-        verify(mockPersonsView).removeFooter();
-        verify(mockPersonsView).addPersonsToAdapter(personsDomainModelStub.getPersons());
-        verify(mockPersonsView).addFooter();
+        verify(mockPersonsView).removeFooterView();
+        verify(mockPersonsView).showPersons(personsDomainModelStub.getPersons());
+        verify(mockPersonsView).addFooterView();
         verify(mockPersonsView).setPersonsDomainModel(personsDomainModelStub);
 //        verify(mockPersonsView, times(1)).setModel(any(PersonsWrapper.class)); // Alternative verify check
     }
@@ -238,7 +236,7 @@ public class PersonsPresenterTest {
         personsPresenter.onScrollToEndOfList();
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-        verify(mockPersonsView).loadMoreItems();
+        verify(mockPersonsView).loadMorePersons();
 
         verifyZeroInteractions(mockPersonsUseCase);
     }
