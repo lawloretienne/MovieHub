@@ -509,7 +509,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     // region PersonDetailsPresentationContract.View Methods
 
     @Override
-    public void showPersonDetails(PersonDetailsDomainModel personDetailsDomainModel) {
+    public void setPersonDetailsDomainModel(PersonDetailsDomainModel personDetailsDomainModel) {
         this.personDetailsPresentationModel = personDetailsPresentationModelMapper.mapToPresentationModel(personDetailsDomainModel);
 
         nestedScrollView.setNestedScrollingEnabled(true);

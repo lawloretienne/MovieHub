@@ -74,7 +74,7 @@ public class MovieDetailsPresenterTest {
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMovieDetailsView).showErrorView();
-        verify(mockMovieDetailsView, never()).showMovieDetails(movieDetailsDomainModelStub);
+        verify(mockMovieDetailsView, never()).setMovieDetailsDomainModel(movieDetailsDomainModelStub);
 
     }
 
@@ -90,7 +90,7 @@ public class MovieDetailsPresenterTest {
         movieDetailsPresenter.onLoadMovieDetails(movieDetailsDomainModelStub.getMovie().getId());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-        verify(mockMovieDetailsView).showMovieDetails(movieDetailsDomainModelStub);
+        verify(mockMovieDetailsView).setMovieDetailsDomainModel(movieDetailsDomainModelStub);
         verify(mockMovieDetailsView, never()).showErrorView();
     }
 

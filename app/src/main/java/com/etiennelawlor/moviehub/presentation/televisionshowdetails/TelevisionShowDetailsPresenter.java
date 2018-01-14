@@ -50,7 +50,7 @@ public class TelevisionShowDetailsPresenter implements TelevisionShowDetailsPres
                     @Override
                     public void onSuccess(TelevisionShowDetailsDomainModel televisionShowDetailsDomainModel) {
                         if(televisionShowDetailsDomainModel != null){
-                            televisionShowDetailsView.showTelevisionShowDetails(televisionShowDetailsDomainModel);
+                            televisionShowDetailsView.setTelevisionShowDetailsDomainModel(televisionShowDetailsDomainModel);
                         }
                     }
 

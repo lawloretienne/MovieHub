@@ -12,7 +12,7 @@ import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
 public interface MovieDetailsPresentationContract {
 
     interface View {
-        void showMovieDetails(MovieDetailsDomainModel movieDetailsDomainModel);
+        void setMovieDetailsDomainModel(MovieDetailsDomainModel movieDetailsDomainModel);
         void showToolbarTitle();
         void hideToolbarTitle();
         void showErrorView();

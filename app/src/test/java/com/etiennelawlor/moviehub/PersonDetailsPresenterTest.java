@@ -87,7 +87,7 @@ public class PersonDetailsPresenterTest {
         personDetailsPresenter.onLoadPersonDetails(personDetailsDomainModelStub.getPerson().getId());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-        verify(mockPersonDetailsView).showPersonDetails(personDetailsDomainModelStub);
+        verify(mockPersonDetailsView).setPersonDetailsDomainModel(personDetailsDomainModelStub);
     }
 
     @Test

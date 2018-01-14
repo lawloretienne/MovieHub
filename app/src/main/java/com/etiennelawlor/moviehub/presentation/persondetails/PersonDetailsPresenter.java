@@ -50,7 +50,7 @@ public class PersonDetailsPresenter implements PersonDetailsPresentationContract
                     @Override
                     public void onSuccess(PersonDetailsDomainModel personDetailsDomainModel) {
                         if(personDetailsDomainModel != null){
-                            personDetailsView.showPersonDetails(personDetailsDomainModel);
+                            personDetailsView.setPersonDetailsDomainModel(personDetailsDomainModel);
                         }
                     }
 

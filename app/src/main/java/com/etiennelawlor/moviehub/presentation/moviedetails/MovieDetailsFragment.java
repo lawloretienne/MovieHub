@@ -484,12 +484,12 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
     // region MovieDetailsPresentationContract.View Methods
 
     @Override
-    public void showMovieDetails(MovieDetailsDomainModel movieDetailsDomainModel) {
+    public void setMovieDetailsDomainModel(MovieDetailsDomainModel movieDetailsDomainModel) {
         this.movieDetailsPresentationModel = movieDetailsPresentationModelMapper.mapToPresentationModel(movieDetailsDomainModel);
         nestedScrollView.setNestedScrollingEnabled(true);
-        movie = movieDetailsPresentationModel.getMovie();
+//        movie = movieDetailsPresentationModel.getMovie();
 
-        setUpBackdrop();
+//        setUpBackdrop();
         setUpOverview();
         setUpDuration();
         setUpGenres();

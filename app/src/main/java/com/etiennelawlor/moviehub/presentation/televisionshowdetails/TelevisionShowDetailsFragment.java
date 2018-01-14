@@ -487,7 +487,7 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
 
     // region TelevisionShowDetailsPresentationContract.View Methods
     @Override
-    public void showTelevisionShowDetails(TelevisionShowDetailsDomainModel televisionShowDetailsDomainModel) {
+    public void setTelevisionShowDetailsDomainModel(TelevisionShowDetailsDomainModel televisionShowDetailsDomainModel) {
         this.televisionShowDetailsPresentationModel = televisionShowDetailsPresentationModelMapper.mapToPresentationModel(televisionShowDetailsDomainModel);
 
         nestedScrollView.setNestedScrollingEnabled(true);

@@ -12,7 +12,7 @@ import com.etiennelawlor.moviehub.presentation.models.TelevisionShowPresentation
 public interface TelevisionShowDetailsPresentationContract {
 
     interface View {
-        void showTelevisionShowDetails(TelevisionShowDetailsDomainModel televisionShowDetailsDomainModel);
+        void setTelevisionShowDetailsDomainModel(TelevisionShowDetailsDomainModel televisionShowDetailsDomainModel);
         void showToolbarTitle();
         void hideToolbarTitle();
         void showErrorView();

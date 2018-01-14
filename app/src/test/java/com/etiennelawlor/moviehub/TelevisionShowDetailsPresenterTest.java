@@ -87,7 +87,7 @@ public class TelevisionShowDetailsPresenterTest {
         televisionShowDetailsPresenter.onLoadTelevisionShowDetails(televisionShowDetailsDomainModelStub.getTelevisionShow().getId());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-        verify(mockTelevisionShowDetailsView).showTelevisionShowDetails(televisionShowDetailsDomainModelStub);
+        verify(mockTelevisionShowDetailsView).setTelevisionShowDetailsDomainModel(televisionShowDetailsDomainModelStub);
     }
 
     @Test

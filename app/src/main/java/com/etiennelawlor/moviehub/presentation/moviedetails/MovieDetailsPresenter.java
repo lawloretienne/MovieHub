@@ -47,7 +47,7 @@ public class MovieDetailsPresenter implements MovieDetailsPresentationContract.P
                     @Override
                     public void onSuccess(MovieDetailsDomainModel movieDetailsDomainModel) {
                         if(movieDetailsDomainModel != null){
-                            movieDetailsView.showMovieDetails(movieDetailsDomainModel);
+                            movieDetailsView.setMovieDetailsDomainModel(movieDetailsDomainModel);
                         }
                     }
 
