@@ -2,7 +2,6 @@ package com.etiennelawlor.moviehub.presentation.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.v7.graphics.Palette;
 import android.text.TextUtils;
 
 import com.etiennelawlor.moviehub.util.DateUtility;
@@ -47,8 +46,6 @@ public class TelevisionShowPresentationModel implements Parcelable {
     public String type;
     public float voteAverage;
     public int voteCount;
-
-    private Palette posterPalette;
     // endregion
 
     // region Constructors
@@ -175,10 +172,6 @@ public class TelevisionShowPresentationModel implements Parcelable {
 
     public int getVoteCount() {
         return voteCount;
-    }
-
-    public Palette getPosterPalette() {
-        return posterPalette;
     }
 
     public String getFirstAirYear(){
@@ -370,10 +363,6 @@ public class TelevisionShowPresentationModel implements Parcelable {
         this.voteCount = voteCount;
     }
 
-    public void setPosterPalette(Palette posterPalette) {
-        this.posterPalette = posterPalette;
-    }
-
     // endregion
 
     // region Parcelable Methods
@@ -448,7 +437,6 @@ public class TelevisionShowPresentationModel implements Parcelable {
                 ", type='" + type + '\'' +
                 ", voteAverage=" + voteAverage +
                 ", voteCount=" + voteCount +
-                ", posterPalette=" + posterPalette +
                 '}';
     }
 }

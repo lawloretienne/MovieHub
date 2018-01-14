@@ -489,12 +489,10 @@ public class TelevisionShowDetailsFragment extends BaseFragment implements Telev
     @Override
     public void showTelevisionShowDetails(TelevisionShowDetailsDomainModel televisionShowDetailsDomainModel) {
         this.televisionShowDetailsPresentationModel = televisionShowDetailsPresentationModelMapper.mapToPresentationModel(televisionShowDetailsDomainModel);
-        final Palette posterPalette = televisionShow.getPosterPalette();
 
         nestedScrollView.setNestedScrollingEnabled(true);
 
         televisionShow = televisionShowDetailsPresentationModel.getTelevisionShow();
-        televisionShow.setPosterPalette(posterPalette);
 
         setUpBackdrop();
         setUpOverview();

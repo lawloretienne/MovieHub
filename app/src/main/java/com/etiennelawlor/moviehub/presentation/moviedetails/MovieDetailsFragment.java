@@ -486,12 +486,8 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
     @Override
     public void showMovieDetails(MovieDetailsDomainModel movieDetailsDomainModel) {
         this.movieDetailsPresentationModel = movieDetailsPresentationModelMapper.mapToPresentationModel(movieDetailsDomainModel);
-        final Palette posterPalette = movie.getPosterPalette();
-
         nestedScrollView.setNestedScrollingEnabled(true);
-
         movie = movieDetailsPresentationModel.getMovie();
-        movie.setPosterPalette(posterPalette);
 
         setUpBackdrop();
         setUpOverview();

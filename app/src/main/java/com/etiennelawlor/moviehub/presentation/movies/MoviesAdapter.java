@@ -215,20 +215,12 @@ public class MoviesAdapter extends BaseAdapter<MoviePresentationModel> {
                         .into(iv, new Callback() {
                             @Override
                             public void onSuccess() {
-                                if(movie.getPosterPalette() != null){
-                                    setUpInfoBackgroundColor(vh.infoLinearLayout, movie.getPosterPalette());
-                                    setUpTitleTextColor(vh.titleTextView, movie.getPosterPalette());
-                                    setUpSubtitleTextColor(vh.subtitleTextView, movie.getPosterPalette());
-                                } else {
-                                    Bitmap bitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
-                                    Palette.from(bitmap).generate(palette -> {
-                                        movie.setPosterPalette(palette);
-
-                                        setUpInfoBackgroundColor(vh.infoLinearLayout, palette);
-                                        setUpTitleTextColor(vh.titleTextView, palette);
-                                        setUpSubtitleTextColor(vh.subtitleTextView, palette);
-                                    });
-                                }
+                                Bitmap bitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
+                                Palette.from(bitmap).generate(palette -> {
+                                    setUpInfoBackgroundColor(vh.infoLinearLayout, palette);
+                                    setUpTitleTextColor(vh.titleTextView, palette);
+                                    setUpSubtitleTextColor(vh.subtitleTextView, palette);
+                                });
                             }
 
                             @Override

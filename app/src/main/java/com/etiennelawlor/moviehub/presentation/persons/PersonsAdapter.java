@@ -213,20 +213,12 @@ public class PersonsAdapter extends BaseAdapter<PersonPresentationModel> {
                         .into(iv, new Callback() {
                             @Override
                             public void onSuccess() {
-                                if(person.getProfilePalette() != null){
-                                    setUpInfoBackgroundColor(vh.infoLinearLayout, person.getProfilePalette());
-                                    setUpTitleTextColor(vh.titleTextView, person.getProfilePalette());
-//                                setUpSubtitleTextColor(vh.subtitleTextView, person.getProfilePalette());
-                                } else {
-                                    Bitmap bitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
-                                    Palette.from(bitmap).generate(palette -> {
-                                        person.setProfilePalette(palette);
-
-                                        setUpInfoBackgroundColor(vh.infoLinearLayout, palette);
-                                        setUpTitleTextColor(vh.titleTextView, palette);
+                                Bitmap bitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
+                                Palette.from(bitmap).generate(palette -> {
+                                    setUpInfoBackgroundColor(vh.infoLinearLayout, palette);
+                                    setUpTitleTextColor(vh.titleTextView, palette);
 //                                        setUpSubtitleTextColor(vh.subtitleTextView, palette);
-                                    });
-                                }
+                                });
                             }
 
                             @Override

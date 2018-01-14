@@ -4,7 +4,6 @@ import com.etiennelawlor.moviehub.domain.models.PersonDetailsDomainModel;
 import com.etiennelawlor.moviehub.domain.usecases.PersonDetailsDomainContract;
 import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.TelevisionShowPresentationModel;
-import com.etiennelawlor.moviehub.util.NetworkUtility;
 import com.etiennelawlor.moviehub.util.rxjava.SchedulerProvider;
 
 import io.reactivex.disposables.CompositeDisposable;

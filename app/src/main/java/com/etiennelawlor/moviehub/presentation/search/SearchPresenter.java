@@ -5,7 +5,6 @@ import com.etiennelawlor.moviehub.domain.usecases.SearchDomainContract;
 import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.TelevisionShowPresentationModel;
-import com.etiennelawlor.moviehub.util.NetworkUtility;
 import com.etiennelawlor.moviehub.util.rxjava.SchedulerProvider;
 
 import java.util.concurrent.TimeUnit;

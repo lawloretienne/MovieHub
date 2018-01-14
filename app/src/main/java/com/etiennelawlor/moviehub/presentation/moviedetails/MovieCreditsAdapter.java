@@ -210,20 +210,12 @@ public class MovieCreditsAdapter extends BaseAdapter<MovieCreditPresentationMode
                         .into(iv, new Callback() {
                             @Override
                             public void onSuccess() {
-                                if(movieCredit.getProfilePalette() != null){
-                                    setUpInfoBackgroundColor(vh.infoLinearLayout, movieCredit.getProfilePalette());
-                                    setUpTitleTextColor(vh.titleTextView, movieCredit.getProfilePalette());
-                                    setUpSubtitleTextColor(vh.subtitleTextView, movieCredit.getProfilePalette());
-                                } else {
-                                    Bitmap bitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
-                                    Palette.from(bitmap).generate(palette -> {
-                                        movieCredit.setProfilePalette(palette);
-
-                                        setUpInfoBackgroundColor(vh.infoLinearLayout, palette);
-                                        setUpTitleTextColor(vh.titleTextView, palette);
-                                        setUpSubtitleTextColor(vh.subtitleTextView, palette);
-                                    });
-                                }
+                                Bitmap bitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
+                                Palette.from(bitmap).generate(palette -> {
+                                    setUpInfoBackgroundColor(vh.infoLinearLayout, palette);
+                                    setUpTitleTextColor(vh.titleTextView, palette);
+                                    setUpSubtitleTextColor(vh.subtitleTextView, palette);
+                                });
                             }
 
                             @Override

@@ -210,20 +210,12 @@ public class TelevisionShowCreditsAdapter extends BaseAdapter<TelevisionShowCred
                         .into(iv, new Callback() {
                             @Override
                             public void onSuccess() {
-                                if(televisionShowCredit.getProfilePalette() != null){
-                                    setUpInfoBackgroundColor(vh.infoLinearLayout, televisionShowCredit.getProfilePalette());
-                                    setUpTitleTextColor(vh.titleTextView, televisionShowCredit.getProfilePalette());
-                                    setUpSubtitleTextColor(vh.subtitleTextView, televisionShowCredit.getProfilePalette());
-                                } else {
-                                    Bitmap bitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
-                                    Palette.from(bitmap).generate(palette -> {
-                                        televisionShowCredit.setProfilePalette(palette);
-
-                                        setUpInfoBackgroundColor(vh.infoLinearLayout, palette);
-                                        setUpTitleTextColor(vh.titleTextView, palette);
-                                        setUpSubtitleTextColor(vh.subtitleTextView, palette);
-                                    });
-                                }
+                                Bitmap bitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
+                                Palette.from(bitmap).generate(palette -> {
+                                    setUpInfoBackgroundColor(vh.infoLinearLayout, palette);
+                                    setUpTitleTextColor(vh.titleTextView, palette);
+                                    setUpSubtitleTextColor(vh.subtitleTextView, palette);
+                                });
                             }
 
                             @Override

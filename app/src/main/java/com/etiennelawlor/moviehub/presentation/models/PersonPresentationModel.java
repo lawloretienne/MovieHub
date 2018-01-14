@@ -2,7 +2,6 @@ package com.etiennelawlor.moviehub.presentation.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.v7.graphics.Palette;
 
 /**
  * Created by etiennelawlor on 12/31/17.
@@ -25,8 +24,6 @@ public class PersonPresentationModel implements Parcelable {
     public String placeOfBirth;
     public String profilePath;
     public ProfileImagesPresentationModel images;
-
-    private Palette profilePalette;
     // endregion
 
     // region Constructors
@@ -84,10 +81,6 @@ public class PersonPresentationModel implements Parcelable {
         return images;
     }
 
-    public Palette getProfilePalette() {
-        return profilePalette;
-    }
-
     public String getProfileUrl(){
         String profileUrl = String.format("%s%s%s", SECURE_BASE_URL, PROFILE_SIZE, profilePath);
         return profileUrl;
@@ -130,10 +123,6 @@ public class PersonPresentationModel implements Parcelable {
 
     public void setImages(ProfileImagesPresentationModel images) {
         this.images = images;
-    }
-
-    public void setProfilePalette(Palette profilePalette) {
-        this.profilePalette = profilePalette;
     }
 
     // endregion
@@ -182,7 +171,6 @@ public class PersonPresentationModel implements Parcelable {
                 ", placeOfBirth='" + placeOfBirth + '\'' +
                 ", profilePath='" + profilePath + '\'' +
                 ", images=" + images +
-                ", profilePalette=" + profilePalette +
                 '}';
     }
 }

@@ -214,22 +214,13 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCreditPresentationMo
                         .into(iv, new Callback() {
                             @Override
                             public void onSuccess() {
-                                if(personCredit.getPosterPalette() != null){
-                                    setUpInfoBackgroundColor(vh.infoLinearLayout, personCredit.getPosterPalette());
-                                    setUpTitleTextColor(vh.titleTextView, personCredit.getPosterPalette());
-                                    setUpSubtitleTextColor(vh.subtitleTextView, personCredit.getPosterPalette());
-                                    setUpCaptionTextColor(vh.captionTextView, personCredit.getPosterPalette());
-                                } else {
-                                    Bitmap bitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
-                                    Palette.from(bitmap).generate(palette -> {
-                                        personCredit.setPosterPalette(palette);
-
-                                        setUpInfoBackgroundColor(vh.infoLinearLayout, palette);
-                                        setUpTitleTextColor(vh.titleTextView, palette);
-                                        setUpSubtitleTextColor(vh.subtitleTextView, palette);
-                                        setUpCaptionTextColor(vh.captionTextView, palette);
-                                    });
-                                }
+                                Bitmap bitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
+                                Palette.from(bitmap).generate(palette -> {
+                                    setUpInfoBackgroundColor(vh.infoLinearLayout, palette);
+                                    setUpTitleTextColor(vh.titleTextView, palette);
+                                    setUpSubtitleTextColor(vh.subtitleTextView, palette);
+                                    setUpCaptionTextColor(vh.captionTextView, palette);
+                                });
                             }
 
                             @Override

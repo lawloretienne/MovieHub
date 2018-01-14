@@ -210,20 +210,12 @@ public class SearchTelevisionShowsAdapter extends BaseAdapter<TelevisionShowPres
                         .into(iv, new Callback() {
                             @Override
                             public void onSuccess() {
-                                if(televisionShow.getPosterPalette() != null){
-                                    setUpInfoBackgroundColor(vh.infoLinearLayout, televisionShow.getPosterPalette());
-                                    setUpTitleTextColor(vh.titleTextView, televisionShow.getPosterPalette());
-                                    setUpSubtitleTextColor(vh.subtitleTextView, televisionShow.getPosterPalette());
-                                } else {
-                                    Bitmap bitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
-                                    Palette.from(bitmap).generate(palette -> {
-                                        televisionShow.setPosterPalette(palette);
-
-                                        setUpInfoBackgroundColor(vh.infoLinearLayout, palette);
-                                        setUpTitleTextColor(vh.titleTextView, palette);
-                                        setUpSubtitleTextColor(vh.subtitleTextView, palette);
-                                    });
-                                }
+                                Bitmap bitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
+                                Palette.from(bitmap).generate(palette -> {
+                                    setUpInfoBackgroundColor(vh.infoLinearLayout, palette);
+                                    setUpTitleTextColor(vh.titleTextView, palette);
+                                    setUpSubtitleTextColor(vh.subtitleTextView, palette);
+                                });
                             }
 
                             @Override

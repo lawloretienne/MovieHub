@@ -511,12 +511,10 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     @Override
     public void showPersonDetails(PersonDetailsDomainModel personDetailsDomainModel) {
         this.personDetailsPresentationModel = personDetailsPresentationModelMapper.mapToPresentationModel(personDetailsDomainModel);
-        final Palette profilePalette = person.getProfilePalette();
 
         nestedScrollView.setNestedScrollingEnabled(true);
 
         person = personDetailsPresentationModel.getPerson();
-        person.setProfilePalette(profilePalette);
 
         setUpBackdrop();
         setUpBio();

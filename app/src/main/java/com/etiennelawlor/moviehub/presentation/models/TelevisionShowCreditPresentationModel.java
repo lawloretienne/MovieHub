@@ -1,7 +1,5 @@
 package com.etiennelawlor.moviehub.presentation.models;
 
-import android.support.v7.graphics.Palette;
-
 /**
  * Created by etiennelawlor on 12/31/17.
  */
@@ -19,8 +17,6 @@ public class TelevisionShowCreditPresentationModel extends CreditPresentationMod
     public String name;
     public String department;
     public String profilePath;
-
-    private Palette profilePalette;
     // endregion
 
     // region Getters
@@ -43,10 +39,6 @@ public class TelevisionShowCreditPresentationModel extends CreditPresentationMod
 
     public String getProfilePath() {
         return profilePath;
-    }
-
-    public Palette getProfilePalette() {
-        return profilePalette;
     }
 
     public String getProfileUrl(){
@@ -78,10 +70,6 @@ public class TelevisionShowCreditPresentationModel extends CreditPresentationMod
         this.profilePath = profilePath;
     }
 
-    public void setProfilePalette(Palette profilePalette) {
-        this.profilePalette = profilePalette;
-    }
-
     // endregion
 
     @Override
@@ -92,7 +80,6 @@ public class TelevisionShowCreditPresentationModel extends CreditPresentationMod
                 ", name='" + name + '\'' +
                 ", department='" + department + '\'' +
                 ", profilePath='" + profilePath + '\'' +
-                ", profilePalette=" + profilePalette +
                 '}';
     }
 }

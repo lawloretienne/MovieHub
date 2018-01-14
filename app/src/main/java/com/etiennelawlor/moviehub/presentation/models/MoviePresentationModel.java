@@ -2,7 +2,6 @@ package com.etiennelawlor.moviehub.presentation.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.v7.graphics.Palette;
 import android.text.TextUtils;
 
 import com.etiennelawlor.moviehub.util.DateUtility;
@@ -44,8 +43,6 @@ public class MoviePresentationModel implements Parcelable {
     public boolean video;
     public float voteAverage;
     public int voteCount;
-
-    private Palette posterPalette;
     // endregion
 
     // region Constructors
@@ -163,10 +160,6 @@ public class MoviePresentationModel implements Parcelable {
         return voteCount;
     }
 
-    public Palette getPosterPalette() {
-        return posterPalette;
-    }
-
     public String getReleaseYear(){
         String releaseYear = "";
         if (!TextUtils.isEmpty(releaseDate)) {
@@ -278,10 +271,6 @@ public class MoviePresentationModel implements Parcelable {
         this.voteCount = voteCount;
     }
 
-    public void setPosterPalette(Palette posterPalette) {
-        this.posterPalette = posterPalette;
-    }
-
     // endregion
 
     // region Parcelable Methods
@@ -352,7 +341,6 @@ public class MoviePresentationModel implements Parcelable {
                 ", video=" + video +
                 ", voteAverage=" + voteAverage +
                 ", voteCount=" + voteCount +
-                ", posterPalette=" + posterPalette +
                 '}';
     }
 }

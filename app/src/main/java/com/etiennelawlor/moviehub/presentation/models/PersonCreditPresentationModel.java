@@ -1,6 +1,5 @@
 package com.etiennelawlor.moviehub.presentation.models;
 
-import android.support.v7.graphics.Palette;
 import android.text.TextUtils;
 
 import com.etiennelawlor.moviehub.util.DateUtility;
@@ -29,8 +28,6 @@ public class PersonCreditPresentationModel extends CreditPresentationModel {
     public String firstAirDate;
     public String releaseDate;
     public String mediaType;
-
-    private Palette posterPalette;
     // endregion
 
     // region Getters
@@ -69,10 +66,6 @@ public class PersonCreditPresentationModel extends CreditPresentationModel {
 
     public String getMediaType() {
         return mediaType;
-    }
-
-    public Palette getPosterPalette() {
-        return posterPalette;
     }
 
     public String getPosterUrl(){
@@ -137,10 +130,6 @@ public class PersonCreditPresentationModel extends CreditPresentationModel {
         this.mediaType = mediaType;
     }
 
-    public void setPosterPalette(Palette posterPalette) {
-        this.posterPalette = posterPalette;
-    }
-
     // endregion
 
     @Override
@@ -155,7 +144,6 @@ public class PersonCreditPresentationModel extends CreditPresentationModel {
                 ", firstAirDate='" + firstAirDate + '\'' +
                 ", releaseDate='" + releaseDate + '\'' +
                 ", mediaType='" + mediaType + '\'' +
-                ", posterPalette=" + posterPalette +
                 '}';
     }
 }
