@@ -1,7 +1,6 @@
 package com.etiennelawlor.moviehub.presentation.persons;
 
 import android.content.res.Resources;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -29,7 +28,6 @@ import com.etiennelawlor.moviehub.presentation.mappers.PersonsPresentationModelM
 import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.PersonsPresentationModel;
 import com.etiennelawlor.moviehub.presentation.persondetails.PersonDetailsActivity;
-import com.etiennelawlor.moviehub.util.FontCache;
 
 import java.util.List;
 
@@ -79,7 +77,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     // endregion
 
     // region Listeners
-    @OnClick(R.id.reload_btn)
+    @OnClick(R.id.retry_btn)
     public void onReloadButtonClicked() {
         personsPresenter.onLoadPopularPersons(personsPresentationModel == null ? 1 : personsPresentationModel.getPageNumber());
     }

@@ -1,7 +1,6 @@
 package com.etiennelawlor.moviehub.presentation.movies;
 
 import android.content.res.Resources;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -29,7 +28,6 @@ import com.etiennelawlor.moviehub.presentation.mappers.MoviesPresentationModelMa
 import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.MoviesPresentationModel;
 import com.etiennelawlor.moviehub.presentation.moviedetails.MovieDetailsActivity;
-import com.etiennelawlor.moviehub.util.FontCache;
 
 import java.util.List;
 
@@ -52,8 +50,6 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     RecyclerView recyclerView;
     @BindView(R.id.error_ll)
     LinearLayout errorLinearLayout;
-    @BindView(R.id.error_tv)
-    TextView errorTextView;
     @BindView(R.id.pb)
     ProgressBar progressBar;
     @BindView(android.R.id.empty)
@@ -79,7 +75,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     // endregion
 
     // region Listeners
-    @OnClick(R.id.reload_btn)
+    @OnClick(R.id.retry_btn)
     public void onReloadButtonClicked() {
         moviesPresenter.onLoadPopularMovies(moviesPresentationModel == null ? 1 : moviesPresentationModel.getPageNumber());
     }
@@ -220,11 +216,6 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     }
 
     @Override
-    public void setErrorText(String errorText) {
-        errorTextView.setText(errorText);
-    }
-
-    @Override
     public void showLoadingView() {
         progressBar.setVisibility(View.VISIBLE);
         isLoading = true;
@@ -237,39 +228,39 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     }
 
     @Override
-    public void addHeader() {
+    public void addHeaderView() {
         moviesAdapter.addHeader();
     }
 
     @Override
-    public void addFooter() {
+    public void addFooterView() {
         moviesAdapter.addFooter();
     }
 
     @Override
-    public void removeFooter() {
+    public void removeFooterView() {
         moviesAdapter.removeFooter();
         isLoading = false;
     }
 
     @Override
-    public void showErrorFooter() {
+    public void showErrorFooterView() {
         moviesAdapter.updateFooter(BaseAdapter.FooterType.ERROR);
     }
 
     @Override
-    public void showLoadingFooter() {
+    public void showLoadingFooterView() {
         moviesAdapter.updateFooter(BaseAdapter.FooterType.LOAD_MORE);
         isLoading = true;
     }
 
     @Override
-    public void addMoviesToAdapter(List<MovieDomainModel> movies) {
+    public void showMovies(List<MovieDomainModel> movies) {
         moviesAdapter.addAll(moviePresentationModelMapper.mapListToPresentationModelList(movies));
     }
 
     @Override
-    public void loadMoreItems() {
+    public void loadMoreMovies() {
         moviesPresentationModel.incrementPageNumber();
         moviesPresenter.onLoadPopularMovies(moviesPresentationModel.getPageNumber());
     }

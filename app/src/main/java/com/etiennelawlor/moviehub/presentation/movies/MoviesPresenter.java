@@ -4,7 +4,6 @@ import com.etiennelawlor.moviehub.domain.models.MovieDomainModel;
 import com.etiennelawlor.moviehub.domain.models.MoviesDomainModel;
 import com.etiennelawlor.moviehub.domain.usecases.MoviesDomainContract;
 import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
-import com.etiennelawlor.moviehub.util.NetworkUtility;
 import com.etiennelawlor.moviehub.util.rxjava.SchedulerProvider;
 
 import java.util.List;
@@ -48,7 +47,7 @@ public class MoviesPresenter implements MoviesPresentationContract.Presenter {
             moviesView.hideErrorView();
             moviesView.showLoadingView();
         } else{
-            moviesView.showLoadingFooter();
+            moviesView.showLoadingFooterView();
         }
 
         Disposable disposable = moviesUseCase.getPopularMovies(currentPage)
@@ -66,22 +65,22 @@ public class MoviesPresenter implements MoviesPresentationContract.Presenter {
                                 moviesView.hideLoadingView();
 
                                 if(hasMovies){
-                                    moviesView.addHeader();
-                                    moviesView.addMoviesToAdapter(movieDomainModels);
+                                    moviesView.addHeaderView();
+                                    moviesView.showMovies(movieDomainModels);
 
                                     if(!isLastPage)
-                                        moviesView.addFooter();
+                                        moviesView.addFooterView();
                                 } else {
                                     moviesView.showEmptyView();
                                 }
                             } else {
-                                moviesView.removeFooter();
+                                moviesView.removeFooterView();
 
                                 if(hasMovies){
-                                    moviesView.addMoviesToAdapter(movieDomainModels);
+                                    moviesView.showMovies(movieDomainModels);
 
                                     if(!isLastPage)
-                                        moviesView.addFooter();
+                                        moviesView.addFooterView();
                                 }
                             }
 
@@ -96,14 +95,9 @@ public class MoviesPresenter implements MoviesPresentationContract.Presenter {
                         if(currentPage == 1){
                             moviesView.hideLoadingView();
 
-                            if (NetworkUtility.isKnownException(throwable)) {
-                                moviesView.setErrorText("Can't load data.\nCheck your network connection.");
-                                moviesView.showErrorView();
-                            }
+                            moviesView.showErrorView();
                         } else {
-                            if(NetworkUtility.isKnownException(throwable)){
-                                moviesView.showErrorFooter();
-                            }
+                            moviesView.showErrorFooterView();
                         }
                     }
                 });
@@ -118,7 +112,7 @@ public class MoviesPresenter implements MoviesPresentationContract.Presenter {
 
     @Override
     public void onScrollToEndOfList() {
-        moviesView.loadMoreItems();
+        moviesView.loadMoreMovies();
     }
     // endregion
 

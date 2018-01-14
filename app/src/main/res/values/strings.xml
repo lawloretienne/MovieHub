@@ -12,11 +12,9 @@
     <string name="movies">Movies</string>
     <string name="tv_shows">TV Shows</string>
     <string name="people">People</string>
-    <string name="reload">Reload</string>
-    <string name="check_your_network_connection">Can\'t load data. Check your network connection.</string>
     <string name="content_desc">Content Description</string>
-    <string name="network_connection_unavailable">Network connection is unavailable.</string>
-    <string name="retry">RETRY</string>
+    <string name="oops_something_went_wrong">Oops, something went wrong.</string>
+    <string name="retry">Retry</string>
     <string name="not_available">N/A</string>
     <string name="movie_poster">Movie Poster</string>
     <string name="actor_headshot">Actor Headshot</string>

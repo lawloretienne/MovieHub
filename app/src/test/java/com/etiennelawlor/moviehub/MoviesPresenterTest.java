@@ -78,7 +78,6 @@ public class MoviesPresenterTest {
         verify(mockMoviesView).showLoadingView();
 
         verify(mockMoviesView).hideLoadingView();
-        verify(mockMoviesView).setErrorText(anyString());
         verify(mockMoviesView).showErrorView();
     }
 
@@ -93,9 +92,9 @@ public class MoviesPresenterTest {
         moviesPresenter.onLoadPopularMovies(moviesDomainModelStub.getPageNumber());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-        verify(mockMoviesView).showLoadingFooter();
+        verify(mockMoviesView).showLoadingFooterView();
 
-        verify(mockMoviesView).showErrorFooter();
+        verify(mockMoviesView).showErrorFooterView();
     }
 
     @Test
@@ -129,9 +128,9 @@ public class MoviesPresenterTest {
         moviesPresenter.onLoadPopularMovies(moviesDomainModelStub.getPageNumber());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-        verify(mockMoviesView).showLoadingFooter();
+        verify(mockMoviesView).showLoadingFooterView();
 
-        verify(mockMoviesView).removeFooter();
+        verify(mockMoviesView).removeFooterView();
         verify(mockMoviesView).setMoviesDomainModel(moviesDomainModelStub);
     }
 
@@ -151,8 +150,8 @@ public class MoviesPresenterTest {
         verify(mockMoviesView).showLoadingView();
 
         verify(mockMoviesView).hideLoadingView();
-        verify(mockMoviesView).addHeader();
-        verify(mockMoviesView).addMoviesToAdapter(moviesDomainModelStub.getMovies());
+        verify(mockMoviesView).addHeaderView();
+        verify(mockMoviesView).showMovies(moviesDomainModelStub.getMovies());
         verify(mockMoviesView).setMoviesDomainModel(moviesDomainModelStub);
     }
 
@@ -172,9 +171,9 @@ public class MoviesPresenterTest {
         verify(mockMoviesView).showLoadingView();
 
         verify(mockMoviesView).hideLoadingView();
-        verify(mockMoviesView).addHeader();
-        verify(mockMoviesView).addMoviesToAdapter(moviesDomainModelStub.getMovies());
-        verify(mockMoviesView).addFooter();
+        verify(mockMoviesView).addHeaderView();
+        verify(mockMoviesView).showMovies(moviesDomainModelStub.getMovies());
+        verify(mockMoviesView).addFooterView();
         verify(mockMoviesView).setMoviesDomainModel(moviesDomainModelStub);
     }
 
@@ -189,10 +188,10 @@ public class MoviesPresenterTest {
         moviesPresenter.onLoadPopularMovies(moviesDomainModelStub.getPageNumber());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-        verify(mockMoviesView).showLoadingFooter();
+        verify(mockMoviesView).showLoadingFooterView();
 
-        verify(mockMoviesView).removeFooter();
-        verify(mockMoviesView).addMoviesToAdapter(moviesDomainModelStub.getMovies());
+        verify(mockMoviesView).removeFooterView();
+        verify(mockMoviesView).showMovies(moviesDomainModelStub.getMovies());
         verify(mockMoviesView).setMoviesDomainModel(moviesDomainModelStub);
     }
 
@@ -207,11 +206,11 @@ public class MoviesPresenterTest {
         moviesPresenter.onLoadPopularMovies(moviesDomainModelStub.getPageNumber());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-        verify(mockMoviesView).showLoadingFooter();
+        verify(mockMoviesView).showLoadingFooterView();
 
-        verify(mockMoviesView).removeFooter();
-        verify(mockMoviesView).addMoviesToAdapter(moviesDomainModelStub.getMovies());
-        verify(mockMoviesView).addFooter();
+        verify(mockMoviesView).removeFooterView();
+        verify(mockMoviesView).showMovies(moviesDomainModelStub.getMovies());
+        verify(mockMoviesView).addFooterView();
         verify(mockMoviesView).setMoviesDomainModel(moviesDomainModelStub);
 //        verify(mockMoviesView, times(1)).setModel(any(MoviesPresentationModel.class)); // Alternative verify check
     }
@@ -238,7 +237,7 @@ public class MoviesPresenterTest {
         moviesPresenter.onScrollToEndOfList();
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-        verify(mockMoviesView).loadMoreItems();
+        verify(mockMoviesView).loadMoreMovies();
 
         verifyZeroInteractions(mockMoviesUseCase);
     }

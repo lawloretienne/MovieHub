@@ -30,12 +30,12 @@
         android:visibility="gone">
 
         <com.etiennelawlor.moviehub.presentation.common.widget.CustomFontButton
-            android:id="@+id/reload_btn"
+            android:id="@+id/retry_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="@string/reload"
+            android:text="@string/retry"
             android:textAllCaps="false"
             android:textColor="@color/primary_text_dark"
             android:textSize="16sp"
@@ -47,10 +47,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/reload_btn"
+            android:layout_toLeftOf="@id/retry_btn"
             android:gravity="center"
             android:padding="16dp"
-            android:text="@string/check_your_network_connection"
+            android:text="@string/oops_something_went_wrong"
             android:textColor="@color/secondary_text_light"
             android:textSize="16sp"
             app:textFont="lato_medium" />

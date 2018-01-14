@@ -302,7 +302,7 @@ public class TelevisionShowCreditsAdapter extends BaseAdapter<TelevisionShowCred
         FrameLayout loadingFrameLayout;
         @BindView(R.id.error_rl)
         RelativeLayout errorRelativeLayout;
-        @BindView(R.id.reload_btn)
+        @BindView(R.id.retry_btn)
         Button reloadButton;
         // endregion
 

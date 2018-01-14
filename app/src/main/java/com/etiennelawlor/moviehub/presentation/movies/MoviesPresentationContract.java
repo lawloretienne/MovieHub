@@ -18,16 +18,15 @@ public interface MoviesPresentationContract {
         void hideEmptyView();
         void showErrorView();
         void hideErrorView();
-        void setErrorText(String errorText);
         void showLoadingView();
         void hideLoadingView();
-        void addHeader();
-        void addFooter();
-        void removeFooter();
-        void showErrorFooter();
-        void showLoadingFooter();
-        void addMoviesToAdapter(List<MovieDomainModel> movies);
-        void loadMoreItems();
+        void addHeaderView();
+        void addFooterView();
+        void removeFooterView();
+        void showErrorFooterView();
+        void showLoadingFooterView();
+        void showMovies(List<MovieDomainModel> movies);
+        void loadMoreMovies();
         void setMoviesDomainModel(MoviesDomainModel moviesDomainModel);
 
         // Navigation methods

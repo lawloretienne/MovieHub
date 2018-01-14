@@ -523,7 +523,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
     @Override
     public void showErrorView() {
         Snackbar snackbar = Snackbar.make(getActivity().findViewById(R.id.main_content),
-                TrestleUtility.getFormattedText(getString(R.string.network_connection_unavailable), font, 16),
+                TrestleUtility.getFormattedText(getString(R.string.oops_something_went_wrong), font, 16),
                 Snackbar.LENGTH_INDEFINITE);
         snackbar.setAction(R.string.retry, view -> {
             if(movie != null)
