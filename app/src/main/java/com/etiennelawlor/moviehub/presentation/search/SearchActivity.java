@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.etiennelawlor.moviehub.R;
 
@@ -31,6 +33,16 @@ public class SearchActivity extends AppCompatActivity {
                     .beginTransaction()
                     .attach(fragment)
                     .commit();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentById(R.id.content_fl);
+        if(fragment instanceof SearchFragment){
+            ((SearchFragment)fragment).onBackPressed();
         }
     }
 

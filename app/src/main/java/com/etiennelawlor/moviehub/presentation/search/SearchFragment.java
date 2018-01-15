@@ -3,6 +3,7 @@ package com.etiennelawlor.moviehub.presentation.search;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -16,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
 import android.transition.Transition;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -59,7 +61,6 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import timber.log.Timber;
 
 /**
  * Created by etiennelawlor on 1/13/17.
@@ -108,6 +109,8 @@ public class SearchFragment extends BaseFragment implements SearchPresentationCo
     private Transition sharedElementEnterTransition;
     private Transition sharedElementReturnTransition;
     private SearchComponent searchComponent;
+    private final Handler handler = new Handler();
+
     private PersonPresentationModelMapper personPresentationModelMapper = new PersonPresentationModelMapper();
     private MoviePresentationModelMapper moviePresentationModelMapper = new MoviePresentationModelMapper();
     private TelevisionShowPresentationModelMapper televisionShowPresentationModelMapper = new TelevisionShowPresentationModelMapper();
@@ -122,41 +125,40 @@ public class SearchFragment extends BaseFragment implements SearchPresentationCo
     private Transition.TransitionListener enterTransitionTransitionListener = new Transition.TransitionListener() {
         @Override
         public void onTransitionStart(Transition transition) {
-            Timber.d("");
         }
 
         @Override
         public void onTransitionEnd(Transition transition) {
-            DisplayUtility.showKeyboard(getContext(), searchEditText);
-            searchEditText.animate().alpha(1.0f).setDuration(300);
+            handler.postDelayed(() -> {
+                DisplayUtility.showKeyboard(getContext(), searchEditText);
+
+                sharedElementEnterTransition.removeListener(enterTransitionTransitionListener);
+                sharedElementReturnTransition = getActivity().getWindow().getSharedElementReturnTransition();
+                sharedElementReturnTransition.addListener(returnTransitionTransitionListener);
+            }, 300);
         }
 
         @Override
         public void onTransitionCancel(Transition transition) {
-
         }
 
         @Override
         public void onTransitionPause(Transition transition) {
-
         }
 
         @Override
         public void onTransitionResume(Transition transition) {
-
         }
     };
 
     private Transition.TransitionListener returnTransitionTransitionListener = new Transition.TransitionListener() {
         @Override
         public void onTransitionStart(Transition transition) {
-            Timber.d("");
-            searchEditText.animate().alpha(0.0f).setDuration(300);
+//            searchEditText.animate().alpha(0.0f).setDuration(0);
         }
 
         @Override
         public void onTransitionEnd(Transition transition) {
-            appbar.animate().alpha(0.0f).setDuration(300);
         }
 
         @Override
@@ -238,8 +240,6 @@ public class SearchFragment extends BaseFragment implements SearchPresentationCo
 
         sharedElementEnterTransition = getActivity().getWindow().getSharedElementEnterTransition();
         sharedElementEnterTransition.addListener(enterTransitionTransitionListener);
-//        sharedElementReturnTransition = getActivity().getWindow().getSharedElementReturnTransition();
-//        sharedElementReturnTransition.addListener(returnTransitionTransitionListener);
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
     }
@@ -277,7 +277,6 @@ public class SearchFragment extends BaseFragment implements SearchPresentationCo
     public void onDestroyView() {
         super.onDestroyView();
 //        searchEditText.animate().alpha(0.0f).setDuration(300);
-
         removeListeners();
         unbinder.unbind();
         searchPresenter.onDestroyView();
@@ -297,8 +296,9 @@ public class SearchFragment extends BaseFragment implements SearchPresentationCo
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
                 DisplayUtility.hideKeyboard(getContext(), searchEditText);
-//                searchEditText.animate().alpha(0.0f).setDuration(300);
+                searchProgressBar.setVisibility(View.GONE);
                 getActivity().supportFinishAfterTransition();
+
 //                NavUtils.navigateUpFromSameTask(this);
                 return true;
         }
@@ -334,7 +334,6 @@ public class SearchFragment extends BaseFragment implements SearchPresentationCo
 
     @Override
     public void showErrorView() {
-
         Snackbar snackbar = Snackbar.make(getActivity().findViewById(R.id.main_content),
                 TrestleUtility.getFormattedText(getString(R.string.oops_something_went_wrong), font, 16),
                 Snackbar.LENGTH_INDEFINITE);
@@ -481,8 +480,9 @@ public class SearchFragment extends BaseFragment implements SearchPresentationCo
     }
 
     private void removeListeners() {
-        sharedElementEnterTransition.removeListener(enterTransitionTransitionListener);
-//        sharedElementReturnTransition.removeListener(returnTransitionTransitionListener);
+//        sharedElementEnterTransition.removeListener(enterTransitionTransitionListener);
+        sharedElementReturnTransition.removeListener(returnTransitionTransitionListener);
+
 //        moviesAdapter.setOnItemClickListener(null);
     }
 
@@ -577,6 +577,10 @@ public class SearchFragment extends BaseFragment implements SearchPresentationCo
 
     public void releaseSearchComponent(){
         searchComponent = null;
+    }
+
+    public void onBackPressed(){
+        searchProgressBar.setVisibility(View.GONE);
     }
     // endregion
 }

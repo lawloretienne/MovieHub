@@ -1,4 +1,4 @@
-package com.etiennelawlor.moviehub;
+package com.etiennelawlor.moviehub.di.module;
 
 import android.app.Application;
 import android.content.Context;

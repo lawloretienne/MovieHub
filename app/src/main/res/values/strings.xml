@@ -30,7 +30,7 @@
     <string name="birthplace">Birthplace</string>
     <string name="born">Born</string>
     <string name="died">Died</string>
-    <string name="search_movies_tv_shows_and_people">Search Movies, TV Shows, and People</string>
+    <string name="search_movies_tv_shows_and_people">Search Movies, TV Shows, &amp; People</string>
     <string name="seasons">Seasons</string>
     <string name="first_air_date">First Air Date</string>
     <string name="no_available_movies">No available movies.</string>
