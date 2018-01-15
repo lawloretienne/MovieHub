@@ -92,7 +92,7 @@ ext {
     rulesVersion = '1.0.1'
     espressoVersion = '3.0.1'
     supportAnnotations = '24.2.0'
-    mockwebserver = '3.9.1'
+//    mockwebserver = '3.9.1'
 }
 
 /*
@@ -172,7 +172,7 @@ dependencies {
     // UI testing with UI Automator
 //    androidTestImplementation 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
 
-    testImplementation "com.squareup.okhttp3:mockwebserver:$mockwebserver"
+//    testImplementation "com.squareup.okhttp3:mockwebserver:$mockwebserver"
 }
 
 /*

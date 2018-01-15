@@ -34,12 +34,12 @@ public class PersonRemoteDataSource implements PersonDataSourceContract.RemoteDa
     }
 
     @Override
-    public Single<PersonResponse> getPerson(int personId) {
+    public Single<PersonResponse> getPerson(long personId) {
         return movieHubService.getPerson(personId);
     }
 
     @Override
-    public Single<PersonCreditsResponse> getPersonCredits(int personId) {
+    public Single<PersonCreditsResponse> getPersonCredits(long personId) {
         return movieHubService.getPersonCredits(personId);
     }
 

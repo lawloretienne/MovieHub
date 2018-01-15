@@ -45,7 +45,7 @@ public class PersonRepository implements PersonDataSourceContract.Repository {
     }
 
     @Override
-    public Single<PersonDataModel> getPerson(int personId) {
+    public Single<PersonDataModel> getPerson(long personId) {
         Maybe<PersonDataModel> local = personLocalDataSource.getPerson(personId);
         Single<PersonDataModel> remote =
                 personRemoteDataSource.getPerson(personId)
@@ -56,7 +56,7 @@ public class PersonRepository implements PersonDataSourceContract.Repository {
     }
 
     @Override
-    public Single<PersonCreditsDataModel> getPersonCredits(int personId) {
+    public Single<PersonCreditsDataModel> getPersonCredits(long personId) {
         Maybe<PersonCreditsDataModel> local = personLocalDataSource.getPersonCredits(personId);
         Single<PersonCreditsDataModel> remote =
                 personRemoteDataSource.getPersonCredits(personId)

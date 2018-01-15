@@ -35,7 +35,7 @@ public class PersonLocalDataSource implements PersonDataSourceContract.LocalDate
     }
 
     @Override
-    public Maybe<PersonDataModel> getPerson(int personId) {
+    public Maybe<PersonDataModel> getPerson(long personId) {
         //        Use mapper to convert from realm objects to POJOs
         return Maybe.empty();
     }
@@ -46,7 +46,7 @@ public class PersonLocalDataSource implements PersonDataSourceContract.LocalDate
     }
 
     @Override
-    public Maybe<PersonCreditsDataModel> getPersonCredits(int personId) {
+    public Maybe<PersonCreditsDataModel> getPersonCredits(long personId) {
         //        Use mapper to convert from realm objects to POJOs
         return Maybe.empty();
     }

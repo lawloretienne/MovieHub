@@ -18,22 +18,22 @@ public interface PersonDataSourceContract {
 
     interface Repository {
         Single<PersonsDataModel> getPopularPersons(int currentPage);
-        Single<PersonDataModel> getPerson(int personId);
-        Single<PersonCreditsDataModel> getPersonCredits(int personId);
+        Single<PersonDataModel> getPerson(long personId);
+        Single<PersonCreditsDataModel> getPersonCredits(long personId);
     }
 
     interface LocalDateSource {
         Maybe<PersonsDataModel> getPopularPersons(int currentPage);
         void savePopularPersons(PersonsDataModel personsDataModel);
-        Maybe<PersonDataModel> getPerson(int personId);
+        Maybe<PersonDataModel> getPerson(long personId);
         void savePerson(PersonDataModel person);
-        Maybe<PersonCreditsDataModel> getPersonCredits(int personId);
+        Maybe<PersonCreditsDataModel> getPersonCredits(long personId);
         void savePersonCredits(PersonCreditsDataModel personCreditsResponse);
     }
 
     interface RemoteDateSource {
         Single<PersonsResponse> getPopularPersons(int currentPage);
-        Single<PersonResponse> getPerson(int personId);
-        Single<PersonCreditsResponse> getPersonCredits(int personId);
+        Single<PersonResponse> getPerson(long personId);
+        Single<PersonCreditsResponse> getPersonCredits(long personId);
     }
 }
