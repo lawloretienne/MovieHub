@@ -25,7 +25,7 @@ public class MovieDetailsUseCase implements MovieDetailsDomainContract.UseCase {
 
     // region MovieDetailsDomainContract.UseCase Methods
     @Override
-    public Single<MovieDetailsDomainModel> getMovieDetails(int movieId) {
+    public Single<MovieDetailsDomainModel> getMovieDetails(long movieId) {
         return Single.zip(
                 movieRepository.getMovie(movieId),
                 movieRepository.getMovieCredits(movieId),

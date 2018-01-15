@@ -21,30 +21,30 @@ public interface MovieDataSourceContract {
     interface Repository {
 //        Restful VERB is the first part of method name GET , POST , DELETE, PUT
         Single<MoviesDataModel> getPopularMovies(int currentPage);
-        Single<MovieDataModel> getMovie(int movieId);
-        Single<MovieCreditsDataModel> getMovieCredits(int movieId);
-        Single<MoviesDataModel> getSimilarMovies(int movieId);
-        Single<MovieReleaseDatesDataModel> getMovieReleaseDates(int movieId);
+        Single<MovieDataModel> getMovie(long movieId);
+        Single<MovieCreditsDataModel> getMovieCredits(long movieId);
+        Single<MoviesDataModel> getSimilarMovies(long movieId);
+        Single<MovieReleaseDatesDataModel> getMovieReleaseDates(long movieId);
     }
 
     interface LocalDateSource {
         Maybe<MoviesDataModel> getPopularMovies(int currentPage);
         void savePopularMovies(MoviesDataModel moviesDataModel);
-        Maybe<MovieDataModel> getMovie(int movieId);
+        Maybe<MovieDataModel> getMovie(long movieId);
         void saveMovie(MovieDataModel movie);
-        Maybe<MovieCreditsDataModel> getMovieCredits(int movieId);
+        Maybe<MovieCreditsDataModel> getMovieCredits(long movieId);
         void saveMovieCredits(MovieCreditsDataModel movieCreditsDataModel);
-        Maybe<MoviesDataModel> getSimilarMovies(int movieId);
+        Maybe<MoviesDataModel> getSimilarMovies(long movieId);
         void saveSimilarMovies(MoviesDataModel moviesDataModel);
-        Maybe<MovieReleaseDatesDataModel> getMovieReleaseDates(int movieId);
+        Maybe<MovieReleaseDatesDataModel> getMovieReleaseDates(long movieId);
         void saveMovieReleaseDates(MovieReleaseDatesDataModel movieReleaseDatesEnvelope);
     }
 
     interface RemoteDateSource {
         Single<MoviesResponse> getPopularMovies(int currentPage);
-        Single<MovieResponse> getMovie(int movieId);
-        Single<MovieCreditsResponse> getMovieCredits(int movieId);
-        Single<MoviesResponse> getSimilarMovies(int movieId);
-        Single<MovieReleaseDatesResponse> getMovieReleaseDates(int movieId);
+        Single<MovieResponse> getMovie(long movieId);
+        Single<MovieCreditsResponse> getMovieCredits(long movieId);
+        Single<MoviesResponse> getSimilarMovies(long movieId);
+        Single<MovieReleaseDatesResponse> getMovieReleaseDates(long movieId);
     }
 }

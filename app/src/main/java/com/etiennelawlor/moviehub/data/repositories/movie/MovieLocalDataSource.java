@@ -35,7 +35,7 @@ public class MovieLocalDataSource implements MovieDataSourceContract.LocalDateSo
     }
 
     @Override
-    public Maybe<MovieDataModel> getMovie(int movieId) {
+    public Maybe<MovieDataModel> getMovie(long movieId) {
         //        Use mapper to convert from realm objects to POJOs
         return Maybe.empty();
     }
@@ -46,7 +46,7 @@ public class MovieLocalDataSource implements MovieDataSourceContract.LocalDateSo
     }
 
     @Override
-    public Maybe<MovieCreditsDataModel> getMovieCredits(int movieId) {
+    public Maybe<MovieCreditsDataModel> getMovieCredits(long movieId) {
         //        Use mapper to convert from realm objects to POJOs
         return Maybe.empty();
     }
@@ -57,7 +57,7 @@ public class MovieLocalDataSource implements MovieDataSourceContract.LocalDateSo
     }
 
     @Override
-    public Maybe<MoviesDataModel> getSimilarMovies(int movieId) {
+    public Maybe<MoviesDataModel> getSimilarMovies(long movieId) {
         //        Use mapper to convert from realm objects to POJOs
         return Maybe.empty();
     }
@@ -68,7 +68,7 @@ public class MovieLocalDataSource implements MovieDataSourceContract.LocalDateSo
     }
 
     @Override
-    public Maybe<MovieReleaseDatesDataModel> getMovieReleaseDates(int movieId) {
+    public Maybe<MovieReleaseDatesDataModel> getMovieReleaseDates(long movieId) {
         //        Use mapper to convert from realm objects to POJOs
         return Maybe.empty();
     }

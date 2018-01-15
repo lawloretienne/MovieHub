@@ -11,6 +11,6 @@ import io.reactivex.Single;
 public interface MovieDetailsDomainContract {
 
     interface UseCase {
-        Single<MovieDetailsDomainModel> getMovieDetails(int movieId);
+        Single<MovieDetailsDomainModel> getMovieDetails(long movieId);
     }
 }

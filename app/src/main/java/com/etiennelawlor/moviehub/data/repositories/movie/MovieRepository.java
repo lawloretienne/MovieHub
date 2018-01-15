@@ -48,7 +48,7 @@ public class MovieRepository implements MovieDataSourceContract.Repository {
     }
 
     @Override
-    public Single<MovieDataModel> getMovie(int movieId) {
+    public Single<MovieDataModel> getMovie(long movieId) {
         Maybe<MovieDataModel> local = movieLocalDataSource.getMovie(movieId);
         Single<MovieDataModel> remote =
                 movieRemoteDataSource.getMovie(movieId)
@@ -59,7 +59,7 @@ public class MovieRepository implements MovieDataSourceContract.Repository {
     }
 
     @Override
-    public Single<MovieCreditsDataModel> getMovieCredits(int movieId) {
+    public Single<MovieCreditsDataModel> getMovieCredits(long movieId) {
         Maybe<MovieCreditsDataModel> local = movieLocalDataSource.getMovieCredits(movieId);
         Single<MovieCreditsDataModel> remote =
                 movieRemoteDataSource.getMovieCredits(movieId)
@@ -70,7 +70,7 @@ public class MovieRepository implements MovieDataSourceContract.Repository {
     }
 
     @Override
-    public Single<MoviesDataModel> getSimilarMovies(int movieId) {
+    public Single<MoviesDataModel> getSimilarMovies(long movieId) {
         Maybe<MoviesDataModel> local = movieLocalDataSource.getSimilarMovies(movieId);
         Single<MoviesDataModel> remote =
                 movieRemoteDataSource.getSimilarMovies(movieId)
@@ -81,7 +81,7 @@ public class MovieRepository implements MovieDataSourceContract.Repository {
     }
 
     @Override
-    public Single<MovieReleaseDatesDataModel> getMovieReleaseDates(int movieId) {
+    public Single<MovieReleaseDatesDataModel> getMovieReleaseDates(long movieId) {
         Maybe<MovieReleaseDatesDataModel> local = movieLocalDataSource.getMovieReleaseDates(movieId);
         Single<MovieReleaseDatesDataModel> remote =
                 movieRemoteDataSource.getMovieReleaseDates(movieId)

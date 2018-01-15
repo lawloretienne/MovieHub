@@ -34,22 +34,22 @@ public class MovieRemoteDataSource implements MovieDataSourceContract.RemoteDate
     }
 
     @Override
-    public Single<MovieResponse> getMovie(int movieId) {
+    public Single<MovieResponse> getMovie(long movieId) {
         return movieHubService.getMovie(movieId);
     }
 
     @Override
-    public Single<MovieCreditsResponse> getMovieCredits(int movieId) {
+    public Single<MovieCreditsResponse> getMovieCredits(long movieId) {
         return movieHubService.getMovieCredits(movieId);
     }
 
     @Override
-    public Single<MoviesResponse> getSimilarMovies(int movieId) {
+    public Single<MoviesResponse> getSimilarMovies(long movieId) {
         return movieHubService.getSimilarMovies(movieId);
     }
 
     @Override
-    public Single<MovieReleaseDatesResponse> getMovieReleaseDates(int movieId) {
+    public Single<MovieReleaseDatesResponse> getMovieReleaseDates(long movieId) {
         return movieHubService.getMovieReleaseDates(movieId);
     }
 
