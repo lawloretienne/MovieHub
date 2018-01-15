@@ -36,7 +36,7 @@ public class TelevisionShowLocalDataSource implements TelevisionShowDataSourceCo
     }
 
     @Override
-    public Maybe<TelevisionShowDataModel> getTelevisionShow(int tvId) {
+    public Maybe<TelevisionShowDataModel> getTelevisionShow(long tvId) {
         //        Use mapper to convert from realm objects to POJOs
         return Maybe.empty();
     }
@@ -47,7 +47,7 @@ public class TelevisionShowLocalDataSource implements TelevisionShowDataSourceCo
     }
 
     @Override
-    public Maybe<TelevisionShowCreditsDataModel> getTelevisionShowCredits(int tvId) {
+    public Maybe<TelevisionShowCreditsDataModel> getTelevisionShowCredits(long tvId) {
         //        Use mapper to convert from realm objects to POJOs
         return Maybe.empty();
     }
@@ -58,7 +58,7 @@ public class TelevisionShowLocalDataSource implements TelevisionShowDataSourceCo
     }
 
     @Override
-    public Maybe<TelevisionShowsDataModel> getSimilarTelevisionShows(int tvId) {
+    public Maybe<TelevisionShowsDataModel> getSimilarTelevisionShows(long tvId) {
         //        Use mapper to convert from realm objects to POJOs
         return Maybe.empty();
     }
@@ -69,7 +69,7 @@ public class TelevisionShowLocalDataSource implements TelevisionShowDataSourceCo
     }
 
     @Override
-    public Maybe<TelevisionShowContentRatingsDataModel> getTelevisionShowContentRatings(int tvId) {
+    public Maybe<TelevisionShowContentRatingsDataModel> getTelevisionShowContentRatings(long tvId) {
         //        Use mapper to convert from realm objects to POJOs
         return Maybe.empty();
     }

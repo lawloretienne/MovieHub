@@ -34,22 +34,22 @@ public class TelevisionShowRemoteDataSource implements TelevisionShowDataSourceC
     }
 
     @Override
-    public Single<TelevisionShowResponse> getTelevisionShow(int tvId) {
+    public Single<TelevisionShowResponse> getTelevisionShow(long tvId) {
         return movieHubService.getTelevisionShow(tvId);
     }
 
     @Override
-    public Single<TelevisionShowCreditsResponse> getTelevisionShowCredits(int tvId) {
+    public Single<TelevisionShowCreditsResponse> getTelevisionShowCredits(long tvId) {
         return movieHubService.getTelevisionShowCredits(tvId);
     }
 
     @Override
-    public Single<TelevisionShowsResponse> getSimilarTelevisionShows(int tvId) {
+    public Single<TelevisionShowsResponse> getSimilarTelevisionShows(long tvId) {
         return movieHubService.getSimilarTelevisionShows(tvId);
     }
 
     @Override
-    public Single<TelevisionShowContentRatingsResponse> getTelevisionShowContentRatings(int tvId) {
+    public Single<TelevisionShowContentRatingsResponse> getTelevisionShowContentRatings(long tvId) {
         return movieHubService.getTelevisionShowContentRatings(tvId);
     }
 

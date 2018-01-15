@@ -20,30 +20,30 @@ public interface TelevisionShowDataSourceContract {
 
     interface Repository {
         Single<TelevisionShowsDataModel> getPopularTelevisionShows(int currentPage);
-        Single<TelevisionShowDataModel> getTelevisionShow(int tvId);
-        Single<TelevisionShowCreditsDataModel> getTelevisionShowCredits(int tvId);
-        Single<TelevisionShowsDataModel> getSimilarTelevisionShows(int tvId);
-        Single<TelevisionShowContentRatingsDataModel> getTelevisionShowContentRatings(int tvId);
+        Single<TelevisionShowDataModel> getTelevisionShow(long tvId);
+        Single<TelevisionShowCreditsDataModel> getTelevisionShowCredits(long tvId);
+        Single<TelevisionShowsDataModel> getSimilarTelevisionShows(long tvId);
+        Single<TelevisionShowContentRatingsDataModel> getTelevisionShowContentRatings(long tvId);
     }
 
     interface LocalDateSource {
         Maybe<TelevisionShowsDataModel> getPopularTelevisionShows(int currentPage);
         void savePopularTelevisionShows(TelevisionShowsDataModel televisionShowsDataModel);
-        Maybe<TelevisionShowDataModel> getTelevisionShow(int tvId);
+        Maybe<TelevisionShowDataModel> getTelevisionShow(long tvId);
         void saveTelevisionShow(TelevisionShowDataModel televisionShowDataModel);
-        Maybe<TelevisionShowCreditsDataModel> getTelevisionShowCredits(int tvId);
+        Maybe<TelevisionShowCreditsDataModel> getTelevisionShowCredits(long tvId);
         void saveTelevisionShowCredits(TelevisionShowCreditsDataModel televisionShowCreditsDataModel);
-        Maybe<TelevisionShowsDataModel> getSimilarTelevisionShows(int tvId);
+        Maybe<TelevisionShowsDataModel> getSimilarTelevisionShows(long tvId);
         void saveSimilarTelevisionShows(TelevisionShowsDataModel televisionShowsDataModel);
-        Maybe<TelevisionShowContentRatingsDataModel> getTelevisionShowContentRatings(int tvId);
+        Maybe<TelevisionShowContentRatingsDataModel> getTelevisionShowContentRatings(long tvId);
         void saveTelevisionShowContentRatings(TelevisionShowContentRatingsDataModel televisionShowContentRatingsResponse);
     }
 
     interface RemoteDateSource {
         Single<TelevisionShowsResponse> getPopularTelevisionShows(int currentPage);
-        Single<TelevisionShowResponse> getTelevisionShow(int tvId);
-        Single<TelevisionShowCreditsResponse> getTelevisionShowCredits(int tvId);
-        Single<TelevisionShowsResponse> getSimilarTelevisionShows(int tvId);
-        Single<TelevisionShowContentRatingsResponse> getTelevisionShowContentRatings(int tvId);
+        Single<TelevisionShowResponse> getTelevisionShow(long tvId);
+        Single<TelevisionShowCreditsResponse> getTelevisionShowCredits(long tvId);
+        Single<TelevisionShowsResponse> getSimilarTelevisionShows(long tvId);
+        Single<TelevisionShowContentRatingsResponse> getTelevisionShowContentRatings(long tvId);
     }
 }

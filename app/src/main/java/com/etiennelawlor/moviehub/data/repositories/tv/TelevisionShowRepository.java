@@ -48,7 +48,7 @@ public class TelevisionShowRepository implements TelevisionShowDataSourceContrac
     }
 
     @Override
-    public Single<TelevisionShowDataModel> getTelevisionShow(int tvId) {
+    public Single<TelevisionShowDataModel> getTelevisionShow(long tvId) {
         Maybe<TelevisionShowDataModel> local = televisionShowLocalDataSource.getTelevisionShow(tvId);
         Single<TelevisionShowDataModel> remote =
                 televisionShowRemoteDataSource.getTelevisionShow(tvId)
@@ -59,7 +59,7 @@ public class TelevisionShowRepository implements TelevisionShowDataSourceContrac
     }
 
     @Override
-    public Single<TelevisionShowCreditsDataModel> getTelevisionShowCredits(int tvId) {
+    public Single<TelevisionShowCreditsDataModel> getTelevisionShowCredits(long tvId) {
         Maybe<TelevisionShowCreditsDataModel> local = televisionShowLocalDataSource.getTelevisionShowCredits(tvId);
         Single<TelevisionShowCreditsDataModel> remote =
                 televisionShowRemoteDataSource.getTelevisionShowCredits(tvId)
@@ -70,7 +70,7 @@ public class TelevisionShowRepository implements TelevisionShowDataSourceContrac
     }
 
     @Override
-    public Single<TelevisionShowsDataModel> getSimilarTelevisionShows(int tvId) {
+    public Single<TelevisionShowsDataModel> getSimilarTelevisionShows(long tvId) {
         Maybe<TelevisionShowsDataModel> local = televisionShowLocalDataSource.getSimilarTelevisionShows(tvId);
         Single<TelevisionShowsDataModel> remote =
                 televisionShowRemoteDataSource.getSimilarTelevisionShows(tvId)
@@ -81,7 +81,7 @@ public class TelevisionShowRepository implements TelevisionShowDataSourceContrac
     }
 
     @Override
-    public Single<TelevisionShowContentRatingsDataModel> getTelevisionShowContentRatings(int tvId) {
+    public Single<TelevisionShowContentRatingsDataModel> getTelevisionShowContentRatings(long tvId) {
         Maybe<TelevisionShowContentRatingsDataModel> local = televisionShowLocalDataSource.getTelevisionShowContentRatings(tvId);
         Single<TelevisionShowContentRatingsDataModel> remote =
                 televisionShowRemoteDataSource.getTelevisionShowContentRatings(tvId)
