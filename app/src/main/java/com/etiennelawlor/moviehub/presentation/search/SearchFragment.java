@@ -1,9 +1,10 @@
 package com.etiennelawlor.moviehub.presentation.search;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -17,12 +18,13 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
 import android.transition.Transition;
-import android.util.Log;
+import android.transition.TransitionListenerAdapter;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewPropertyAnimator;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -107,9 +109,7 @@ public class SearchFragment extends BaseFragment implements SearchPresentationCo
     private SearchPersonsAdapter searchPersonsAdapter;
     private InitialValueObservable<CharSequence> searchQueryChangeObservable;
     private Transition sharedElementEnterTransition;
-    private Transition sharedElementReturnTransition;
     private SearchComponent searchComponent;
-    private final Handler handler = new Handler();
 
     private PersonPresentationModelMapper personPresentationModelMapper = new PersonPresentationModelMapper();
     private MoviePresentationModelMapper moviePresentationModelMapper = new MoviePresentationModelMapper();
@@ -122,55 +122,19 @@ public class SearchFragment extends BaseFragment implements SearchPresentationCo
     // endregion
 
     // region Listeners
-    private Transition.TransitionListener enterTransitionTransitionListener = new Transition.TransitionListener() {
-        @Override
-        public void onTransitionStart(Transition transition) {
-        }
-
+    private Transition.TransitionListener enterTransitionTransitionListener = new TransitionListenerAdapter() {
         @Override
         public void onTransitionEnd(Transition transition) {
-            handler.postDelayed(() -> {
-                DisplayUtility.showKeyboard(getContext(), searchEditText);
+            ViewPropertyAnimator viewPropertyAnimator = searchEditText.animate().alpha(1.0f).setDuration(300);
+            viewPropertyAnimator.setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animator) {
+                    DisplayUtility.showKeyboard(getContext(), searchEditText);
 
-                sharedElementEnterTransition.removeListener(enterTransitionTransitionListener);
-                sharedElementReturnTransition = getActivity().getWindow().getSharedElementReturnTransition();
-                sharedElementReturnTransition.addListener(returnTransitionTransitionListener);
-            }, 300);
-        }
-
-        @Override
-        public void onTransitionCancel(Transition transition) {
-        }
-
-        @Override
-        public void onTransitionPause(Transition transition) {
-        }
-
-        @Override
-        public void onTransitionResume(Transition transition) {
-        }
-    };
-
-    private Transition.TransitionListener returnTransitionTransitionListener = new Transition.TransitionListener() {
-        @Override
-        public void onTransitionStart(Transition transition) {
-//            searchEditText.animate().alpha(0.0f).setDuration(0);
-        }
-
-        @Override
-        public void onTransitionEnd(Transition transition) {
-        }
-
-        @Override
-        public void onTransitionCancel(Transition transition) {
-        }
-
-        @Override
-        public void onTransitionPause(Transition transition) {
-        }
-
-        @Override
-        public void onTransitionResume(Transition transition) {
+                    sharedElementEnterTransition.removeListener(enterTransitionTransitionListener);
+                    viewPropertyAnimator.setListener(null);
+                }
+            }).start();
         }
     };
 
@@ -276,7 +240,6 @@ public class SearchFragment extends BaseFragment implements SearchPresentationCo
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-//        searchEditText.animate().alpha(0.0f).setDuration(300);
         removeListeners();
         unbinder.unbind();
         searchPresenter.onDestroyView();
@@ -297,7 +260,15 @@ public class SearchFragment extends BaseFragment implements SearchPresentationCo
             case android.R.id.home:
                 DisplayUtility.hideKeyboard(getContext(), searchEditText);
                 searchProgressBar.setVisibility(View.GONE);
-                getActivity().supportFinishAfterTransition();
+                searchEditText.animate()
+                    .alpha(0.0f)
+                    .setDuration(300)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animator) {
+                            getActivity().supportFinishAfterTransition();
+                        }
+                    }).start();
 
 //                NavUtils.navigateUpFromSameTask(this);
                 return true;
@@ -480,9 +451,6 @@ public class SearchFragment extends BaseFragment implements SearchPresentationCo
     }
 
     private void removeListeners() {
-//        sharedElementEnterTransition.removeListener(enterTransitionTransitionListener);
-        sharedElementReturnTransition.removeListener(returnTransitionTransitionListener);
-
 //        moviesAdapter.setOnItemClickListener(null);
     }
 
@@ -581,6 +549,8 @@ public class SearchFragment extends BaseFragment implements SearchPresentationCo
 
     public void onBackPressed(){
         searchProgressBar.setVisibility(View.GONE);
+
+        searchEditText.animate().alpha(0.0f).setDuration(300).start();
     }
     // endregion
 }
