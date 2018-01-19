@@ -39,14 +39,14 @@ public interface SearchPresentationContract {
         void showPersonsView();
 
         // Navigation methods
-        void openMovieDetails(MoviePresentationModel movie);
+        void openMovieDetails(MovieDomainModel movie);
         void openTelevisionShowDetails(TelevisionShowPresentationModel televisionShow);
         void openPersonDetails(PersonPresentationModel person);
     }
 
     interface Presenter extends BasePresenter {
         void onLoadSearch(Observable<CharSequence> searchQueryChangeObservable);
-        void onMovieClick(MoviePresentationModel movie);
+        void onMovieClick(MovieDomainModel movie);
         void onTelevisionShowClick(TelevisionShowPresentationModel televisionShow);
         void onPersonClick(PersonPresentationModel person);
     }

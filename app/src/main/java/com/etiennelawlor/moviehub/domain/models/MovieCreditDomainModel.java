@@ -6,6 +6,11 @@ package com.etiennelawlor.moviehub.domain.models;
 
 public class MovieCreditDomainModel extends CreditDomainModel {
 
+    // region Constants
+    public static final String SECURE_BASE_URL = "https://image.tmdb.org/t/p/";
+    public static final String PROFILE_SIZE = "h632";
+    // endregion
+
     // region Fields
     public String job;
     public String character;
@@ -34,6 +39,11 @@ public class MovieCreditDomainModel extends CreditDomainModel {
 
     public String getProfilePath() {
         return profilePath;
+    }
+
+    public String getProfileUrl(){
+        String profileUrl = String.format("%s%s%s", SECURE_BASE_URL, PROFILE_SIZE, profilePath);
+        return profileUrl;
     }
 
     // endregion

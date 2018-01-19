@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
+import com.etiennelawlor.moviehub.domain.models.MovieDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.common.widget.DynamicHeightImageView;
 import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
@@ -34,7 +35,7 @@ import butterknife.ButterKnife;
  * Created by etiennelawlor on 12/17/16.
  */
 
-public class MoviesAdapter extends BaseAdapter<MoviePresentationModel> {
+public class MoviesAdapter extends BaseAdapter<MovieDomainModel> {
 
     // region Constants
     // endregion
@@ -119,7 +120,7 @@ public class MoviesAdapter extends BaseAdapter<MoviePresentationModel> {
     protected void bindItemViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         final MovieViewHolder holder = (MovieViewHolder) viewHolder;
 
-        final MoviePresentationModel movie = getItem(position);
+        final MovieDomainModel movie = getItem(position);
         if (movie != null) {
             holder.bind(movie);
         }
@@ -149,13 +150,13 @@ public class MoviesAdapter extends BaseAdapter<MoviePresentationModel> {
 
     @Override
     public void addHeader() {
-        add(new MoviePresentationModel());
+        add(new MovieDomainModel());
     }
 
     @Override
     public void addFooter() {
         isFooterAdded = true;
-        add(new MoviePresentationModel());
+        add(new MovieDomainModel());
     }
 
     // region Inner Classes
@@ -189,7 +190,7 @@ public class MoviesAdapter extends BaseAdapter<MoviePresentationModel> {
         // endregion
 
         // region Helper Methods
-        private void bind(MoviePresentationModel movie){
+        private void bind(MovieDomainModel movie){
             resetInfoBackgroundColor(infoLinearLayout);
             resetTitleTextColor(titleTextView);
             resetSubtitleTextColor(subtitleTextView);
@@ -199,7 +200,7 @@ public class MoviesAdapter extends BaseAdapter<MoviePresentationModel> {
             setUpSubtitle(subtitleTextView, movie);
         }
 
-        private void setUpThumbnail(final MovieViewHolder vh, final MoviePresentationModel movie){
+        private void setUpThumbnail(final MovieViewHolder vh, final MovieDomainModel movie){
             final DynamicHeightImageView iv = vh.thumbnailImageView;
 
             double heightRatio = 3.0D/2.0D;
@@ -246,7 +247,7 @@ public class MoviesAdapter extends BaseAdapter<MoviePresentationModel> {
             }
         }
 
-        private void setUpTitle(TextView tv, MoviePresentationModel movie){
+        private void setUpTitle(TextView tv, MovieDomainModel movie){
             String title = movie.getTitle();
             if (!TextUtils.isEmpty(title)) {
                 tv.setText(title);
@@ -267,7 +268,7 @@ public class MoviesAdapter extends BaseAdapter<MoviePresentationModel> {
             }
         }
 
-        private void setUpSubtitle(TextView tv, MoviePresentationModel movie){
+        private void setUpSubtitle(TextView tv, MovieDomainModel movie){
             String releaseYear = movie.getReleaseYear();
             if (!TextUtils.isEmpty(releaseYear)) {
                 tv.setText(releaseYear);

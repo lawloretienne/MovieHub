@@ -178,7 +178,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     @Override
     public void onItemClick(int position, View view) {
         selectedMovieView = view;
-        MoviePresentationModel movie = moviesAdapter.getItem(position);
+        MovieDomainModel movie = moviesAdapter.getItem(position);
         if(movie != null){
             moviesPresenter.onMovieClick(movie);
         }
@@ -255,7 +255,8 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
 
     @Override
     public void showMovies(List<MovieDomainModel> movies) {
-        moviesAdapter.addAll(moviePresentationModelMapper.mapListToPresentationModelList(movies));
+//        moviesAdapter.addAll(moviePresentationModelMapper.mapListToPresentationModelList(movies));
+        moviesAdapter.addAll(movies);
     }
 
     @Override
@@ -270,7 +271,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     }
 
     @Override
-    public void openMovieDetails(MoviePresentationModel movie) {
+    public void openMovieDetails(MovieDomainModel movie) {
         Window window = getActivity().getWindow();
 //            window.setStatusBarColor(ContextCompat.getColor(getContext(), R.color.status_bar_color));
 

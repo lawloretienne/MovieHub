@@ -48,6 +48,7 @@ import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.di.component.PersonDetailsComponent;
 import com.etiennelawlor.moviehub.di.module.PersonDetailsModule;
+import com.etiennelawlor.moviehub.domain.models.MovieDomainModel;
 import com.etiennelawlor.moviehub.domain.models.PersonDetailsDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
@@ -187,7 +188,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
                 String mediaType = personCredit.getMediaType();
                 switch (mediaType){
                     case MOVIE_MEDIA_TYPE:
-                        MoviePresentationModel movie = new MoviePresentationModel();
+                        MovieDomainModel movie = new MovieDomainModel();
 
                         movie.setTitle(personCredit.getTitle());
                         movie.setId(personCredit.getId());
@@ -224,7 +225,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
                 String mediaType = personCredit.getMediaType();
                 switch (mediaType){
                     case MOVIE_MEDIA_TYPE:
-                        MoviePresentationModel movie = new MoviePresentationModel();
+                        MovieDomainModel movie = new MovieDomainModel();
 
                         movie.setTitle(personCredit.getTitle());
                         movie.setId(personCredit.getId());
@@ -558,7 +559,7 @@ public class PersonDetailsFragment extends BaseFragment implements PersonDetails
     }
 
     @Override
-    public void openMovieDetails(MoviePresentationModel movie) {
+    public void openMovieDetails(MovieDomainModel movie) {
 //            window.setStatusBarColor(primaryDark);
 
         Pair<View, String> moviePair = getMoviePair();

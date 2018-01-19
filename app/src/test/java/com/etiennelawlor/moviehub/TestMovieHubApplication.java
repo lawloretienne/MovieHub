@@ -1,5 +1,7 @@
 package com.etiennelawlor.moviehub;
 
+import com.etiennelawlor.moviehub.di.component.ApplicationComponent;
+import com.etiennelawlor.moviehub.di.component.DaggerApplicationComponent;
 import com.etiennelawlor.moviehub.di.component.TestApplicationComponent;
 import com.etiennelawlor.moviehub.di.module.TestNetworkModule;
 import com.etiennelawlor.moviehub.di.module.AndroidModule;
@@ -14,7 +16,7 @@ public class TestMovieHubApplication extends MovieHubApplication {
     private static TestMovieHubApplication currentApplication = null;
     // endregion
 
-    private TestApplicationComponent testApplicationComponent;
+    private ApplicationComponent applicationComponent;
 
     @Override
     public void onCreate() {
@@ -22,11 +24,11 @@ public class TestMovieHubApplication extends MovieHubApplication {
 
         currentApplication = this;
 
-        testApplicationComponent = createApplicationComponent();
+        applicationComponent = createApplicationComponent();
     }
 
-    public TestApplicationComponent createApplicationComponent() {
-        return DaggerTestApplicationComponent.builder()
+    public ApplicationComponent createApplicationComponent() {
+        return DaggerApplicationComponent.builder()
                 .androidModule(new AndroidModule(this))
                 .networkModule(new TestNetworkModule())
                 .build();
@@ -37,8 +39,12 @@ public class TestMovieHubApplication extends MovieHubApplication {
 //        return testApplicationComponent;
 //    }
 
-    public TestApplicationComponent getApplicationComponent() {
-        return testApplicationComponent;
+    public ApplicationComponent getApplicationComponent() {
+        return applicationComponent;
+    }
+
+    public void setTestComponent(ApplicationComponent applicationComponent) {
+        this.applicationComponent = applicationComponent;
     }
 
     public static TestMovieHubApplication getInstance() {

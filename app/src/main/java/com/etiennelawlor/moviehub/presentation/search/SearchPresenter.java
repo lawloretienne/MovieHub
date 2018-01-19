@@ -1,5 +1,6 @@
 package com.etiennelawlor.moviehub.presentation.search;
 
+import com.etiennelawlor.moviehub.domain.models.MovieDomainModel;
 import com.etiennelawlor.moviehub.domain.models.SearchDomainModel;
 import com.etiennelawlor.moviehub.domain.usecases.SearchDomainContract;
 import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
@@ -148,7 +149,7 @@ public class SearchPresenter implements SearchPresentationContract.Presenter {
     }
 
     @Override
-    public void onMovieClick(MoviePresentationModel movie) {
+    public void onMovieClick(MovieDomainModel movie) {
         searchView.openMovieDetails(movie);
     }
 

@@ -1,5 +1,6 @@
 package com.etiennelawlor.moviehub.presentation.persondetails;
 
+import com.etiennelawlor.moviehub.domain.models.MovieDomainModel;
 import com.etiennelawlor.moviehub.domain.models.PersonDetailsDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BasePresenter;
 import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
@@ -18,13 +19,13 @@ public interface PersonDetailsPresentationContract {
         void showErrorView();
 
         // Navigation methods
-        void openMovieDetails(MoviePresentationModel movie);
+        void openMovieDetails(MovieDomainModel movie);
         void openTelevisionShowDetails(TelevisionShowPresentationModel televisionShow);
     }
 
     interface Presenter extends BasePresenter {
         void onLoadPersonDetails(int personId);
-        void onMovieClick(MoviePresentationModel movie);
+        void onMovieClick(MovieDomainModel movie);
         void onTelevisionShowClick(TelevisionShowPresentationModel televisionShow);
         void onScrollChange(boolean isScrolledPastThreshold);
     }

@@ -143,7 +143,7 @@ public class SearchFragment extends BaseFragment implements SearchPresentationCo
         public void onItemClick(int position, View view) {
             selectedMovieView = view;
 
-            MoviePresentationModel movie = searchMoviesAdapter.getItem(position);
+            MovieDomainModel movie = searchMoviesAdapter.getItem(position);
             if(movie != null){
                 searchPresenter.onMovieClick(movie);
             }
@@ -320,7 +320,8 @@ public class SearchFragment extends BaseFragment implements SearchPresentationCo
 
     @Override
     public void addMoviesToAdapter(List<MovieDomainModel> movies) {
-        searchMoviesAdapter.addAll(moviePresentationModelMapper.mapListToPresentationModelList(movies));
+//        searchMoviesAdapter.addAll(moviePresentationModelMapper.mapListToPresentationModelList(movies));
+        searchMoviesAdapter.addAll(movies);
     }
 
     @Override
@@ -379,7 +380,7 @@ public class SearchFragment extends BaseFragment implements SearchPresentationCo
     }
 
     @Override
-    public void openMovieDetails(MoviePresentationModel movie) {
+    public void openMovieDetails(MovieDomainModel movie) {
         Window window = getActivity().getWindow();
 //                window.setStatusBarColor(statusBarColor);
 

@@ -30,12 +30,12 @@ public interface MoviesPresentationContract {
         void setMoviesDomainModel(MoviesDomainModel moviesDomainModel);
 
         // Navigation methods
-        void openMovieDetails(MoviePresentationModel movie);
+        void openMovieDetails(MovieDomainModel movie);
     }
 
     interface Presenter extends BasePresenter {
         void onLoadPopularMovies(int currentPage);
-        void onMovieClick(MoviePresentationModel movie);
+        void onMovieClick(MovieDomainModel movie);
         void onScrollToEndOfList();
     }
 }

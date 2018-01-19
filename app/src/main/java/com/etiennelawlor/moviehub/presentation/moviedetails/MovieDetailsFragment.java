@@ -48,7 +48,9 @@ import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.di.component.MovieDetailsComponent;
 import com.etiennelawlor.moviehub.di.module.MovieDetailsModule;
+import com.etiennelawlor.moviehub.domain.models.MovieCreditDomainModel;
 import com.etiennelawlor.moviehub.domain.models.MovieDetailsDomainModel;
+import com.etiennelawlor.moviehub.domain.models.MovieDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.common.GravitySnapHelper;
@@ -152,7 +154,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
     // endregion
 
     // region Member Variables
-    private MoviePresentationModel movie;
+    private MovieDomainModel movie;
     private Unbinder unbinder;
     private Typeface font;
     private int moviePosterHeight;
@@ -162,10 +164,13 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
     private MovieCreditsAdapter castAdapter;
     private MovieCreditsAdapter crewAdapter;
     private Transition sharedElementEnterTransition;
-    private MovieDetailsPresentationModel movieDetailsPresentationModel;
+//    private MovieDetailsPresentationModel movieDetailsPresentationModel;
     private MovieDetailsComponent movieDetailsComponent;
     private final Handler handler = new Handler();
-    private MovieDetailsPresentationModelMapper movieDetailsPresentationModelMapper = new MovieDetailsPresentationModelMapper();
+    private List<MovieCreditDomainModel> cast;
+    private List<MovieCreditDomainModel> crew;
+    private List<MovieDomainModel> similarMovies;
+//    private MovieDetailsPresentationModelMapper movieDetailsPresentationModelMapper = new MovieDetailsPresentationModelMapper();
     // endregion
 
     // region Injected Variables
@@ -188,7 +193,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
         @Override
         public void onItemClick(int position, View view) {
             selectedMovieView = view;
-            MoviePresentationModel movie = similarMoviesAdapter.getItem(position);
+            MovieDomainModel movie = similarMoviesAdapter.getItem(position);
             if(movie != null){
                 movieDetailsPresenter.onMovieClick(movie);
             }
@@ -238,7 +243,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
         @Override
         public void onItemClick(int position, View view) {
             selectedPersonView = view;
-            MovieCreditPresentationModel movieCredit = castAdapter.getItem(position);
+            MovieCreditDomainModel movieCredit = castAdapter.getItem(position);
             if(movieCredit != null){
                 PersonPresentationModel person = new PersonPresentationModel();
 
@@ -255,7 +260,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
         @Override
         public void onItemClick(int position, View view) {
             selectedPersonView = view;
-            MovieCreditPresentationModel movieCredit = crewAdapter.getItem(position);
+            MovieCreditDomainModel movieCredit = crewAdapter.getItem(position);
             if(movieCredit != null){
                 PersonPresentationModel person = new PersonPresentationModel();
 
@@ -483,24 +488,24 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
 
     // region MovieDetailsPresentationContract.View Methods
 
-    @Override
-    public void setMovieDetailsDomainModel(MovieDetailsDomainModel movieDetailsDomainModel) {
-        this.movieDetailsPresentationModel = movieDetailsPresentationModelMapper.mapToPresentationModel(movieDetailsDomainModel);
-        nestedScrollView.setNestedScrollingEnabled(true);
-//        movie = movieDetailsPresentationModel.getMovie();
-
-//        setUpBackdrop();
-        setUpOverview();
-        setUpDuration();
-        setUpGenres();
-        setUpStatus();
-        setUpReleaseDate();
-        setUpBudget();
-        setUpRevenue();
-        setUpRating();
-
-        showMovieDetailsBody();
-    }
+//    @Override
+//    public void setMovieDetailsDomainModel(MovieDetailsDomainModel movieDetailsDomainModel) {
+////        this.movieDetailsPresentationModel = movieDetailsPresentationModelMapper.mapToPresentationModel(movieDetailsDomainModel);
+//        nestedScrollView.setNestedScrollingEnabled(true);
+////        movie = movieDetailsPresentationModel.getMovie();
+//
+////        setUpBackdrop();
+////        setUpOverview();
+////        setUpDuration();
+////        setUpGenres();
+////        setUpStatus();
+////        setUpReleaseDate();
+////        setUpBudget();
+////        setUpRevenue();
+////        setUpRating();
+//
+//        showMovieDetailsBody();
+//    }
 
     @Override
     public void showToolbarTitle() {
@@ -535,6 +540,81 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
     }
 
     @Override
+    public void showOverview(String overview) {
+        overviewTextView.setText(overview);
+    }
+
+    @Override
+    public void showDuration(String duration) {
+        durationTextView.setText(duration);
+    }
+
+    @Override
+    public void showGenres(String genres) {
+        genresTextView.setText(genres);
+    }
+
+    @Override
+    public void showStatus(String status) {
+        statusTextView.setText(status);
+    }
+
+    @Override
+    public void showReleaseDate(String releaseDate) {
+        releaseDateTextView.setText(releaseDate);
+    }
+
+    @Override
+    public void showBudget(String budget) {
+        budgetTextView.setText(budget);
+    }
+
+    @Override
+    public void showRevenue(String revenue) {
+        revenueTextView.setText(revenue);
+    }
+
+    @Override
+    public void showRating(String rating) {
+        ratingTextView.setText(rating);
+    }
+
+    @Override
+    public void hideRatingView() {
+        ratingTextView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void setCast(List<MovieCreditDomainModel> cast) {
+        this.cast = cast;
+    }
+
+    @Override
+    public void setCrew(List<MovieCreditDomainModel> crew) {
+        this.crew = crew;
+    }
+
+    @Override
+    public void setSimilarMovies(List<MovieDomainModel> similarMovies) {
+        this.similarMovies = similarMovies;
+    }
+
+    @Override
+    public void showMovieDetailsBodyView() {
+        progressBar.setVisibility(View.GONE);
+        nestedScrollView.setNestedScrollingEnabled(true);
+
+        final int targetHeight = AnimationUtility.getTargetHeight(movieDetailsBodyLinearLayout);
+        Animation animation = AnimationUtility.getExpandHeightAnimation(movieDetailsBodyLinearLayout, targetHeight);
+        // 1dp/ms
+        animation.setDuration((int)(targetHeight / movieDetailsBodyLinearLayout.getContext().getResources().getDisplayMetrics().density));
+        animation.setAnimationListener(movieDetailsBodyAnimationListener);
+        animation.setInterpolator(new AccelerateDecelerateInterpolator());
+        animation.setStartOffset(START_OFFSET);
+        movieDetailsBodyLinearLayout.startAnimation(animation);
+    }
+
+    @Override
     public void openPersonDetails(PersonPresentationModel person) {
         Window window = getActivity().getWindow();
 //            window.setStatusBarColor(primaryDark);
@@ -547,7 +627,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
     }
 
     @Override
-    public void openMovieDetails(MoviePresentationModel movie) {
+    public void openMovieDetails(MovieDomainModel movie) {
         Window window = getActivity().getWindow();
 //                window.setStatusBarColor(statusBarColor);
 
@@ -598,33 +678,33 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
         }
     }
 
-    private String getPosterUrl(MoviePresentationModel movie){
+    private String getPosterUrl(MovieDomainModel movie){
         String posterPath = movie.getPosterPath();
         String posterUrl = String.format("%s%s%s", SECURE_BASE_URL, POSTER_SIZE, posterPath);
         return posterUrl;
     }
 
-    private String getBackdropUrl(MoviePresentationModel movie){
+    private String getBackdropUrl(MovieDomainModel movie){
         String backdropPath = movie.getBackdropPath();
         String backdropUrl = String.format("%s%s%s", SECURE_BASE_URL, BACKDROP_SIZE, backdropPath);
         return backdropUrl;
     }
 
-    private void showMovieDetailsBody(){
-        progressBar.setVisibility(View.GONE);
-
-        final int targetHeight = AnimationUtility.getTargetHeight(movieDetailsBodyLinearLayout);
-        Animation animation = AnimationUtility.getExpandHeightAnimation(movieDetailsBodyLinearLayout, targetHeight);
-        // 1dp/ms
-        animation.setDuration((int)(targetHeight / movieDetailsBodyLinearLayout.getContext().getResources().getDisplayMetrics().density));
-        animation.setAnimationListener(movieDetailsBodyAnimationListener);
-        animation.setInterpolator(new AccelerateDecelerateInterpolator());
-        animation.setStartOffset(START_OFFSET);
-        movieDetailsBodyLinearLayout.startAnimation(animation);
-    }
+//    private void showMovieDetailsBody(){
+//        progressBar.setVisibility(View.GONE);
+//
+//        final int targetHeight = AnimationUtility.getTargetHeight(movieDetailsBodyLinearLayout);
+//        Animation animation = AnimationUtility.getExpandHeightAnimation(movieDetailsBodyLinearLayout, targetHeight);
+//        // 1dp/ms
+//        animation.setDuration((int)(targetHeight / movieDetailsBodyLinearLayout.getContext().getResources().getDisplayMetrics().density));
+//        animation.setAnimationListener(movieDetailsBodyAnimationListener);
+//        animation.setInterpolator(new AccelerateDecelerateInterpolator());
+//        animation.setStartOffset(START_OFFSET);
+//        movieDetailsBodyLinearLayout.startAnimation(animation);
+//    }
 
     private void setUpCast(){
-        List<MovieCreditPresentationModel> cast = movieDetailsPresentationModel.getCast();
+//        List<MovieCreditPresentationModel> cast = movieDetailsPresentationModel.getCast();
         if(cast != null && cast.size()>0){
             View castView = castViewStub.inflate();
 
@@ -643,7 +723,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
     }
 
     private void setUpCrew(){
-        List<MovieCreditPresentationModel> crew = movieDetailsPresentationModel.getCrew();
+//        List<MovieCreditPresentationModel> crew = movieDetailsPresentationModel.getCrew();
         if(crew != null && crew.size()>0){
             View crewView = crewViewStub.inflate();
 
@@ -662,7 +742,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
     }
 
     private void setUpSimilarMovies(){
-        List<MoviePresentationModel> similarMovies = movieDetailsPresentationModel.getSimilarMovies();
+//        List<MoviePresentationModel> similarMovies = movieDetailsPresentationModel.getSimilarMovies();
         if(similarMovies != null && similarMovies.size()>0){
             View similarMoviesView = similarMoviesViewStub.inflate();
 
@@ -728,100 +808,100 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
         }
     }
 
-    private void setUpOverview(){
-        String overview = movie.getOverview();
-        if(!TextUtils.isEmpty(overview)){
-            overviewTextView.setText(overview);
-        } else {
-            overviewTextView.setText(R.string.not_available);
-        }
-    }
+//    private void setUpOverview(){
+//        String overview = movie.getOverview();
+//        if(!TextUtils.isEmpty(overview)){
+//            overviewTextView.setText(overview);
+//        } else {
+//            overviewTextView.setText(R.string.not_available);
+//        }
+//    }
+//
+//    private void setUpDuration(){
+//        int runTime = movie.getRuntime();
+//        if(runTime>0) {
+//            int hours = runTime/60;
+//            int minutes = runTime%60;
+//            if(hours>0){
+//                if(minutes>0){
+//                    durationTextView.setText(String.format("%dh %dm", hours, minutes));
+//                } else {
+//                    durationTextView.setText(String.format("%dh", hours));
+//                }
+//            } else {
+//                durationTextView.setText(String.format("%dm", minutes));
+//            }
+//        } else {
+//            durationTextView.setText(R.string.not_available);
+//        }
+//    }
+//
+//    private void setUpGenres(){
+//        List<GenrePresentationModel> genres = movie.getGenres();
+//        if(genres != null && genres.size()>0){
+//            StringBuilder stringBuilder = new StringBuilder("");
+//
+//            for(int i=0; i<genres.size(); i++){
+//                GenrePresentationModel genre = genres.get(i);
+//                stringBuilder.append(genre.getName());
+//                if(i!=genres.size()-1){
+//                    stringBuilder.append(" | ");
+//                }
+//            }
+//
+//            genresTextView.setText(stringBuilder);
+//        }
+//    }
+//
+//    private void setUpStatus(){
+//        String status = movie.getStatus();
+//        if(!TextUtils.isEmpty(status)){
+//            statusTextView.setText(status);
+//        }
+//    }
+//
+//    private void setUpReleaseDate(){
+//        String releaseDate = movie.getReleaseDate();
+//        if(!TextUtils.isEmpty(releaseDate)){
+//            Calendar calendar = DateUtility.getCalendar(releaseDate, PATTERN);
+//
+//            String month = DateUtility.getMonth(calendar.get(Calendar.MONTH));
+//            int day = calendar.get(Calendar.DAY_OF_MONTH);
+//            int year = calendar.get(Calendar.YEAR);
+//
+//            String formattedReleaseDate = String.format("%s %d, %d", month, day, year);
+//
+//            releaseDateTextView.setText(formattedReleaseDate);
+//        }
+//    }
+//
+//    private void setUpBudget(){
+//        int budget = movie.getBudget();
+//        if(budget > 0){
+//            budgetTextView.setText(String.format("$%s", NumberFormat.getNumberInstance(Locale.US).format(budget)));
+//        } else {
+//            budgetTextView.setText(R.string.not_available);
+//        }
+//    }
+//
+//    private void setUpRevenue(){
+//        long revenue = movie.getRevenue();
+//        if(revenue > 0L){
+//            revenueTextView.setText(String.format("$%s", NumberFormat.getNumberInstance(Locale.US).format(revenue)));
+//        } else {
+//            revenueTextView.setText(R.string.not_available);
+//        }
+//    }
 
-    private void setUpDuration(){
-        int runTime = movie.getRuntime();
-        if(runTime>0) {
-            int hours = runTime/60;
-            int minutes = runTime%60;
-            if(hours>0){
-                if(minutes>0){
-                    durationTextView.setText(String.format("%dh %dm", hours, minutes));
-                } else {
-                    durationTextView.setText(String.format("%dh", hours));
-                }
-            } else {
-                durationTextView.setText(String.format("%dm", minutes));
-            }
-        } else {
-            durationTextView.setText(R.string.not_available);
-        }
-    }
-
-    private void setUpGenres(){
-        List<GenrePresentationModel> genres = movie.getGenres();
-        if(genres != null && genres.size()>0){
-            StringBuilder stringBuilder = new StringBuilder("");
-
-            for(int i=0; i<genres.size(); i++){
-                GenrePresentationModel genre = genres.get(i);
-                stringBuilder.append(genre.getName());
-                if(i!=genres.size()-1){
-                    stringBuilder.append(" | ");
-                }
-            }
-
-            genresTextView.setText(stringBuilder);
-        }
-    }
-
-    private void setUpStatus(){
-        String status = movie.getStatus();
-        if(!TextUtils.isEmpty(status)){
-            statusTextView.setText(status);
-        }
-    }
-
-    private void setUpReleaseDate(){
-        String releaseDate = movie.getReleaseDate();
-        if(!TextUtils.isEmpty(releaseDate)){
-            Calendar calendar = DateUtility.getCalendar(releaseDate, PATTERN);
-
-            String month = DateUtility.getMonth(calendar.get(Calendar.MONTH));
-            int day = calendar.get(Calendar.DAY_OF_MONTH);
-            int year = calendar.get(Calendar.YEAR);
-
-            String formattedReleaseDate = String.format("%s %d, %d", month, day, year);
-
-            releaseDateTextView.setText(formattedReleaseDate);
-        }
-    }
-
-    private void setUpBudget(){
-        int budget = movie.getBudget();
-        if(budget > 0){
-            budgetTextView.setText(String.format("$%s", NumberFormat.getNumberInstance(Locale.US).format(budget)));
-        } else {
-            budgetTextView.setText(R.string.not_available);
-        }
-    }
-
-    private void setUpRevenue(){
-        long revenue = movie.getRevenue();
-        if(revenue > 0L){
-            revenueTextView.setText(String.format("$%s", NumberFormat.getNumberInstance(Locale.US).format(revenue)));
-        } else {
-            revenueTextView.setText(R.string.not_available);
-        }
-    }
-
-    private void setUpRating(){
-        String rating = movieDetailsPresentationModel.getRating();
-
-        if(!TextUtils.isEmpty(rating)){
-            ratingTextView.setText(rating);
-        } else {
-            ratingTextView.setVisibility(View.GONE);
-        }
-    }
+//    private void setUpRating(){
+//        String rating = movieDetailsPresentationModel.getRating();
+//
+//        if(!TextUtils.isEmpty(rating)){
+//            ratingTextView.setText(rating);
+//        } else {
+//            ratingTextView.setVisibility(View.GONE);
+//        }
+//    }
 
     private void setCollapsingToolbarTitle(String title) {
         if (!TextUtils.isEmpty(title)) {

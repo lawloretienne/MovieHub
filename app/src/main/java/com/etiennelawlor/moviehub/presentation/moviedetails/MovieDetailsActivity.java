@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.etiennelawlor.moviehub.R;
+import com.etiennelawlor.moviehub.domain.models.MovieDomainModel;
 import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
 
 import butterknife.ButterKnife;
@@ -55,7 +56,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     }
 
     // Use factory methods for creating Intents
-    public static Intent createIntent(Context context, MoviePresentationModel movie){
+    public static Intent createIntent(Context context, MovieDomainModel movie){
         Intent intent = new Intent(context, MovieDetailsActivity.class);
         intent.putExtra(KEY_MOVIE, movie);
         return intent;

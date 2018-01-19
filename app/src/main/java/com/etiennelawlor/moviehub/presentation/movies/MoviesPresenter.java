@@ -106,7 +106,7 @@ public class MoviesPresenter implements MoviesPresentationContract.Presenter {
     }
 
     @Override
-    public void onMovieClick(MoviePresentationModel movie) {
+    public void onMovieClick(MovieDomainModel movie) {
         moviesView.openMovieDetails(movie);
     }
 

@@ -1,5 +1,6 @@
 package com.etiennelawlor.moviehub.presentation.persondetails;
 
+import com.etiennelawlor.moviehub.domain.models.MovieDomainModel;
 import com.etiennelawlor.moviehub.domain.models.PersonDetailsDomainModel;
 import com.etiennelawlor.moviehub.domain.usecases.PersonDetailsDomainContract;
 import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
@@ -66,7 +67,7 @@ public class PersonDetailsPresenter implements PersonDetailsPresentationContract
     }
 
     @Override
-    public void onMovieClick(MoviePresentationModel movie) {
+    public void onMovieClick(MovieDomainModel movie) {
         personDetailsView.openMovieDetails(movie);
     }
 

@@ -82,7 +82,7 @@ public class MovieRemoteDataSourceTest {
 ////                .plus(new NetworkModule())
 //                .inject(this);
 
-//        TestMovieHubApplication.getInstance().getApplicationComponent().inject(this);
+//        TestMovieHubApplication.getInstance().setTestComponent().inject(this);
 
         movieRemoteDataSource = new MovieRemoteDataSource(movieHubService);
 
