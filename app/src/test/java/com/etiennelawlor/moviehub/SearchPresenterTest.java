@@ -113,7 +113,7 @@ public class SearchPresenterTest {
     @Test
     public void onMovieClick_shouldOpenMovieDetails() {
         // 1. (Given) Set up conditions required for the test
-        MoviePresentationModel movie = new MoviePresentationModel();
+        MovieDomainModel movie = new MovieDomainModel();
 
         // 2. (When) Then perform one or more actions
         searchPresenter.onMovieClick(movie);
