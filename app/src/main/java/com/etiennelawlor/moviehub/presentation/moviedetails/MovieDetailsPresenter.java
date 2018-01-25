@@ -1,7 +1,5 @@
 package com.etiennelawlor.moviehub.presentation.moviedetails;
 
-import android.text.TextUtils;
-
 import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.domain.models.GenreDomainModel;
 import com.etiennelawlor.moviehub.domain.models.MovieDetailsDomainModel;
@@ -9,6 +7,7 @@ import com.etiennelawlor.moviehub.domain.models.MovieDomainModel;
 import com.etiennelawlor.moviehub.domain.usecases.MovieDetailsDomainContract;
 import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
 import com.etiennelawlor.moviehub.util.DateUtility;
+import com.etiennelawlor.moviehub.util.StringUtility;
 import com.etiennelawlor.moviehub.util.rxjava.SchedulerProvider;
 
 import java.text.NumberFormat;
@@ -53,7 +52,7 @@ public class MovieDetailsPresenter implements MovieDetailsPresentationContract.P
     }
 
     @Override
-    public void onLoadMovieDetails(int movieId) {
+    public void onLoadMovieDetails(long movieId) {
         Disposable disposable = movieDetailsUseCase.getMovieDetails(movieId)
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
@@ -64,7 +63,7 @@ public class MovieDetailsPresenter implements MovieDetailsPresentationContract.P
                             MovieDomainModel movie = movieDetailsDomainModel.getMovie();
                             if(movie != null){
                                 String overview = movie.getOverview();
-                                if(!TextUtils.isEmpty(overview)){
+                                if(!StringUtility.isEmpty(overview)){
                                     movieDetailsView.showOverview(overview);
                                 } else {
                                     movieDetailsView.showOverview(R.string.not_available);
@@ -105,14 +104,14 @@ public class MovieDetailsPresenter implements MovieDetailsPresentationContract.P
                                 }
 
                                 String status = movie.getStatus();
-                                if(!TextUtils.isEmpty(status)){
+                                if(!StringUtility.isEmpty(status)){
                                     movieDetailsView.showStatus(status);
                                 } else {
                                     movieDetailsView.showStatus(R.string.not_available);
                                 }
 
                                 String releaseDate = movie.getReleaseDate();
-                                if(!TextUtils.isEmpty(releaseDate)){
+                                if(!StringUtility.isEmpty(releaseDate)){
                                     Calendar calendar = DateUtility.getCalendar(releaseDate, PATTERN);
 
                                     String month = DateUtility.getMonth(calendar.get(Calendar.MONTH));
@@ -142,7 +141,7 @@ public class MovieDetailsPresenter implements MovieDetailsPresentationContract.P
                             }
 
                             String rating = movieDetailsDomainModel.getRating();
-                            if(!TextUtils.isEmpty(rating)){
+                            if(!StringUtility.isEmpty(rating)){
                                 movieDetailsView.showRating(rating);
                             } else {
                                 movieDetailsView.hideRatingView();

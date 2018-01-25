@@ -6,6 +6,7 @@ import com.etiennelawlor.moviehub.domain.usecases.SearchDomainContract;
 import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.TelevisionShowPresentationModel;
+import com.etiennelawlor.moviehub.util.StringUtility;
 import com.etiennelawlor.moviehub.util.rxjava.SchedulerProvider;
 
 import java.util.concurrent.TimeUnit;
@@ -52,7 +53,7 @@ public class SearchPresenter implements SearchPresentationContract.Presenter {
                 .debounce(400, TimeUnit.MILLISECONDS)
                 .observeOn(schedulerProvider.ui())
                 .filter(charSequence -> {
-                    if(isEmpty(charSequence)){
+                    if(StringUtility.isEmpty(charSequence)){
                         searchView.hideLoadingView();
 
                         searchView.clearMoviesAdapter();
@@ -69,7 +70,7 @@ public class SearchPresenter implements SearchPresentationContract.Presenter {
                         searchView.showLoadingView();
                     }
 
-                    return !isEmpty(charSequence);
+                    return !StringUtility.isEmpty(charSequence);
                 })
                 .map(CharSequence::toString)
 //                .switchMap(q -> {
@@ -163,11 +164,5 @@ public class SearchPresenter implements SearchPresentationContract.Presenter {
         searchView.openPersonDetails(person);
     }
 
-    // endregion
-
-    // region Helper Methods
-    public static boolean isEmpty(CharSequence str) {
-        return str == null || str.length() == 0;
-    }
     // endregion
 }

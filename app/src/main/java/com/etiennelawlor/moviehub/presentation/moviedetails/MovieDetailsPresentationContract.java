@@ -48,7 +48,7 @@ public interface MovieDetailsPresentationContract {
     }
 
     interface Presenter extends BasePresenter {
-        void onLoadMovieDetails(int movieId);
+        void onLoadMovieDetails(long movieId);
         void onPersonClick(PersonPresentationModel person);
         void onMovieClick(MovieDomainModel movie);
         void onScrollChange(boolean isScrolledPastThreshold);

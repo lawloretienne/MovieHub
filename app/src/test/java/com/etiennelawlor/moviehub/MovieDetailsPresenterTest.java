@@ -14,6 +14,7 @@ import com.etiennelawlor.moviehub.util.rxjava.TestSchedulerProvider;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
@@ -24,6 +25,7 @@ import io.reactivex.Single;
 
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyListOf;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -69,13 +71,10 @@ public class MovieDetailsPresenterTest {
         // 1. (Given) Set up conditions required for the test
         movieDetailsDomainModelStub = getMovieDetailsDomainModelStub();
 
-        when(mockMovieDetailsUseCase.getMovieDetails(anyInt())).thenReturn(Single.error(new IOException()));
-
-//        when(mockMovieDetailsUseCase.getMovieDetails(anyInt())).thenReturn(Single.just(movieDetailsDomainModelStub));
+        when(mockMovieDetailsUseCase.getMovieDetails(anyLong())).thenReturn(Single.error(new IOException()));
 
         // 2. (When) Then perform one or more actions
         movieDetailsPresenter.onLoadMovieDetails(movieDetailsDomainModelStub.getMovie().getId());
-//        movieDetailsPresenter.onLoadMovieDetails(anyInt());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMovieDetailsView).showErrorView();
@@ -94,21 +93,21 @@ public class MovieDetailsPresenterTest {
         verify(mockMovieDetailsView, never()).showMovieDetailsBodyView();
     }
 
-//    @Test
-//    public void onLoadMovieDetails_shouldShowMovieDetails_whenRequestSucceeded() {
-//        // 1. (Given) Set up conditions required for the test
-//        movieDetailsDomainModelStub = getMovieDetailsDomainModelStub();
-//
-//        when(mockMovieDetailsUseCase.getMovieDetails(anyInt())).thenReturn(Single.just(movieDetailsDomainModelStub));
-//
-//
-//        // 2. (When) Then perform one or more actions
-//        movieDetailsPresenter.onLoadMovieDetails(movieDetailsDomainModelStub.getMovie().getId());
-//
-//        // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-//        verify(mockMovieDetailsView).setMovieDetailsDomainModel(movieDetailsDomainModelStub);
-//        verify(mockMovieDetailsView, never()).showErrorView();
-//    }
+    @Test
+    public void onLoadMovieDetails_shouldShowMovieDetails_whenRequestSucceeded() {
+        // 1. (Given) Set up conditions required for the test
+        movieDetailsDomainModelStub = getMovieDetailsDomainModelStub();
+
+        when(mockMovieDetailsUseCase.getMovieDetails(anyLong())).thenReturn(Single.just(movieDetailsDomainModelStub));
+
+
+        // 2. (When) Then perform one or more actions
+        movieDetailsPresenter.onLoadMovieDetails(movieDetailsDomainModelStub.getMovie().getId());
+
+        // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
+        verify(mockMovieDetailsView).showOverview(anyInt());
+        verify(mockMovieDetailsView, never()).showErrorView();
+    }
 
     @Test
     public void onPersonClick_shouldOpenPersonDetails() {
