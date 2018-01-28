@@ -22,7 +22,7 @@ import java.util.List;
 
 import io.reactivex.Single;
 
-import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -67,7 +67,7 @@ public class MovieDetailsPresenterTest {
         // 1. (Given) Set up conditions required for the test
         movieDetailsDomainModelStub = getMovieDetailsDomainModelStub();
 
-        when(mockMovieDetailsUseCase.getMovieDetails(anyInt())).thenReturn(Single.error(new IOException()));
+        when(mockMovieDetailsUseCase.getMovieDetails(anyLong())).thenReturn(Single.error(new IOException()));
 
         // 2. (When) Then perform one or more actions
         movieDetailsPresenter.onLoadMovieDetails(movieDetailsDomainModelStub.getMovie().getId());
@@ -83,7 +83,7 @@ public class MovieDetailsPresenterTest {
         // 1. (Given) Set up conditions required for the test
         movieDetailsDomainModelStub = getMovieDetailsDomainModelStub();
 
-        when(mockMovieDetailsUseCase.getMovieDetails(anyInt())).thenReturn(Single.just(movieDetailsDomainModelStub));
+        when(mockMovieDetailsUseCase.getMovieDetails(anyLong())).thenReturn(Single.just(movieDetailsDomainModelStub));
 
 
         // 2. (When) Then perform one or more actions
