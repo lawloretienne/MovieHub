@@ -20,6 +20,7 @@ public interface MoviesPresentationContract {
         void hideErrorView();
         void showLoadingView();
         void hideLoadingView();
+
         void addHeaderView();
         void addFooterView();
         void removeFooterView();

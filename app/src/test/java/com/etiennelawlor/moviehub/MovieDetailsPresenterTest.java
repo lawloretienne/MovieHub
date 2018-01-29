@@ -4,6 +4,9 @@ import com.etiennelawlor.moviehub.domain.models.MovieCreditDomainModel;
 import com.etiennelawlor.moviehub.domain.models.MovieDetailsDomainModel;
 import com.etiennelawlor.moviehub.domain.models.MovieDomainModel;
 import com.etiennelawlor.moviehub.domain.usecases.MovieDetailsDomainContract;
+import com.etiennelawlor.moviehub.presentation.mappers.MovieDetailsPresentationModelMapper;
+import com.etiennelawlor.moviehub.presentation.models.MovieCreditPresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.MovieDetailsPresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
 import com.etiennelawlor.moviehub.presentation.moviedetails.MovieDetailsPresentationContract;
@@ -22,6 +25,7 @@ import java.util.List;
 
 import io.reactivex.Single;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -41,9 +45,13 @@ public class MovieDetailsPresenterTest {
     private MovieDetailsPresentationContract.View mockMovieDetailsView;
     @Mock
     private MovieDetailsDomainContract.UseCase mockMovieDetailsUseCase;
+    @Mock
+    private MovieDetailsPresentationModelMapper mockMovieDetailsPresentationModelMapper;
 
     // Stubs
     private MovieDetailsDomainModel movieDetailsDomainModelStub;
+    private MovieDetailsPresentationModel movieDetailsPresentationModelStub;
+
     // endregion
 
     // region Member Variables
@@ -65,16 +73,16 @@ public class MovieDetailsPresenterTest {
     @Test
     public void onLoadMovieDetails_shouldShowError_whenRequestFailed() {
         // 1. (Given) Set up conditions required for the test
-        movieDetailsDomainModelStub = getMovieDetailsDomainModelStub();
+        movieDetailsPresentationModelStub = getMovieDetailsPresentationModelStub();
 
         when(mockMovieDetailsUseCase.getMovieDetails(anyLong())).thenReturn(Single.error(new IOException()));
 
         // 2. (When) Then perform one or more actions
-        movieDetailsPresenter.onLoadMovieDetails(movieDetailsDomainModelStub.getMovie().getId());
+        movieDetailsPresenter.onLoadMovieDetails(movieDetailsPresentationModelStub.getMovie().getId());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verify(mockMovieDetailsView).showErrorView();
-        verify(mockMovieDetailsView, never()).setMovieDetailsDomainModel(movieDetailsDomainModelStub);
+        verify(mockMovieDetailsView, never()).showMovieDetails(movieDetailsPresentationModelStub);
 
     }
 
@@ -82,15 +90,17 @@ public class MovieDetailsPresenterTest {
     public void onLoadMovieDetails_shouldShowMovieDetails_whenRequestSucceeded() {
         // 1. (Given) Set up conditions required for the test
         movieDetailsDomainModelStub = getMovieDetailsDomainModelStub();
+        movieDetailsPresentationModelStub = getMovieDetailsPresentationModelStub();
 
         when(mockMovieDetailsUseCase.getMovieDetails(anyLong())).thenReturn(Single.just(movieDetailsDomainModelStub));
 
+//        when(mockMovieDetailsPresentationModelMapper.mapToPresentationModel(movieDetailsDomainModelStub)).thenReturn(movieDetailsPresentationModelStub);
 
         // 2. (When) Then perform one or more actions
         movieDetailsPresenter.onLoadMovieDetails(movieDetailsDomainModelStub.getMovie().getId());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-        verify(mockMovieDetailsView).setMovieDetailsDomainModel(movieDetailsDomainModelStub);
+        verify(mockMovieDetailsView).showMovieDetails(any(MovieDetailsPresentationModel.class));
         verify(mockMovieDetailsView, never()).showErrorView();
     }
 
@@ -168,6 +178,7 @@ public class MovieDetailsPresenterTest {
         MovieDetailsDomainModel movieDetailsDomainModel = new MovieDetailsDomainModel();
         MovieDomainModel movie = new MovieDomainModel();
         movie.setId(1);
+        movie.setGenres(new ArrayList<>());
         List<MovieCreditDomainModel> cast = new ArrayList<>();
         List<MovieCreditDomainModel> crew = new ArrayList<>();
         List<MovieDomainModel> similarMovies = new ArrayList<>();
@@ -178,6 +189,23 @@ public class MovieDetailsPresenterTest {
         movieDetailsDomainModel.setMovie(movie);
         movieDetailsDomainModel.setSimilarMovies(similarMovies);
         return movieDetailsDomainModel;
+    }
+
+    private MovieDetailsPresentationModel getMovieDetailsPresentationModelStub(){
+        MovieDetailsPresentationModel movieDetailsPresentationModel = new MovieDetailsPresentationModel();
+        MoviePresentationModel movie = new MoviePresentationModel();
+        movie.setId(1);
+        movie.setGenres(new ArrayList<>());
+        List<MovieCreditPresentationModel> cast = new ArrayList<>();
+        List<MovieCreditPresentationModel> crew = new ArrayList<>();
+        List<MoviePresentationModel> similarMovies = new ArrayList<>();
+        String rating = "";
+        movieDetailsPresentationModel.setRating(rating);
+        movieDetailsPresentationModel.setCast(cast);
+        movieDetailsPresentationModel.setCrew(crew);
+        movieDetailsPresentationModel.setMovie(movie);
+        movieDetailsPresentationModel.setSimilarMovies(similarMovies);
+        return movieDetailsPresentationModel;
     }
     // endregion
 }

@@ -2,6 +2,8 @@ package com.etiennelawlor.moviehub.presentation.moviedetails;
 
 import com.etiennelawlor.moviehub.domain.models.MovieDetailsDomainModel;
 import com.etiennelawlor.moviehub.domain.usecases.MovieDetailsDomainContract;
+import com.etiennelawlor.moviehub.presentation.mappers.MovieDetailsPresentationModelMapper;
+import com.etiennelawlor.moviehub.presentation.models.MovieDetailsPresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
 import com.etiennelawlor.moviehub.util.rxjava.SchedulerProvider;
@@ -21,6 +23,7 @@ public class MovieDetailsPresenter implements MovieDetailsPresentationContract.P
     private final MovieDetailsDomainContract.UseCase movieDetailsUseCase;
     private final SchedulerProvider schedulerProvider;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private MovieDetailsPresentationModelMapper movieDetailsPresentationModelMapper = new MovieDetailsPresentationModelMapper();
     // endregion
 
     // region Constructors
@@ -41,19 +44,26 @@ public class MovieDetailsPresenter implements MovieDetailsPresentationContract.P
     @Override
     public void onLoadMovieDetails(int movieId) {
         Disposable disposable = movieDetailsUseCase.getMovieDetails(movieId)
+                .map( movieDetailsDomainModel -> movieDetailsPresentationModelMapper.mapToPresentationModel(movieDetailsDomainModel))
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
-                .subscribeWith(new DisposableSingleObserver<MovieDetailsDomainModel>() {
+                .subscribeWith(new DisposableSingleObserver<MovieDetailsPresentationModel>() {
                     @Override
-                    public void onSuccess(MovieDetailsDomainModel movieDetailsDomainModel) {
-                        if(movieDetailsDomainModel != null){
-                            movieDetailsView.setMovieDetailsDomainModel(movieDetailsDomainModel);
-                        }
+                    public void onSuccess(MovieDetailsPresentationModel movieDetailsPresentationModel) {
+                        movieDetailsView.hideLoadingView();
+
+                        movieDetailsView.showMovieDetails(movieDetailsPresentationModel);
+
+//                        if(movieDetailsPresentationModel != null){
+//                            movieDetailsView.showMovieDetails(movieDetailsPresentationModel);
+//                        }
                     }
 
                     @Override
                     public void onError(Throwable throwable) {
                         throwable.printStackTrace();
+
+                        movieDetailsView.hideLoadingView();
 
                         movieDetailsView.showErrorView();
                     }

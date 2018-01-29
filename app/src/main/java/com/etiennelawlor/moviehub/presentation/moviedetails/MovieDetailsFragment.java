@@ -484,12 +484,12 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
     // region MovieDetailsPresentationContract.View Methods
 
     @Override
-    public void setMovieDetailsDomainModel(MovieDetailsDomainModel movieDetailsDomainModel) {
-        this.movieDetailsPresentationModel = movieDetailsPresentationModelMapper.mapToPresentationModel(movieDetailsDomainModel);
-        nestedScrollView.setNestedScrollingEnabled(true);
+    public void showMovieDetails(MovieDetailsPresentationModel movieDetailsPresentationModel) {
+//        this.movieDetailsPresentationModel = movieDetailsPresentationModelMapper.mapToPresentationModel(movieDetailsDomainModel);
+        this.movieDetailsPresentationModel = movieDetailsPresentationModel;
+
 //        movie = movieDetailsPresentationModel.getMovie();
 
-//        setUpBackdrop();
         setUpOverview();
         setUpDuration();
         setUpGenres();
@@ -514,6 +514,11 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
     @Override
     public void hideToolbarTitle() {
         setCollapsingToolbarTitle("");
+    }
+
+    @Override
+    public void hideLoadingView() {
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -611,8 +616,6 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
     }
 
     private void showMovieDetailsBody(){
-        progressBar.setVisibility(View.GONE);
-
         final int targetHeight = AnimationUtility.getTargetHeight(movieDetailsBodyLinearLayout);
         Animation animation = AnimationUtility.getExpandHeightAnimation(movieDetailsBodyLinearLayout, targetHeight);
         // 1dp/ms
@@ -621,6 +624,7 @@ public class MovieDetailsFragment extends BaseFragment implements MovieDetailsPr
         animation.setInterpolator(new AccelerateDecelerateInterpolator());
         animation.setStartOffset(START_OFFSET);
         movieDetailsBodyLinearLayout.startAnimation(animation);
+        nestedScrollView.setNestedScrollingEnabled(true);
     }
 
     private void setUpCast(){

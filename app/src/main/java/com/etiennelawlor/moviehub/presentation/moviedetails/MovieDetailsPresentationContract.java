@@ -2,6 +2,7 @@ package com.etiennelawlor.moviehub.presentation.moviedetails;
 
 import com.etiennelawlor.moviehub.domain.models.MovieDetailsDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BasePresenter;
+import com.etiennelawlor.moviehub.presentation.models.MovieDetailsPresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
 import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
 
@@ -12,9 +13,10 @@ import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
 public interface MovieDetailsPresentationContract {
 
     interface View {
-        void setMovieDetailsDomainModel(MovieDetailsDomainModel movieDetailsDomainModel);
+        void showMovieDetails(MovieDetailsPresentationModel movieDetailsPresentationModel);
         void showToolbarTitle();
         void hideToolbarTitle();
+        void hideLoadingView();
         void showErrorView();
 
         // Navigation methods
