@@ -20,15 +20,18 @@ public interface MoviesPresentationContract {
         void hideErrorView();
         void showLoadingView();
         void hideLoadingView();
-
         void addHeaderView();
         void addFooterView();
         void removeFooterView();
         void showErrorFooterView();
         void showLoadingFooterView();
         void showMovies(List<MovieDomainModel> movies);
+
         void loadMoreMovies();
-        void setMoviesDomainModel(MoviesDomainModel moviesDomainModel);
+
+        // Set fields that won't be used immediately
+        void setPageNumber(int pageNumber);
+        void setLastPage(boolean lastPage);
 
         // Navigation methods
         void openMovieDetails(MoviePresentationModel movie);

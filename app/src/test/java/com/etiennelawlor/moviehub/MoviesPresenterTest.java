@@ -113,7 +113,8 @@ public class MoviesPresenterTest {
 
         verify(mockMoviesView).hideLoadingView();
         verify(mockMoviesView).showEmptyView();
-        verify(mockMoviesView).setMoviesDomainModel(moviesDomainModelStub);
+        verify(mockMoviesView).setLastPage(moviesDomainModelStub.isLastPage());
+        verify(mockMoviesView).setPageNumber(moviesDomainModelStub.getPageNumber());
     }
 
     @Test
@@ -130,7 +131,8 @@ public class MoviesPresenterTest {
         verify(mockMoviesView).showLoadingFooterView();
 
         verify(mockMoviesView).removeFooterView();
-        verify(mockMoviesView).setMoviesDomainModel(moviesDomainModelStub);
+        verify(mockMoviesView).setLastPage(moviesDomainModelStub.isLastPage());
+        verify(mockMoviesView).setPageNumber(moviesDomainModelStub.getPageNumber());
     }
 
     @Test
@@ -151,7 +153,8 @@ public class MoviesPresenterTest {
         verify(mockMoviesView).hideLoadingView();
         verify(mockMoviesView).addHeaderView();
         verify(mockMoviesView).showMovies(moviesDomainModelStub.getMovies());
-        verify(mockMoviesView).setMoviesDomainModel(moviesDomainModelStub);
+        verify(mockMoviesView).setLastPage(moviesDomainModelStub.isLastPage());
+        verify(mockMoviesView).setPageNumber(moviesDomainModelStub.getPageNumber());
     }
 
     @Test
@@ -173,7 +176,8 @@ public class MoviesPresenterTest {
         verify(mockMoviesView).addHeaderView();
         verify(mockMoviesView).showMovies(moviesDomainModelStub.getMovies());
         verify(mockMoviesView).addFooterView();
-        verify(mockMoviesView).setMoviesDomainModel(moviesDomainModelStub);
+        verify(mockMoviesView).setLastPage(moviesDomainModelStub.isLastPage());
+        verify(mockMoviesView).setPageNumber(moviesDomainModelStub.getPageNumber());
     }
 
     @Test
@@ -191,7 +195,8 @@ public class MoviesPresenterTest {
 
         verify(mockMoviesView).removeFooterView();
         verify(mockMoviesView).showMovies(moviesDomainModelStub.getMovies());
-        verify(mockMoviesView).setMoviesDomainModel(moviesDomainModelStub);
+        verify(mockMoviesView).setLastPage(moviesDomainModelStub.isLastPage());
+        verify(mockMoviesView).setPageNumber(moviesDomainModelStub.getPageNumber());
     }
 
     @Test
@@ -210,7 +215,8 @@ public class MoviesPresenterTest {
         verify(mockMoviesView).removeFooterView();
         verify(mockMoviesView).showMovies(moviesDomainModelStub.getMovies());
         verify(mockMoviesView).addFooterView();
-        verify(mockMoviesView).setMoviesDomainModel(moviesDomainModelStub);
+        verify(mockMoviesView).setLastPage(moviesDomainModelStub.isLastPage());
+        verify(mockMoviesView).setPageNumber(moviesDomainModelStub.getPageNumber());
 //        verify(mockMoviesView, times(1)).setModel(any(MoviesPresentationModel.class)); // Alternative verify check
     }
 

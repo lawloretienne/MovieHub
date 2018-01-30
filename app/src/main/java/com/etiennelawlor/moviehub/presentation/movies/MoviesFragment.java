@@ -19,13 +19,10 @@ import com.etiennelawlor.moviehub.R;
 import com.etiennelawlor.moviehub.di.component.MoviesComponent;
 import com.etiennelawlor.moviehub.di.module.MoviesModule;
 import com.etiennelawlor.moviehub.domain.models.MovieDomainModel;
-import com.etiennelawlor.moviehub.domain.models.MoviesDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.mappers.MoviePresentationModelMapper;
-import com.etiennelawlor.moviehub.presentation.mappers.MoviesPresentationModelMapper;
 import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
-import com.etiennelawlor.moviehub.presentation.models.MoviesPresentationModel;
 import com.etiennelawlor.moviehub.presentation.moviedetails.MovieDetailsActivity;
 
 import java.util.List;
@@ -61,10 +58,10 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     private MoviesAdapter moviesAdapter;
     private Unbinder unbinder;
     private StaggeredGridLayoutManager layoutManager;
-    private MoviesPresentationModel moviesPresentationModel;
-    private boolean isLoading = false;
+    private boolean lastPage;
+    private int pageNumber = 1;
+    private boolean loading = false;
     private MoviesComponent moviesComponent;
-    private MoviesPresentationModelMapper moviesPresentationModelMapper = new MoviesPresentationModelMapper();
     private MoviePresentationModelMapper moviePresentationModelMapper = new MoviePresentationModelMapper();
     // endregion
 
@@ -76,7 +73,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     // region Listeners
     @OnClick(R.id.retry_btn)
     public void onReloadButtonClicked() {
-        moviesPresenter.onLoadPopularMovies(moviesPresentationModel == null ? 1 : moviesPresentationModel.getPageNumber());
+        moviesPresenter.onLoadPopularMovies(pageNumber);
     }
 
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
@@ -96,8 +93,8 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
 
             if ((visibleItemCount + firstVisibleItem) >= totalItemCount
                     && totalItemCount > 0
-                    && !isLoading
-                    && !moviesPresentationModel.isLastPage()) {
+                    && !loading
+                    && !lastPage) {
                 moviesPresenter.onScrollToEndOfList();
             }
         }
@@ -154,7 +151,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
         // Pagination
         recyclerView.addOnScrollListener(recyclerViewOnScrollListener);
 
-        moviesPresenter.onLoadPopularMovies(moviesPresentationModel == null ? 1 : moviesPresentationModel.getPageNumber());
+        moviesPresenter.onLoadPopularMovies(pageNumber);
     }
 
     @Override
@@ -188,7 +185,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     // region MoviesAdapter.OnReloadClickListener Methods
     @Override
     public void onReloadClick() {
-        moviesPresenter.onLoadPopularMovies(moviesPresentationModel.getPageNumber());
+        moviesPresenter.onLoadPopularMovies(pageNumber);
     }
     // endregion
 
@@ -217,13 +214,13 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     @Override
     public void showLoadingView() {
         progressBar.setVisibility(View.VISIBLE);
-        isLoading = true;
+        loading = true;
     }
 
     @Override
     public void hideLoadingView() {
         progressBar.setVisibility(View.GONE);
-        isLoading = false;
+        loading = false;
     }
 
     @Override
@@ -239,7 +236,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     @Override
     public void removeFooterView() {
         moviesAdapter.removeFooter();
-        isLoading = false;
+        loading = false;
     }
 
     @Override
@@ -250,7 +247,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     @Override
     public void showLoadingFooterView() {
         moviesAdapter.updateFooter(BaseAdapter.FooterType.LOAD_MORE);
-        isLoading = true;
+        loading = true;
     }
 
     @Override
@@ -260,13 +257,18 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
 
     @Override
     public void loadMoreMovies() {
-        moviesPresentationModel.incrementPageNumber();
-        moviesPresenter.onLoadPopularMovies(moviesPresentationModel.getPageNumber());
+        pageNumber++;
+        moviesPresenter.onLoadPopularMovies(pageNumber);
     }
 
     @Override
-    public void setMoviesDomainModel(MoviesDomainModel moviesDomainModel) {
-        this.moviesPresentationModel = moviesPresentationModelMapper.mapToPresentationModel(moviesDomainModel);
+    public void setPageNumber(int pageNumber) {
+        this.pageNumber = pageNumber;
+    }
+
+    @Override
+    public void setLastPage(boolean lastPage) {
+        this.lastPage = lastPage;
     }
 
     @Override

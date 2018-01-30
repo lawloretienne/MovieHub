@@ -84,7 +84,8 @@ public class MoviesPresenter implements MoviesPresentationContract.Presenter {
                                 }
                             }
 
-                            moviesView.setMoviesDomainModel(moviesDomainModel);
+                            moviesView.setLastPage(moviesDomainModel.isLastPage());
+                            moviesView.setPageNumber(moviesDomainModel.getPageNumber());
                         }
                     }
 
