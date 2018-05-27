@@ -3,7 +3,7 @@ apply plugin: 'realm-android'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.1'
+    buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "com.etiennelawlor.moviehub"
         minSdkVersion 21
@@ -67,7 +67,7 @@ android {
 // Define versions in a single place
 ext {
     // App dependencies
-    supportLibraryVersion = '27.0.2'
+    supportLibraryVersion = '27.1.1'
     picassoVersion = '2.5.2'
     retrofit2Version = '2.3.0'
     okhttp3Version = '3.9.1'
@@ -76,7 +76,7 @@ ext {
     timberVersion = '4.6.0'
     recyclerviewAnimatorsVersion = '2.0.0' // Update at some point
     trestleVersion = '0.0.8'
-    multidexVersion = '1.0.2'
+    multidexVersion = '1.0.3'
     // Because RxAndroid releases are few and far between, it is recommended you also
     // explicitly depend on RxJava's latest version for bug fixes and new features.
     rxjava2RxandroidVersion = '2.0.1'
@@ -136,7 +136,7 @@ dependencies {
 //    implementation 'com.google.dagger:dagger-android:2.14.1'
 //    annotationProcessor 'com.google.dagger:dagger-android-processor:2.14.1'
 //    implementation 'com.google.dagger:dagger-android-support:2.14.1'
-    provided 'javax.annotation:jsr250-api:1.0'
+    compileOnly 'javax.annotation:jsr250-api:1.0'
 
     implementation "io.reactivex.rxjava2:rxjava:$rxjava2Version" // RxJava
     implementation "io.reactivex.rxjava2:rxandroid:$rxjava2RxandroidVersion" // RxAndroid providing Android Scheduler
