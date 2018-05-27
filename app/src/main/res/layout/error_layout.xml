@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/error_ll"
     android:layout_width="288dp"
     android:layout_height="wrap_content"
@@ -26,13 +25,13 @@
         android:textColor="@color/secondary_text_light"
         android:textSize="20sp"
         app:textFont="lato_medium"
-        tools:text="Can't load data.\nCheck your network connection." />
+        android:text="@string/oops_something_went_wrong" />
 
     <com.etiennelawlor.moviehub.presentation.common.widget.CustomFontButton
-        android:id="@+id/reload_btn"
+        android:id="@+id/retry_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/reload"
+        android:text="@string/retry"
         android:textAllCaps="false"
         android:textColor="@color/primary_text_dark"
         android:textSize="20sp"

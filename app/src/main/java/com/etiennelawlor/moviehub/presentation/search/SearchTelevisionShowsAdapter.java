@@ -18,9 +18,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.common.widget.DynamicHeightImageView;
+import com.etiennelawlor.moviehub.presentation.models.TelevisionShowPresentationModel;
 import com.etiennelawlor.moviehub.util.AnimationUtility;
 import com.etiennelawlor.moviehub.util.ColorUtility;
 import com.etiennelawlor.moviehub.util.DisplayUtility;
@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
  * Created by etiennelawlor on 12/17/16.
  */
 
-public class SearchTelevisionShowsAdapter extends BaseAdapter<TelevisionShow> {
+public class SearchTelevisionShowsAdapter extends BaseAdapter<TelevisionShowPresentationModel> {
 
     // region Constants
     // endregion
@@ -73,14 +73,11 @@ public class SearchTelevisionShowsAdapter extends BaseAdapter<TelevisionShow> {
 
         final TelevisionShowViewHolder holder = new TelevisionShowViewHolder(v);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int adapterPos = holder.getAdapterPosition();
-                if (adapterPos != RecyclerView.NO_POSITION) {
-                    if (onItemClickListener != null) {
-                        onItemClickListener.onItemClick(adapterPos, holder.itemView);
-                    }
+        holder.itemView.setOnClickListener(v1 -> {
+            int adapterPos = holder.getAdapterPosition();
+            if (adapterPos != RecyclerView.NO_POSITION) {
+                if (onItemClickListener != null) {
+                    onItemClickListener.onItemClick(adapterPos, holder.itemView);
                 }
             }
         });
@@ -96,12 +93,9 @@ public class SearchTelevisionShowsAdapter extends BaseAdapter<TelevisionShow> {
         v.setLayoutParams(layoutParams);
 
         final FooterViewHolder holder = new FooterViewHolder(v);
-        holder.reloadButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(onReloadClickListener != null){
-                    onReloadClickListener.onReloadClick();
-                }
+        holder.reloadButton.setOnClickListener(v1 -> {
+            if(onReloadClickListener != null){
+                onReloadClickListener.onReloadClick();
             }
         });
 
@@ -117,7 +111,7 @@ public class SearchTelevisionShowsAdapter extends BaseAdapter<TelevisionShow> {
     protected void bindItemViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         final TelevisionShowViewHolder holder = (TelevisionShowViewHolder) viewHolder;
 
-        final TelevisionShow televisionShow = getItem(position);
+        final TelevisionShowPresentationModel televisionShow = getItem(position);
         if (televisionShow != null) {
             holder.bind(televisionShow);
         }
@@ -153,7 +147,7 @@ public class SearchTelevisionShowsAdapter extends BaseAdapter<TelevisionShow> {
     @Override
     public void addFooter() {
         isFooterAdded = true;
-        add(new TelevisionShow());
+        add(new TelevisionShowPresentationModel());
     }
 
     // region Inner Classes
@@ -187,7 +181,7 @@ public class SearchTelevisionShowsAdapter extends BaseAdapter<TelevisionShow> {
         // endregion
 
         // region Helper Methods
-        private void bind(TelevisionShow televisionShow){
+        private void bind(TelevisionShowPresentationModel televisionShow){
             resetInfoBackgroundColor(infoLinearLayout);
             resetTitleTextColor(titleTextView);
             resetSubtitleTextColor(subtitleTextView);
@@ -197,7 +191,7 @@ public class SearchTelevisionShowsAdapter extends BaseAdapter<TelevisionShow> {
             setUpSubtitle(subtitleTextView, televisionShow);
         }
 
-        private void setUpThumbnail(final TelevisionShowViewHolder vh, final TelevisionShow televisionShow){
+        private void setUpThumbnail(final TelevisionShowViewHolder vh, final TelevisionShowPresentationModel televisionShow){
             final DynamicHeightImageView iv = vh.thumbnailImageView;
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) iv.getLayoutParams();
             layoutParams.width = ivWidth;
@@ -216,22 +210,12 @@ public class SearchTelevisionShowsAdapter extends BaseAdapter<TelevisionShow> {
                         .into(iv, new Callback() {
                             @Override
                             public void onSuccess() {
-                                if(televisionShow.getPosterPalette() != null){
-                                    setUpInfoBackgroundColor(vh.infoLinearLayout, televisionShow.getPosterPalette());
-                                    setUpTitleTextColor(vh.titleTextView, televisionShow.getPosterPalette());
-                                    setUpSubtitleTextColor(vh.subtitleTextView, televisionShow.getPosterPalette());
-                                } else {
-                                    Bitmap bitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
-                                    Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-                                        public void onGenerated(Palette palette) {
-                                            televisionShow.setPosterPalette(palette);
-
-                                            setUpInfoBackgroundColor(vh.infoLinearLayout, palette);
-                                            setUpTitleTextColor(vh.titleTextView, palette);
-                                            setUpSubtitleTextColor(vh.subtitleTextView, palette);
-                                        }
-                                    });
-                                }
+                                Bitmap bitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
+                                Palette.from(bitmap).generate(palette -> {
+                                    setUpInfoBackgroundColor(vh.infoLinearLayout, palette);
+                                    setUpTitleTextColor(vh.titleTextView, palette);
+                                    setUpSubtitleTextColor(vh.subtitleTextView, palette);
+                                });
                             }
 
                             @Override
@@ -257,7 +241,7 @@ public class SearchTelevisionShowsAdapter extends BaseAdapter<TelevisionShow> {
             }
         }
 
-        private void setUpTitle(TextView tv, TelevisionShow televisionShow){
+        private void setUpTitle(TextView tv, TelevisionShowPresentationModel televisionShow){
             String title = televisionShow.getName();
             if (!TextUtils.isEmpty(title)) {
                 tv.setText(title);
@@ -278,7 +262,7 @@ public class SearchTelevisionShowsAdapter extends BaseAdapter<TelevisionShow> {
             }
         }
 
-        private void setUpSubtitle(TextView tv, TelevisionShow televisionShow){
+        private void setUpSubtitle(TextView tv, TelevisionShowPresentationModel televisionShow){
             String firstAirYear = televisionShow.getFirstAirYear();
             if (!TextUtils.isEmpty(firstAirYear)) {
                 tv.setText(firstAirYear);
@@ -307,7 +291,7 @@ public class SearchTelevisionShowsAdapter extends BaseAdapter<TelevisionShow> {
         FrameLayout loadingFrameLayout;
         @BindView(R.id.error_rl)
         RelativeLayout errorRelativeLayout;
-        @BindView(R.id.reload_btn)
+        @BindView(R.id.retry_btn)
         Button reloadButton;
         // endregion
 

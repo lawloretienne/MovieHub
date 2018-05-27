@@ -39,13 +39,7 @@ public class AnimationUtility {
 
     public static void animateBackgroundColorChange(final View view, int startColor, int endColor){
         ValueAnimator infoBackgroundColorAnim = ValueAnimator.ofArgb(startColor, endColor);
-        infoBackgroundColorAnim.addUpdateListener(new ValueAnimator
-                .AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                view.setBackgroundColor((int) animation.getAnimatedValue());
-            }
-        });
+        infoBackgroundColorAnim.addUpdateListener(animation -> view.setBackgroundColor((int) animation.getAnimatedValue()));
         infoBackgroundColorAnim.setDuration(DURATION);
         infoBackgroundColorAnim.setInterpolator(
                 getFastOutSlowInInterpolator(view.getContext()));
@@ -54,13 +48,7 @@ public class AnimationUtility {
 
     public static void animateTextColorChange(final TextView tv, int startColor, int endColor){
         ValueAnimator titleTextColorAnim = ValueAnimator.ofArgb(startColor, endColor);
-        titleTextColorAnim.addUpdateListener(new ValueAnimator
-                .AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                tv.setTextColor((int) animation.getAnimatedValue());
-            }
-        });
+        titleTextColorAnim.addUpdateListener(animation -> tv.setTextColor((int) animation.getAnimatedValue()));
         titleTextColorAnim.setDuration(DURATION);
         titleTextColorAnim.setInterpolator(
                 getFastOutSlowInInterpolator(tv.getContext()));

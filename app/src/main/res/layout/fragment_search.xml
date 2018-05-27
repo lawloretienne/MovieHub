@@ -20,18 +20,20 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent"
+                android:focusableInTouchMode="true">
 
                 <com.etiennelawlor.moviehub.presentation.common.widget.CustomFontEditText
                     android:id="@+id/search_et"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@+id/search_pb"
-                    android:background="@null"
+                    android:layout_alignWithParentIfMissing="true"
                     android:alpha="0.0"
+                    android:background="@null"
                     android:ellipsize="end"
-                    android:hint="Search Movies, TV Shows, and People"
+                    android:hint="@string/search_movies_tv_shows_and_people"
                     android:inputType="textCapWords"
                     android:singleLine="true"
                     android:textSize="16sp"

@@ -1,29 +1,31 @@
 package com.etiennelawlor.moviehub;
 
-import com.etiennelawlor.moviehub.data.network.response.Movie;
-import com.etiennelawlor.moviehub.data.network.response.Person;
-import com.etiennelawlor.moviehub.data.network.response.PersonCredit;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.repositories.person.models.PersonDetailsWrapper;
-import com.etiennelawlor.moviehub.domain.PersonDetailsDomainContract;
+import com.etiennelawlor.moviehub.domain.models.PersonCreditDomainModel;
+import com.etiennelawlor.moviehub.domain.models.PersonDetailsDomainModel;
+import com.etiennelawlor.moviehub.domain.models.PersonDomainModel;
+import com.etiennelawlor.moviehub.domain.usecases.PersonDetailsDomainContract;
+import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.TelevisionShowPresentationModel;
+import com.etiennelawlor.moviehub.presentation.persondetails.PersonDetailsPresentationContract;
 import com.etiennelawlor.moviehub.presentation.persondetails.PersonDetailsPresenter;
-import com.etiennelawlor.moviehub.presentation.persondetails.PersonDetailsUiContract;
+import com.etiennelawlor.moviehub.util.rxjava.SchedulerProvider;
+import com.etiennelawlor.moviehub.util.rxjava.TestSchedulerProvider;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.net.UnknownHostException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.Single;
 
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by etiennelawlor on 2/9/17.
@@ -35,18 +37,17 @@ public class PersonDetailsPresenterTest {
 
     // Mocks
     @Mock
-    private PersonDetailsUiContract.View mockPersonDetailsView;
+    private PersonDetailsPresentationContract.View mockPersonDetailsView;
     @Mock
     private PersonDetailsDomainContract.UseCase mockPersonDetailsUseCase;
 
     // Stubs
-    private ArgumentCaptor<DisposableSingleObserver> disposableSingleObserverArgumentCaptor;
-
+    private PersonDetailsDomainModel personDetailsDomainModelStub;
     // endregion
 
     // region Member Variables
-    private PersonDetailsWrapper personDetailsWrapper;
     private PersonDetailsPresenter personDetailsPresenter;
+    private SchedulerProvider schedulerProvider = new TestSchedulerProvider();
     // endregion
 
     @Before
@@ -56,7 +57,7 @@ public class PersonDetailsPresenterTest {
         MockitoAnnotations.initMocks(this);
 
         // Get a reference to the class under test
-        personDetailsPresenter = new PersonDetailsPresenter(mockPersonDetailsView, mockPersonDetailsUseCase);
+        personDetailsPresenter = new PersonDetailsPresenter(mockPersonDetailsView, mockPersonDetailsUseCase, schedulerProvider);
     }
 
     // region Test Methods
@@ -64,47 +65,35 @@ public class PersonDetailsPresenterTest {
     @Test
     public void onLoadTelevisionShowDetails_shouldShowError_whenRequestFailed() {
         // 1. (Given) Set up conditions required for the test
-        Person person = new Person();
-        person.setId(1);
-        List<PersonCredit> cast = new ArrayList<>();
-        List<PersonCredit> crew = new ArrayList<>();
-        personDetailsWrapper = new PersonDetailsWrapper(person, cast, crew);
+        personDetailsDomainModelStub = getPersonDetailsDomainModelStub();
+
+        when(mockPersonDetailsUseCase.getPersonDetails(anyInt())).thenReturn(Single.error(new IOException()));
 
         // 2. (When) Then perform one or more actions
-        personDetailsPresenter.onLoadPersonDetails(person.getId());
+        personDetailsPresenter.onLoadPersonDetails(personDetailsDomainModelStub.getPerson().getId());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
-        verify(mockPersonDetailsUseCase).getPersonDetails(anyInt(), disposableSingleObserverArgumentCaptor.capture());
-        disposableSingleObserverArgumentCaptor.getValue().onError(new UnknownHostException());
-
         verify(mockPersonDetailsView).showErrorView();
     }
 
     @Test
     public void onLoadTelevisionShowDetails_shouldShowTelevisionShowDetails_whenRequestSucceeded() {
         // 1. (Given) Set up conditions required for the test
-        Person person = new Person();
-        person.setId(1);
-        List<PersonCredit> cast = new ArrayList<>();
-        List<PersonCredit> crew = new ArrayList<>();
-        personDetailsWrapper = new PersonDetailsWrapper(person, cast, crew);
+        personDetailsDomainModelStub = getPersonDetailsDomainModelStub();
+
+        when(mockPersonDetailsUseCase.getPersonDetails(anyInt())).thenReturn(Single.just(personDetailsDomainModelStub));
 
         // 2. (When) Then perform one or more actions
-        personDetailsPresenter.onLoadPersonDetails(person.getId());
+        personDetailsPresenter.onLoadPersonDetails(personDetailsDomainModelStub.getPerson().getId());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
-        verify(mockPersonDetailsUseCase).getPersonDetails(anyInt(), disposableSingleObserverArgumentCaptor.capture());
-        disposableSingleObserverArgumentCaptor.getValue().onSuccess(personDetailsWrapper);
-
-        verify(mockPersonDetailsView).showPersonDetails(personDetailsWrapper);
+        verify(mockPersonDetailsView).setPersonDetailsDomainModel(personDetailsDomainModelStub);
     }
 
     @Test
     public void onMovieClick_shouldOpenMovieDetails() {
         // 1. (Given) Set up conditions required for the test
-        Movie movie = new Movie();
+        MoviePresentationModel movie = new MoviePresentationModel();
 
         // 2. (When) Then perform one or more actions
         personDetailsPresenter.onMovieClick(movie);
@@ -118,7 +107,7 @@ public class PersonDetailsPresenterTest {
     @Test
     public void onTelevisionShowClick_shouldOpenTelevisionShowDetails() {
         // 1. (Given) Set up conditions required for the test
-        TelevisionShow televisionShow = new TelevisionShow();
+        TelevisionShowPresentationModel televisionShow = new TelevisionShowPresentationModel();
 
         // 2. (When) Then perform one or more actions
         personDetailsPresenter.onTelevisionShowClick(televisionShow);
@@ -158,15 +147,29 @@ public class PersonDetailsPresenterTest {
     }
 
     @Test
-    public void onDestroyView_shouldClearSubscriptions() {
+    public void onDestroyView_shouldNotInteractWithViewOrUsecase() {
         // 1. (Given) Set up conditions required for the test
 
         // 2. (When) Then perform one or more actions
         personDetailsPresenter.onDestroyView();
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verifyZeroInteractions(mockPersonDetailsView);
-        verify(mockPersonDetailsUseCase).clearDisposables();
+        verifyZeroInteractions(mockPersonDetailsUseCase);
     }
 
+    // endregion
+
+    // region Helper Methods
+    private PersonDetailsDomainModel getPersonDetailsDomainModelStub(){
+        PersonDetailsDomainModel personDetailsDomainModel = new PersonDetailsDomainModel();
+        PersonDomainModel person = new PersonDomainModel();
+        person.setId(1);
+        List<PersonCreditDomainModel> cast = new ArrayList<>();
+        List<PersonCreditDomainModel> crew = new ArrayList<>();
+        personDetailsDomainModel.setPerson(person);
+        personDetailsDomainModel.setCast(cast);
+        personDetailsDomainModel.setCrew(crew);
+        return personDetailsDomainModel;
+    }
     // endregion
 }

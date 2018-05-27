@@ -20,7 +20,8 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             app:collapsedTitleTextAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            <!--|snap-->
 
             <FrameLayout
                 android:id="@+id/backdrop_fl"
@@ -103,7 +104,8 @@
                     android:layout_marginLeft="16dp"
                     android:background="@drawable/gradient_bg"
                     android:scaleType="centerCrop"
-                    android:transitionName="@string/transition_television_show_thumbnail" />
+                    android:transitionName="@string/transition_television_show_thumbnail"
+                    android:contentDescription="@string/television_show_poster"/>
 
             </FrameLayout>
 
@@ -176,7 +178,7 @@
                     <com.etiennelawlor.moviehub.presentation.common.widget.CustomFontTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Overview"
+                        android:text="@string/overview"
                         android:textColor="@color/primary_text_dark"
                         android:textSize="18sp"
                         app:textFont="lato_medium" />
@@ -193,7 +195,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="Seasons"
+                        android:text="@string/seasons"
                         android:textColor="@color/primary_text_dark"
                         android:textSize="18sp"
                         app:textFont="lato_medium" />
@@ -210,7 +212,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="Status"
+                        android:text="@string/status"
                         android:textColor="@color/primary_text_dark"
                         android:textSize="18sp"
                         app:textFont="lato_medium" />
@@ -227,7 +229,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="First Air Date"
+                        android:text="@string/first_air_date"
                         android:textColor="@color/primary_text_dark"
                         android:textSize="18sp"
                         app:textFont="lato_medium" />

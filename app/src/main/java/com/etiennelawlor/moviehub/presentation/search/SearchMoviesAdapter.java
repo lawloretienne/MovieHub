@@ -18,9 +18,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.network.response.Movie;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.common.widget.DynamicHeightImageView;
+import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
 import com.etiennelawlor.moviehub.util.AnimationUtility;
 import com.etiennelawlor.moviehub.util.ColorUtility;
 import com.etiennelawlor.moviehub.util.DisplayUtility;
@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
  * Created by etiennelawlor on 12/17/16.
  */
 
-public class SearchMoviesAdapter extends BaseAdapter<Movie> {
+public class SearchMoviesAdapter extends BaseAdapter<MoviePresentationModel> {
 
     // region Constants
     // endregion
@@ -73,14 +73,11 @@ public class SearchMoviesAdapter extends BaseAdapter<Movie> {
 
         final MovieViewHolder holder = new MovieViewHolder(v);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int adapterPos = holder.getAdapterPosition();
-                if (adapterPos != RecyclerView.NO_POSITION) {
-                    if (onItemClickListener != null) {
-                        onItemClickListener.onItemClick(adapterPos, holder.itemView);
-                    }
+        holder.itemView.setOnClickListener(v1 -> {
+            int adapterPos = holder.getAdapterPosition();
+            if (adapterPos != RecyclerView.NO_POSITION) {
+                if (onItemClickListener != null) {
+                    onItemClickListener.onItemClick(adapterPos, holder.itemView);
                 }
             }
         });
@@ -96,12 +93,9 @@ public class SearchMoviesAdapter extends BaseAdapter<Movie> {
         v.setLayoutParams(layoutParams);
 
         final FooterViewHolder holder = new FooterViewHolder(v);
-        holder.reloadButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(onReloadClickListener != null){
-                    onReloadClickListener.onReloadClick();
-                }
+        holder.reloadButton.setOnClickListener(v1 -> {
+            if(onReloadClickListener != null){
+                onReloadClickListener.onReloadClick();
             }
         });
 
@@ -117,7 +111,7 @@ public class SearchMoviesAdapter extends BaseAdapter<Movie> {
     protected void bindItemViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         final MovieViewHolder holder = (MovieViewHolder) viewHolder;
 
-        final Movie movie = getItem(position);
+        final MoviePresentationModel movie = getItem(position);
         if (movie != null) {
             holder.bind(movie);
         }
@@ -153,11 +147,11 @@ public class SearchMoviesAdapter extends BaseAdapter<Movie> {
     @Override
     public void addFooter() {
         isFooterAdded = true;
-        add(new Movie());
+        add(new MoviePresentationModel());
     }
 
     // region Helper Methods
-//    public void updatedAdapter(List<Movie> movies){
+//    public void updatedAdapter(List<MovieResponse> movies){
 //        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new MovieDiffCallback(this.items, movies));
 //        clear();
 //        addAll(movies);
@@ -196,7 +190,7 @@ public class SearchMoviesAdapter extends BaseAdapter<Movie> {
         // endregion
 
         // region Helper Methods
-        private void bind(Movie movie){
+        private void bind(MoviePresentationModel movie){
             resetInfoBackgroundColor(infoLinearLayout);
             resetTitleTextColor(titleTextView);
             resetSubtitleTextColor(subtitleTextView);
@@ -206,7 +200,7 @@ public class SearchMoviesAdapter extends BaseAdapter<Movie> {
             setUpSubtitle(subtitleTextView, movie);
         }
 
-        private void setUpThumbnail(final MovieViewHolder vh, final Movie movie){
+        private void setUpThumbnail(final MovieViewHolder vh, final MoviePresentationModel movie){
             final DynamicHeightImageView iv = vh.thumbnailImageView;
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) iv.getLayoutParams();
             layoutParams.width = ivWidth;
@@ -225,22 +219,12 @@ public class SearchMoviesAdapter extends BaseAdapter<Movie> {
                         .into(iv, new Callback() {
                             @Override
                             public void onSuccess() {
-                                if(movie.getPosterPalette() != null){
-                                    setUpInfoBackgroundColor(vh.infoLinearLayout, movie.getPosterPalette());
-                                    setUpTitleTextColor(vh.titleTextView, movie.getPosterPalette());
-                                    setUpSubtitleTextColor(vh.subtitleTextView, movie.getPosterPalette());
-                                } else {
-                                    Bitmap bitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
-                                    Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-                                        public void onGenerated(Palette palette) {
-                                            movie.setPosterPalette(palette);
-
-                                            setUpInfoBackgroundColor(vh.infoLinearLayout, palette);
-                                            setUpTitleTextColor(vh.titleTextView, palette);
-                                            setUpSubtitleTextColor(vh.subtitleTextView, palette);
-                                        }
-                                    });
-                                }
+                                Bitmap bitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
+                                Palette.from(bitmap).generate(palette -> {
+                                    setUpInfoBackgroundColor(vh.infoLinearLayout, palette);
+                                    setUpTitleTextColor(vh.titleTextView, palette);
+                                    setUpSubtitleTextColor(vh.subtitleTextView, palette);
+                                });
                             }
 
                             @Override
@@ -266,7 +250,7 @@ public class SearchMoviesAdapter extends BaseAdapter<Movie> {
             }
         }
 
-        private void setUpTitle(TextView tv, Movie movie){
+        private void setUpTitle(TextView tv, MoviePresentationModel movie){
             String title = movie.getTitle();
             if (!TextUtils.isEmpty(title)) {
                 tv.setText(title);
@@ -287,7 +271,7 @@ public class SearchMoviesAdapter extends BaseAdapter<Movie> {
             }
         }
 
-        private void setUpSubtitle(TextView tv, Movie movie){
+        private void setUpSubtitle(TextView tv, MoviePresentationModel movie){
             String releaseYear = movie.getReleaseYear();
             if (!TextUtils.isEmpty(releaseYear)) {
                 tv.setText(releaseYear);
@@ -316,7 +300,7 @@ public class SearchMoviesAdapter extends BaseAdapter<Movie> {
         FrameLayout loadingFrameLayout;
         @BindView(R.id.error_rl)
         RelativeLayout errorRelativeLayout;
-        @BindView(R.id.reload_btn)
+        @BindView(R.id.retry_btn)
         Button reloadButton;
         // endregion
 
@@ -331,12 +315,12 @@ public class SearchMoviesAdapter extends BaseAdapter<Movie> {
 //    private class MovieDiffCallback extends DiffUtil.Callback {
 //
 //        // region Member Variables
-//        private List<Movie> oldMovies;
-//        private List<Movie> newMovies;
+//        private List<MovieResponse> oldMovies;
+//        private List<MovieResponse> newMovies;
 //        // endregion
 //
 //        // region Constructors
-//        public MovieDiffCallback(List<Movie> newMovies, List<Movie> oldMovies) {
+//        public MovieDiffCallback(List<MovieResponse> newMovies, List<MovieResponse> oldMovies) {
 //            this.newMovies = newMovies;
 //            this.oldMovies = oldMovies;
 //        }

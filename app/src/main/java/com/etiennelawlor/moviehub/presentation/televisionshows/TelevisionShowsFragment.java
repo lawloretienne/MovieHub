@@ -1,8 +1,6 @@
 package com.etiennelawlor.moviehub.presentation.televisionshows;
 
-import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -15,17 +13,20 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowsPage;
+import com.etiennelawlor.moviehub.di.component.TelevisionShowsComponent;
 import com.etiennelawlor.moviehub.di.module.TelevisionShowsModule;
+import com.etiennelawlor.moviehub.domain.models.TelevisionShowDomainModel;
+import com.etiennelawlor.moviehub.domain.models.TelevisionShowsDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
+import com.etiennelawlor.moviehub.presentation.mappers.TelevisionShowPresentationModelMapper;
+import com.etiennelawlor.moviehub.presentation.mappers.TelevisionShowsPresentationModelMapper;
+import com.etiennelawlor.moviehub.presentation.models.TelevisionShowPresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.TelevisionShowsPresentationModel;
 import com.etiennelawlor.moviehub.presentation.televisionshowdetails.TelevisionShowDetailsActivity;
-import com.etiennelawlor.moviehub.util.FontCache;
 
 import java.util.List;
 
@@ -41,19 +42,13 @@ import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
  * Created by etiennelawlor on 12/16/16.
  */
 
-public class TelevisionShowsFragment extends BaseFragment implements TelevisionShowsAdapter.OnItemClickListener, TelevisionShowsAdapter.OnReloadClickListener, TelevisionShowsUiContract.View {
-
-    // region Constants
-    public static final String KEY_TELEVISION_SHOW = "KEY_TELEVISION_SHOW";
-    // endregion
+public class TelevisionShowsFragment extends BaseFragment implements TelevisionShowsAdapter.OnItemClickListener, TelevisionShowsAdapter.OnReloadClickListener, TelevisionShowsPresentationContract.View {
 
     // region Views
     @BindView(R.id.rv)
     RecyclerView recyclerView;
     @BindView(R.id.error_ll)
     LinearLayout errorLinearLayout;
-    @BindView(R.id.error_tv)
-    TextView errorTextView;
     @BindView(R.id.pb)
     ProgressBar progressBar;
     @BindView(android.R.id.empty)
@@ -64,22 +59,25 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
 
     // region Member Variables
     private TelevisionShowsAdapter televisionShowsAdapter;
-    private Typeface font;
     private Unbinder unbinder;
     private StaggeredGridLayoutManager layoutManager;
     private boolean isLoading = false;
-    private TelevisionShowsPage televisionShowsPage;
+    private TelevisionShowsPresentationModel televisionShowsPresentationModel;
+    private TelevisionShowsComponent televisionShowsComponent;
+    private TelevisionShowsPresentationModelMapper televisionShowsPresentationModelMapper = new TelevisionShowsPresentationModelMapper();
+    private TelevisionShowPresentationModelMapper televisionShowPresentationModelMapper = new TelevisionShowPresentationModelMapper();
+
     // endregion
 
     // region Injected Variables
     @Inject
-    TelevisionShowsUiContract.Presenter televisionShowsPresenter;
+    TelevisionShowsPresentationContract.Presenter televisionShowsPresenter;
     // endregion
 
     // region Listeners
-    @OnClick(R.id.reload_btn)
+    @OnClick(R.id.retry_btn)
     public void onReloadButtonClicked() {
-        televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsPage == null ? 1 : televisionShowsPage.getPageNumber());
+        televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsPresentationModel == null ? 1 : televisionShowsPresentationModel.getPageNumber());
     }
 
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
@@ -100,7 +98,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
             if ((visibleItemCount + firstVisibleItem) >= totalItemCount
                     && totalItemCount > 0
                     && !isLoading
-                    && !televisionShowsPage.isLastPage()) {
+                    && !televisionShowsPresentationModel.isLastPage()) {
                 televisionShowsPresenter.onScrollToEndOfList();
             }
         }
@@ -130,12 +128,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ((MovieHubApplication)getActivity().getApplication())
-                .getComponent()
-                .plus(new TelevisionShowsModule(this))
-                .inject(this);
-
-        font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
+        createTelevisionShowsComponent().inject(this);
     }
 
     @Override
@@ -163,7 +156,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
         // Pagination
         recyclerView.addOnScrollListener(recyclerViewOnScrollListener);
 
-        televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsPage == null ? 1 : televisionShowsPage.getPageNumber());
+        televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsPresentationModel == null ? 1 : televisionShowsPresentationModel.getPageNumber());
     }
 
     @Override
@@ -174,6 +167,12 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
         televisionShowsPresenter.onDestroyView();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        releaseTelevisionShowsComponent();
+    }
     // endregion
 
     // region TelevisionShowsAdapter.OnItemClickListener Methods
@@ -181,7 +180,7 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
     public void onItemClick(int position, View view) {
         selectedTelevisionShowView = view;
 
-        TelevisionShow televisionShow = televisionShowsAdapter.getItem(position);
+        TelevisionShowPresentationModel televisionShow = televisionShowsAdapter.getItem(position);
         if(televisionShow != null){
             televisionShowsPresenter.onTelevisionShowClick(televisionShow);
         }
@@ -191,11 +190,11 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
     // region TelevisionShowsAdapter.OnReloadClickListener Methods
     @Override
     public void onReloadClick() {
-        televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsPage.getPageNumber());
+        televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsPresentationModel.getPageNumber());
     }
     // endregion
 
-    // region TelevisionShowsUiContract.View Methods
+    // region TelevisionShowsPresentationContract.View Methods
 
     @Override
     public void showEmptyView() {
@@ -218,11 +217,6 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
     }
 
     @Override
-    public void setErrorText(String errorText) {
-        errorTextView.setText(errorText);
-    }
-
-    @Override
     public void showLoadingView() {
         progressBar.setVisibility(View.VISIBLE);
         isLoading = true;
@@ -235,65 +229,58 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
     }
 
     @Override
-    public void addHeader() {
+    public void addHeaderView() {
         televisionShowsAdapter.addHeader();
     }
 
     @Override
-    public void addFooter() {
+    public void addFooterView() {
         televisionShowsAdapter.addFooter();
     }
 
     @Override
-    public void removeFooter() {
+    public void removeFooterView() {
         televisionShowsAdapter.removeFooter();
         isLoading = false;
     }
 
     @Override
-    public void showErrorFooter() {
+    public void showErrorFooterView() {
         televisionShowsAdapter.updateFooter(BaseAdapter.FooterType.ERROR);
     }
 
     @Override
-    public void showLoadingFooter() {
+    public void showLoadingFooterView() {
         televisionShowsAdapter.updateFooter(BaseAdapter.FooterType.LOAD_MORE);
         isLoading = true;
     }
 
     @Override
-    public void addTelevisionShowsToAdapter(List<TelevisionShow> televisionShows) {
-        televisionShowsAdapter.addAll(televisionShows);
+    public void showTelevisionShows(List<TelevisionShowDomainModel> televisionShows) {
+        televisionShowsAdapter.addAll(televisionShowPresentationModelMapper.mapListToPresentationModelList(televisionShows));
     }
 
     @Override
-    public void loadMoreItems() {
-        televisionShowsPage.incrementPageNumber();
-        televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsPage.getPageNumber());
+    public void loadMoreTelevisionShows() {
+        televisionShowsPresentationModel.incrementPageNumber();
+        televisionShowsPresenter.onLoadPopularTelevisionShows(televisionShowsPresentationModel.getPageNumber());
     }
 
     @Override
-    public void setTelevisionShowsPage(TelevisionShowsPage televisionShowsPage) {
-        this.televisionShowsPage = televisionShowsPage;
+    public void setTelevisionShowsDomainModel(TelevisionShowsDomainModel televisionShowsDomainModel) {
+        this.televisionShowsPresentationModel = televisionShowsPresentationModelMapper.mapToPresentationModel(televisionShowsDomainModel);
     }
 
     @Override
-    public void openTelevisionShowDetails(TelevisionShow televisionShow) {
-        Intent intent = new Intent(getActivity(), TelevisionShowDetailsActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(KEY_TELEVISION_SHOW, televisionShow);
-        intent.putExtras(bundle);
-
+    public void openTelevisionShowDetails(TelevisionShowPresentationModel televisionShow) {
         Window window = getActivity().getWindow();
 //            window.setStatusBarColor(primaryDark);
 
-        Resources resources = selectedTelevisionShowView.getResources();
-        Pair<View, String> televisionShowPair  = getPair(selectedTelevisionShowView, resources.getString(R.string.transition_television_show_thumbnail));
-
+        Pair<View, String> televisionShowPair  = getTelevisionShowPair();
         ActivityOptionsCompat options = getActivityOptionsCompat(televisionShowPair);
 
         window.setExitTransition(null);
-        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+        ActivityCompat.startActivity(getActivity(), TelevisionShowDetailsActivity.createIntent(getContext(), televisionShow), options.toBundle());
     }
     // endregion
 
@@ -334,54 +321,66 @@ public class TelevisionShowsFragment extends BaseFragment implements TelevisionS
         return options;
     }
 
-    private Pair<View, String> getPair(View view, String transition){
-        Pair<View, String> posterImagePair = null;
-        View posterImageView = ButterKnife.findById(view, R.id.thumbnail_iv);
-        if(posterImageView != null){
-            posterImagePair = Pair.create(posterImageView, transition);
-        }
-
-        return posterImagePair;
+    private Pair<View, String> getTelevisionShowPair(){
+        Resources resources = getResources();
+        String transitionName = resources.getString(R.string.transition_television_show_thumbnail);
+        View view = selectedTelevisionShowView.findViewById(R.id.thumbnail_iv);
+        return getPair(view, transitionName);
     }
 
     private Pair<View, String> getBottomNavigationViewPair(){
+        Resources resources = getResources();
+        String transitionName = resources.getString(R.string.transition_bottom_navigation);
+        View view = getActivity().findViewById(R.id.bottom_navigation);
+        return getPair(view, transitionName);
+    }
+
+    private Pair<View, String> getStatusBarPair(){
+        View view = getActivity().findViewById(android.R.id.statusBarBackground);
+        return getPair(view);
+    }
+
+    private Pair<View, String> getNavigationBarPair(){
+        View view = getActivity().findViewById(android.R.id.navigationBarBackground);
+        return getPair(view);
+    }
+
+    private Pair<View, String> getAppBarPair(){
+        Resources resources = getResources();
+        String transitionName = resources.getString(R.string.transition_app_bar);
+        View view = getActivity().findViewById(R.id.appbar);
+        return getPair(view, transitionName);
+    }
+
+    private Pair<View, String> getPair(View view, String transitionName){
         Pair<View, String> pair = null;
-        View bottomNavigationView = ButterKnife.findById(getActivity(), R.id.bottom_navigation);
-        if(bottomNavigationView != null) {
-            Resources resources = bottomNavigationView.getResources();
-            pair = Pair.create(bottomNavigationView, resources.getString(R.string.transition_bottom_navigation));
+        if(view != null) {
+            pair = Pair.create(view, transitionName);
         }
         return pair;
     }
 
-    private Pair<View, String> getStatusBarPair(){
+    private Pair<View, String> getPair(View view){
         Pair<View, String> pair = null;
-        View statusBar = ButterKnife.findById(getActivity(), android.R.id.statusBarBackground);
-        if(statusBar != null)
-            pair = Pair.create(statusBar, statusBar.getTransitionName());
-        return pair;
-    }
-
-    private Pair<View, String> getNavigationBarPair(){
-        Pair<View, String> pair = null;
-        View navigationBar = ButterKnife.findById(getActivity(), android.R.id.navigationBarBackground);
-        if(navigationBar != null)
-            pair = Pair.create(navigationBar, navigationBar.getTransitionName());
-        return pair;
-    }
-
-    private Pair<View, String> getAppBarPair(){
-        Pair<View, String> pair = null;
-        View appBar = ButterKnife.findById(getActivity(), R.id.appbar);
-        if(appBar != null) {
-            Resources resources = appBar.getResources();
-            pair = Pair.create(appBar, resources.getString(R.string.transition_app_bar));
+        if(view != null) {
+            pair = Pair.create(view, view.getTransitionName());
         }
         return pair;
     }
 
     public void scrollToTop(){
         recyclerView.scrollToPosition(0);
+    }
+
+    private TelevisionShowsComponent createTelevisionShowsComponent(){
+        televisionShowsComponent = ((MovieHubApplication)getActivity().getApplication())
+                .getApplicationComponent()
+                .createSubcomponent(new TelevisionShowsModule(this));
+        return televisionShowsComponent;
+    }
+
+    public void releaseTelevisionShowsComponent(){
+        televisionShowsComponent = null;
     }
     // endregion
 }

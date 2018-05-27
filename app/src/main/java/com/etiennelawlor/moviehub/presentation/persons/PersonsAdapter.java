@@ -18,9 +18,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.network.response.Person;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.common.widget.DynamicHeightImageView;
+import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
 import com.etiennelawlor.moviehub.util.AnimationUtility;
 import com.etiennelawlor.moviehub.util.ColorUtility;
 import com.etiennelawlor.moviehub.util.DisplayUtility;
@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
  * Created by etiennelawlor on 12/17/16.
  */
 
-public class PersonsAdapter extends BaseAdapter<Person> {
+public class PersonsAdapter extends BaseAdapter<PersonPresentationModel> {
 
     // region Constants
     // endregion
@@ -81,14 +81,11 @@ public class PersonsAdapter extends BaseAdapter<Person> {
 
         final PersonViewHolder holder = new PersonViewHolder(v);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int adapterPos = holder.getAdapterPosition();
-                if (adapterPos != RecyclerView.NO_POSITION) {
-                    if (onItemClickListener != null) {
-                        onItemClickListener.onItemClick(adapterPos, holder.itemView);
-                    }
+        holder.itemView.setOnClickListener(v1 -> {
+            int adapterPos = holder.getAdapterPosition();
+            if (adapterPos != RecyclerView.NO_POSITION) {
+                if (onItemClickListener != null) {
+                    onItemClickListener.onItemClick(adapterPos, holder.itemView);
                 }
             }
         });
@@ -104,12 +101,9 @@ public class PersonsAdapter extends BaseAdapter<Person> {
         v.setLayoutParams(layoutParams);
 
         final FooterViewHolder holder = new FooterViewHolder(v);
-        holder.reloadButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(onReloadClickListener != null){
-                    onReloadClickListener.onReloadClick();
-                }
+        holder.reloadButton.setOnClickListener(v1 -> {
+            if(onReloadClickListener != null){
+                onReloadClickListener.onReloadClick();
             }
         });
 
@@ -125,7 +119,7 @@ public class PersonsAdapter extends BaseAdapter<Person> {
     protected void bindItemViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         final PersonViewHolder holder = (PersonViewHolder) viewHolder;
 
-        final Person person = getItem(position);
+        final PersonPresentationModel person = getItem(position);
         if (person != null) {
             holder.bind(person);
         }
@@ -155,13 +149,13 @@ public class PersonsAdapter extends BaseAdapter<Person> {
 
     @Override
     public void addHeader() {
-        add(new Person());
+        add(new PersonPresentationModel());
     }
 
     @Override
     public void addFooter() {
         isFooterAdded = true;
-        add(new Person());
+        add(new PersonPresentationModel());
     }
 
     // region Inner Classes
@@ -195,7 +189,7 @@ public class PersonsAdapter extends BaseAdapter<Person> {
         // endregion
 
         // region Helper Methods
-        private void bind(Person person){
+        private void bind(PersonPresentationModel person){
             resetInfoBackgroundColor(infoLinearLayout);
             resetTitleTextColor(titleTextView);
 
@@ -203,7 +197,7 @@ public class PersonsAdapter extends BaseAdapter<Person> {
             setUpTitle(titleTextView, person);
         }
 
-        private void setUpThumbnail(final PersonViewHolder vh, final Person person){
+        private void setUpThumbnail(final PersonViewHolder vh, final PersonPresentationModel person){
             final DynamicHeightImageView iv = vh.thumbnailImageView;
 
             double heightRatio = 3.0D/2.0D;
@@ -219,22 +213,12 @@ public class PersonsAdapter extends BaseAdapter<Person> {
                         .into(iv, new Callback() {
                             @Override
                             public void onSuccess() {
-                                if(person.getProfilePalette() != null){
-                                    setUpInfoBackgroundColor(vh.infoLinearLayout, person.getProfilePalette());
-                                    setUpTitleTextColor(vh.titleTextView, person.getProfilePalette());
-//                                setUpSubtitleTextColor(vh.subtitleTextView, person.getProfilePalette());
-                                } else {
-                                    Bitmap bitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
-                                    Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-                                        public void onGenerated(Palette palette) {
-                                            person.setProfilePalette(palette);
-
-                                            setUpInfoBackgroundColor(vh.infoLinearLayout, palette);
-                                            setUpTitleTextColor(vh.titleTextView, palette);
+                                Bitmap bitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
+                                Palette.from(bitmap).generate(palette -> {
+                                    setUpInfoBackgroundColor(vh.infoLinearLayout, palette);
+                                    setUpTitleTextColor(vh.titleTextView, palette);
 //                                        setUpSubtitleTextColor(vh.subtitleTextView, palette);
-                                        }
-                                    });
-                                }
+                                });
                             }
 
                             @Override
@@ -259,7 +243,7 @@ public class PersonsAdapter extends BaseAdapter<Person> {
             }
         }
 
-        private void setUpTitle(TextView tv, Person person){
+        private void setUpTitle(TextView tv, PersonPresentationModel person){
             String name = person.getName();
             if (!TextUtils.isEmpty(name)) {
                 tv.setText(name);
@@ -288,7 +272,7 @@ public class PersonsAdapter extends BaseAdapter<Person> {
         FrameLayout loadingFrameLayout;
         @BindView(R.id.error_rl)
         RelativeLayout errorRelativeLayout;
-        @BindView(R.id.reload_btn)
+        @BindView(R.id.retry_btn)
         Button reloadButton;
         // endregion
 

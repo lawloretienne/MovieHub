@@ -20,7 +20,8 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             app:collapsedTitleTextAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            <!--|snap-->
 
             <FrameLayout
                 android:id="@+id/backdrop_fl"
@@ -103,7 +104,8 @@
                     android:layout_marginLeft="16dp"
                     android:background="@drawable/gradient_bg"
                     android:scaleType="centerCrop"
-                    android:transitionName="@string/transition_person_thumbnail" />
+                    android:transitionName="@string/transition_person_thumbnail"
+                    android:contentDescription="@string/actor_headshot"/>
 
             </FrameLayout>
 
@@ -127,7 +129,7 @@
                 <com.etiennelawlor.moviehub.presentation.common.widget.CustomFontTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Bio"
+                    android:text="@string/bio"
                     android:textColor="@color/primary_text_dark"
                     android:textSize="18sp"
                     app:textFont="lato_medium" />
@@ -144,7 +146,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Birthplace"
+                    android:text="@string/birthplace"
                     android:textColor="@color/primary_text_dark"
                     android:textSize="18sp"
                     app:textFont="lato_medium" />
@@ -161,7 +163,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Born"
+                    android:text="@string/born"
                     android:textColor="@color/primary_text_dark"
                     android:textSize="18sp"
                     app:textFont="lato_medium" />
@@ -185,7 +187,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="Died"
+                        android:text="@string/died"
                         android:textColor="@color/primary_text_dark"
                         android:textSize="18sp"
                         app:textFont="lato_medium" />

@@ -17,4 +17,14 @@ public class TestSchedulerProvider implements SchedulerProvider {
     public Scheduler ui() {
         return Schedulers.trampoline();
     }
+
+    @Override
+    public Scheduler computation() {
+        return Schedulers.trampoline();
+    }
+
+    @Override
+    public Scheduler newThread() {
+        return Schedulers.trampoline();
+    }
 }

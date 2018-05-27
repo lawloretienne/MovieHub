@@ -1,6 +1,7 @@
 package com.etiennelawlor.moviehub.presentation.search;
 
-import android.content.Intent;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -17,11 +18,13 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
 import android.transition.Transition;
+import android.transition.TransitionListenerAdapter;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewPropertyAnimator;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -30,13 +33,20 @@ import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.network.response.Movie;
-import com.etiennelawlor.moviehub.data.network.response.Person;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
+import com.etiennelawlor.moviehub.di.component.SearchComponent;
 import com.etiennelawlor.moviehub.di.module.SearchModule;
+import com.etiennelawlor.moviehub.domain.models.MovieDomainModel;
+import com.etiennelawlor.moviehub.domain.models.PersonDomainModel;
+import com.etiennelawlor.moviehub.domain.models.TelevisionShowDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
 import com.etiennelawlor.moviehub.presentation.common.GravitySnapHelper;
+import com.etiennelawlor.moviehub.presentation.mappers.MoviePresentationModelMapper;
+import com.etiennelawlor.moviehub.presentation.mappers.PersonPresentationModelMapper;
+import com.etiennelawlor.moviehub.presentation.mappers.TelevisionShowPresentationModelMapper;
+import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.TelevisionShowPresentationModel;
 import com.etiennelawlor.moviehub.presentation.moviedetails.MovieDetailsActivity;
 import com.etiennelawlor.moviehub.presentation.persondetails.PersonDetailsActivity;
 import com.etiennelawlor.moviehub.presentation.televisionshowdetails.TelevisionShowDetailsActivity;
@@ -53,19 +63,12 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import timber.log.Timber;
 
 /**
  * Created by etiennelawlor on 1/13/17.
  */
 
-public class SearchFragment extends BaseFragment implements SearchUiContract.View {
-
-    // region Constants
-    public static final String KEY_MOVIE = "KEY_MOVIE";
-    public static final String KEY_TELEVISION_SHOW = "KEY_TELEVISION_SHOW";
-    public static final String KEY_PERSON = "KEY_PERSON";
-    // endregion
+public class SearchFragment extends BaseFragment implements SearchPresentationContract.View {
 
     // region Views
     @BindView(R.id.appbar)
@@ -106,65 +109,32 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
     private SearchPersonsAdapter searchPersonsAdapter;
     private InitialValueObservable<CharSequence> searchQueryChangeObservable;
     private Transition sharedElementEnterTransition;
-    private Transition sharedElementReturnTransition;
+    private SearchComponent searchComponent;
+
+    private PersonPresentationModelMapper personPresentationModelMapper = new PersonPresentationModelMapper();
+    private MoviePresentationModelMapper moviePresentationModelMapper = new MoviePresentationModelMapper();
+    private TelevisionShowPresentationModelMapper televisionShowPresentationModelMapper = new TelevisionShowPresentationModelMapper();
     // endregion
 
     // region Injected Variables
     @Inject
-    SearchUiContract.Presenter searchPresenter;
+    SearchPresentationContract.Presenter searchPresenter;
     // endregion
 
     // region Listeners
-    private Transition.TransitionListener enterTransitionTransitionListener = new Transition.TransitionListener() {
-        @Override
-        public void onTransitionStart(Transition transition) {
-            Timber.d("");
-        }
-
+    private Transition.TransitionListener enterTransitionTransitionListener = new TransitionListenerAdapter() {
         @Override
         public void onTransitionEnd(Transition transition) {
-            DisplayUtility.showKeyboard(getContext(), searchEditText);
-            searchEditText.animate().alpha(1.0f).setDuration(300);
-        }
+            ViewPropertyAnimator viewPropertyAnimator = searchEditText.animate().alpha(1.0f).setDuration(300);
+            viewPropertyAnimator.setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animator) {
+                    DisplayUtility.showKeyboard(getContext(), searchEditText);
 
-        @Override
-        public void onTransitionCancel(Transition transition) {
-
-        }
-
-        @Override
-        public void onTransitionPause(Transition transition) {
-
-        }
-
-        @Override
-        public void onTransitionResume(Transition transition) {
-
-        }
-    };
-
-    private Transition.TransitionListener returnTransitionTransitionListener = new Transition.TransitionListener() {
-        @Override
-        public void onTransitionStart(Transition transition) {
-            Timber.d("");
-            searchEditText.animate().alpha(0.0f).setDuration(300);
-        }
-
-        @Override
-        public void onTransitionEnd(Transition transition) {
-            appbar.animate().alpha(0.0f).setDuration(300);
-        }
-
-        @Override
-        public void onTransitionCancel(Transition transition) {
-        }
-
-        @Override
-        public void onTransitionPause(Transition transition) {
-        }
-
-        @Override
-        public void onTransitionResume(Transition transition) {
+                    sharedElementEnterTransition.removeListener(enterTransitionTransitionListener);
+                    viewPropertyAnimator.setListener(null);
+                }
+            }).start();
         }
     };
 
@@ -173,7 +143,7 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
         public void onItemClick(int position, View view) {
             selectedMovieView = view;
 
-            Movie movie = searchMoviesAdapter.getItem(position);
+            MoviePresentationModel movie = searchMoviesAdapter.getItem(position);
             if(movie != null){
                 searchPresenter.onMovieClick(movie);
             }
@@ -185,7 +155,7 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
         public void onItemClick(int position, View view) {
             selectedTelevisionShowView = view;
 
-            TelevisionShow televisionShow = searchTelevisionShowsAdapter.getItem(position);
+            TelevisionShowPresentationModel televisionShow = searchTelevisionShowsAdapter.getItem(position);
             if(televisionShow != null){
                 searchPresenter.onTelevisionShowClick(televisionShow);
             }
@@ -197,16 +167,13 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
         public void onItemClick(int position, View view) {
             selectedPersonView = view;
 
-            Person person = searchPersonsAdapter.getItem(position);
+            PersonPresentationModel person = searchPersonsAdapter.getItem(position);
             if(person != null){
                 searchPresenter.onPersonClick(person);
             }
         }
     };
 
-    // endregion
-
-    // region Callbacks
     // endregion
 
     // region Constructors
@@ -231,18 +198,12 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ((MovieHubApplication)getActivity().getApplication())
-                .getComponent()
-                .plus(new SearchModule(this))
-                .inject(this);
+        createSearchComponent().inject(this);
 
         setHasOptionsMenu(true);
 
         sharedElementEnterTransition = getActivity().getWindow().getSharedElementEnterTransition();
         sharedElementEnterTransition.addListener(enterTransitionTransitionListener);
-//        sharedElementReturnTransition = getActivity().getWindow().getSharedElementReturnTransition();
-//        sharedElementReturnTransition.addListener(returnTransitionTransitionListener);
-
 
         font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
     }
@@ -276,6 +237,186 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
         searchPresenter.onLoadSearch(searchQueryChangeObservable);
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        removeListeners();
+        unbinder.unbind();
+        searchPresenter.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        releaseSearchComponent();
+    }
+    // endregion
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                DisplayUtility.hideKeyboard(getContext(), searchEditText);
+                searchProgressBar.setVisibility(View.GONE);
+                searchEditText.animate()
+                    .alpha(0.0f)
+                    .setDuration(300)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animator) {
+                            getActivity().supportFinishAfterTransition();
+                        }
+                    }).start();
+
+//                NavUtils.navigateUpFromSameTask(this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    // region SearchPresentationContract.View Methods
+
+    @Override
+    public void showEmptyView() {
+        emptyLinearLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideEmptyView() {
+        emptyLinearLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void setEmptyText(String emptyText) {
+        emptyTextView.setText(emptyText);
+    }
+
+    @Override
+    public void showLoadingView() {
+        searchProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideLoadingView() {
+        searchProgressBar.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void showErrorView() {
+        Snackbar snackbar = Snackbar.make(getActivity().findViewById(R.id.main_content),
+                TrestleUtility.getFormattedText(getString(R.string.oops_something_went_wrong), font, 16),
+                Snackbar.LENGTH_INDEFINITE);
+        snackbar.setAction(R.string.retry, view -> searchPresenter.onLoadSearch(searchQueryChangeObservable));
+        View snackBarView = snackbar.getView();
+//                            snackBarView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.grey_200));
+        TextView textView = snackBarView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(ContextCompat.getColor(getContext(), R.color.secondary_text_light));
+        textView.setTypeface(font);
+
+        snackbar.show();
+    }
+
+    @Override
+    public void addMoviesToAdapter(List<MovieDomainModel> movies) {
+        searchMoviesAdapter.addAll(moviePresentationModelMapper.mapListToPresentationModelList(movies));
+    }
+
+    @Override
+    public void clearMoviesAdapter() {
+        searchMoviesAdapter.clear();
+    }
+
+    @Override
+    public void hideMoviesView() {
+        moviesLinearLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showMoviesView() {
+        moviesLinearLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void addTelevisionShowsToAdapter(List<TelevisionShowDomainModel> televisionShows) {
+        searchTelevisionShowsAdapter.addAll(televisionShowPresentationModelMapper.mapListToPresentationModelList(televisionShows));
+    }
+
+    @Override
+    public void clearTelevisionShowsAdapter() {
+        searchTelevisionShowsAdapter.clear();
+    }
+
+    @Override
+    public void hideTelevisionShowsView() {
+        televisionShowsLinearLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showTelevisionShowsView() {
+        televisionShowsLinearLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void addPersonsToAdapter(List<PersonDomainModel> persons) {
+        searchPersonsAdapter.addAll(personPresentationModelMapper.mapListToPresentationModelList(persons));
+    }
+
+    @Override
+    public void clearPersonsAdapter() {
+        searchPersonsAdapter.clear();
+    }
+
+    @Override
+    public void hidePersonsView() {
+        personsLinearLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showPersonsView() {
+        personsLinearLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void openMovieDetails(MoviePresentationModel movie) {
+        Window window = getActivity().getWindow();
+//                window.setStatusBarColor(statusBarColor);
+
+        Pair<View, String> moviePair  = getMoviePair();
+        ActivityOptionsCompat options = getActivityOptionsCompat(moviePair);
+
+        window.setExitTransition(null);
+        ActivityCompat.startActivity(getActivity(), MovieDetailsActivity.createIntent(getContext(), movie), options.toBundle());
+    }
+
+    @Override
+    public void openTelevisionShowDetails(TelevisionShowPresentationModel televisionShow) {
+        Window window = getActivity().getWindow();
+//            window.setStatusBarColor(primaryDark);
+
+        Pair<View, String> televisionShowPair  = getTelevisionShowPair();
+        ActivityOptionsCompat options = getActivityOptionsCompat(televisionShowPair);
+
+        window.setExitTransition(null);
+        ActivityCompat.startActivity(getActivity(), TelevisionShowDetailsActivity.createIntent(getContext(), televisionShow), options.toBundle());
+    }
+
+    @Override
+    public void openPersonDetails(PersonPresentationModel person) {
+        Window window = getActivity().getWindow();
+//            window.setStatusBarColor(primaryDark);
+
+        Pair<View, String> personPair  = getPersonPair();
+        ActivityOptionsCompat options = getActivityOptionsCompat(personPair);
+
+        window.setExitTransition(null);
+        ActivityCompat.startActivity(getActivity(), PersonDetailsActivity.createIntent(getContext(), person), options.toBundle());
+    }
+
+    // endregion
+
+    // region Helper Methods
     private void setUpMoviesLayout(){
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         moviesRecyclerView.setLayoutManager(layoutManager);
@@ -309,203 +450,7 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
         snapHelper.attachToRecyclerView(personsRecyclerView);
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-//        searchEditText.animate().alpha(0.0f).setDuration(300);
-
-        removeListeners();
-        unbinder.unbind();
-        searchPresenter.onDestroyView();
-    }
-
-    // endregion
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
-            case android.R.id.home:
-                DisplayUtility.hideKeyboard(getContext(), searchEditText);
-//                searchEditText.animate().alpha(0.0f).setDuration(300);
-                getActivity().supportFinishAfterTransition();
-//                NavUtils.navigateUpFromSameTask(this);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    // region SearchUiContract.View Methods
-
-    @Override
-    public void showEmptyView() {
-        emptyLinearLayout.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void hideEmptyView() {
-        emptyLinearLayout.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void setEmptyText(String emptyText) {
-        emptyTextView.setText(emptyText);
-    }
-
-    @Override
-    public void showLoadingView() {
-        searchProgressBar.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void hideLoadingView() {
-        searchProgressBar.setVisibility(View.INVISIBLE);
-    }
-
-    @Override
-    public void showErrorView() {
-        Snackbar snackbar = Snackbar.make(ButterKnife.findById(getActivity(), R.id.main_content),
-                TrestleUtility.getFormattedText("Network connection is unavailable.", font, 16),
-                Snackbar.LENGTH_INDEFINITE);
-        snackbar.setAction("RETRY", new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                searchPresenter.onLoadSearch(searchQueryChangeObservable);
-            }
-        });
-        View snackBarView = snackbar.getView();
-//                            snackBarView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.grey_200));
-        TextView textView = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text);
-        textView.setTextColor(ContextCompat.getColor(getContext(), R.color.secondary_text_light));
-        textView.setTypeface(font);
-
-        snackbar.show();
-    }
-
-    @Override
-    public void addMoviesToAdapter(List<Movie> movies) {
-        searchMoviesAdapter.addAll(movies);
-    }
-
-    @Override
-    public void clearMoviesAdapter() {
-        searchMoviesAdapter.clear();
-    }
-
-    @Override
-    public void hideMoviesView() {
-        moviesLinearLayout.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showMoviesView() {
-        moviesLinearLayout.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void addTelevisionShowsToAdapter(List<TelevisionShow> televisionShows) {
-        searchTelevisionShowsAdapter.addAll(televisionShows);
-    }
-
-    @Override
-    public void clearTelevisionShowsAdapter() {
-        searchTelevisionShowsAdapter.clear();
-    }
-
-    @Override
-    public void hideTelevisionShowsView() {
-        televisionShowsLinearLayout.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showTelevisionShowsView() {
-        televisionShowsLinearLayout.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void addPersonsToAdapter(List<Person> persons) {
-        searchPersonsAdapter.addAll(persons);
-    }
-
-    @Override
-    public void clearPersonsAdapter() {
-        searchPersonsAdapter.clear();
-    }
-
-    @Override
-    public void hidePersonsView() {
-        personsLinearLayout.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showPersonsView() {
-        personsLinearLayout.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void openMovieDetails(Movie movie) {
-        Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(KEY_MOVIE, movie);
-//                bundle.putInt(MovieDetailsActivity.KEY_STATUS_BAR_COLOR, getActivity().getWindow().getStatusBarColor());
-        intent.putExtras(bundle);
-
-        Window window = getActivity().getWindow();
-//                window.setStatusBarColor(statusBarColor);
-
-        Resources resources = selectedMovieView.getResources();
-        Pair<View, String> moviePair  = getPair(selectedMovieView, resources.getString(R.string.transition_movie_thumbnail));
-
-        ActivityOptionsCompat options = getActivityOptionsCompat(moviePair);
-
-        window.setExitTransition(null);
-        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
-    }
-
-    @Override
-    public void openTelevisionShowDetails(TelevisionShow televisionShow) {
-        Intent intent = new Intent(getActivity(), TelevisionShowDetailsActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(KEY_TELEVISION_SHOW, televisionShow);
-        intent.putExtras(bundle);
-
-        Window window = getActivity().getWindow();
-//            window.setStatusBarColor(primaryDark);
-
-        Resources resources = selectedTelevisionShowView.getResources();
-        Pair<View, String> televisionShowPair  = getPair(selectedTelevisionShowView, resources.getString(R.string.transition_television_show_thumbnail));
-
-        ActivityOptionsCompat options = getActivityOptionsCompat(televisionShowPair);
-
-        window.setExitTransition(null);
-        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
-    }
-
-    @Override
-    public void openPersonDetails(Person person) {
-        Intent intent = new Intent(getActivity(), PersonDetailsActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(KEY_PERSON, person);
-        intent.putExtras(bundle);
-
-        Window window = getActivity().getWindow();
-//            window.setStatusBarColor(primaryDark);
-
-        Resources resources = selectedPersonView.getResources();
-        Pair<View, String> personPair  = getPair(selectedPersonView, resources.getString(R.string.transition_person_thumbnail));
-
-        ActivityOptionsCompat options = getActivityOptionsCompat(personPair);
-
-        window.setExitTransition(null);
-        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
-    }
-
-    // endregion
-
-    // region Helper Methods
     private void removeListeners() {
-        sharedElementEnterTransition.removeListener(enterTransitionTransitionListener);
-//        sharedElementReturnTransition.removeListener(returnTransitionTransitionListener);
 //        moviesAdapter.setOnItemClickListener(null);
     }
 
@@ -537,40 +482,75 @@ public class SearchFragment extends BaseFragment implements SearchUiContract.Vie
         return options;
     }
 
-    private Pair<View, String> getPair(View view, String transition){
-        Pair<View, String> posterImagePair = null;
-        View posterImageView = ButterKnife.findById(view, R.id.thumbnail_iv);
-        if(posterImageView != null){
-            posterImagePair = Pair.create(posterImageView, transition);
-        }
+    private Pair<View, String> getMoviePair(){
+        Resources resources = getResources();
+        String transitionName = resources.getString(R.string.transition_movie_thumbnail);
+        View view = selectedMovieView.findViewById(R.id.thumbnail_iv);
+        return getPair(view, transitionName);
+    }
 
-        return posterImagePair;
+    private Pair<View, String> getTelevisionShowPair(){
+        Resources resources = getResources();
+        String transitionName = resources.getString(R.string.transition_television_show_thumbnail);
+        View view = selectedTelevisionShowView.findViewById(R.id.thumbnail_iv);
+        return getPair(view, transitionName);
+    }
+
+    private Pair<View, String> getPersonPair(){
+        Resources resources = getResources();
+        String transitionName = resources.getString(R.string.transition_person_thumbnail);
+        View view = selectedPersonView.findViewById(R.id.thumbnail_iv);
+        return getPair(view, transitionName);
     }
 
     private Pair<View, String> getStatusBarPair(){
-        Pair<View, String> pair = null;
-        View statusBar = ButterKnife.findById(getActivity(), android.R.id.statusBarBackground);
-        if(statusBar != null)
-            pair = Pair.create(statusBar, statusBar.getTransitionName());
-        return pair;
+        View view = getActivity().findViewById(android.R.id.statusBarBackground);
+        return getPair(view);
     }
 
     private Pair<View, String> getNavigationBarPair(){
-        Pair<View, String> pair = null;
-        View navigationBar = ButterKnife.findById(getActivity(), android.R.id.navigationBarBackground);
-        if(navigationBar != null)
-            pair = Pair.create(navigationBar, navigationBar.getTransitionName());
-        return pair;
+        View view = getActivity().findViewById(android.R.id.navigationBarBackground);
+        return getPair(view);
     }
 
     private Pair<View, String> getAppBarPair(){
+        Resources resources = getResources();
+        String transitionName = resources.getString(R.string.transition_app_bar);
+        View view = getActivity().findViewById(R.id.appbar);
+        return getPair(view, transitionName);
+    }
+
+    private Pair<View, String> getPair(View view, String transitionName){
         Pair<View, String> pair = null;
-        View appBar = ButterKnife.findById(getActivity(), R.id.appbar);
-        if(appBar != null) {
-            Resources resources = appBar.getResources();
-            pair = Pair.create(appBar, resources.getString(R.string.transition_app_bar));
+        if(view != null) {
+            pair = Pair.create(view, transitionName);
         }
         return pair;
+    }
+
+    private Pair<View, String> getPair(View view){
+        Pair<View, String> pair = null;
+        if(view != null) {
+            pair = Pair.create(view, view.getTransitionName());
+        }
+        return pair;
+    }
+
+    private SearchComponent createSearchComponent(){
+        searchComponent = ((MovieHubApplication)getActivity().getApplication())
+                .getApplicationComponent()
+                .createSubcomponent(new SearchModule(this));
+        return searchComponent;
+    }
+
+    public void releaseSearchComponent(){
+        searchComponent = null;
+    }
+
+    public void onBackPressed(){
+        searchProgressBar.setVisibility(View.GONE);
+
+        searchEditText.animate().alpha(0.0f).setDuration(300).start();
     }
     // endregion
 }

@@ -1,7 +1,11 @@
 package com.etiennelawlor.moviehub.data.repositories.person;
 
-import com.etiennelawlor.moviehub.data.repositories.person.models.PersonDetailsWrapper;
-import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsPage;
+import com.etiennelawlor.moviehub.data.network.response.PersonCreditsResponse;
+import com.etiennelawlor.moviehub.data.network.response.PersonResponse;
+import com.etiennelawlor.moviehub.data.network.response.PersonsResponse;
+import com.etiennelawlor.moviehub.data.repositories.models.PersonCreditsDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.PersonDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.PersonsDataModel;
 
 import io.reactivex.Maybe;
 import io.reactivex.Single;
@@ -13,24 +17,23 @@ import io.reactivex.Single;
 public interface PersonDataSourceContract {
 
     interface Repository {
-        Single<PersonsPage> getPopularPersons(int currentPage);
-
-        Single<PersonDetailsWrapper> getPersonDetails(int personId);
+        Single<PersonsDataModel> getPopularPersons(int currentPage);
+        Single<PersonDataModel> getPerson(long personId);
+        Single<PersonCreditsDataModel> getPersonCredits(long personId);
     }
 
     interface LocalDateSource {
-        Maybe<PersonsPage> getPopularPersons(int currentPage);
-
-        void savePopularPersons(PersonsPage personsPage);
-
-        Maybe<PersonDetailsWrapper> getPersonDetails(int personId);
-
-        void savePersonDetails(PersonDetailsWrapper personDetailsWrapper);
+        Maybe<PersonsDataModel> getPopularPersons(int currentPage);
+        void savePopularPersons(PersonsDataModel personsDataModel);
+        Maybe<PersonDataModel> getPerson(long personId);
+        void savePerson(PersonDataModel person);
+        Maybe<PersonCreditsDataModel> getPersonCredits(long personId);
+        void savePersonCredits(PersonCreditsDataModel personCreditsResponse);
     }
 
     interface RemoteDateSource {
-        Single<PersonsPage> getPopularPersons(int currentPage);
-
-        Single<PersonDetailsWrapper> getPersonDetails(int personId);
+        Single<PersonsResponse> getPopularPersons(int currentPage);
+        Single<PersonResponse> getPerson(long personId);
+        Single<PersonCreditsResponse> getPersonCredits(long personId);
     }
 }

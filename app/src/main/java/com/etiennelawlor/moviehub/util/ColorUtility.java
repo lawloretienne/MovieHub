@@ -157,7 +157,7 @@ public class ColorUtility {
 
     public static String modifyColorLuminance(String originalColor, float luminance) {
         if(originalColor.length() == 6){
-            String modifiedColor = "";
+            StringBuilder modifiedColor = new StringBuilder();
             int c;
             for (int i = 0; i < 3; i++) {
                 c = Integer.parseInt(originalColor.substring((i * 2), (i * 2) + 2), 16);
@@ -166,14 +166,14 @@ public class ColorUtility {
                 if(hexString.length() == 1){
                     hexString = "0"+hexString;
                 }
-                modifiedColor += hexString;
+                modifiedColor.append(hexString);
             }
 
-            return modifiedColor;
+            return modifiedColor.toString();
         } else if(originalColor.length() == 7 && originalColor.startsWith("#")) {
             originalColor = originalColor.substring(1);
 
-            String modifiedColor = "";
+            StringBuilder modifiedColor = new StringBuilder();
             int c;
             for (int i = 0; i < 3; i++) {
                 c = Integer.parseInt(originalColor.substring((i * 2), (i * 2) + 2), 16);
@@ -182,10 +182,10 @@ public class ColorUtility {
                 if(hexString.length() == 1){
                     hexString = "0"+hexString;
                 }
-                modifiedColor += hexString;
+                modifiedColor.append(hexString);
             }
 
-            return modifiedColor;
+            return modifiedColor.toString();
         } else {
             return originalColor;
         }

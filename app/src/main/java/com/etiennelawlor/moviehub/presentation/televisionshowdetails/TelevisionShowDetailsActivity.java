@@ -1,15 +1,22 @@
 package com.etiennelawlor.moviehub.presentation.televisionshowdetails;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.etiennelawlor.moviehub.R;
+import com.etiennelawlor.moviehub.presentation.models.TelevisionShowPresentationModel;
 
 import butterknife.ButterKnife;
 
 public class TelevisionShowDetailsActivity extends AppCompatActivity {
+
+    // region Constants
+    protected static final String KEY_TELEVISION_SHOW = "TELEVISION_SHOW";
+    // endregion
 
     // region Lifecycle Methods
     @Override
@@ -45,5 +52,12 @@ public class TelevisionShowDetailsActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    // Use factory methods for creating Intents
+    public static Intent createIntent(Context context, TelevisionShowPresentationModel televisionShow){
+        Intent intent = new Intent(context, TelevisionShowDetailsActivity.class);
+        intent.putExtra(KEY_TELEVISION_SHOW, televisionShow);
+        return intent;
     }
 }

@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:gravity="center"
-        android:text="No available people."
+        android:text="@string/no_available_people"
         android:textColor="@color/secondary_text_light"
         android:textSize="20sp"
         app:textFont="lato_medium" />

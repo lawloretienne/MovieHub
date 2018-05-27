@@ -1,8 +1,6 @@
 package com.etiennelawlor.moviehub.presentation.movies;
 
-import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -15,17 +13,20 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.network.response.Movie;
-import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesPage;
+import com.etiennelawlor.moviehub.di.component.MoviesComponent;
 import com.etiennelawlor.moviehub.di.module.MoviesModule;
+import com.etiennelawlor.moviehub.domain.models.MovieDomainModel;
+import com.etiennelawlor.moviehub.domain.models.MoviesDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
+import com.etiennelawlor.moviehub.presentation.mappers.MoviePresentationModelMapper;
+import com.etiennelawlor.moviehub.presentation.mappers.MoviesPresentationModelMapper;
+import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.MoviesPresentationModel;
 import com.etiennelawlor.moviehub.presentation.moviedetails.MovieDetailsActivity;
-import com.etiennelawlor.moviehub.util.FontCache;
 
 import java.util.List;
 
@@ -41,19 +42,13 @@ import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
  * Created by etiennelawlor on 12/16/16.
  */
 
-public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItemClickListener, MoviesAdapter.OnReloadClickListener, MoviesUiContract.View {
-
-    // region Constants
-    public static final String KEY_MOVIE = "KEY_MOVIE";
-    // endregion
+public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItemClickListener, MoviesAdapter.OnReloadClickListener, MoviesPresentationContract.View {
 
     // region Views
     @BindView(R.id.rv)
     RecyclerView recyclerView;
     @BindView(R.id.error_ll)
     LinearLayout errorLinearLayout;
-    @BindView(R.id.error_tv)
-    TextView errorTextView;
     @BindView(R.id.pb)
     ProgressBar progressBar;
     @BindView(android.R.id.empty)
@@ -64,22 +59,24 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
 
     // region Member Variables
     private MoviesAdapter moviesAdapter;
-    private Typeface font;
     private Unbinder unbinder;
     private StaggeredGridLayoutManager layoutManager;
-    private MoviesPage moviesPage;
+    private MoviesPresentationModel moviesPresentationModel;
     private boolean isLoading = false;
+    private MoviesComponent moviesComponent;
+    private MoviesPresentationModelMapper moviesPresentationModelMapper = new MoviesPresentationModelMapper();
+    private MoviePresentationModelMapper moviePresentationModelMapper = new MoviePresentationModelMapper();
     // endregion
 
     // region Injected Variables
     @Inject
-    MoviesUiContract.Presenter moviesPresenter;
+    MoviesPresentationContract.Presenter moviesPresenter;
     // endregion
 
     // region Listeners
-    @OnClick(R.id.reload_btn)
+    @OnClick(R.id.retry_btn)
     public void onReloadButtonClicked() {
-        moviesPresenter.onLoadPopularMovies(moviesPage == null ? 1 : moviesPage.getPageNumber());
+        moviesPresenter.onLoadPopularMovies(moviesPresentationModel == null ? 1 : moviesPresentationModel.getPageNumber());
     }
 
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
@@ -100,7 +97,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
             if ((visibleItemCount + firstVisibleItem) >= totalItemCount
                     && totalItemCount > 0
                     && !isLoading
-                    && !moviesPage.isLastPage()) {
+                    && !moviesPresentationModel.isLastPage()) {
                 moviesPresenter.onScrollToEndOfList();
             }
         }
@@ -129,12 +126,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ((MovieHubApplication)getActivity().getApplication())
-                .getComponent()
-                .plus(new MoviesModule(this))
-                .inject(this);
-
-        font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
+        createMoviesComponent().inject(this);
     }
 
     @Override
@@ -162,7 +154,7 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
         // Pagination
         recyclerView.addOnScrollListener(recyclerViewOnScrollListener);
 
-        moviesPresenter.onLoadPopularMovies(moviesPage == null ? 1 : moviesPage.getPageNumber());
+        moviesPresenter.onLoadPopularMovies(moviesPresentationModel == null ? 1 : moviesPresentationModel.getPageNumber());
     }
 
     @Override
@@ -173,13 +165,20 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
         moviesPresenter.onDestroyView();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        releaseMoviesComponent();
+    }
+
     // endregion
 
     // region MoviesAdapter.OnItemClickListener Methods
     @Override
     public void onItemClick(int position, View view) {
         selectedMovieView = view;
-        Movie movie = moviesAdapter.getItem(position);
+        MoviePresentationModel movie = moviesAdapter.getItem(position);
         if(movie != null){
             moviesPresenter.onMovieClick(movie);
         }
@@ -189,11 +188,11 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     // region MoviesAdapter.OnReloadClickListener Methods
     @Override
     public void onReloadClick() {
-        moviesPresenter.onLoadPopularMovies(moviesPage.getPageNumber());
+        moviesPresenter.onLoadPopularMovies(moviesPresentationModel.getPageNumber());
     }
     // endregion
 
-    // region MoviesUiContract.View Methods
+    // region MoviesPresentationContract.View Methods
 
     @Override
     public void showEmptyView() {
@@ -216,11 +215,6 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     }
 
     @Override
-    public void setErrorText(String errorText) {
-        errorTextView.setText(errorText);
-    }
-
-    @Override
     public void showLoadingView() {
         progressBar.setVisibility(View.VISIBLE);
         isLoading = true;
@@ -233,66 +227,58 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
     }
 
     @Override
-    public void addHeader() {
+    public void addHeaderView() {
         moviesAdapter.addHeader();
     }
 
     @Override
-    public void addFooter() {
+    public void addFooterView() {
         moviesAdapter.addFooter();
     }
 
     @Override
-    public void removeFooter() {
+    public void removeFooterView() {
         moviesAdapter.removeFooter();
         isLoading = false;
     }
 
     @Override
-    public void showErrorFooter() {
+    public void showErrorFooterView() {
         moviesAdapter.updateFooter(BaseAdapter.FooterType.ERROR);
     }
 
     @Override
-    public void showLoadingFooter() {
+    public void showLoadingFooterView() {
         moviesAdapter.updateFooter(BaseAdapter.FooterType.LOAD_MORE);
         isLoading = true;
     }
 
     @Override
-    public void addMoviesToAdapter(List<Movie> movies) {
-        moviesAdapter.addAll(movies);
+    public void showMovies(List<MovieDomainModel> movies) {
+        moviesAdapter.addAll(moviePresentationModelMapper.mapListToPresentationModelList(movies));
     }
 
     @Override
-    public void loadMoreItems() {
-        moviesPage.incrementPageNumber();
-        moviesPresenter.onLoadPopularMovies(moviesPage.getPageNumber());
+    public void loadMoreMovies() {
+        moviesPresentationModel.incrementPageNumber();
+        moviesPresenter.onLoadPopularMovies(moviesPresentationModel.getPageNumber());
     }
 
     @Override
-    public void setMoviesPage(MoviesPage moviesPage) {
-        this.moviesPage = moviesPage;
+    public void setMoviesDomainModel(MoviesDomainModel moviesDomainModel) {
+        this.moviesPresentationModel = moviesPresentationModelMapper.mapToPresentationModel(moviesDomainModel);
     }
 
     @Override
-    public void openMovieDetails(Movie movie) {
-        Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(KEY_MOVIE, movie);
-//            bundle.putInt(MovieDetailsActivity.KEY_STATUS_BAR_COLOR, getActivity().getWindow().getStatusBarColor());
-        intent.putExtras(bundle);
-
+    public void openMovieDetails(MoviePresentationModel movie) {
         Window window = getActivity().getWindow();
 //            window.setStatusBarColor(ContextCompat.getColor(getContext(), R.color.status_bar_color));
 
-        Resources resources = selectedMovieView.getResources();
-        Pair<View, String> moviePair  = getPair(selectedMovieView, resources.getString(R.string.transition_movie_thumbnail));
-
+        Pair<View, String> moviePair  = getMoviePair();
         ActivityOptionsCompat options = getActivityOptionsCompat(moviePair);
 
         window.setExitTransition(null);
-        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+        ActivityCompat.startActivity(getActivity(), MovieDetailsActivity.createIntent(getContext(), movie), options.toBundle());
     }
 
     // endregion
@@ -335,54 +321,66 @@ public class MoviesFragment extends BaseFragment implements MoviesAdapter.OnItem
         return options;
     }
 
-    private Pair<View, String> getPair(View view, String transition){
-        Pair<View, String> posterImagePair = null;
-        View posterImageView = ButterKnife.findById(view, R.id.thumbnail_iv);
-        if(posterImageView != null){
-            posterImagePair = Pair.create(posterImageView, transition);
-        }
-
-        return posterImagePair;
+    private Pair<View, String> getMoviePair(){
+        Resources resources = getResources();
+        String transitionName = resources.getString(R.string.transition_movie_thumbnail);
+        View view = selectedMovieView.findViewById(R.id.thumbnail_iv);
+        return getPair(view, transitionName);
     }
 
     private Pair<View, String> getBottomNavigationViewPair(){
+        Resources resources = getResources();
+        String transitionName = resources.getString(R.string.transition_bottom_navigation);
+        View view = getActivity().findViewById(R.id.bottom_navigation);
+        return getPair(view, transitionName);
+    }
+
+    private Pair<View, String> getStatusBarPair(){
+        View view = getActivity().findViewById(android.R.id.statusBarBackground);
+        return getPair(view);
+    }
+
+    private Pair<View, String> getNavigationBarPair(){
+        View view = getActivity().findViewById(android.R.id.navigationBarBackground);
+        return getPair(view);
+    }
+
+    private Pair<View, String> getAppBarPair(){
+        Resources resources = getResources();
+        String transitionName = resources.getString(R.string.transition_app_bar);
+        View view = getActivity().findViewById(R.id.appbar);
+        return getPair(view, transitionName);
+    }
+
+    private Pair<View, String> getPair(View view, String transitionName){
         Pair<View, String> pair = null;
-        View bottomNavigationView = ButterKnife.findById(getActivity(), R.id.bottom_navigation);
-        if(bottomNavigationView != null) {
-            Resources resources = bottomNavigationView.getResources();
-            pair = Pair.create(bottomNavigationView, resources.getString(R.string.transition_bottom_navigation));
+        if(view != null) {
+            pair = Pair.create(view, transitionName);
         }
         return pair;
     }
 
-    private Pair<View, String> getStatusBarPair(){
+    private Pair<View, String> getPair(View view){
         Pair<View, String> pair = null;
-        View statusBar = ButterKnife.findById(getActivity(), android.R.id.statusBarBackground);
-        if(statusBar != null)
-            pair = Pair.create(statusBar, statusBar.getTransitionName());
-        return pair;
-    }
-
-    private Pair<View, String> getNavigationBarPair(){
-        Pair<View, String> pair = null;
-        View navigationBar = ButterKnife.findById(getActivity(), android.R.id.navigationBarBackground);
-        if(navigationBar != null)
-            pair = Pair.create(navigationBar, navigationBar.getTransitionName());
-        return pair;
-    }
-
-    private Pair<View, String> getAppBarPair(){
-        Pair<View, String> pair = null;
-        View appBar = ButterKnife.findById(getActivity(), R.id.appbar);
-        if(appBar != null) {
-            Resources resources = appBar.getResources();
-            pair = Pair.create(appBar, resources.getString(R.string.transition_app_bar));
+        if(view != null) {
+            pair = Pair.create(view, view.getTransitionName());
         }
         return pair;
     }
 
     public void scrollToTop(){
         recyclerView.scrollToPosition(0);
+    }
+
+    private MoviesComponent createMoviesComponent(){
+        moviesComponent = ((MovieHubApplication)getActivity().getApplication())
+                .getApplicationComponent()
+                .createSubcomponent(new MoviesModule(this));
+        return moviesComponent;
+    }
+
+    public void releaseMoviesComponent(){
+        moviesComponent = null;
     }
     // endregion
 }

@@ -1,31 +1,35 @@
 package com.etiennelawlor.moviehub;
 
-import com.etiennelawlor.moviehub.data.network.response.Movie;
-import com.etiennelawlor.moviehub.data.network.response.Person;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.repositories.search.models.SearchWrapper;
-import com.etiennelawlor.moviehub.domain.SearchDomainContract;
+import com.etiennelawlor.moviehub.domain.models.MovieDomainModel;
+import com.etiennelawlor.moviehub.domain.models.PersonDomainModel;
+import com.etiennelawlor.moviehub.domain.models.SearchDomainModel;
+import com.etiennelawlor.moviehub.domain.models.TelevisionShowDomainModel;
+import com.etiennelawlor.moviehub.domain.usecases.SearchDomainContract;
+import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.TelevisionShowPresentationModel;
+import com.etiennelawlor.moviehub.presentation.search.SearchPresentationContract;
 import com.etiennelawlor.moviehub.presentation.search.SearchPresenter;
-import com.etiennelawlor.moviehub.presentation.search.SearchUiContract;
+import com.etiennelawlor.moviehub.util.rxjava.SchedulerProvider;
 import com.etiennelawlor.moviehub.util.rxjava.TestSchedulerProvider;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.net.UnknownHostException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.Single;
 
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by etiennelawlor on 2/9/17.
@@ -37,17 +41,18 @@ public class SearchPresenterTest {
 
     // Mocks
     @Mock
-    private SearchUiContract.View mockSearchView;
+    private SearchPresentationContract.View mockSearchView;
     @Mock
     private SearchDomainContract.UseCase mockSearchUseCase;
 
     // Stubs
-    private ArgumentCaptor<DisposableSingleObserver> disposableSingleObserverArgumentCaptor;
+//    private ArgumentCaptor<DisposableSingleObserver> disposableSingleObserverArgumentCaptor;
+    private SearchDomainModel searchDomainModelStub;
     // endregion
 
     // region Member Variables
-    private SearchWrapper searchWrapper;
     private SearchPresenter searchPresenter;
+    private SchedulerProvider schedulerProvider = new TestSchedulerProvider();
     // endregion
 
     @Before
@@ -57,34 +62,28 @@ public class SearchPresenterTest {
         MockitoAnnotations.initMocks(this);
 
         // Get a reference to the class under test
-        searchPresenter = new SearchPresenter(mockSearchView, mockSearchUseCase, new TestSchedulerProvider());
+        searchPresenter = new SearchPresenter(mockSearchView, mockSearchUseCase, schedulerProvider);
     }
 
     // region Test Methods
 
-    // Test fails because of scheudluers
-    //    @Test(expected = IOException.class)
+    //@Test(expected = IOException.class)
     @Test
     public void onLoadSearch_shouldShowError_whenRequestFailed() {
         // 1. (Given) Set up conditions required for the test
-        String query = "";
-        List<Movie> movies = getListOfMovies(0);
-        List<TelevisionShow> televisionShows = getListOfTelevisionShows(0);
-        List<Person> persons = getListOfPersons(0);
-        searchWrapper = new SearchWrapper(query, movies, televisionShows, persons);
+        searchDomainModelStub = getSearchDomainModelStub();
 
         CharSequence[] queries = {"J", "Je", "Jen", "Jenn", "Jenni", "Jennif", "Jennife", "Jennifer"};
         Observable<CharSequence> searchQueriesObservable = Observable.fromArray(queries);
+
+        when(mockSearchUseCase.getSearchResponse(anyString())).thenReturn(Single.error(new IOException()));
+
 
         // 2. (When) Then perform one or more actions
         searchPresenter.onLoadSearch(searchQueriesObservable);
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-        verify(mockSearchView, times(queries.length)).hideLoadingView();
-
-        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
-        verify(mockSearchUseCase).getSearchResponse(anyString(), disposableSingleObserverArgumentCaptor.capture());
-        disposableSingleObserverArgumentCaptor.getValue().onError(new UnknownHostException());
+        verify(mockSearchView, times(queries.length+1)).hideLoadingView();
 
         verify(mockSearchView).showErrorView();
     }
@@ -93,24 +92,18 @@ public class SearchPresenterTest {
     @Test
     public void onLoadSearch_shouldShowTelevisionShowDetails_whenRequestSucceeded() {
         // 1. (Given) Set up conditions required for the test
-        String query = "";
-        List<Movie> movies = getListOfMovies(0);
-        List<TelevisionShow> televisionShows = getListOfTelevisionShows(0);
-        List<Person> persons = getListOfPersons(0);
-        searchWrapper = new SearchWrapper(query, movies, televisionShows, persons);
+        searchDomainModelStub = getSearchDomainModelStub();
 
         CharSequence[] queries = {"J", "Je", "Jen", "Jenn", "Jenni", "Jennif", "Jennife", "Jennifer"};
         Observable<CharSequence> searchQueriesObservable = Observable.fromArray(queries);
+
+        when(mockSearchUseCase.getSearchResponse(anyString())).thenReturn(Single.just(searchDomainModelStub));
 
         // 2. (When) Then perform one or more actions
         searchPresenter.onLoadSearch(searchQueriesObservable);
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-        verify(mockSearchView, times(queries.length)).hideLoadingView();
-
-        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
-        verify(mockSearchUseCase).getSearchResponse(anyString(), disposableSingleObserverArgumentCaptor.capture());
-        disposableSingleObserverArgumentCaptor.getValue().onSuccess(searchWrapper);
+        verify(mockSearchView, times(queries.length+1)).hideLoadingView();
 
         verify(mockSearchView).clearMoviesAdapter();
         verify(mockSearchView).clearTelevisionShowsAdapter();
@@ -120,7 +113,7 @@ public class SearchPresenterTest {
     @Test
     public void onMovieClick_shouldOpenMovieDetails() {
         // 1. (Given) Set up conditions required for the test
-        Movie movie = new Movie();
+        MoviePresentationModel movie = new MoviePresentationModel();
 
         // 2. (When) Then perform one or more actions
         searchPresenter.onMovieClick(movie);
@@ -134,7 +127,7 @@ public class SearchPresenterTest {
     @Test
     public void onTelevisionShowClick_shouldOpenTelevisionShowDetails() {
         // 1. (Given) Set up conditions required for the test
-        TelevisionShow televisionShow = new TelevisionShow();
+        TelevisionShowPresentationModel televisionShow = new TelevisionShowPresentationModel();
 
         // 2. (When) Then perform one or more actions
         searchPresenter.onTelevisionShowClick(televisionShow);
@@ -148,7 +141,7 @@ public class SearchPresenterTest {
     @Test
     public void onPersonClick_shouldOpenPersonDetails() {
         // 1. (Given) Set up conditions required for the test
-        Person person = new Person();
+        PersonPresentationModel person = new PersonPresentationModel();
 
         // 2. (When) Then perform one or more actions
         searchPresenter.onPersonClick(person);
@@ -173,31 +166,44 @@ public class SearchPresenterTest {
     // endregion
 
     // region Helper Methods
-    private List<Movie> getListOfMovies(int numOfMovies){
-        List<Movie> movies = new ArrayList<>();
+    private List<MovieDomainModel> getListOfMovies(int numOfMovies){
+        List<MovieDomainModel> movies = new ArrayList<>();
         for(int i=0; i<numOfMovies; i++){
-            Movie movie = new Movie();
+            MovieDomainModel movie = new MovieDomainModel();
             movies.add(movie);
         }
         return movies;
     }
 
-    private List<TelevisionShow> getListOfTelevisionShows(int numOfTelevisionShows){
-        List<TelevisionShow> televisionShows = new ArrayList<>();
+    private List<TelevisionShowDomainModel> getListOfTelevisionShows(int numOfTelevisionShows){
+        List<TelevisionShowDomainModel> televisionShows = new ArrayList<>();
         for(int i=0; i<numOfTelevisionShows; i++){
-            TelevisionShow televisionShow = new TelevisionShow();
+            TelevisionShowDomainModel televisionShow = new TelevisionShowDomainModel();
             televisionShows.add(televisionShow);
         }
         return televisionShows;
     }
 
-    private List<Person> getListOfPersons(int numOfPersons){
-        List<Person> persons = new ArrayList<>();
+    private List<PersonDomainModel> getListOfPersons(int numOfPersons){
+        List<PersonDomainModel> persons = new ArrayList<>();
         for(int i=0; i<numOfPersons; i++){
-            Person person = new Person();
+            PersonDomainModel person = new PersonDomainModel();
             persons.add(person);
         }
         return persons;
+    }
+
+    private SearchDomainModel getSearchDomainModelStub(){
+        SearchDomainModel searchDomainModel = new SearchDomainModel();
+        String query = "";
+        List<MovieDomainModel> movies = getListOfMovies(0);
+        List<TelevisionShowDomainModel> televisionShows = getListOfTelevisionShows(0);
+        List<PersonDomainModel> persons = getListOfPersons(0);
+        searchDomainModel.setQuery(query);
+        searchDomainModel.setMovies(movies);
+        searchDomainModel.setTelevisionShows(televisionShows);
+        searchDomainModel.setPersons(persons);
+        return searchDomainModel;
     }
     // endregion
 

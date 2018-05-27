@@ -1,10 +1,8 @@
 package com.etiennelawlor.moviehub.presentation.main;
 
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -81,46 +79,41 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         formatMenuItems();
 
         bottomNavigationView.setOnNavigationItemSelectedListener(
-                new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        if(!item.isChecked()){
-                            item.setChecked(true);
-                            switch (item.getItemId()) {
-                                case R.id.action_movies:
-                                    getSupportFragmentManager()
-                                            .beginTransaction()
-                                            .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                                            .replace(R.id.content_fl, MoviesFragment.newInstance(), "")
-                                            .commit();
-                                    break;
-                                case R.id.action_tv_shows:
-                                    getSupportFragmentManager()
-                                            .beginTransaction()
-                                            .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                                            .replace(R.id.content_fl, TelevisionShowsFragment.newInstance(), "")
-                                            .commit();
-                                    break;
-                                case R.id.action_people:
-                                    getSupportFragmentManager()
-                                            .beginTransaction()
-                                            .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                                            .replace(R.id.content_fl, PersonsFragment.newInstance(), "")
-                                            .commit();
-                                    break;
-                            }
-                        } else {
-                            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_fl);
-                            if(fragment instanceof MoviesFragment){
-                                ((MoviesFragment)fragment).scrollToTop();
-                            } else if(fragment instanceof TelevisionShowsFragment){
-                                ((TelevisionShowsFragment)fragment).scrollToTop();
-                            } else if(fragment instanceof PersonsFragment){
-                                ((PersonsFragment)fragment).scrollToTop();
-                            }
+                item -> {
+                    if(!item.isChecked()){
+                        item.setChecked(true);
+                        Fragment fragment1;
+                        switch (item.getItemId()) {
+                            case R.id.action_movies:
+                                fragment1 = MoviesFragment.newInstance();
+                                break;
+                            case R.id.action_tv_shows:
+                                fragment1 = TelevisionShowsFragment.newInstance();
+                                break;
+                            case R.id.action_people:
+                                fragment1 = PersonsFragment.newInstance();
+                                break;
+                            default:
+                                fragment1 = MoviesFragment.newInstance();
+                                break;
                         }
-                        return false;
+
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                                .replace(R.id.content_fl, fragment1, "")
+                                .commit();
+                    } else {
+                        Fragment fragment1 = getSupportFragmentManager().findFragmentById(R.id.content_fl);
+                        if(fragment1 instanceof MoviesFragment){
+                            ((MoviesFragment) fragment1).scrollToTop();
+                        } else if(fragment1 instanceof TelevisionShowsFragment){
+                            ((TelevisionShowsFragment) fragment1).scrollToTop();
+                        } else if(fragment1 instanceof PersonsFragment){
+                            ((PersonsFragment) fragment1).scrollToTop();
+                        }
                     }
+                    return false;
                 });
     }
     // endregion
@@ -129,19 +122,16 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     @Override
     public void viewSearch() {
-        Intent intent = new Intent(this, SearchActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-
         Window window = getWindow();
 //        window.setStatusBarColor(primaryDark);
 
         Resources resources = searchCardView.getResources();
-        Pair<View, String> searchPair  = getPair(searchCardView, resources.getString(R.string.transition_search));
+        Pair<View, String> searchPair  = getSearchViewPair(searchCardView, resources.getString(R.string.transition_search));
 
         ActivityOptionsCompat options = getActivityOptionsCompat(searchPair);
 
         window.setExitTransition(null);
-        ActivityCompat.startActivity(this, intent, options.toBundle());
+        ActivityCompat.startActivity(this, SearchActivity.createIntent(this), options.toBundle());
     }
 
     // endregion
@@ -190,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     private Pair<View, String> getStatusBarPair(){
         Pair<View, String> pair = null;
-        View statusBar = ButterKnife.findById(this, android.R.id.statusBarBackground);
+        View statusBar = findViewById(android.R.id.statusBarBackground);
         if(statusBar != null)
             pair = Pair.create(statusBar, statusBar.getTransitionName());
         return pair;
@@ -198,15 +188,15 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     private Pair<View, String> getNavigationBarPair(){
         Pair<View, String> pair = null;
-        View navigationBar = ButterKnife.findById(this, android.R.id.navigationBarBackground);
+        View navigationBar = findViewById(android.R.id.navigationBarBackground);
         if(navigationBar != null)
             pair = Pair.create(navigationBar, navigationBar.getTransitionName());
         return pair;
     }
 
-    private Pair<View, String> getPair(View view, String transition){
+    private Pair<View, String> getSearchViewPair(View view, String transition){
         Pair<View, String> searchPair = null;
-        View searchView = ButterKnife.findById(view, R.id.search_cv);
+        View searchView = view.findViewById(R.id.search_cv);
         if(searchView != null){
             searchPair = Pair.create(searchView, transition);
         }

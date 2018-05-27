@@ -1,16 +1,15 @@
 package com.etiennelawlor.moviehub.di.module;
 
+import com.etiennelawlor.moviehub.data.network.MovieHubService;
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowDataSourceContract;
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowLocalDataSource;
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowRemoteDataSource;
 import com.etiennelawlor.moviehub.data.repositories.tv.TelevisionShowRepository;
-import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowDetailsWrapper;
-import com.etiennelawlor.moviehub.domain.TelevisionShowDetailsDomainContract;
-import com.etiennelawlor.moviehub.domain.TelevisionShowDetailsUseCase;
+import com.etiennelawlor.moviehub.domain.usecases.TelevisionShowDetailsDomainContract;
+import com.etiennelawlor.moviehub.domain.usecases.TelevisionShowDetailsUseCase;
+import com.etiennelawlor.moviehub.presentation.televisionshowdetails.TelevisionShowDetailsPresentationContract;
 import com.etiennelawlor.moviehub.presentation.televisionshowdetails.TelevisionShowDetailsPresenter;
-import com.etiennelawlor.moviehub.presentation.televisionshowdetails.TelevisionShowDetailsUiContract;
-import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
-import com.etiennelawlor.moviehub.util.rxjava.SchedulerTransformer;
+import com.etiennelawlor.moviehub.util.rxjava.SchedulerProvider;
 
 import dagger.Module;
 import dagger.Provides;
@@ -22,9 +21,9 @@ import dagger.Provides;
 @Module
 public class TelevisionShowDetailsModule {
 
-    private TelevisionShowDetailsUiContract.View televisionShowDetailsView;
+    private TelevisionShowDetailsPresentationContract.View televisionShowDetailsView;
 
-    public TelevisionShowDetailsModule(TelevisionShowDetailsUiContract.View televisionShowDetailsView) {
+    public TelevisionShowDetailsModule(TelevisionShowDetailsPresentationContract.View televisionShowDetailsView) {
         this.televisionShowDetailsView = televisionShowDetailsView;
     }
 
@@ -34,8 +33,8 @@ public class TelevisionShowDetailsModule {
     }
 
     @Provides
-    public TelevisionShowDataSourceContract.RemoteDateSource provideTelevisionShowRemoteDataSource() {
-        return new TelevisionShowRemoteDataSource();
+    public TelevisionShowDataSourceContract.RemoteDateSource provideTelevisionShowRemoteDataSource(MovieHubService movieHubService) {
+        return new TelevisionShowRemoteDataSource(movieHubService);
     }
 
     @Provides
@@ -44,17 +43,12 @@ public class TelevisionShowDetailsModule {
     }
 
     @Provides
-    public SchedulerTransformer<TelevisionShowDetailsWrapper> proviedSchedulerTransformer() {
-        return new ProductionSchedulerTransformer<TelevisionShowDetailsWrapper>();
+    public TelevisionShowDetailsDomainContract.UseCase provideTelevisionShowDetailsUseCase(TelevisionShowDataSourceContract.Repository televisionShowRepository) {
+        return new TelevisionShowDetailsUseCase(televisionShowRepository);
     }
 
     @Provides
-    public TelevisionShowDetailsDomainContract.UseCase provideTelevisionShowDetailsUseCase(TelevisionShowDataSourceContract.Repository televisionShowRepository, SchedulerTransformer<TelevisionShowDetailsWrapper> schedulerTransformer) {
-        return new TelevisionShowDetailsUseCase(televisionShowRepository, schedulerTransformer);
-    }
-
-    @Provides
-    public TelevisionShowDetailsUiContract.Presenter provideTelevisionShowDetailsPresenter(TelevisionShowDetailsDomainContract.UseCase televisionShowDetailsUseCase) {
-        return new TelevisionShowDetailsPresenter(televisionShowDetailsView, televisionShowDetailsUseCase);
+    public TelevisionShowDetailsPresentationContract.Presenter provideTelevisionShowDetailsPresenter(TelevisionShowDetailsDomainContract.UseCase televisionShowDetailsUseCase, SchedulerProvider schedulerProvider) {
+        return new TelevisionShowDetailsPresenter(televisionShowDetailsView, televisionShowDetailsUseCase, schedulerProvider);
     }
 }

@@ -6,6 +6,7 @@ import android.content.Context;
 import com.etiennelawlor.moviehub.BuildConfig;
 import com.etiennelawlor.moviehub.data.network.AuthorizedNetworkInterceptor;
 import com.etiennelawlor.moviehub.data.network.MovieHubService;
+import com.etiennelawlor.moviehub.di.scope.ApplicationScope;
 
 import java.io.File;
 
@@ -23,7 +24,7 @@ import timber.log.Timber;
  * Created by etiennelawlor on 12/25/17.
  */
 
-@Module(includes = ApplicationModule.class)
+@Module
 public class NetworkModule {
 
     public NetworkModule() {
@@ -82,5 +83,11 @@ public class NetworkModule {
                 .client(okHttpClient)
                 .build();
         return retrofit;
+    }
+
+    @Provides
+    @ApplicationScope
+    public MovieHubService provideMovieHubService(Retrofit retrofit) {
+        return retrofit.create(MovieHubService.class);
     }
 }

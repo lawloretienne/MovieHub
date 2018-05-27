@@ -1,28 +1,31 @@
 package com.etiennelawlor.moviehub;
 
-import com.etiennelawlor.moviehub.data.network.response.Person;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShow;
-import com.etiennelawlor.moviehub.data.network.response.TelevisionShowCredit;
-import com.etiennelawlor.moviehub.data.repositories.tv.models.TelevisionShowDetailsWrapper;
-import com.etiennelawlor.moviehub.domain.TelevisionShowDetailsDomainContract;
+import com.etiennelawlor.moviehub.domain.models.TelevisionShowCreditDomainModel;
+import com.etiennelawlor.moviehub.domain.models.TelevisionShowDetailsDomainModel;
+import com.etiennelawlor.moviehub.domain.models.TelevisionShowDomainModel;
+import com.etiennelawlor.moviehub.domain.usecases.TelevisionShowDetailsDomainContract;
+import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.TelevisionShowPresentationModel;
+import com.etiennelawlor.moviehub.presentation.televisionshowdetails.TelevisionShowDetailsPresentationContract;
 import com.etiennelawlor.moviehub.presentation.televisionshowdetails.TelevisionShowDetailsPresenter;
-import com.etiennelawlor.moviehub.presentation.televisionshowdetails.TelevisionShowDetailsUiContract;
+import com.etiennelawlor.moviehub.util.rxjava.SchedulerProvider;
+import com.etiennelawlor.moviehub.util.rxjava.TestSchedulerProvider;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.net.UnknownHostException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.Single;
 
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by etiennelawlor on 2/9/17.
@@ -34,17 +37,17 @@ public class TelevisionShowDetailsPresenterTest {
 
     // Mocks
     @Mock
-    private TelevisionShowDetailsUiContract.View mockTelevisionShowDetailsView;
+    private TelevisionShowDetailsPresentationContract.View mockTelevisionShowDetailsView;
     @Mock
     private TelevisionShowDetailsDomainContract.UseCase mockTelevisionShowDetailsUseCase;
 
     // Stubs
-    private ArgumentCaptor<DisposableSingleObserver> disposableSingleObserverArgumentCaptor;
+    private TelevisionShowDetailsDomainModel televisionShowDetailsDomainModelStub;
     // endregion
 
     // region Member Variables
-    private TelevisionShowDetailsWrapper televisionShowDetailsWrapper;
     private TelevisionShowDetailsPresenter televisionShowDetailsPresenter;
+    private SchedulerProvider schedulerProvider = new TestSchedulerProvider();
     // endregion
 
     @Before
@@ -54,7 +57,7 @@ public class TelevisionShowDetailsPresenterTest {
         MockitoAnnotations.initMocks(this);
 
         // Get a reference to the class under test
-        televisionShowDetailsPresenter = new TelevisionShowDetailsPresenter(mockTelevisionShowDetailsView, mockTelevisionShowDetailsUseCase);
+        televisionShowDetailsPresenter = new TelevisionShowDetailsPresenter(mockTelevisionShowDetailsView, mockTelevisionShowDetailsUseCase, schedulerProvider);
     }
 
     // region Test Methods
@@ -62,21 +65,12 @@ public class TelevisionShowDetailsPresenterTest {
     @Test
     public void onLoadTelevisionShowDetails_shouldShowError_whenRequestFailed() {
         // 1. (Given) Set up conditions required for the test
-        TelevisionShow televisionShow = new TelevisionShow();
-        televisionShow.setId(1);
-        List<TelevisionShowCredit> cast = new ArrayList<>();
-        List<TelevisionShowCredit> crew = new ArrayList<>();
-        List<TelevisionShow> similarTelevisionShows = new ArrayList<>();
-        String rating = "";
-        televisionShowDetailsWrapper = new TelevisionShowDetailsWrapper(televisionShow, cast, crew, similarTelevisionShows, rating);
+        televisionShowDetailsDomainModelStub = getTelevisionShowDetailsDomainModelStub();
+
+        when(mockTelevisionShowDetailsUseCase.getTelevisionShowDetails(anyInt())).thenReturn(Single.error(new IOException()));
 
         // 2. (When) Then perform one or more actions
-        televisionShowDetailsPresenter.onLoadTelevisionShowDetails(televisionShow.getId());
-
-        // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
-        verify(mockTelevisionShowDetailsUseCase).getTelevisionShowDetails(anyInt(), disposableSingleObserverArgumentCaptor.capture());
-        disposableSingleObserverArgumentCaptor.getValue().onError(new UnknownHostException());
+        televisionShowDetailsPresenter.onLoadTelevisionShowDetails(televisionShowDetailsDomainModelStub.getTelevisionShow().getId());
 
         verify(mockTelevisionShowDetailsView).showErrorView();
     }
@@ -84,29 +78,22 @@ public class TelevisionShowDetailsPresenterTest {
     @Test
     public void onLoadTelevisionShowDetails_shouldShowTelevisionShowDetails_whenRequestSucceeded() {
         // 1. (Given) Set up conditions required for the test
-        TelevisionShow televisionShow = new TelevisionShow();
-        televisionShow.setId(1);
-        List<TelevisionShowCredit> cast = new ArrayList<>();
-        List<TelevisionShowCredit> crew = new ArrayList<>();
-        List<TelevisionShow> similarTelevisionShows = new ArrayList<>();
-        String rating = "";
-        televisionShowDetailsWrapper = new TelevisionShowDetailsWrapper(televisionShow, cast, crew, similarTelevisionShows, rating);
+        televisionShowDetailsDomainModelStub = getTelevisionShowDetailsDomainModelStub();
+
+        when(mockTelevisionShowDetailsUseCase.getTelevisionShowDetails(anyInt())).thenReturn(Single.just(televisionShowDetailsDomainModelStub));
+
 
         // 2. (When) Then perform one or more actions
-        televisionShowDetailsPresenter.onLoadTelevisionShowDetails(televisionShow.getId());
+        televisionShowDetailsPresenter.onLoadTelevisionShowDetails(televisionShowDetailsDomainModelStub.getTelevisionShow().getId());
 
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
-        disposableSingleObserverArgumentCaptor = ArgumentCaptor.forClass(DisposableSingleObserver.class);
-        verify(mockTelevisionShowDetailsUseCase).getTelevisionShowDetails(anyInt(), disposableSingleObserverArgumentCaptor.capture());
-        disposableSingleObserverArgumentCaptor.getValue().onSuccess(televisionShowDetailsWrapper);
-
-        verify(mockTelevisionShowDetailsView).showTelevisionShowDetails(televisionShowDetailsWrapper);
+        verify(mockTelevisionShowDetailsView).setTelevisionShowDetailsDomainModel(televisionShowDetailsDomainModelStub);
     }
 
     @Test
     public void onPersonClick_shouldOpenPersonDetails() {
         // 1. (Given) Set up conditions required for the test
-        Person person = new Person();
+        PersonPresentationModel person = new PersonPresentationModel();
 
         // 2. (When) Then perform one or more actions
         televisionShowDetailsPresenter.onPersonClick(person);
@@ -120,7 +107,7 @@ public class TelevisionShowDetailsPresenterTest {
     @Test
     public void onTelevisionShowClick_shouldOpenTelevisionShowDetails() {
         // 1. (Given) Set up conditions required for the test
-        TelevisionShow televisionShow = new TelevisionShow();
+        TelevisionShowPresentationModel televisionShow = new TelevisionShowPresentationModel();
 
         // 2. (When) Then perform one or more actions
         televisionShowDetailsPresenter.onTelevisionShowClick(televisionShow);
@@ -160,15 +147,33 @@ public class TelevisionShowDetailsPresenterTest {
     }
 
     @Test
-    public void onDestroyView_shouldClearSubscriptions() {
+    public void onDestroyView_shouldNotInteractWithViewOrUsecase() {
         // 1. (Given) Set up conditions required for the test
 
         // 2. (When) Then perform one or more actions
         televisionShowDetailsPresenter.onDestroyView();
         // 3. (Then) Afterwards, verify that the state you are expecting is actually achieved
         verifyZeroInteractions(mockTelevisionShowDetailsView);
-        verify(mockTelevisionShowDetailsUseCase).clearDisposables();
+        verifyZeroInteractions(mockTelevisionShowDetailsUseCase);
     }
 
+    // endregion
+
+    // region Helper Methods
+    private TelevisionShowDetailsDomainModel getTelevisionShowDetailsDomainModelStub(){
+        TelevisionShowDetailsDomainModel televisionShowDetailsDomainModel = new TelevisionShowDetailsDomainModel();
+        TelevisionShowDomainModel televisionShow = new TelevisionShowDomainModel();
+        televisionShow.setId(1);
+        List<TelevisionShowCreditDomainModel> cast = new ArrayList<>();
+        List<TelevisionShowCreditDomainModel> crew = new ArrayList<>();
+        List<TelevisionShowDomainModel> similarTelevisionShows = new ArrayList<>();
+        String rating = "";
+        televisionShowDetailsDomainModel.setTelevisionShow(televisionShow);
+        televisionShowDetailsDomainModel.setCast(cast);
+        televisionShowDetailsDomainModel.setCrew(crew);
+        televisionShowDetailsDomainModel.setSimilarTelevisionShows(similarTelevisionShows);
+        televisionShowDetailsDomainModel.setRating(rating);
+        return televisionShowDetailsDomainModel;
+    }
     // endregion
 }

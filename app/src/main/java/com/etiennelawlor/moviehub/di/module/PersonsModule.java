@@ -1,16 +1,15 @@
 package com.etiennelawlor.moviehub.di.module;
 
+import com.etiennelawlor.moviehub.data.network.MovieHubService;
 import com.etiennelawlor.moviehub.data.repositories.person.PersonDataSourceContract;
 import com.etiennelawlor.moviehub.data.repositories.person.PersonLocalDataSource;
 import com.etiennelawlor.moviehub.data.repositories.person.PersonRemoteDataSource;
 import com.etiennelawlor.moviehub.data.repositories.person.PersonRepository;
-import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsPage;
-import com.etiennelawlor.moviehub.domain.PersonsDomainContract;
-import com.etiennelawlor.moviehub.domain.PersonsUseCase;
+import com.etiennelawlor.moviehub.domain.usecases.PersonsDomainContract;
+import com.etiennelawlor.moviehub.domain.usecases.PersonsUseCase;
+import com.etiennelawlor.moviehub.presentation.persons.PersonsPresentationContract;
 import com.etiennelawlor.moviehub.presentation.persons.PersonsPresenter;
-import com.etiennelawlor.moviehub.presentation.persons.PersonsUiContract;
-import com.etiennelawlor.moviehub.util.rxjava.ProductionSchedulerTransformer;
-import com.etiennelawlor.moviehub.util.rxjava.SchedulerTransformer;
+import com.etiennelawlor.moviehub.util.rxjava.SchedulerProvider;
 
 import dagger.Module;
 import dagger.Provides;
@@ -22,9 +21,9 @@ import dagger.Provides;
 @Module
 public class PersonsModule {
 
-    private PersonsUiContract.View personsView;
+    private PersonsPresentationContract.View personsView;
 
-    public PersonsModule(PersonsUiContract.View personsView) {
+    public PersonsModule(PersonsPresentationContract.View personsView) {
         this.personsView = personsView;
     }
 
@@ -34,8 +33,8 @@ public class PersonsModule {
     }
 
     @Provides
-    public PersonDataSourceContract.RemoteDateSource providePersonRemoteDataSource() {
-        return new PersonRemoteDataSource();
+    public PersonDataSourceContract.RemoteDateSource providePersonRemoteDataSource(MovieHubService movieHubService) {
+        return new PersonRemoteDataSource(movieHubService);
     }
 
     @Provides
@@ -44,17 +43,12 @@ public class PersonsModule {
     }
 
     @Provides
-    public SchedulerTransformer<PersonsPage> provideSchedulerTransformer() {
-        return new ProductionSchedulerTransformer<PersonsPage>();
+    public PersonsDomainContract.UseCase providePersonsUseCase(PersonDataSourceContract.Repository personRepository) {
+        return new PersonsUseCase(personRepository);
     }
 
     @Provides
-    public PersonsDomainContract.UseCase providePersonsUseCase(PersonDataSourceContract.Repository personRepository, SchedulerTransformer<PersonsPage> schedulerTransformer) {
-        return new PersonsUseCase(personRepository, schedulerTransformer);
-    }
-
-    @Provides
-    public PersonsUiContract.Presenter providePersonsPresenter(PersonsDomainContract.UseCase personsUseCase) {
-        return new PersonsPresenter(personsView, personsUseCase);
+    public PersonsPresentationContract.Presenter providePersonsPresenter(PersonsDomainContract.UseCase personsUseCase, SchedulerProvider schedulerProvider) {
+        return new PersonsPresenter(personsView, personsUseCase, schedulerProvider);
     }
 }

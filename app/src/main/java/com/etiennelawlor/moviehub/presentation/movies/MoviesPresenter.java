@@ -1,36 +1,43 @@
 package com.etiennelawlor.moviehub.presentation.movies;
 
-import com.etiennelawlor.moviehub.data.network.response.Movie;
-import com.etiennelawlor.moviehub.data.repositories.movie.models.MoviesPage;
-import com.etiennelawlor.moviehub.domain.MoviesDomainContract;
-import com.etiennelawlor.moviehub.util.NetworkUtility;
+import com.etiennelawlor.moviehub.domain.models.MovieDomainModel;
+import com.etiennelawlor.moviehub.domain.models.MoviesDomainModel;
+import com.etiennelawlor.moviehub.domain.usecases.MoviesDomainContract;
+import com.etiennelawlor.moviehub.presentation.models.MoviePresentationModel;
+import com.etiennelawlor.moviehub.util.rxjava.SchedulerProvider;
 
 import java.util.List;
 
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableSingleObserver;
 
 /**
  * Created by etiennelawlor on 2/9/17.
  */
 
-public class MoviesPresenter implements MoviesUiContract.Presenter {
+public class MoviesPresenter implements MoviesPresentationContract.Presenter {
 
     // region Member Variables
-    private final MoviesUiContract.View moviesView;
+    private final MoviesPresentationContract.View moviesView;
     private final MoviesDomainContract.UseCase moviesUseCase;
+    private final SchedulerProvider schedulerProvider;
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
     // endregion
 
     // region Constructors
-    public MoviesPresenter(MoviesUiContract.View moviesView, MoviesDomainContract.UseCase moviesUseCase) {
+    public MoviesPresenter(MoviesPresentationContract.View moviesView, MoviesDomainContract.UseCase moviesUseCase, SchedulerProvider schedulerProvider) {
         this.moviesView = moviesView;
         this.moviesUseCase = moviesUseCase;
+        this.schedulerProvider = schedulerProvider;
     }
     // endregion
 
-    // region MoviesUiContract.Presenter Methods
+    // region MoviesPresentationContract.Presenter Methods
     @Override
     public void onDestroyView() {
-        moviesUseCase.clearDisposables();
+        if (compositeDisposable != null)
+            compositeDisposable.clear();
     }
 
     @Override
@@ -40,72 +47,72 @@ public class MoviesPresenter implements MoviesUiContract.Presenter {
             moviesView.hideErrorView();
             moviesView.showLoadingView();
         } else{
-            moviesView.showLoadingFooter();
+            moviesView.showLoadingFooterView();
         }
 
-        moviesUseCase.getPopularMovies(currentPage, new DisposableSingleObserver<MoviesPage>() {
-            @Override
-            public void onSuccess(MoviesPage moviesPage) {
-                if(moviesPage != null){
-                    List<Movie> movies = moviesPage.getMovies();
-                    int currentPage = moviesPage.getPageNumber();
-                    boolean isLastPage = moviesPage.isLastPage();
-                    boolean hasMovies = moviesPage.hasMovies();
-                    if(currentPage == 1){
-                        moviesView.hideLoadingView();
+        Disposable disposable = moviesUseCase.getPopularMovies(currentPage)
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
+                .subscribeWith(new DisposableSingleObserver<MoviesDomainModel>() {
+                    @Override
+                    public void onSuccess(MoviesDomainModel moviesDomainModel) {
+                        if(moviesDomainModel != null){
+                            List<MovieDomainModel> movieDomainModels = moviesDomainModel.getMovies();
+                            int currentPage = moviesDomainModel.getPageNumber();
+                            boolean isLastPage = moviesDomainModel.isLastPage();
+                            boolean hasMovies = moviesDomainModel.hasMovies();
+                            if(currentPage == 1){
+                                moviesView.hideLoadingView();
 
-                        if(hasMovies){
-                            moviesView.addHeader();
-                            moviesView.addMoviesToAdapter(movies);
+                                if(hasMovies){
+                                    moviesView.addHeaderView();
+                                    moviesView.showMovies(movieDomainModels);
 
-                            if(!isLastPage)
-                                moviesView.addFooter();
+                                    if(!isLastPage)
+                                        moviesView.addFooterView();
+                                } else {
+                                    moviesView.showEmptyView();
+                                }
+                            } else {
+                                moviesView.removeFooterView();
+
+                                if(hasMovies){
+                                    moviesView.showMovies(movieDomainModels);
+
+                                    if(!isLastPage)
+                                        moviesView.addFooterView();
+                                }
+                            }
+
+                            moviesView.setMoviesDomainModel(moviesDomainModel);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        throwable.printStackTrace();
+
+                        if(currentPage == 1){
+                            moviesView.hideLoadingView();
+
+                            moviesView.showErrorView();
                         } else {
-                            moviesView.showEmptyView();
-                        }
-                    } else {
-                        moviesView.removeFooter();
-
-                        if(hasMovies){
-                            moviesView.addMoviesToAdapter(movies);
-
-                            if(!isLastPage)
-                                moviesView.addFooter();
+                            moviesView.showErrorFooterView();
                         }
                     }
+                });
 
-                    moviesView.setMoviesPage(moviesPage);
-                }
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                throwable.printStackTrace();
-
-                if(currentPage == 1){
-                    moviesView.hideLoadingView();
-
-                    if (NetworkUtility.isKnownException(throwable)) {
-                        moviesView.setErrorText("Can't load data.\nCheck your network connection.");
-                        moviesView.showErrorView();
-                    }
-                } else {
-                    if(NetworkUtility.isKnownException(throwable)){
-                        moviesView.showErrorFooter();
-                    }
-                }
-            }
-        });
+        compositeDisposable.add(disposable);
     }
 
     @Override
-    public void onMovieClick(Movie movie) {
+    public void onMovieClick(MoviePresentationModel movie) {
         moviesView.openMovieDetails(movie);
     }
 
     @Override
     public void onScrollToEndOfList() {
-        moviesView.loadMoreItems();
+        moviesView.loadMoreMovies();
     }
     // endregion
 

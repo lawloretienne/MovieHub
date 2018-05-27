@@ -18,9 +18,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.network.response.PersonCredit;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.common.widget.DynamicHeightImageView;
+import com.etiennelawlor.moviehub.presentation.models.PersonCreditPresentationModel;
 import com.etiennelawlor.moviehub.util.AnimationUtility;
 import com.etiennelawlor.moviehub.util.ColorUtility;
 import com.etiennelawlor.moviehub.util.DisplayUtility;
@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
  * Created by etiennelawlor on 12/17/16.
  */
 
-public class PersonCreditsAdapter extends BaseAdapter<PersonCredit> {
+public class PersonCreditsAdapter extends BaseAdapter<PersonCreditPresentationModel> {
 
     // region Constants
     // endregion
@@ -73,14 +73,11 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCredit> {
 
         final PersonCreditViewHolder holder = new PersonCreditViewHolder(v);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int adapterPos = holder.getAdapterPosition();
-                if (adapterPos != RecyclerView.NO_POSITION) {
-                    if (onItemClickListener != null) {
-                        onItemClickListener.onItemClick(adapterPos, holder.itemView);
-                    }
+        holder.itemView.setOnClickListener(v1 -> {
+            int adapterPos = holder.getAdapterPosition();
+            if (adapterPos != RecyclerView.NO_POSITION) {
+                if (onItemClickListener != null) {
+                    onItemClickListener.onItemClick(adapterPos, holder.itemView);
                 }
             }
         });
@@ -96,12 +93,9 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCredit> {
         v.setLayoutParams(layoutParams);
 
         final FooterViewHolder holder = new FooterViewHolder(v);
-        holder.reloadButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(onReloadClickListener != null){
-                    onReloadClickListener.onReloadClick();
-                }
+        holder.reloadButton.setOnClickListener(v1 -> {
+            if(onReloadClickListener != null){
+                onReloadClickListener.onReloadClick();
             }
         });
 
@@ -117,7 +111,7 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCredit> {
     protected void bindItemViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         final PersonCreditViewHolder holder = (PersonCreditViewHolder) viewHolder;
 
-        final PersonCredit personCredit = getItem(position);
+        final PersonCreditPresentationModel personCredit = getItem(position);
         if (personCredit != null) {
             holder.bind(personCredit);
         }
@@ -153,7 +147,7 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCredit> {
     @Override
     public void addFooter() {
         isFooterAdded = true;
-        add(new PersonCredit());
+        add(new PersonCreditPresentationModel());
     }
 
     // region Inner Classes
@@ -189,7 +183,7 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCredit> {
         // endregion
 
         // region Helper Methods
-        private void bind(PersonCredit personCredit){
+        private void bind(PersonCreditPresentationModel personCredit){
             resetInfoBackgroundColor(infoLinearLayout);
             resetTitleTextColor(titleTextView);
             resetSubtitleTextColor(subtitleTextView);
@@ -201,7 +195,7 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCredit> {
             setUpCaption(captionTextView, personCredit);
         }
 
-        private void setUpThumbnail(final PersonCreditViewHolder vh, final PersonCredit personCredit){
+        private void setUpThumbnail(final PersonCreditViewHolder vh, final PersonCreditPresentationModel personCredit){
             final DynamicHeightImageView iv = vh.thumbnailImageView;
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) iv.getLayoutParams();
             layoutParams.width = ivWidth;
@@ -220,24 +214,13 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCredit> {
                         .into(iv, new Callback() {
                             @Override
                             public void onSuccess() {
-                                if(personCredit.getPosterPalette() != null){
-                                    setUpInfoBackgroundColor(vh.infoLinearLayout, personCredit.getPosterPalette());
-                                    setUpTitleTextColor(vh.titleTextView, personCredit.getPosterPalette());
-                                    setUpSubtitleTextColor(vh.subtitleTextView, personCredit.getPosterPalette());
-                                    setUpCaptionTextColor(vh.captionTextView, personCredit.getPosterPalette());
-                                } else {
-                                    Bitmap bitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
-                                    Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-                                        public void onGenerated(Palette palette) {
-                                            personCredit.setPosterPalette(palette);
-
-                                            setUpInfoBackgroundColor(vh.infoLinearLayout, palette);
-                                            setUpTitleTextColor(vh.titleTextView, palette);
-                                            setUpSubtitleTextColor(vh.subtitleTextView, palette);
-                                            setUpCaptionTextColor(vh.captionTextView, palette);
-                                        }
-                                    });
-                                }
+                                Bitmap bitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
+                                Palette.from(bitmap).generate(palette -> {
+                                    setUpInfoBackgroundColor(vh.infoLinearLayout, palette);
+                                    setUpTitleTextColor(vh.titleTextView, palette);
+                                    setUpSubtitleTextColor(vh.subtitleTextView, palette);
+                                    setUpCaptionTextColor(vh.captionTextView, palette);
+                                });
                             }
 
                             @Override
@@ -263,7 +246,7 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCredit> {
             }
         }
 
-        private void setUpTitle(TextView tv, PersonCredit personCredit){
+        private void setUpTitle(TextView tv, PersonCreditPresentationModel personCredit){
             String title = personCredit.getTitle();
             String name = personCredit.getName();
             if (!TextUtils.isEmpty(title)) {
@@ -271,7 +254,7 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCredit> {
             } else if (!TextUtils.isEmpty(name)) {
                 tv.setText(name);
             } else {
-                tv.setText("N/A");
+                tv.setText(R.string.not_available);
             }
         }
 
@@ -289,7 +272,7 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCredit> {
             }
         }
 
-        private void setUpSubtitle(TextView tv, PersonCredit personCredit){
+        private void setUpSubtitle(TextView tv, PersonCreditPresentationModel personCredit){
             String job = personCredit.getJob();
             String character = personCredit.getCharacter();
             if (!TextUtils.isEmpty(job)) {
@@ -297,11 +280,11 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCredit> {
             } else if (!TextUtils.isEmpty(character)) {
                 tv.setText(character);
             } else {
-                tv.setText("N/A");
+                tv.setText(R.string.not_available);
             }
         }
 
-        private void setUpCaption(TextView tv, PersonCredit personCredit){
+        private void setUpCaption(TextView tv, PersonCreditPresentationModel personCredit){
             int firstAirYear = personCredit.getFirstAirYear();
             int releaseYear = personCredit.getReleaseYear();
             if(firstAirYear != -1){
@@ -347,7 +330,7 @@ public class PersonCreditsAdapter extends BaseAdapter<PersonCredit> {
         FrameLayout loadingFrameLayout;
         @BindView(R.id.error_rl)
         RelativeLayout errorRelativeLayout;
-        @BindView(R.id.reload_btn)
+        @BindView(R.id.retry_btn)
         Button reloadButton;
         // endregion
 

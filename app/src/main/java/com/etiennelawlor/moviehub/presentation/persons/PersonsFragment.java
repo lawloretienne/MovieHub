@@ -1,8 +1,6 @@
 package com.etiennelawlor.moviehub.presentation.persons;
 
-import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -15,17 +13,20 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.etiennelawlor.moviehub.MovieHubApplication;
 import com.etiennelawlor.moviehub.R;
-import com.etiennelawlor.moviehub.data.network.response.Person;
-import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsPage;
+import com.etiennelawlor.moviehub.di.component.PersonsComponent;
 import com.etiennelawlor.moviehub.di.module.PersonsModule;
+import com.etiennelawlor.moviehub.domain.models.PersonDomainModel;
+import com.etiennelawlor.moviehub.domain.models.PersonsDomainModel;
 import com.etiennelawlor.moviehub.presentation.base.BaseAdapter;
 import com.etiennelawlor.moviehub.presentation.base.BaseFragment;
+import com.etiennelawlor.moviehub.presentation.mappers.PersonPresentationModelMapper;
+import com.etiennelawlor.moviehub.presentation.mappers.PersonsPresentationModelMapper;
+import com.etiennelawlor.moviehub.presentation.models.PersonPresentationModel;
+import com.etiennelawlor.moviehub.presentation.models.PersonsPresentationModel;
 import com.etiennelawlor.moviehub.presentation.persondetails.PersonDetailsActivity;
-import com.etiennelawlor.moviehub.util.FontCache;
 
 import java.util.List;
 
@@ -41,19 +42,13 @@ import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
  * Created by etiennelawlor on 12/16/16.
  */
 
-public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnItemClickListener, PersonsAdapter.OnReloadClickListener, PersonsUiContract.View {
-
-    // region Constants
-    public static final String KEY_PERSON = "KEY_PERSON";
-    // endregion
+public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnItemClickListener, PersonsAdapter.OnReloadClickListener, PersonsPresentationContract.View {
 
     // region Views
     @BindView(R.id.rv)
     RecyclerView recyclerView;
     @BindView(R.id.error_ll)
     LinearLayout errorLinearLayout;
-    @BindView(R.id.error_tv)
-    TextView errorTextView;
     @BindView(R.id.pb)
     ProgressBar progressBar;
     @BindView(android.R.id.empty)
@@ -64,22 +59,24 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
 
     // region Member Variables
     private PersonsAdapter personsAdapter;
-    private Typeface font;
     private Unbinder unbinder;
     private StaggeredGridLayoutManager layoutManager;
-    private PersonsPage personsPage;
+    private PersonsPresentationModel personsPresentationModel;
+    private PersonsComponent personsComponent;
     private boolean isLoading = false;
+    private PersonsPresentationModelMapper personsPresentationModelMapper = new PersonsPresentationModelMapper();
+    private PersonPresentationModelMapper personPresentationModelMapper = new PersonPresentationModelMapper();
     // endregion
 
     // region Injected Variables
     @Inject
-    PersonsUiContract.Presenter personsPresenter;
+    PersonsPresentationContract.Presenter personsPresenter;
     // endregion
 
     // region Listeners
-    @OnClick(R.id.reload_btn)
+    @OnClick(R.id.retry_btn)
     public void onReloadButtonClicked() {
-        personsPresenter.onLoadPopularPersons(personsPage == null ? 1 : personsPage.getPageNumber());
+        personsPresenter.onLoadPopularPersons(personsPresentationModel == null ? 1 : personsPresentationModel.getPageNumber());
     }
 
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
@@ -100,7 +97,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
             if ((visibleItemCount + firstVisibleItem) >= totalItemCount
                     && totalItemCount > 0
                     && !isLoading
-                    && !personsPage.isLastPage()) {
+                    && !personsPresentationModel.isLastPage()) {
                 personsPresenter.onScrollToEndOfList();
             }
         }
@@ -130,12 +127,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ((MovieHubApplication)getActivity().getApplication())
-                .getComponent()
-                .plus(new PersonsModule(this))
-                .inject(this);
-
-        font = FontCache.getTypeface("Lato-Medium.ttf", getContext());
+        createPersonsComponent().inject(this);
     }
 
     @Override
@@ -163,7 +155,7 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
         // Pagination
         recyclerView.addOnScrollListener(recyclerViewOnScrollListener);
 
-        personsPresenter.onLoadPopularPersons(personsPage == null ? 1 : personsPage.getPageNumber());
+        personsPresenter.onLoadPopularPersons(personsPresentationModel == null ? 1 : personsPresentationModel.getPageNumber());
     }
 
     @Override
@@ -174,13 +166,19 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
         personsPresenter.onDestroyView();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        releasePersonsComponent();
+    }
     // endregion
 
     // region PersonsAdapter.OnItemClickListener Methods
     @Override
     public void onItemClick(int position, View view) {
         selectedPersonView = view;
-        Person person = personsAdapter.getItem(position);
+        PersonPresentationModel person = personsAdapter.getItem(position);
         if(person != null){
             personsPresenter.onPersonClick(person);
         }
@@ -190,11 +188,11 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     // region PersonsAdapter.OnReloadClickListener Methods
     @Override
     public void onReloadClick() {
-        personsPresenter.onLoadPopularPersons(personsPage.getPageNumber());
+        personsPresenter.onLoadPopularPersons(personsPresentationModel.getPageNumber());
     }
     // endregion
 
-    // region PersonsUiContract.View Methods
+    // region PersonsPresentationContract.View Methods
 
     @Override
     public void showEmptyView() {
@@ -217,11 +215,6 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     }
 
     @Override
-    public void setErrorText(String errorText) {
-        errorTextView.setText(errorText);
-    }
-
-    @Override
     public void showLoadingView() {
         progressBar.setVisibility(View.VISIBLE);
         isLoading = true;
@@ -234,65 +227,58 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
     }
 
     @Override
-    public void addHeader() {
+    public void addHeaderView() {
         personsAdapter.addHeader();
     }
 
     @Override
-    public void addFooter() {
+    public void addFooterView() {
         personsAdapter.addFooter();
     }
 
     @Override
-    public void removeFooter() {
+    public void removeFooterView() {
         personsAdapter.removeFooter();
         isLoading = false;
     }
 
     @Override
-    public void showErrorFooter() {
+    public void showErrorFooterView() {
         personsAdapter.updateFooter(BaseAdapter.FooterType.ERROR);
     }
 
     @Override
-    public void showLoadingFooter() {
+    public void showLoadingFooterView() {
         personsAdapter.updateFooter(BaseAdapter.FooterType.LOAD_MORE);
         isLoading = true;
     }
 
     @Override
-    public void addPersonsToAdapter(List<Person> persons) {
-        personsAdapter.addAll(persons);
+    public void showPersons(List<PersonDomainModel> persons) {
+        personsAdapter.addAll(personPresentationModelMapper.mapListToPresentationModelList(persons));
     }
 
     @Override
-    public void loadMoreItems() {
-        personsPage.incrementPageNumber();
-        personsPresenter.onLoadPopularPersons(personsPage.getPageNumber());
+    public void loadMorePersons() {
+        personsPresentationModel.incrementPageNumber();
+        personsPresenter.onLoadPopularPersons(personsPresentationModel.getPageNumber());
     }
 
     @Override
-    public void setPersonsPage(PersonsPage personsPage) {
-        this.personsPage = personsPage;
+    public void setPersonsDomainModel(PersonsDomainModel personsDomainModel) {
+        this.personsPresentationModel = personsPresentationModelMapper.mapToPresentationModel(personsDomainModel);
     }
 
     @Override
-    public void openPersonDetails(Person person) {
-        Intent intent = new Intent(getActivity(), PersonDetailsActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(KEY_PERSON, person);
-        intent.putExtras(bundle);
-
+    public void openPersonDetails(PersonPresentationModel person) {
         Window window = getActivity().getWindow();
 //            window.setStatusBarColor(primaryDark);
 
-        Resources resources = selectedPersonView.getResources();
-        Pair<View, String> personPair  = getPair(selectedPersonView, resources.getString(R.string.transition_person_thumbnail));
-
+        Pair<View, String> personPair  = getPersonPair();
         ActivityOptionsCompat options = getActivityOptionsCompat(personPair);
 
         window.setExitTransition(null);
-        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+        ActivityCompat.startActivity(getActivity(), PersonDetailsActivity.createIntent(getContext(), person), options.toBundle());
     }
 
     // endregion
@@ -334,54 +320,66 @@ public class PersonsFragment extends BaseFragment implements PersonsAdapter.OnIt
         return options;
     }
 
-    private Pair<View, String> getPair(View view, String transition){
-        Pair<View, String> posterImagePair = null;
-        View posterImageView = ButterKnife.findById(view, R.id.thumbnail_iv);
-        if(posterImageView != null){
-            posterImagePair = Pair.create(posterImageView, transition);
-        }
-
-        return posterImagePair;
+    private Pair<View, String> getPersonPair(){
+        Resources resources = getResources();
+        String transitionName = resources.getString(R.string.transition_person_thumbnail);
+        View view = selectedPersonView.findViewById(R.id.thumbnail_iv);
+        return getPair(view, transitionName);
     }
 
     private Pair<View, String> getBottomNavigationViewPair(){
+        Resources resources = getResources();
+        String transitionName = resources.getString(R.string.transition_bottom_navigation);
+        View view = getActivity().findViewById(R.id.bottom_navigation);
+        return getPair(view, transitionName);
+    }
+
+    private Pair<View, String> getStatusBarPair(){
+        View view = getActivity().findViewById(android.R.id.statusBarBackground);
+        return getPair(view);
+    }
+
+    private Pair<View, String> getNavigationBarPair(){
+        View view = getActivity().findViewById(android.R.id.navigationBarBackground);
+        return getPair(view);
+    }
+
+    private Pair<View, String> getAppBarPair(){
+        Resources resources = getResources();
+        String transitionName = resources.getString(R.string.transition_app_bar);
+        View view = getActivity().findViewById(R.id.appbar);
+        return getPair(view, transitionName);
+    }
+
+    private Pair<View, String> getPair(View view, String transitionName){
         Pair<View, String> pair = null;
-        View bottomNavigationView = ButterKnife.findById(getActivity(), R.id.bottom_navigation);
-        if(bottomNavigationView != null) {
-            Resources resources = bottomNavigationView.getResources();
-            pair = Pair.create(bottomNavigationView, resources.getString(R.string.transition_bottom_navigation));
+        if(view != null) {
+            pair = Pair.create(view, transitionName);
         }
         return pair;
     }
 
-    private Pair<View, String> getStatusBarPair(){
+    private Pair<View, String> getPair(View view){
         Pair<View, String> pair = null;
-        View statusBar = ButterKnife.findById(getActivity(), android.R.id.statusBarBackground);
-        if(statusBar != null)
-            pair = Pair.create(statusBar, statusBar.getTransitionName());
-        return pair;
-    }
-
-    private Pair<View, String> getNavigationBarPair(){
-        Pair<View, String> pair = null;
-        View navigationBar = ButterKnife.findById(getActivity(), android.R.id.navigationBarBackground);
-        if(navigationBar != null)
-            pair = Pair.create(navigationBar, navigationBar.getTransitionName());
-        return pair;
-    }
-
-    private Pair<View, String> getAppBarPair(){
-        Pair<View, String> pair = null;
-        View appBar = ButterKnife.findById(getActivity(), R.id.appbar);
-        if(appBar != null) {
-            Resources resources = appBar.getResources();
-            pair = Pair.create(appBar, resources.getString(R.string.transition_app_bar));
+        if(view != null) {
+            pair = Pair.create(view, view.getTransitionName());
         }
         return pair;
     }
 
     public void scrollToTop(){
         recyclerView.scrollToPosition(0);
+    }
+
+    private PersonsComponent createPersonsComponent(){
+        personsComponent = ((MovieHubApplication)getActivity().getApplication())
+                .getApplicationComponent()
+                .createSubcomponent(new PersonsModule(this));
+        return personsComponent;
+    }
+
+    public void releasePersonsComponent(){
+        personsComponent = null;
     }
     // endregion
 }

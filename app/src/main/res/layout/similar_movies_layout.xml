@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        android:text="Similar Movies"
+        android:text="@string/similar_movies"
         android:textColor="@color/primary_text_light"
         android:textSize="20sp"
         app:textFont="lato_medium" />

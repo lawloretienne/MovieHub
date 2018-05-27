@@ -1,8 +1,9 @@
 package com.etiennelawlor.moviehub.data.repositories.person;
 
 import com.etiennelawlor.moviehub.data.database.RealmUtility;
-import com.etiennelawlor.moviehub.data.repositories.person.models.PersonDetailsWrapper;
-import com.etiennelawlor.moviehub.data.repositories.person.models.PersonsPage;
+import com.etiennelawlor.moviehub.data.repositories.models.PersonCreditsDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.PersonDataModel;
+import com.etiennelawlor.moviehub.data.repositories.models.PersonsDataModel;
 
 import io.reactivex.Maybe;
 
@@ -20,27 +21,38 @@ public class PersonLocalDataSource implements PersonDataSourceContract.LocalDate
     // region PersonDataSourceContract.LocalDateSource Methods
 
     @Override
-    public Maybe<PersonsPage> getPopularPersons(int currentPage) {
-        PersonsPage personsPage = RealmUtility.getPersonsPage(currentPage);
-        if(personsPage == null)
+    public Maybe<PersonsDataModel> getPopularPersons(int currentPage) {
+        PersonsDataModel personsDataModel = RealmUtility.getPersonsDataModel(currentPage);
+        if(personsDataModel == null)
             return Maybe.empty();
         else
-            return Maybe.just(personsPage);
+            return Maybe.just(personsDataModel);
     }
 
     @Override
-    public void savePopularPersons(PersonsPage personsPage) {
-        RealmUtility.savePersonsPage(personsPage);
+    public void savePopularPersons(PersonsDataModel personsDataModel) {
+        RealmUtility.savePersonsDataModel(personsDataModel);
     }
 
     @Override
-    public Maybe<PersonDetailsWrapper> getPersonDetails(int personId) {
+    public Maybe<PersonDataModel> getPerson(long personId) {
         //        Use mapper to convert from realm objects to POJOs
         return Maybe.empty();
     }
 
     @Override
-    public void savePersonDetails(PersonDetailsWrapper personDetailsWrapper) {
+    public void savePerson(PersonDataModel person) {
+//        Use mapper to convert from POJOs to realm objects
+    }
+
+    @Override
+    public Maybe<PersonCreditsDataModel> getPersonCredits(long personId) {
+        //        Use mapper to convert from realm objects to POJOs
+        return Maybe.empty();
+    }
+
+    @Override
+    public void savePersonCredits(PersonCreditsDataModel personCreditsDataModel) {
 //        Use mapper to convert from POJOs to realm objects
     }
 

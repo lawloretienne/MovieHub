@@ -1,12 +1,4 @@
 <resources>
-    <string name="app_name">MovieHub</string>
-    <string name="movies">Movies</string>
-    <string name="tv_shows">TV Shows</string>
-    <string name="people">People</string>
-    <string name="reload">Reload</string>
-    <string name="check_your_network_connection">Can\'t load data. Check your network connection.</string>
-    <string name="content_desc">Content Description</string>
-
     <!-- transition shared elements -->
     <string name="transition_movie_thumbnail" translatable="false">movie_thumbnail</string>
     <string name="transition_television_show_thumbnail" translatable="false">television_show_thumbnail</string>
@@ -16,5 +8,34 @@
     <string name="transition_search_frame_layout" translatable="false">search_frame_layout</string>
     <string name="transition_search" translatable="false">search</string>
 
+    <string name="app_name">MovieHub</string>
+    <string name="movies">Movies</string>
+    <string name="tv_shows">TV Shows</string>
+    <string name="people">People</string>
+    <string name="content_desc">Content Description</string>
+    <string name="oops_something_went_wrong">Oops, something went wrong.</string>
+    <string name="retry">Retry</string>
+    <string name="not_available">N/A</string>
+    <string name="movie_poster">Movie Poster</string>
+    <string name="actor_headshot">Actor Headshot</string>
+    <string name="television_show_poster">Television Show Poster</string>
+    <string name="cast_credits">Cast Credits</string>
+    <string name="crew_credits">Crew Credits</string>
+    <string name="overview">Overview</string>
+    <string name="status">Status</string>
+    <string name="release_date">Release Date</string>
+    <string name="budget">Budget</string>
+    <string name="revenue">Revenue</string>
+    <string name="bio">Bio</string>
+    <string name="birthplace">Birthplace</string>
+    <string name="born">Born</string>
+    <string name="died">Died</string>
+    <string name="search_movies_tv_shows_and_people">Search Movies, TV Shows, &amp; People</string>
+    <string name="seasons">Seasons</string>
+    <string name="first_air_date">First Air Date</string>
+    <string name="no_available_movies">No available movies.</string>
+    <string name="no_available_people">No available people.</string>
+    <string name="similar_movies">Similar Movies</string>
+    <string name="similar_television_shows">Similar Television Shows</string>
 
 </resources>

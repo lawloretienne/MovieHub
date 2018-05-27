@@ -8,11 +8,10 @@ import android.util.Log;
 
 import com.etiennelawlor.moviehub.di.component.ApplicationComponent;
 import com.etiennelawlor.moviehub.di.component.DaggerApplicationComponent;
+import com.etiennelawlor.moviehub.di.module.AndroidModule;
 import com.etiennelawlor.moviehub.di.module.ApplicationModule;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
-
-import java.io.File;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -33,7 +32,7 @@ public class MovieHubApplication extends Application {
 
     // region Member Variables
     private RefWatcher refWatcher;
-    private ApplicationComponent component;
+    private ApplicationComponent applicationComponent;
     // endregion
 
     // region Lifecycle Methods
@@ -47,9 +46,7 @@ public class MovieHubApplication extends Application {
 
         currentApplication = this;
 
-        component = DaggerApplicationComponent.builder()
-                .applicationModule(new ApplicationModule(this))
-                .build();
+        applicationComponent = createApplicationComponent();
     }
     // endregion
 
@@ -60,16 +57,20 @@ public class MovieHubApplication extends Application {
     }
 
     // region Helper Methods
-    public ApplicationComponent getComponent() {
-        return component;
+
+    public ApplicationComponent createApplicationComponent() {
+        return DaggerApplicationComponent.builder()
+                .applicationModule(new ApplicationModule(this))
+                .androidModule(new AndroidModule(this))
+                .build();
+    }
+
+    public ApplicationComponent getApplicationComponent() {
+        return applicationComponent;
     }
 
     public static MovieHubApplication getInstance() {
         return currentApplication;
-    }
-
-    public static File getCacheDirectory() {
-        return currentApplication.getCacheDir();
     }
 
     public static RefWatcher getRefWatcher(Context context) {
@@ -125,7 +126,7 @@ public class MovieHubApplication extends Application {
         private static final int MAX_LOG_LENGTH = 4000;
 
         @Override
-        protected boolean isLoggable(int priority) {
+        protected boolean isLoggable(String tag, int priority) {
             if (priority == Log.VERBOSE || priority == Log.DEBUG || priority == Log.INFO) {
                 return false;
             }
