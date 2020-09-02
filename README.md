@@ -1,6 +1,3 @@
-
-<a href="https://tracking.gitads.io/?repo=MovieHub"><img src="https://images.gitads.io/MovieHub" alt="GitAds"/></a>
-
 # MovieHub
 
 ![MovieHub](https://raw.githubusercontent.com/lawloretienne/MovieHub/master/images/ic_launcher.png)
